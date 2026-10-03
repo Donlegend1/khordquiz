@@ -13,7 +13,15 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                serif: ['"Source Serif 4"', ...defaultTheme.fontFamily.serif],
+                display: ['"Playfair Display"', ...defaultTheme.fontFamily.serif],
+            },
+            colors: {
+                brand: {
+                    DEFAULT: '#C1271F',
+                    dark: '#A11F18',
+                },
             },
         },
     },

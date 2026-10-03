@@ -1,0 +1,227 @@
+// Copied from the KhordQuiz app (src/lib/privacy-policy.ts). Keep the two in sync.
+import { h, LEGAL_CONTACT_EMAIL, list, p } from '@/data/legal/helpers';
+
+const INTRO = [
+  p('KingsleyKhordpiano, LLC (“Company,” “we,” “us,” or “our”) operates KhordQuiz (the “App”).'),
+  p('KhordQuiz is an ear-training and music-learning application designed to help musicians, instrumentalists, and other music learners improve their ability to hear and identify musical elements, including notes, chords, melodic lines, and related musical concepts.'),
+  p('This Privacy Policy explains what information we collect, how we use it, how we protect it, and the circumstances in which it may be shared.'),
+];
+
+const SECTIONS = [
+  {
+    title: '1. Information We Collect',
+    blocks: [
+      p('We collect information necessary to operate KhordQuiz, provide our services, manage accounts and subscriptions, maintain security, and improve the App.'),
+      p('The categories of information we may collect include the following.'),
+      h('1.1 Account Information'),
+      p('When you create or use an account, we may collect:'),
+      list('your name;', 'email address;', 'country or region;', 'account identifiers; and', 'information associated with your KhordQuiz account.'),
+      h('1.2 Information From Google Sign-In'),
+      p('KhordQuiz provides Google Sign-In as an authentication option.'),
+      p('When you choose to sign in using Google, we may receive information made available to us through the Google authentication process.'),
+      p('Depending on the configuration and permissions used by KhordQuiz, this may include:'),
+      list('your Google account’s unique identifier;', 'email address;', 'email verification status;', 'name;', 'given name;', 'family name;', 'profile picture;', 'locale; and', 'other information made available through the authorized Google authentication scopes.'),
+      p('We use this information primarily to authenticate you, create and maintain your KhordQuiz account, and provide account-related functionality.'),
+      p('We do not request access to your Google Drive, Gmail, contacts, or other unrelated Google services unless a particular feature is introduced in the future and the relevant access is separately requested and disclosed.'),
+      h('1.3 Information From Sign in with Apple'),
+      p('KhordQuiz may provide Sign in with Apple as an authentication option.'),
+      p('When you choose to sign in using your Apple Account, Apple may provide KhordQuiz with information necessary to authenticate you and establish or maintain your KhordQuiz account.'),
+      p('Depending on the information requested, the Apple authentication configuration, and your choices, this may include:'),
+      list('a unique Apple-provided user identifier associated with your KhordQuiz account;', 'your name;', 'first and last name, where provided;', 'a verified email address, where you choose to provide one;', 'an Apple-provided private relay email address where you choose to hide your personal email address; and', 'authentication or identity information necessary to verify your sign-in.'),
+      p('Apple may allow you to choose whether to share your real email address or use an Apple private relay address. A private relay address may allow communications from KhordQuiz to be forwarded to your personal inbox without revealing your personal email address to KhordQuiz.'),
+      p('We use information received through Sign in with Apple primarily to authenticate you, create and maintain your KhordQuiz account, associate your account with your Apple authentication credentials, and provide account-related functionality.'),
+      p('We do not receive unrelated information from your Apple Account merely because you use Sign in with Apple.'),
+      h('1.4 Country or Region'),
+      p('We may collect your country or region.'),
+      p('We use this information for purposes such as:'),
+      list('providing an appropriate service experience;', 'understanding where our users are located;', 'supporting international availability;', 'improving the App;', 'understanding usage patterns; and', 'complying with applicable legal or regulatory requirements.'),
+      h('1.5 IP Address'),
+      p('When you use KhordQuiz, we may automatically collect your Internet Protocol (“IP”) address.'),
+      p('We may use IP addresses for purposes including:'),
+      list('security;', 'fraud prevention;', 'preventing unauthorized access;', 'diagnosing technical problems;', 'analytics;', 'understanding general geographic usage;', 'maintaining and improving the App; and', 'complying with legal obligations.'),
+      p('An IP address may also be processed by third-party infrastructure or service providers used to operate the App.'),
+      h('1.6 Device and Technical Information'),
+      p('We may automatically collect technical information about the device and environment used to access KhordQuiz.'),
+      p('Depending on the device and technical configuration, this may include:'),
+      list('device identifiers;', 'device type;', 'operating system and version;', 'App version;', 'language or locale;', 'network information;', 'IP address;', 'crash information;', 'diagnostic information; and', 'other technical information necessary to operate, secure, and improve the App.'),
+      h('1.7 Analytics and Usage Information'),
+      p('We may collect information about how users interact with KhordQuiz.'),
+      p('This may include:'),
+      list('features used;', 'exercises or sections accessed;', 'session information;', 'interactions with the App;', 'usage frequency;', 'performance information;', 'technical events;', 'errors and crashes; and', 'other usage statistics.'),
+      p('We use analytics and usage information to understand how KhordQuiz is used, identify problems, improve functionality, improve the learning experience, and make decisions about future development.'),
+      h('1.8 Payment and Transaction Information'),
+      p('KhordQuiz offers paid monthly and annual subscriptions and may offer a one-time lifetime purchase.'),
+      p('Depending on the platform and purchase method used, payments may be processed through:'),
+      list('Stripe;', 'PayPal; or', 'Apple In-App Purchase.'),
+      p('When you make a payment, the applicable payment provider or platform may collect and process information necessary to process and manage the transaction.'),
+      p('This may include:'),
+      list('payment-method information;', 'transaction details;', 'billing information;', 'fraud-prevention information;', 'purchase identifiers;', 'subscription information; and', 'other information required by the applicable payment provider or platform.'),
+      p('We do not intend to store your complete payment-card number or other full payment credentials on KhordQuiz’s own systems.'),
+      p('We may receive information from the applicable payment provider or platform that is necessary to identify and manage your purchase, such as:'),
+      list('transaction identifiers;', 'payment status;', 'purchase amount;', 'currency;', 'subscription status;', 'billing period;', 'payment date; and', 'information necessary to provide customer support concerning the transaction.'),
+      p('When a purchase is made through Apple In-App Purchase, Apple may process the transaction and related purchase information under Apple’s applicable terms and privacy practices. KhordQuiz may receive transaction or entitlement information necessary to provide access to the purchased features.'),
+    ],
+  },
+  {
+    title: '2. Notifications',
+    blocks: [
+      p('KhordQuiz may request permission to send notifications to your device.'),
+      p('Notifications may be used for purposes including:'),
+      list('important service communications;', 'account-related communications;', 'subscription information;', 'reminders;', 'updates concerning KhordQuiz; and', 'other communications related to your use of the App.'),
+      p('Depending on the technical implementation, KhordQuiz or its notification infrastructure may process a device or push-notification identifier necessary to deliver notifications.'),
+      p('You may control notification permissions through your device settings where supported.'),
+    ],
+  },
+  {
+    title: '3. Information We Do Not Collect Through User Content',
+    blocks: [
+      p('KhordQuiz is a music-learning application and does not currently provide users with a feature for uploading or publishing:'),
+      list('photographs;', 'videos;', 'documents;', 'posts;', 'comments;', 'messages; or', 'other user-generated content.'),
+      p('We therefore do not collect user-generated content of these types through an upload or publishing feature.'),
+    ],
+  },
+  {
+    title: '4. How We Use Personal Information',
+    blocks: [
+      p('We may use information collected through KhordQuiz to:'),
+      list('create and manage accounts;', 'authenticate users;', 'provide access to KhordQuiz;', 'provide ear-training and educational functionality;', 'manage subscriptions and lifetime purchases;', 'process and verify transactions;', 'provide customer support;', 'communicate with users;', 'send service-related notifications;', 'understand how users interact with KhordQuiz;', 'analyze usage and performance;', 'diagnose technical problems;', 'improve KhordQuiz and its learning experience;', 'develop new features;', 'maintain the security of KhordQuiz;', 'detect and prevent fraud, abuse, hacking, cracking, and unauthorized access;', 'enforce our Terms of Service;', 'comply with legal and regulatory obligations; and', 'protect the rights, property, and safety of the Company, our users, and others.'),
+      p('We do not sell personal information as part of the ordinary operation of KhordQuiz.'),
+    ],
+  },
+  {
+    title: '5. Legal Bases for Processing',
+    blocks: [
+      p('Where a privacy law requires us to identify a legal basis for processing personal information, the applicable basis may depend on the particular processing activity and the jurisdiction in which you are located.'),
+      p('Depending on the circumstances, we may process information because:'),
+      list('it is necessary to provide a service you have requested or perform a contract with you;', 'it is necessary to process or administer a payment or subscription;', 'it is necessary for our legitimate interests, such as maintaining security, preventing fraud, improving the App, and operating our business;', 'you have provided consent where consent is required; or', 'processing is necessary to comply with a legal obligation.'),
+      p('Where processing is based on consent, you may withdraw consent where applicable, although withdrawal does not affect processing that occurred before the withdrawal.'),
+    ],
+  },
+  {
+    title: '6. How We Share Information',
+    blocks: [
+      p('We may disclose personal information to service providers and other parties where reasonably necessary to operate KhordQuiz.'),
+      h('Google'),
+      p('Google may process information when you use Google Sign-In to authenticate your KhordQuiz account.'),
+      h('Apple'),
+      p('Apple may process information when you use Sign in with Apple to authenticate your KhordQuiz account.'),
+      p('Apple may also process information when you make a purchase through Apple In-App Purchase.'),
+      p('Apple’s handling of information is subject to Apple’s applicable privacy policies and terms.'),
+      h('Stripe'),
+      p('Stripe may process payment and transaction information when you use Stripe to purchase KhordQuiz.'),
+      h('PayPal'),
+      p('PayPal may process payment and transaction information when you use PayPal to purchase KhordQuiz.'),
+      h('Service Providers'),
+      p('We may use other third-party providers to support functions such as:'),
+      list('hosting and infrastructure;', 'analytics;', 'security;', 'technical operations;', 'communications;', 'customer support; and', 'other services necessary to operate KhordQuiz.'),
+      p('Where such providers process personal information on our behalf, we seek to require them to process that information only for appropriate purposes and to maintain appropriate protections, subject to applicable law.'),
+      h('Legal and Safety Disclosures'),
+      p('We may disclose information where reasonably necessary to:'),
+      list('comply with a legal obligation;', 'respond to lawful requests from government authorities;', 'enforce our agreements;', 'investigate fraud or security incidents;', 'protect KhordQuiz or its users;', 'protect the rights, property, or safety of the Company or others; or', 'establish, exercise, or defend legal claims.'),
+      p('We may also disclose information in connection with a corporate transaction, such as a merger, acquisition, financing, restructuring, or sale of assets, subject to applicable law.'),
+    ],
+  },
+  {
+    title: '7. International Processing',
+    blocks: [
+      p('KhordQuiz is intended to be available to users in many countries and regions.'),
+      p('As a result, personal information may be processed, stored, or accessed in countries other than the country in which you live.'),
+      p('Third-party providers used by KhordQuiz may also process information internationally.'),
+      p('Where applicable law requires safeguards for international transfers of personal information, we will use appropriate mechanisms required by that law.'),
+      p('Availability of KhordQuiz may nevertheless be subject to applicable laws, regulations, sanctions, export controls, platform restrictions, and technical limitations in particular countries or regions.'),
+    ],
+  },
+  {
+    title: '8. Data Security',
+    blocks: [
+      p('We use reasonable technical and organizational measures designed to protect personal information against unauthorized access, alteration, disclosure, loss, misuse, or destruction.'),
+      p('Security measures may include access controls, authentication mechanisms, encryption where appropriate, monitoring, and other technical or organizational safeguards.'),
+      p('However, no internet-based service, electronic transmission, or storage system can be guaranteed to be completely secure.'),
+    ],
+  },
+  {
+    title: '9. Data Retention',
+    blocks: [
+      p('We retain personal information for as long as reasonably necessary for the purposes described in this Privacy Policy.'),
+      p('This may include the period necessary to:'),
+      list('maintain your account;', 'provide KhordQuiz;', 'maintain subscription and purchase records;', 'provide customer support;', 'maintain security;', 'prevent fraud and abuse;', 'resolve disputes;', 'enforce agreements; and', 'comply with legal, accounting, tax, or regulatory obligations.'),
+      p('When personal information is no longer reasonably necessary for these purposes, we will delete, anonymize, or otherwise dispose of it in accordance with applicable law.'),
+      p('Where a law imposes a specific retention period, we may retain information for the period required by that law.'),
+    ],
+  },
+  {
+    title: '10. Children’s Privacy',
+    blocks: [
+      p('KhordQuiz may be used by children as well as adults.'),
+      p('Because KhordQuiz may collect personal information such as names, email addresses, IP addresses, device identifiers, and usage information, additional protections may apply when the user is a child.'),
+      p('For users in jurisdictions where parental or guardian consent is required before collecting or processing a child’s personal information, we will take the steps required by applicable law.'),
+      p('Where required, we may use age-screening, parental-notification, parental-consent, or other mechanisms appropriate to the applicable legal requirements.'),
+      p(`Parents and legal guardians may contact us at ${LEGAL_CONTACT_EMAIL} regarding a child’s personal information, including to request access to or deletion of applicable information.`),
+      p('We will process such requests in accordance with applicable law.'),
+    ],
+  },
+  {
+    title: '11. Privacy Rights',
+    blocks: [
+      p('Depending on your location and applicable law, you may have rights concerning your personal information.'),
+      p('These may include the right to:'),
+      list('know whether we process personal information about you;', 'request access to personal information we hold about you;', 'request correction of inaccurate information;', 'request deletion of personal information;', 'request restriction of certain processing;', 'object to certain processing;', 'withdraw consent where processing is based on consent;', 'request portability of certain personal information; and', 'lodge a complaint with a relevant data-protection authority.'),
+      p('These rights are not absolute and may be subject to legal exceptions.'),
+      p(`To exercise a privacy right, contact ${LEGAL_CONTACT_EMAIL}.`),
+      p('We may need to verify your identity before fulfilling certain requests.'),
+    ],
+  },
+  {
+    title: '12. Account Deletion',
+    blocks: [
+      p(`You may request deletion of your KhordQuiz account and associated personal information by contacting ${LEGAL_CONTACT_EMAIL}.`),
+      p('When we receive a valid deletion request, we will delete or anonymize applicable information in accordance with applicable law.'),
+      p('We may retain certain information where reasonably necessary or legally required for purposes such as:'),
+      list('legal compliance;', 'tax or accounting records;', 'fraud prevention;', 'security;', 'dispute resolution; or', 'establishing, exercising, or defending legal claims.'),
+      p('Deleting a KhordQuiz account does not necessarily cancel a subscription that was purchased through a third-party payment provider or platform.'),
+      p('Users should separately cancel an active recurring subscription using the applicable cancellation method for the provider or platform through which the subscription was purchased.'),
+    ],
+  },
+  {
+    title: '13. Your Choices',
+    blocks: [
+      p('You may be able to control certain information through your device or account settings.'),
+      p('For example, you may:'),
+      list('manage notification permissions through your device;', 'manage your Google Account settings through Google;', 'manage your Apple Account and Sign in with Apple settings through Apple;', 'cancel a subscription through the applicable cancellation mechanism;', 'choose whether to provide certain information requested during account creation, where the information is optional; and', 'contact us to request deletion or correction of applicable personal information.'),
+    ],
+  },
+  {
+    title: '14. Third-Party Services and Policies',
+    blocks: [
+      p('KhordQuiz relies on third-party services, including Google, Apple, Stripe, and PayPal.'),
+      p('These companies may independently collect and process information under their own privacy policies and terms.'),
+      p('Your use of Google Sign-In is subject to Google’s applicable terms and policies.'),
+      p('Your use of Sign in with Apple is subject to Apple’s applicable terms and policies.'),
+      p('Payments made through Stripe, PayPal, or Apple In-App Purchase are also subject to the applicable terms and privacy policies of those providers or platforms.'),
+    ],
+  },
+  {
+    title: '15. International Users',
+    blocks: [
+      p('KhordQuiz may be used by users in countries throughout the world.'),
+      p('Different jurisdictions provide different privacy rights and protections. Where a law applicable to you provides rights or protections that are greater than those described in this Privacy Policy, those rights and protections will apply to the extent required by law.'),
+      p('Nothing in this Privacy Policy is intended to deprive you of a mandatory legal protection available to you in your jurisdiction.'),
+    ],
+  },
+  {
+    title: '16. Changes to This Privacy Policy',
+    blocks: [
+      p('We may update this Privacy Policy from time to time to reflect changes to KhordQuiz, our data practices, applicable law, or our service providers.'),
+      p('When we make material changes, we may notify users through the App, by email, or through another reasonable method.'),
+      p('The updated Privacy Policy will state its effective date.'),
+    ],
+  },
+  {
+    title: '17. Contact Us',
+    blocks: [
+      p('If you have questions about this Privacy Policy or KhordQuiz’s privacy practices, or if you wish to exercise an applicable privacy right, contact us at:'),
+    ],
+  },
+];
+
+export const PRIVACY_POLICY = { effectiveDate: 'October 2, 2026', intro: INTRO, sections: SECTIONS, title: 'Privacy Policy' };

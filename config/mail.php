@@ -115,4 +115,15 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Recipient
+    |--------------------------------------------------------------------------
+    |
+    | Messages sent through the website's contact form are emailed here.
+    |
+    */
+
+    'contact_address' => env('MAIL_CONTACT_ADDRESS', 'admin@khordquiz.com'),
+
 ];
