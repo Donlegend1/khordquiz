@@ -31,12 +31,20 @@ export default function SiteHeader() {
                     ))}
                 </nav>
 
-                <a
-                    href="/#download"
-                    className="hidden rounded-lg bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-dark md:inline-block"
-                >
-                    Download App Now
-                </a>
+                <div className="hidden items-center gap-2 md:flex">
+                    <a
+                        href="/login"
+                        className="rounded-lg px-4 py-2.5 text-base font-medium text-gray-900 transition hover:text-brand"
+                    >
+                        Sign in
+                    </a>
+                    <a
+                        href="/#download"
+                        className="rounded-lg bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-dark"
+                    >
+                        Download App Now
+                    </a>
+                </div>
 
                 <button
                     type="button"
@@ -69,6 +77,13 @@ export default function SiteHeader() {
                             </a>
                         ))}
                     </nav>
+                    <a
+                        href="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="mb-2 block rounded-lg px-4 py-3 text-center text-base font-medium text-gray-900 hover:text-brand"
+                    >
+                        Sign in
+                    </a>
                     <a
                         href="/#download"
                         onClick={() => setMenuOpen(false)}
