@@ -30,12 +30,13 @@ const features = [
     },
     {
         tag: 'Mistake Review',
-        title: 'Turn mistakes into muscle memory.',
+        title: 'Know exactly what trips you up.',
         description:
-            'Every question you miss is saved to your Mistakes list. Replay them whenever you like, and each one drops off the list the moment you get it right.',
-        points: ['Up to 10 recent mistakes, ready to replay', 'Stays on your list until you answer it right', 'One tap from Home — no digging through quizzes'],
-        image: '/images/app-review.png',
-        alt: 'Reviewing a mistake: name the interval you hear',
+            'KhordQuiz spots the pairs you keep mixing up — like hearing a Major chord but picking Augmented — so you know exactly what to listen for next time.',
+        points: ['Your most-confused pairs, ranked by how often you mix them up', 'Every missed question saved to a replay list', 'One tap from Progress — no digging through quizzes'],
+        image: '/images/app-confused.png',
+        alt: 'Most confused screen showing answer pairs mixed up most often, with a Review mistakes button',
+        callout: <MistakeCallout />,
     },
     {
         tag: 'Progress',
@@ -168,6 +169,27 @@ function SoundCallout() {
                     width,
                     height: crop.h * scale,
                     backgroundImage: 'url(/images/app-sounds.png)',
+                    backgroundSize: `${589 * scale}px auto`,
+                    backgroundPosition: `-${crop.x * scale}px -${crop.y * scale}px`,
+                }}
+            />
+        </div>
+    );
+}
+
+// The "Most confused" card, cut straight from the screenshot and enlarged.
+function MistakeCallout() {
+    const crop = { x: 20, y: 80, w: 549, h: 486 }; // in the 589×1280 screenshot
+    const width = 300;
+    const scale = width / crop.w;
+
+    return (
+        <div className={`${calloutClass} top-[70px] p-2 sm:top-[80px]`} aria-hidden="true">
+            <div
+                style={{
+                    width,
+                    height: crop.h * scale,
+                    backgroundImage: 'url(/images/app-confused.png)',
                     backgroundSize: `${589 * scale}px auto`,
                     backgroundPosition: `-${crop.x * scale}px -${crop.y * scale}px`,
                 }}
