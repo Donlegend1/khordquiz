@@ -1,6 +1,5 @@
 import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
-import Eyebrow from '@/Components/Site/Eyebrow';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -42,22 +41,12 @@ export default function Login({ status, canResetPassword }) {
         >
             <Head title="Sign in" />
 
-            <header className="mx-auto flex w-full max-w-7xl items-center px-6 py-6 lg:px-[100px]">
-                <Link href="/" className="flex items-baseline text-[28px] leading-none tracking-tight">
-                    <span className="font-sans font-bold text-black">Khord</span>
-                    <span className="font-serif font-semibold text-brand">Quiz</span>
-                </Link>
-            </header>
-
-            <main className="flex flex-1 items-center justify-center px-6 pb-16">
-                <div className="w-full max-w-[440px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
-                    <Eyebrow>Account</Eyebrow>
-                    <h1 className="mt-4 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
-                        Sign <span className="font-display font-medium tracking-normal text-brand">in</span>
-                    </h1>
-                    <p className="mt-2 text-[15px] leading-relaxed text-neutral-600">
-                        Continue your ear training. Your streak is waiting.
-                    </p>
+            <main className="flex flex-1 items-center justify-center px-6 py-16">
+                <div className="w-full max-w-[520px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
+                    <Link href="/" aria-label="KhordQuiz home" className="mx-auto mb-2 block w-fit">
+                        <img src="/images/logo-mark.png" alt="KhordQuiz" width="287" height="192" className="block h-14 w-auto" />
+                    </Link>
+                    <h1 className="sr-only">Sign in</h1>
 
                     {status && (
                         <div className="mt-5 rounded-lg border border-green-200 bg-green-50 px-3.5 py-2.5 text-sm font-medium text-green-700">
@@ -97,16 +86,33 @@ export default function Login({ status, canResetPassword }) {
                                     value={data.password}
                                     className={`${fieldClass(errors.password)} pe-16`}
                                     autoComplete="current-password"
-                                    placeholder="Your password"
+                                    placeholder="Password"
                                     onChange={(e) => setData('password', e.target.value)}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword((visible) => !visible)}
-                                    className="absolute inset-y-0 right-0 px-3.5 text-sm font-medium text-neutral-500 hover:text-neutral-900"
+                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    aria-pressed={showPassword}
+                                    className="absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-500 hover:text-neutral-900"
                                 >
-                                    {showPassword ? 'Hide' : 'Show'}
+                                    <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                                        {showPassword ? (
+                                            // Eye with a slash: click to hide
+                                            <>
+                                                <path d="M3 3l18 18" />
+                                                <path d="M10.6 5.1A10.4 10.4 0 0112 5c6 0 9.5 7 9.5 7a17.6 17.6 0 01-3.1 4.1M6.6 6.6A17.4 17.4 0 002.5 12s3.5 7 9.5 7a9.7 9.7 0 005.4-1.6" />
+                                                <path d="M9.9 9.9a3 3 0 004.2 4.2" />
+                                            </>
+                                        ) : (
+                                            // Open eye: click to show
+                                            <>
+                                                <path d="M2.5 12S6 5 12 5s9.5 7 9.5 7-3.5 7-9.5 7-9.5-7-9.5-7z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </>
+                                        )}
+                                    </svg>
                                 </button>
                             </div>
                             <InputError message={errors.password} className="mt-1.5" />
@@ -142,28 +148,13 @@ export default function Login({ status, canResetPassword }) {
                         </button>
                     </form>
 
-                    <div className="mt-6 rounded-lg border border-dashed border-gray-300 bg-[#FBF6F3] px-4 py-3 text-sm text-neutral-600">
-                        <p className="font-medium text-neutral-900">Demo account</p>
-                        <p className="mt-1">
-                            <span className="text-neutral-500">Email</span> demo@khordquiz.com
-                        </p>
-                        <p>
-                            <span className="text-neutral-500">Password</span> password
-                        </p>
-                        <button
-                            type="button"
-                            className="mt-2 text-sm font-medium text-brand hover:underline"
-                            onClick={() =>
-                                setData({
-                                    email: 'demo@khordquiz.com',
-                                    password: 'password',
-                                    remember: data.remember,
-                                })
-                            }
-                        >
-                            Fill demo credentials
-                        </button>
-                    </div>
+                    {/* For visitors without an account yet. */}
+                    <p className="mt-5 text-center text-sm text-neutral-600">
+                        New to KhordQuiz?{' '}
+                        <a href="/#download" className="font-medium text-brand hover:underline">
+                            Start Training
+                        </a>
+                    </p>
                 </div>
             </main>
         </div>

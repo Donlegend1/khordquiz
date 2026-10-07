@@ -29,9 +29,9 @@ export default function Hero() {
                     </h1>
 
                     <p className="mx-auto mt-6 max-w-[600px] text-base leading-relaxed text-neutral-700 lg:text-[17px] lg:mx-0">
-                        Press play, then name what you hear. 94 audio quizzes on intervals, chords and
-                        progressions — picked for your level, with streaks, challenges and a leaderboard to keep you
-                        coming back.
+                        <span className="font-semibold text-neutral-900">Go beyond intervals.</span> Train your ear on
+                        melodies, scales, triads, 7th to 13th chords, modal voicings, full progressions and more — 94
+                        audio quizzes, played on the instrument you choose, on a path built for your level.
                     </p>
 
                     <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
@@ -39,7 +39,7 @@ export default function Hero() {
                             href="#download"
                             className="rounded-md bg-brand px-5 py-3 text-center text-base font-medium text-white transition hover:bg-brand-dark"
                         >
-                            Download App Now
+                            Start Training
                         </a>
                         <a
                             href="#features"

@@ -1,5 +1,4 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
-import { SUPPORT_EMAIL } from '@/data/contact';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -12,7 +11,7 @@ export default function Contact() {
             id="contact"
             className="scroll-mt-[88px] bg-gradient-to-b from-[#F3F6FB] via-[#FBF5F1] to-[#FDEFE7]"
         >
-            <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1fr_1.2fr] lg:gap-16 lg:px-[100px] lg:py-20">
+            <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:gap-16 lg:px-[100px] lg:py-20">
                 <div>
                     <Eyebrow>Contact</Eyebrow>
 
@@ -21,33 +20,6 @@ export default function Contact() {
                         <br />
                         <span className="font-display font-semibold tracking-normal text-brand">to help.</span>
                     </h2>
-
-                    <p className="mt-4 max-w-[440px] text-base leading-relaxed text-neutral-700">
-                        Questions about your account, a purchase or a bug? Send us a message and use the email address
-                        on your KhordQuiz account so we can find you faster.
-                    </p>
-
-                    <a
-                        href={`mailto:${SUPPORT_EMAIL}`}
-                        className="group mt-8 inline-flex items-center gap-4 rounded-2xl border border-white bg-white/80 px-5 py-4 shadow-sm transition hover:shadow-md"
-                    >
-                        <span className="flex h-11 w-11 items-center justify-center rounded-full bg-brand text-white">
-                            <MailIcon />
-                        </span>
-                        <span>
-                            <span className="block text-xs font-medium uppercase tracking-wide text-neutral-500">
-                                Prefer email?
-                            </span>
-                            <span className="block text-lg font-semibold text-neutral-900 group-hover:text-brand">
-                                {SUPPORT_EMAIL}
-                            </span>
-                        </span>
-                    </a>
-
-                    <p className="mt-6 max-w-[440px] rounded-2xl border border-dashed border-gray-300 px-5 py-4 text-sm text-neutral-600">
-                        <span className="font-semibold text-neutral-900">Have a feature idea?</span> Post it on the
-                        Suggestions board in the app, where other students can vote for it.
-                    </p>
                 </div>
 
                 <ContactForm />
@@ -217,15 +189,6 @@ const inputClass = (error) =>
     `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 ${
         error ? 'border-brand focus:border-brand focus:ring-brand/20' : 'border-gray-300 focus:border-neutral-900 focus:ring-neutral-900/10'
     }`;
-
-function MailIcon() {
-    return (
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <rect x="3" y="5" width="18" height="14" rx="2" />
-            <path d="M3.5 6.5l8.5 6 8.5-6" />
-        </svg>
-    );
-}
 
 function SendIcon() {
     return (

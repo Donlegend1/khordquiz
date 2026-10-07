@@ -13,15 +13,15 @@ export default function FinalCta() {
                 </h2>
 
                 <p className="mx-auto mt-4 max-w-[480px] text-base leading-snug text-gray-300">
-                    Join the musicians training their ear a little every day. 94 quizzes across 16 categories, three
-                    levels, and a leaderboard to keep you motivated.
+                    Your ear can learn to do this. A few focused minutes a day, and you&apos;ll start catching notes,
+                    chords and progressions before the sound even fades.
                 </p>
 
                 <a
                     href="#download"
                     className="mt-10 inline-block rounded-md bg-brand px-5 py-3 text-base font-medium text-white transition hover:bg-brand-dark"
                 >
-                    Download App Now
+                    Start Training
                 </a>
             </div>
         </section>

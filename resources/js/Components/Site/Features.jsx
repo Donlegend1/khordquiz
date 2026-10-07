@@ -1,9 +1,8 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
 import PhoneFrame from '@/Components/Site/PhoneFrame';
 
-// The app is auto-dubbed with alugha, which supports 200+ languages; these are just a sample for the callout.
-const LANGUAGE_COUNT = '200+';
-const languages = ['English', 'Español', 'Français', '日本語', 'العربية'];
+// Mirrors LANGUAGES in the app's settings screen (app/settings.tsx). Add to this list as languages are added.
+const languages = ['English', 'Français', 'Español', 'Português', 'Deutsch'];
 
 const features = [
     {
@@ -30,6 +29,15 @@ const features = [
         callout: <SoundCallout />,
     },
     {
+        tag: 'Mistake Review',
+        title: 'Turn mistakes into muscle memory.',
+        description:
+            'Every question you miss is saved to your Mistakes list. Replay them whenever you like, and each one drops off the list the moment you get it right.',
+        points: ['Up to 10 recent mistakes, ready to replay', 'Stays on your list until you answer it right', 'One tap from Home — no digging through quizzes'],
+        image: '/images/app-review.png',
+        alt: 'Reviewing a mistake: name the interval you hear',
+    },
+    {
         tag: 'Progress',
         title: 'See exactly where your ear is weakest.',
         description:
@@ -54,8 +62,8 @@ const features = [
     {
         tag: 'Languages',
         title: 'Learn in your language.',
-        description: `KhordQuiz is dubbed into ${LANGUAGE_COUNT} languages, so you can train your ear in the language you think in.`,
-        points: [`${LANGUAGE_COUNT} languages`, 'Switch any time from Settings', 'Light and dark mode, too'],
+        description: 'Use KhordQuiz in the language you are most comfortable with, so nothing gets in the way of training your ear.',
+        points: [`Available in ${languages.join(', ')}\u00A0and\u00A0more`, 'Switch any time from Settings', 'Light and dark mode, too'],
         image: '/images/app-settings.png',
         alt: 'Settings screen with appearance, language and practice options',
         callout: <LanguageCallout />,
@@ -75,17 +83,19 @@ export default function Features() {
     return (
         <section id="features" className="scroll-mt-[88px] bg-white">
             <div className="mx-auto max-w-7xl px-6 py-16 lg:px-[100px] lg:py-20">
-                <Eyebrow>Everything you need</Eyebrow>
+                <div className="mx-auto max-w-2xl text-center">
+                    <Eyebrow>Everything you need</Eyebrow>
 
-                <h2 className="mt-5 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl lg:text-[44px]">
-                    Built for real{' '}
-                    <span className="font-display font-semibold tracking-normal text-brand">Progress.</span>
-                </h2>
+                    <h2 className="mt-5 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl lg:text-[44px]">
+                        Built for real{' '}
+                        <span className="font-display font-semibold tracking-normal text-brand">Progress.</span>
+                    </h2>
 
-                <p className="mt-4 max-w-[480px] text-base leading-relaxed text-neutral-700">
-                    KhordQuiz turns ear training into a daily habit. It tracks what you can recognise, shows where you
-                    are weakest, and pushes you forward.
-                </p>
+                    <p className="mx-auto mt-4 max-w-[480px] text-base leading-relaxed text-neutral-700">
+                        KhordQuiz turns ear training into a daily habit. It tracks what you can recognise, shows where
+                        you are weakest, and pushes you forward.
+                    </p>
+                </div>
 
                 <div className="mt-12 flex flex-col gap-14 lg:mt-16 lg:gap-20">
                     {features.map((feature, index) => (
@@ -170,7 +180,7 @@ function LanguageCallout() {
     return (
         <div className={`${calloutClass} top-[72px] w-[260px] py-2`} aria-hidden="true">
             <p className="px-5 pb-1.5 pt-1 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-                {LANGUAGE_COUNT} languages
+                Choose language
             </p>
             <ul>
                 {languages.map((language, index) => (
@@ -190,9 +200,7 @@ function LanguageCallout() {
                         )}
                     </li>
                 ))}
-                <li className="border-t border-gray-100 px-5 py-2 text-[13px] leading-5 text-neutral-500">
-                    and many more…
-                </li>
+                <li className="border-t border-gray-100 px-5 py-2 text-[13px] leading-5 text-neutral-500">and more…</li>
             </ul>
         </div>
     );
