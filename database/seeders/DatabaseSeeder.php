@@ -70,31 +70,40 @@ class DatabaseSeeder extends Seeder
         );
 
         $quizzes = collect($this->catalog())->mapWithKeys(function (array $quiz) use ($admin) {
+            $questions = QuizQuestionBank::for($quiz['title']);
+
+            if ($questions === []) {
+                throw new \RuntimeException("Missing questions for [{$quiz['title']}].");
+            }
+
             $record = Quiz::query()->updateOrCreate(
                 ['slug' => Str::slug($quiz['title'])],
                 [
                     ...$quiz,
                     'slug' => Str::slug($quiz['title']),
+                    'question_count' => count($questions),
                     'created_by' => $admin->id,
                 ],
             );
 
+            $record->syncQuestions($questions);
+
             return [$record->slug => $record];
         });
 
-        $this->progress($member, $quizzes['find-the-note'], QuizAttempt::STATUS_COMPLETED, 25, 23, now()->subDays(2));
-        $this->progress($member, $quizzes['harmonic-5th'], QuizAttempt::STATUS_IN_PROGRESS, 12, 9, now()->subHours(3));
-        $this->progress($member, $quizzes['cadences'], QuizAttempt::STATUS_COMPLETED, 25, 20, now()->subDay());
-        $this->progress($member, $quizzes['diatonic-intervals'], QuizAttempt::STATUS_IN_PROGRESS, 4, 3, now()->subDays(5));
+        $this->progress($member, $quizzes['find-the-note'], QuizAttempt::STATUS_COMPLETED, 4, 3, now()->subDays(2));
+        $this->progress($member, $quizzes['harmonic-5th'], QuizAttempt::STATUS_IN_PROGRESS, 3, 2, now()->subHours(3));
+        $this->progress($member, $quizzes['cadences'], QuizAttempt::STATUS_COMPLETED, 4, 3, now()->subDay());
+        $this->progress($member, $quizzes['diatonic-intervals'], QuizAttempt::STATUS_IN_PROGRESS, 2, 1, now()->subDays(5));
 
-        $this->progress($jordan, $quizzes['tonal-modes'], QuizAttempt::STATUS_IN_PROGRESS, 18, 14, now()->subHour());
-        $this->progress($chioma, $quizzes['cadences'], QuizAttempt::STATUS_COMPLETED, 25, 17, now()->subDay());
+        $this->progress($jordan, $quizzes['tonal-modes'], QuizAttempt::STATUS_IN_PROGRESS, 3, 2, now()->subHour());
+        $this->progress($chioma, $quizzes['cadences'], QuizAttempt::STATUS_COMPLETED, 4, 3, now()->subDay());
 
         $this->award($member, '7-day streak', 'Practiced seven days in a row.', 'streak', now()->subDay());
         $this->award(
             $member,
             'Sharp ear',
-            'Scored 23 out of 25 on Find the Note.',
+            'Scored 3 out of 4 on Find the Note.',
             'score',
             now()->subDays(2),
             $quizzes['find-the-note']->id,

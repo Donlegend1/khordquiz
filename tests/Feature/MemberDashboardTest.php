@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Award;
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+use App\Models\QuizQuestion;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -33,6 +34,14 @@ class MemberDashboardTest extends TestCase
             'question_count' => 25,
         ]);
 
+        QuizQuestion::factory()->create([
+            'quiz_id' => $quiz->id,
+            'position' => 12,
+            'prompt' => 'Which pair is a perfect 5th?',
+            'choices' => ['E-B', 'C-F', 'F-B', 'D-G#'],
+            'answer' => 'E-B',
+        ]);
+
         QuizAttempt::factory()->create([
             'user_id' => $member->id,
             'quiz_id' => $quiz->id,
@@ -59,6 +68,9 @@ class MemberDashboardTest extends TestCase
                 ->where('resume.quiz.title', 'Harmonic 5th')
                 ->where('resume.stopped_at_question', 12)
                 ->where('resume.quiz.question_count', 25)
+                ->where('resume.question.prompt', 'Which pair is a perfect 5th?')
+                ->where('resume.question.choices.0', 'E-B')
+                ->missing('resume.question.answer')
                 ->has('recentQuizzes', 1)
                 ->has('awards', 1)
                 ->where('awards.0.title', '7-day streak'));

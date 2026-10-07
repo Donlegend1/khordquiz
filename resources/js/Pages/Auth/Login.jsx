@@ -141,47 +141,6 @@ export default function Login({ status, canResetPassword }) {
                             {processing ? 'Signing in…' : 'Sign in'}
                         </button>
                     </form>
-
-                    <div className="mt-6 rounded-lg border border-dashed border-gray-300 bg-[#FBF6F3] px-4 py-3 text-sm text-neutral-600">
-                        <p className="font-medium text-neutral-900">Try an account</p>
-                        <p className="mt-1">
-                            Password for both is <span className="font-medium text-neutral-800">password</span>
-                        </p>
-                        <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                            <button
-                                type="button"
-                                className="rounded-md border border-gray-200 bg-white px-3 py-2 text-left hover:border-brand/40"
-                                onClick={() =>
-                                    setData({
-                                        email: 'admin@khordquiz.com',
-                                        password: 'password',
-                                        remember: data.remember,
-                                    })
-                                }
-                            >
-                                <span className="block text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                                    Admin
-                                </span>
-                                <span className="mt-0.5 block font-medium text-neutral-900">admin@khordquiz.com</span>
-                            </button>
-                            <button
-                                type="button"
-                                className="rounded-md border border-gray-200 bg-white px-3 py-2 text-left hover:border-brand/40"
-                                onClick={() =>
-                                    setData({
-                                        email: 'member@khordquiz.com',
-                                        password: 'password',
-                                        remember: data.remember,
-                                    })
-                                }
-                            >
-                                <span className="block text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                                    Member
-                                </span>
-                                <span className="mt-0.5 block font-medium text-neutral-900">member@khordquiz.com</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </main>
         </div>

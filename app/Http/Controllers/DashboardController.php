@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -54,7 +55,7 @@ class DashboardController extends Controller
                 ])
                 ->values(),
             'quizzes' => Quiz::query()
-                ->withCount('attempts')
+                ->withCount(['attempts', 'questions'])
                 ->latest()
                 ->get()
                 ->map(fn (Quiz $quiz) => $quiz->summary())
@@ -87,7 +88,7 @@ class DashboardController extends Controller
 
         $resume = (clone $attempts)
             ->where('status', QuizAttempt::STATUS_IN_PROGRESS)
-            ->with('quiz')
+            ->with('quiz.questions')
             ->latest('last_played_at')
             ->first();
 
@@ -104,7 +105,7 @@ class DashboardController extends Controller
             ],
             'resume' => $resume ? $this->attemptPayload($resume) : null,
             'recentQuizzes' => (clone $attempts)
-                ->with('quiz')
+                ->with('quiz.questions')
                 ->latest('last_played_at')
                 ->limit(5)
                 ->get()
@@ -131,6 +132,7 @@ class DashboardController extends Controller
     {
         $quiz = $attempt->quiz;
         $total = max(1, $quiz->question_count);
+        $question = $quiz->questions->firstWhere('position', $attempt->stopped_at_question);
 
         return [
             'id' => $attempt->id,
@@ -147,6 +149,12 @@ class DashboardController extends Controller
                 'difficulty' => $quiz->difficulty,
                 'question_count' => $quiz->question_count,
             ],
+            'question' => $question ? [
+                'prompt' => $question->prompt,
+                'choices' => $question->choices,
+                'audio_url' => $question->audio_path ? Storage::disk('public')->url($question->audio_path) : null,
+                'video_url' => $question->video_path ? Storage::disk('public')->url($question->video_path) : null,
+            ] : null,
         ];
     }
 

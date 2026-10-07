@@ -71,6 +71,39 @@ class Quiz extends Model
         return $this->hasMany(QuizAttempt::class);
     }
 
+    public function questions(): HasMany
+    {
+        return $this->hasMany(QuizQuestion::class)->orderBy('position');
+    }
+
+    /**
+     * Replace this quiz's questions. Each item needs prompt, choices, and either answer or correct.
+     *
+     * @param  array<int, array<string, mixed>>  $questions
+     */
+    public function syncQuestions(array $questions): void
+    {
+        $this->questions()->reorder()->delete();
+
+        foreach (array_values($questions) as $index => $question) {
+            $choices = array_values($question['choices']);
+            $answer = $question['answer'] ?? $choices[(int) $question['correct']];
+
+            $this->questions()->create([
+                'position' => $index + 1,
+                'prompt' => $question['prompt'],
+                'choices' => $choices,
+                'answer' => $answer,
+                'audio_path' => $question['audio_path'] ?? null,
+                'video_path' => $question['video_path'] ?? null,
+            ]);
+        }
+
+        $this->update([
+            'question_count' => count($questions),
+        ]);
+    }
+
     public static function uniqueSlug(string $title, ?int $ignoreId = null): string
     {
         $base = Str::slug($title);
@@ -102,7 +135,7 @@ class Quiz extends Model
             'category' => $this->category,
             'difficulty' => $this->difficulty,
             'description' => $this->description,
-            'question_count' => $this->question_count,
+            'question_count' => isset($this->questions_count) ? (int) $this->questions_count : $this->question_count,
             'is_published' => $this->is_published,
             'attempts_count' => (int) ($this->attempts_count ?? 0),
         ];

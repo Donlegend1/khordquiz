@@ -28,11 +28,6 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                   href: route('admin.quizzes.index'),
                   current: route().current('admin.quizzes.index') || route().current('admin.quizzes.edit'),
               },
-              {
-                  label: 'Add quiz',
-                  href: route('admin.quizzes.create'),
-                  current: route().current('admin.quizzes.create'),
-              },
           ]
         : [
               {

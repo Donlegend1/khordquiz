@@ -55,6 +55,28 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, awards
                                 </p>
                             </div>
                         </div>
+                        {resume.question && (
+                            <div className="mt-5 rounded-xl bg-[#F6F1EC] px-4 py-4">
+                                <p className="text-sm font-medium text-neutral-900">{resume.question.prompt}</p>
+                                {resume.question.audio_url && (
+                                    <audio controls src={resume.question.audio_url} className="mt-3 w-full" />
+                                )}
+                                {resume.question.video_url && (
+                                    <video
+                                        controls
+                                        src={resume.question.video_url}
+                                        className="mt-3 max-h-64 w-full rounded-lg bg-black"
+                                    />
+                                )}
+                                <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                                    {resume.question.choices.map((choice, index) => (
+                                        <li key={index} className="rounded-lg bg-white px-3 py-2 text-sm text-neutral-700">
+                                            {choice}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
                         <div className="mt-5">
                             <div className="mb-1.5 flex justify-between text-xs text-neutral-500">
                                 <span>Question {resume.stopped_at_question}</span>
@@ -90,6 +112,9 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, awards
                                         <div className="flex items-start justify-between gap-4">
                                             <div>
                                                 <p className="font-medium">{attempt.quiz.title}</p>
+                                                {attempt.status !== 'completed' && attempt.question && (
+                                                    <p className="mt-1 text-sm text-neutral-700">{attempt.question.prompt}</p>
+                                                )}
                                                 <p className="mt-0.5 text-sm text-neutral-500">
                                                     {attempt.quiz.category} · {attempt.last_played_at}
                                                 </p>
