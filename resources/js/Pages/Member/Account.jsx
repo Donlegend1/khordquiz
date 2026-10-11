@@ -30,7 +30,7 @@ function SectionLabel({ title, action }) {
     );
 }
 
-function Row({ icon, label, value, first, href }) {
+function Row({ icon, label, value, first, href, download }) {
     const content = (
         <div className={`flex items-center gap-3 px-4 py-3.5 ${first ? '' : 'border-t border-black/5'}`}>
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
@@ -47,12 +47,21 @@ function Row({ icon, label, value, first, href }) {
         </div>
     );
 
-    return href ? (
+    if (!href) return content;
+
+    // A real data download needs a native navigation, not an Inertia visit.
+    if (download) {
+        return (
+            <a href={href} className="block transition-colors duration-150 hover:bg-neutral-50">
+                {content}
+            </a>
+        );
+    }
+
+    return (
         <Link href={href} className="block transition-colors duration-150 hover:bg-neutral-50">
             {content}
         </Link>
-    ) : (
-        content
     );
 }
 
@@ -175,6 +184,18 @@ export default function Account() {
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                     <rect x="5" y="10.5" width="14" height="9" rx="2" />
                                     <path d="M8 10.5V7a4 4 0 118 0v3.5" />
+                                </svg>
+                            }
+                        />
+                        <Row
+                            href={route('profile.export')}
+                            download
+                            label="Download my data"
+                            value=""
+                            icon={
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                    <path d="M12 4v11m0 0l-4-4m4 4l4-4" strokeLinecap="round" strokeLinejoin="round" />
+                                    <path d="M5 17v2a2 2 0 002 2h10a2 2 0 002-2v-2" />
                                 </svg>
                             }
                         />

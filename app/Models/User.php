@@ -2,7 +2,10 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+// Not implementing MustVerifyEmail yet: MAIL_MAILER is still 'log' (no real
+// mail delivery configured), so enforcing verification would lock every
+// member — including existing test accounts — out of the app with no way to
+// receive the verification link. Revisit once real mail delivery is set up.
 use App\Role;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -12,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'country', 'skill_level'])]
+#[Fillable(['name', 'email', 'password', 'role', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'country', 'skill_level', 'terms_accepted_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -31,6 +34,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'terms_accepted_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
             'current_streak' => 'integer',
