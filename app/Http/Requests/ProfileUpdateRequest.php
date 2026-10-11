@@ -12,20 +12,17 @@ class ProfileUpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
+     * Email isn't here — it's locked on the Edit Profile form and the
+     * controller discards any submitted value, so there's nothing to validate.
+     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique(User::class)->ignore($this->user()->id),
-            ],
+            'country' => ['nullable', 'string', 'max:100'],
+            'skill_level' => ['nullable', 'string', Rule::in(User::SKILL_LEVELS)],
         ];
     }
 }

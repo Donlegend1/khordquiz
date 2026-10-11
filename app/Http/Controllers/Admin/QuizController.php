@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Admin\Concerns\HandlesQuizMedia;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\QuizRequest;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\UploadedFile;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class QuizController extends Controller
 {
+    use HandlesQuizMedia;
+
     public function index(): Response
     {
         return Inertia::render('Admin/Quizzes/Index', [
@@ -26,25 +28,42 @@ class QuizController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Admin/Quizzes/Form', $this->formProps());
+        return Inertia::render('Admin/Quizzes/Form', [
+            ...$this->formProps(),
+            // Lets the Audio Quiz admin deep-link into "add this specific
+            // lesson" already filled in, instead of a blank form.
+            'prefill' => [
+                'category' => $request->string('category')->toString() ?: null,
+                'title' => $request->string('title')->toString() ?: null,
+            ],
+        ]);
     }
 
     public function store(QuizRequest $request): RedirectResponse
     {
         $unusedMedia = DB::transaction(function () use ($request): array {
+            $unused = [];
+
             $quiz = Quiz::query()->create([
                 ...$this->quizAttributes($request),
+                'reference_audio_path' => $this->resolveMedia(
+                    $request->file('reference_audio'),
+                    null,
+                    $request->boolean('keep_reference_audio'),
+                    'quizzes/reference-audio',
+                    $unused,
+                ),
                 'slug' => Quiz::uniqueSlug($request->string('title')->toString()),
                 'created_by' => $request->user()->id,
                 'question_count' => count($request->validated('questions')),
             ]);
 
-            [$questions, $unusedMedia] = $this->questionsWithMedia($request, $quiz);
+            [$questions, $questionMedia] = $this->questionsWithMedia($request, $quiz);
             $quiz->syncQuestions($questions);
 
-            return $unusedMedia;
+            return [...$unused, ...$questionMedia];
         });
 
         $this->deleteMedia($unusedMedia);
@@ -62,15 +81,24 @@ class QuizController extends Controller
     public function update(QuizRequest $request, Quiz $quiz): RedirectResponse
     {
         $unusedMedia = DB::transaction(function () use ($request, $quiz): array {
+            $unused = [];
+
             $quiz->update([
                 ...$this->quizAttributes($request),
+                'reference_audio_path' => $this->resolveMedia(
+                    $request->file('reference_audio'),
+                    $quiz->reference_audio_path,
+                    $request->boolean('keep_reference_audio'),
+                    'quizzes/reference-audio',
+                    $unused,
+                ),
                 'slug' => Quiz::uniqueSlug($request->string('title')->toString(), $quiz->id),
             ]);
 
-            [$questions, $unusedMedia] = $this->questionsWithMedia($request, $quiz);
+            [$questions, $questionMedia] = $this->questionsWithMedia($request, $quiz);
             $quiz->syncQuestions($questions);
 
-            return $unusedMedia;
+            return [...$unused, ...$questionMedia];
         });
 
         $this->deleteMedia($unusedMedia);
@@ -82,10 +110,13 @@ class QuizController extends Controller
 
     public function destroy(Quiz $quiz): RedirectResponse
     {
-        $this->deleteMedia($quiz->questions->flatMap(fn (QuizQuestion $question) => [
-            $question->audio_path,
-            $question->video_path,
-        ])->all());
+        $this->deleteMedia([
+            $quiz->reference_audio_path,
+            ...$quiz->questions->flatMap(fn (QuizQuestion $question) => [
+                $question->audio_path,
+                $question->video_path,
+            ])->all(),
+        ]);
 
         $quiz->delete();
 
@@ -106,6 +137,10 @@ class QuizController extends Controller
                 'category' => $quiz->category,
                 'difficulty' => $quiz->difficulty,
                 'description' => $quiz->description,
+                'video_embed' => $quiz->video_embed,
+                'guide_text' => $quiz->guide_text,
+                'reference_audio_url' => $this->mediaUrl($quiz->reference_audio_path),
+                'keep_reference_audio' => $quiz->reference_audio_path !== null,
                 'is_published' => $quiz->is_published,
                 'questions' => $quiz->questions->map(function ($question) {
                     $correct = array_search($question->answer, $question->choices, true);
@@ -134,7 +169,7 @@ class QuizController extends Controller
      */
     private function quizAttributes(QuizRequest $request): array
     {
-        return $request->safe()->except('questions');
+        return $request->safe()->except(['questions', 'reference_audio', 'keep_reference_audio']);
     }
 
     /**
@@ -194,44 +229,4 @@ class QuizController extends Controller
         return [$questions, $unused];
     }
 
-    /**
-     * @param  array<int, string>  $unused
-     */
-    private function resolveMedia(?UploadedFile $file, ?string $current, bool $keep, string $directory, array &$unused): ?string
-    {
-        if ($file instanceof UploadedFile) {
-            if ($current) {
-                $unused[] = $current;
-            }
-
-            return $file->store($directory, 'public');
-        }
-
-        if ($keep) {
-            return $current;
-        }
-
-        if ($current) {
-            $unused[] = $current;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param  array<int, string|null>  $paths
-     */
-    private function deleteMedia(array $paths): void
-    {
-        $paths = array_values(array_filter($paths));
-
-        if ($paths !== []) {
-            Storage::disk('public')->delete($paths);
-        }
-    }
-
-    private function mediaUrl(?string $path): ?string
-    {
-        return $path ? Storage::disk('public')->url($path) : null;
-    }
 }

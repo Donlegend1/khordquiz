@@ -12,12 +12,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'role', 'current_streak', 'longest_streak', 'last_practiced_on'])]
+#[Fillable(['name', 'email', 'password', 'role', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'country', 'skill_level'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    // Same three options as the mobile app's Edit Profile skill-level picker.
+    public const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 
     /**
      * Get the attributes that should be cast.
@@ -33,6 +36,7 @@ class User extends Authenticatable
             'current_streak' => 'integer',
             'longest_streak' => 'integer',
             'last_practiced_on' => 'date',
+            'daily_goal' => 'integer',
         ];
     }
 

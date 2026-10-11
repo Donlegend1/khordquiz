@@ -17,6 +17,9 @@ use Illuminate\Support\Str;
     'category',
     'difficulty',
     'description',
+    'video_embed',
+    'reference_audio_path',
+    'guide_text',
     'question_count',
     'is_published',
 ])]
@@ -25,23 +28,24 @@ class Quiz extends Model
     /** @use HasFactory<QuizFactory> */
     use HasFactory;
 
+    // Order matches the mobile app's own category list (app/(tabs)/quiz.tsx).
     public const CATEGORIES = [
         'Relative Pitch',
+        'Melodic Dictation',
         'Intervals',
         'Basic Triads',
-        'Melodic Dictation',
-        'Add 9 & b9',
+        'Add 9',
         '7th Degree Chords',
         'Secondary 7th Chords',
-        'Chord Progressions',
-        'Scales',
         '9th Degree Chords',
         'Secondary 9th Chords',
         '11th Degree Chords',
         'Secondary 11th Chords',
         '13th Degree Chords',
         'Extensions',
+        'Chord Progressions',
         'Modal Voicings',
+        'Scales',
     ];
 
     public const DIFFICULTIES = [

@@ -69,10 +69,8 @@ class DashboardController extends Controller
     private function memberDashboard(User $user): array
     {
         $attempts = QuizAttempt::query()->where('user_id', $user->id);
-        $completed = (clone $attempts)
-            ->where('status', QuizAttempt::STATUS_COMPLETED)
-            ->with('quiz')
-            ->get();
+        $allAttempts = (clone $attempts)->with('quiz')->get();
+        $completed = $allAttempts->where('status', QuizAttempt::STATUS_COMPLETED)->values();
 
         $accuracy = null;
 
@@ -104,25 +102,54 @@ class DashboardController extends Controller
                 'accuracy' => $accuracy,
             ],
             'resume' => $resume ? $this->attemptPayload($resume) : null,
+            // In-progress attempts already have their own "Continue where you
+            // left off" card above, so this is completed quizzes only.
             'recentQuizzes' => (clone $attempts)
+                ->where('status', QuizAttempt::STATUS_COMPLETED)
                 ->with('quiz.questions')
-                ->latest('last_played_at')
+                ->latest('completed_at')
                 ->limit(5)
                 ->get()
                 ->map(fn (QuizAttempt $attempt) => $this->attemptPayload($attempt))
                 ->values(),
-            'awards' => $user->awards()
-                ->latest('earned_at')
-                ->get()
-                ->map(fn ($award) => [
-                    'id' => $award->id,
-                    'title' => $award->title,
-                    'description' => $award->description,
-                    'kind' => $award->kind,
-                    'earned_at' => $award->earned_at->format('M j, Y'),
-                ])
-                ->values(),
+            'achievements' => $this->achievements($user, $allAttempts, $completed),
         ];
+    }
+
+    /**
+     * Same fixed catalog and unlock rules as the mobile app's Home screen
+     * (app/(tabs)/home.tsx). "Sharp Ear" is the one approximation: the app
+     * tracks every individual answer in order to find the longest correct
+     * streak, but the web only stores each attempt's final tally — so this
+     * counts a fully-correct attempt's question count as a confirmed run of
+     * that many correct answers in a row, rather than inventing a log that
+     * doesn't exist.
+     *
+     * @param  \Illuminate\Support\Collection<int, QuizAttempt>  $allAttempts
+     * @param  \Illuminate\Support\Collection<int, QuizAttempt>  $completed
+     * @return array<int, array<string, mixed>>
+     */
+    private function achievements(User $user, $allAttempts, $completed): array
+    {
+        $bestCorrectRun = $completed
+            ->filter(fn (QuizAttempt $a) => $a->correct_answers === $a->quiz->question_count)
+            ->max(fn (QuizAttempt $a) => $a->quiz->question_count) ?? 0;
+
+        $hasPerfectScore = $completed->contains(fn (QuizAttempt $a) => $a->correct_answers === $a->quiz->question_count);
+
+        $longestStreak = $user->longest_streak;
+
+        return collect([
+            ['name' => 'First Steps', 'detail' => 'Complete your first quiz', 'icon' => 'footsteps', 'current' => $allAttempts->isNotEmpty() ? 1 : 0, 'target' => 1],
+            ['name' => 'Sharp Ear', 'detail' => 'Answer 10 questions in a row correctly', 'icon' => 'ear', 'current' => $bestCorrectRun, 'target' => 10],
+            ['name' => 'Perfect Harmony', 'detail' => 'Score 100% on any quiz', 'icon' => 'musical-notes', 'current' => $hasPerfectScore ? 1 : 0, 'target' => 1],
+            ['name' => 'Week Warrior', 'detail' => 'Keep a 7-day streak', 'icon' => 'flame', 'current' => $longestStreak, 'target' => 7],
+            ['name' => 'Consistent Player', 'detail' => 'Keep a 14-day streak', 'icon' => 'calendar', 'current' => $longestStreak, 'target' => 14],
+            ['name' => 'Monthly Master', 'detail' => 'Keep a 30-day streak', 'icon' => 'trophy', 'current' => $longestStreak, 'target' => 30],
+        ])
+            ->map(fn ($a) => [...$a, 'current' => min($a['current'], $a['target'])])
+            ->values()
+            ->all();
     }
 
     /**

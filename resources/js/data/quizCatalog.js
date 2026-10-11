@@ -19,7 +19,6 @@ export const paths = [
                     'Harmonic 2nd',
                     'Harmonic 3rd',
                     'Harmonic 4th',
-                    'Harmonic 5th',
                     'Harmonic 6th',
                     'Harmonic 7th',
                     'Find the Key #1',
@@ -39,7 +38,7 @@ export const paths = [
             {
                 name: 'Melodic Dictation',
                 description: 'Listen to short melodies and identify the notes played.',
-                quizzes: ['3-Note Melody', '4-Note Melody', '5-Note Melody', 'Dual Tonic Melody', 'Chordal Melody'],
+                quizzes: ['3-Note Stepwise', '3-Note with Skips', '5-Note Melodies', 'Dual-tonic melodies', 'Chordal melodies'],
             },
         ],
     },
@@ -48,7 +47,7 @@ export const paths = [
         intro: 'Add colour and movement: sevenths, added ninths, progressions and the modes.',
         categories: [
             {
-                name: 'Add 9 & b9',
+                name: 'Add 9',
                 description: 'Hear the colour an added 9th or ♭9 brings to a chord.',
                 levels: 4,
             },

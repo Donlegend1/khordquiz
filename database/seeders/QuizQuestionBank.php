@@ -42,51 +42,7 @@ class QuizQuestionBank
                     'answer' => 'Bb',
                 ],
             ],
-            'Harmonic 5th' => [
-                [
-                    'prompt' => 'C and G sound together. What interval is this?',
-                    'choices' => ['Perfect 5th', 'Perfect 4th', 'Major 3rd', 'Tritone'],
-                    'answer' => 'Perfect 5th',
-                ],
-                [
-                    'prompt' => 'C and F sound together. What interval is this?',
-                    'choices' => ['Perfect 4th', 'Perfect 5th', 'Major 6th', 'Minor 7th'],
-                    'answer' => 'Perfect 4th',
-                ],
-                [
-                    'prompt' => 'Which pair is a harmonic perfect 5th?',
-                    'choices' => ['E–B', 'C–F', 'F–B', 'D–G#'],
-                    'answer' => 'E–B',
-                ],
-                [
-                    'prompt' => 'F and B sound together. What interval is this?',
-                    'choices' => ['Tritone', 'Perfect 5th', 'Perfect 4th', 'Major 3rd'],
-                    'answer' => 'Tritone',
-                ],
-            ],
-            'Diatonic Intervals' => [
-                [
-                    'prompt' => 'In C major, what is the interval from C up to E?',
-                    'choices' => ['Major 3rd', 'Minor 3rd', 'Perfect 4th', 'Major 2nd'],
-                    'answer' => 'Major 3rd',
-                ],
-                [
-                    'prompt' => 'In C major, what is the interval from E up to F?',
-                    'choices' => ['Minor 2nd', 'Major 2nd', 'Minor 3rd', 'Unison'],
-                    'answer' => 'Minor 2nd',
-                ],
-                [
-                    'prompt' => 'In C major, what is the interval from F up to B?',
-                    'choices' => ['Augmented 4th', 'Perfect 4th', 'Major 3rd', 'Perfect 5th'],
-                    'answer' => 'Augmented 4th',
-                ],
-                [
-                    'prompt' => 'In C major, what is the interval from G up to C?',
-                    'choices' => ['Perfect 4th', 'Perfect 5th', 'Major 6th', 'Minor 6th'],
-                    'answer' => 'Perfect 4th',
-                ],
-            ],
-            'Basic Triads — Level 1' => [
+            'Basic Triads · Level 1' => [
                 [
                     'prompt' => 'The notes C, E, and G form which triad?',
                     'choices' => ['Major', 'Minor', 'Diminished', 'Augmented'],
@@ -106,28 +62,6 @@ class QuizQuestionBank
                     'prompt' => 'The notes C, E, and G# form which triad?',
                     'choices' => ['Augmented', 'Major', 'Minor', 'Diminished'],
                     'answer' => 'Augmented',
-                ],
-            ],
-            '3-Note Melody' => [
-                [
-                    'prompt' => 'The melody is C, then D, then E. Which pattern is that?',
-                    'choices' => ['C–D–E', 'C–E–G', 'E–D–C', 'C–D–F'],
-                    'answer' => 'C–D–E',
-                ],
-                [
-                    'prompt' => 'You hear E, then D, then C. What is the contour?',
-                    'choices' => ['Falling by step', 'Rising by step', 'Leap up, then step', 'A repeated note'],
-                    'answer' => 'Falling by step',
-                ],
-                [
-                    'prompt' => 'The notes are C, E, G. What shape is the melody?',
-                    'choices' => ['Major triad up', 'Scale down', 'Two notes only', 'Chromatic run'],
-                    'answer' => 'Major triad up',
-                ],
-                [
-                    'prompt' => 'The notes are G, E, C. What shape is the melody?',
-                    'choices' => ['Major triad down', 'Major triad up', 'Minor triad up', 'A single leap of a 2nd'],
-                    'answer' => 'Major triad down',
                 ],
             ],
             'Cadences' => [
@@ -174,7 +108,7 @@ class QuizQuestionBank
                     'answer' => 'Mixolydian',
                 ],
             ],
-            'Chord Naming' => [
+            'Chord naming' => [
                 [
                     'prompt' => 'The chord tones are C, E, G, B, D. What is the chord?',
                     'choices' => ['Cmaj9', 'C7', 'Cm9', 'Cadd9'],
@@ -196,7 +130,7 @@ class QuizQuestionBank
                     'answer' => 'C9',
                 ],
             ],
-            'Modal Voicings — Level 1' => [
+            'Modal Voicings · Level 1' => [
                 [
                     'prompt' => 'A voicing with a raised 4th above the bass suggests which mode?',
                     'choices' => ['Lydian', 'Dorian', 'Mixolydian', 'Phrygian'],

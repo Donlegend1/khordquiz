@@ -24,6 +24,8 @@ class QuizRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $description = $this->input('description');
+        $videoEmbed = $this->input('video_embed');
+        $guideText = $this->input('guide_text');
         $questions = $this->input('questions', []);
 
         if (is_array($questions)) {
@@ -53,6 +55,9 @@ class QuizRequest extends FormRequest
         $this->merge([
             'is_published' => $this->boolean('is_published'),
             'description' => is_string($description) && trim($description) !== '' ? trim($description) : null,
+            'video_embed' => is_string($videoEmbed) && trim($videoEmbed) !== '' ? trim($videoEmbed) : null,
+            'guide_text' => is_string($guideText) && trim($guideText) !== '' ? trim($guideText) : null,
+            'keep_reference_audio' => $this->boolean('keep_reference_audio'),
             'questions' => $questions,
         ]);
     }
@@ -69,6 +74,10 @@ class QuizRequest extends FormRequest
             'category' => ['required', 'string', Rule::in(Quiz::CATEGORIES)],
             'difficulty' => ['required', 'string', Rule::in(Quiz::DIFFICULTIES)],
             'description' => ['nullable', 'string', 'max:500'],
+            'video_embed' => ['nullable', 'string', 'max:5000'],
+            'reference_audio' => ['nullable', 'file', 'mimes:mp3,wav,m4a,aac,ogg,webm', 'max:15360'],
+            'keep_reference_audio' => ['boolean'],
+            'guide_text' => ['nullable', 'string', 'max:3000'],
             'is_published' => ['boolean'],
             'questions' => ['required', 'array', 'min:1', 'max:30'],
             'questions.*.prompt' => ['required', 'string', 'max:300'],

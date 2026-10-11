@@ -57,13 +57,18 @@ function MediaField({ kind, label, question, index, error, onFile, onRemove }) {
     );
 }
 
-export default function Form({ quiz = null, categories, difficulties }) {
+export default function Form({ quiz = null, categories, difficulties, prefill = null }) {
     const editing = Boolean(quiz);
     const { data, setData, post, put, processing, errors } = useForm({
-        title: quiz?.title ?? '',
-        category: quiz?.category ?? categories[0],
+        title: quiz?.title ?? prefill?.title ?? '',
+        category: quiz?.category ?? prefill?.category ?? categories[0],
         difficulty: quiz?.difficulty ?? difficulties[0],
         description: quiz?.description ?? '',
+        // Not edited from this form — passed through unchanged so saving here
+        // doesn't clear what was set in the Audio Quiz editor.
+        video_embed: quiz?.video_embed ?? '',
+        guide_text: quiz?.guide_text ?? '',
+        keep_reference_audio: quiz?.keep_reference_audio ?? false,
         is_published: quiz?.is_published ?? true,
         questions: quiz?.questions?.length ? quiz.questions : [blankQuestion()],
     });
@@ -121,7 +126,7 @@ export default function Form({ quiz = null, categories, difficulties }) {
                         value={data.title}
                         onChange={(event) => setData('title', event.target.value)}
                         className={fieldClass(errors.title)}
-                        placeholder="Harmonic 5th"
+                        placeholder="Melodic Diatonic Intervals"
                         required
                     />
                     <InputError message={errors.title} className="mt-1.5" />
