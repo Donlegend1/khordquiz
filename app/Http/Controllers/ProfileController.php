@@ -34,7 +34,17 @@ class ProfileController extends Controller
     {
         // Email is locked from the Edit Profile form and isn't a validated
         // field here, so a crafted request can't smuggle a new one through.
-        $request->user()->fill($request->validated());
+        // The users table still has one `name` column (same as the signup
+        // flow), so first/last are combined before saving rather than
+        // adding new columns just for this form.
+        $data = $request->validated();
+        $name = trim($data['first_name'].' '.$data['last_name']);
+
+        $request->user()->fill([
+            'name' => $name,
+            'country' => $data['country'] ?? null,
+            'skill_level' => $data['skill_level'] ?? null,
+        ]);
         $request->user()->save();
 
         return Redirect::route('profile.edit');

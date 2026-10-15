@@ -19,6 +19,7 @@ use Illuminate\Support\Str;
     'description',
     'video_embed',
     'reference_audio_path',
+    'reference_audio_tracks',
     'guide_text',
     'question_count',
     'is_published',
@@ -62,6 +63,7 @@ class Quiz extends Model
         return [
             'question_count' => 'integer',
             'is_published' => 'boolean',
+            'reference_audio_tracks' => 'array',
         ];
     }
 

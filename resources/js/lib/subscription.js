@@ -4,7 +4,7 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 export const PLAN_INFO = {
     lifetime: { tier: 'Premium', label: 'Lifetime', price: '$99.99', subtitle: 'Pay once, use forever' },
     monthly: { tier: 'Standard', label: 'Monthly', price: '$5.99/month', subtitle: 'Billed every month' },
-    yearly: { tier: 'Premium', label: 'Yearly', price: '$49.99/year', originalPrice: '$70.99/year', discount: '30% OFF', subtitle: 'Billed every year' },
+    yearly: { tier: 'Standard', label: 'Yearly', price: '$49.99/year', originalPrice: '$70.99/year', discount: '30% OFF', subtitle: 'Billed every year' },
 };
 
 export const PLAN_ORDER = ['monthly', 'yearly', 'lifetime'];

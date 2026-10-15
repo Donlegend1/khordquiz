@@ -9,11 +9,29 @@ import { useEffect, useRef, useState } from 'react';
 // shortcut. Daily goal is the one row backed by a real column (users.daily_goal),
 // so it reuses the same endpoint as the Progress page's goal picker.
 const APPEARANCES = ['System', 'Light', 'Dark'];
-const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch'];
+const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 const INSTRUMENTS = ['Piano', 'Violin', 'Strings', 'Choir', 'Organ', 'Saxophone', 'Xylophone', 'Guitar', 'Voice', 'Synth'];
 const NOTATIONS = ['Solfège', 'Numbers'];
-const REMINDER_TIMES = ['8:00 AM', '12:00 PM', '6:00 PM', '7:00 PM', '9:00 PM'];
 const NOTIFICATION_DELIVERIES = ['Push', 'Email', 'Off'];
+
+// Reminder time deliberately diverges from the app's fixed 5-slot picker —
+// the member asked for any time, not just the app's preset list. Built as a
+// custom brand-styled picker rather than the native <input type="time">,
+// whose browser-default UI (blue accent, generic popup) didn't match the
+// rest of the app.
+const TIME_HOURS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, '0'));
+const TIME_MINUTES = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'));
+const TIME_PERIODS = ['AM', 'PM'];
+
+function parseTime12(value) {
+    const match = /^(\d{1,2}):(\d{2})\s*(AM|PM)$/i.exec((value ?? '').trim());
+    if (!match) return { hour: '07', minute: '00', period: 'PM' };
+    return { hour: match[1].padStart(2, '0'), minute: match[2], period: match[3].toUpperCase() };
+}
+
+function formatTime12({ hour, minute, period }) {
+    return `${parseInt(hour, 10)}:${minute} ${period}`;
+}
 
 function icon(paths, viewBox = '0 0 24 24') {
     return function Icon(props) {
@@ -102,7 +120,12 @@ function Section({ title, children }) {
     return (
         <div className="mb-6">
             <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">{title}</p>
-            <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">{children}</div>
+            {/* No overflow-hidden here — PickerRow's dropdown needs to overflow
+                below the card, and clipping it was cutting off "Light"/"Dark".
+                Rows have no background of their own (only a hover highlight),
+                so skipping the corner-clip costs only a faint square corner on
+                a hovered first/last row — worth it to keep the dropdown visible. */}
+            <div className="rounded-2xl border border-black/5 bg-white">{children}</div>
         </div>
     );
 }
@@ -151,10 +174,102 @@ function Toggle({ value, onChange, disabled }) {
                 e.stopPropagation();
                 onChange(!value);
             }}
-            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-150 ${value ? 'bg-brand' : 'bg-neutral-200'} ${disabled ? 'cursor-not-allowed' : ''}`}
+            className={`inline-flex h-7 w-12 shrink-0 items-center rounded-full p-1 transition-colors duration-150 ${value ? 'bg-brand' : 'bg-neutral-200'} ${disabled ? 'cursor-not-allowed' : ''}`}
         >
-            <span className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-150 ${value ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span className={`h-5 w-5 rounded-full bg-white shadow transition-transform duration-150 ${value ? 'translate-x-5' : 'translate-x-0'}`} />
         </button>
+    );
+}
+
+// Row height and the column's vertical padding must agree: padding equals
+// half the viewport height minus half a row, so the first and last options
+// can still scroll all the way to the centered selection band.
+const TIME_ROW_HEIGHT = 36;
+const TIME_VIEWPORT_HEIGHT = 180;
+const TIME_COLUMN_PADDING = (TIME_VIEWPORT_HEIGHT - TIME_ROW_HEIGHT) / 2;
+
+function TimeColumn({ label, options, value, onChange }) {
+    const selectedRef = useRef(null);
+
+    useEffect(() => {
+        selectedRef.current?.scrollIntoView({ block: 'center' });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    return (
+        <div className="flex flex-1 flex-col">
+            <p className="border-b border-black/5 bg-neutral-50/80 py-2 text-center text-[10px] font-bold uppercase tracking-wider text-neutral-400">
+                {label}
+            </p>
+            <div className="relative" style={{ height: TIME_VIEWPORT_HEIGHT }}>
+                <div
+                    className="pointer-events-none absolute inset-x-1.5 top-1/2 -translate-y-1/2 rounded-lg bg-brand/[0.08] ring-1 ring-inset ring-brand/20"
+                    style={{ height: TIME_ROW_HEIGHT }}
+                />
+                <div
+                    className="h-full snap-y snap-mandatory overflow-y-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                    style={{
+                        paddingBlock: TIME_COLUMN_PADDING,
+                        maskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 25%, black 75%, transparent)',
+                    }}
+                >
+                    {options.map((option) => (
+                        <button
+                            key={option}
+                            ref={option === value ? selectedRef : null}
+                            type="button"
+                            onClick={(event) => {
+                                onChange(option);
+                                event.currentTarget.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                            }}
+                            className={`flex w-full snap-center items-center justify-center text-sm font-bold tabular-nums transition-colors duration-150 ${
+                                option === value ? 'text-brand' : 'text-neutral-400 hover:text-neutral-600'
+                            }`}
+                            style={{ height: TIME_ROW_HEIGHT }}
+                        >
+                            {option}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function TimeRow({ icon: Icon, label, value, onChange, disabled }) {
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+    const parsed = parseTime12(value);
+
+    useEffect(() => {
+        if (!open) return;
+        const onPointerDown = (event) => {
+            if (ref.current && !ref.current.contains(event.target)) setOpen(false);
+        };
+        document.addEventListener('mousedown', onPointerDown);
+        return () => document.removeEventListener('mousedown', onPointerDown);
+    }, [open]);
+
+    function update(part, partValue) {
+        onChange(formatTime12({ ...parsed, [part]: partValue }));
+    }
+
+    return (
+        <div className="relative" ref={ref}>
+            <RowShell icon={Icon} label={label} disabled={disabled} onClick={() => !disabled && setOpen((v) => !v)}>
+                <span className="shrink-0 text-sm text-neutral-500">{value}</span>
+                <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
+            </RowShell>
+
+            {open && (
+                <div className="absolute right-4 top-full z-20 mt-1.5 flex w-60 divide-x divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-xl">
+                    <TimeColumn label="Hour" options={TIME_HOURS} value={parsed.hour} onChange={(v) => update('hour', v)} />
+                    <TimeColumn label="Min" options={TIME_MINUTES} value={parsed.minute} onChange={(v) => update('minute', v)} />
+                    <TimeColumn label="AM/PM" options={TIME_PERIODS} value={parsed.period} onChange={(v) => update('period', v)} />
+                </div>
+            )}
+        </div>
     );
 }
 
@@ -342,7 +457,7 @@ export default function Settings({ dailyGoal, goalOptions }) {
                     <RowShell first icon={BellIcon} label="Practice reminders" hint="A daily nudge to keep practising">
                         <Toggle value={reminders} onChange={setReminders} />
                     </RowShell>
-                    <PickerRow icon={ClockIcon} label="Reminder time" options={REMINDER_TIMES} value={reminderTime} onChange={setReminderTime} disabled={!reminders} />
+                    <TimeRow icon={ClockIcon} label="Reminder time" value={reminderTime} onChange={setReminderTime} disabled={!reminders} />
                     <RowShell icon={FlameIcon} label="Streak alerts" hint="Before your streak runs out">
                         <Toggle value={streakAlerts} onChange={setStreakAlerts} />
                     </RowShell>

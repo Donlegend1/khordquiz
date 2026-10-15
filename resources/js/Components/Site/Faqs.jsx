@@ -98,15 +98,8 @@ const groups = [
             {
                 question: 'What payment methods are supported?',
                 answer: [
-                    'KhordQuiz may process payments through Stripe, PayPal, or Apple In-App Purchase, depending on the platform and purchase method available to you.',
+                    'KhordQuiz may process payments through Stripe, PayPal, or In-App Purchase, depending on the platform and purchase method available to you.',
                     'Available payment methods may vary depending on your country, currency, platform, and other factors.',
-                ],
-            },
-            {
-                question: "What happens if I'm charged but don't receive access?",
-                answer: [
-                    `Contact us at ${SUPPORT_EMAIL} with your KhordQuiz account email and relevant purchase or transaction information, and we'll investigate the issue.`,
-                    'If the purchase was made through Apple, Stripe, or PayPal, we may also need information identifying the relevant transaction so that we can investigate and verify your purchase.',
                 ],
             },
             {

@@ -1,6 +1,47 @@
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
+function LogOutIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <path d="M15 17l5-5-5-5M20 12H9" />
+            <path d="M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" />
+        </svg>
+    );
+}
+
+function LogOutModal({ open, onClose }) {
+    if (!open) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4" onClick={onClose}>
+            <div className="w-full max-w-sm rounded-2xl bg-white p-6" onClick={(e) => e.stopPropagation()}>
+                <div className="flex flex-col items-center text-center">
+                    <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-brand">
+                        <LogOutIcon className="h-5 w-5" />
+                    </span>
+                    <p className="mt-3 text-base font-bold text-neutral-900">Log out?</p>
+                    <p className="mt-1 text-sm text-neutral-500">You&apos;ll need to sign in again to keep training. You can come back any time.</p>
+                </div>
+
+                <div className="mt-5 space-y-2">
+                    <Link
+                        href={route('logout')}
+                        method="post"
+                        as="button"
+                        className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
+                    >
+                        <LogOutIcon className="h-4 w-4" />
+                        Log Out
+                    </Link>
+                    <button type="button" onClick={onClose} className="w-full rounded-xl bg-neutral-100 py-3 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-200">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 function initials(name) {
     return name
         .split(' ')
@@ -35,6 +76,7 @@ const adminNav = [
         route: 'admin.audio-quiz.index',
         alsoCurrent: ['admin.audio-quiz.show', 'admin.audio-quiz.lesson', 'admin.quizzes.index', 'admin.quizzes.edit', 'admin.quizzes.create'],
     },
+    { label: 'Users', icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
 ];
 
 export default function AppShell({ title, eyebrow, intro, action, children }) {
@@ -42,6 +84,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
     const user = auth.user;
     const isAdmin = user.role === 'admin';
     const [open, setOpen] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
 
     // Lets the nav items animate in once, right after the shell mounts, instead of
     // appearing fully formed — a small touch that makes each page load feel considered.
@@ -104,11 +147,9 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
 
                         <div className="my-1 border-t border-black/5" />
 
-                        <Link
-                            href={route('logout')}
-                            method="post"
-                            as="button"
-                            onClick={close}
+                        <button
+                            type="button"
+                            onClick={() => setLoggingOut(true)}
                             style={{ transitionDelay: mounted ? `${items.length * 35}ms` : '0ms' }}
                             className={`group flex w-full items-center gap-3 rounded-xl border border-transparent px-2.5 py-2 text-left text-sm font-semibold text-brand transition-all duration-200 ease-out hover:bg-neutral-50 ${
                                 mounted ? 'translate-x-0 opacity-100' : '-translate-x-1.5 opacity-0'
@@ -118,7 +159,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                                 <NavIcon name="logout" />
                             </span>
                             Log out
-                        </Link>
+                        </button>
                     </div>
                 </nav>
 
@@ -186,6 +227,8 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                     {children}
                 </main>
             </div>
+
+            <LogOutModal open={loggingOut} onClose={() => setLoggingOut(false)} />
         </div>
     );
 }

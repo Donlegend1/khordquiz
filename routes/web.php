@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\Admin\AudioQuizController;
 use App\Http\Controllers\Admin\QuizController as AdminQuizController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
@@ -50,19 +52,24 @@ Route::delete('/settings/progress', [SettingsController::class, 'resetProgress']
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz', [QuizController::class, 'categories'])->name('quiz.categories');
-    Route::get('/quiz/{category}', [QuizController::class, 'category'])->name('quiz.category');
     Route::get('/quiz/play/{quiz:slug}', [QuizController::class, 'preview'])->name('quiz.preview');
     Route::post('/quiz/play/{quiz:slug}/start', [QuizController::class, 'start'])->name('quiz.start');
     Route::get('/quiz/play/{quiz:slug}/question', [QuizController::class, 'play'])->name('quiz.play');
     Route::post('/quiz/play/{quiz:slug}/answer', [QuizController::class, 'answer'])->name('quiz.answer');
+    Route::post('/quiz/play/{quiz:slug}/next', [QuizController::class, 'next'])->name('quiz.next');
+    Route::post('/quiz/play/{quiz:slug}/cancel', [QuizController::class, 'cancel'])->name('quiz.cancel');
     Route::get('/quiz/play/{quiz:slug}/results', [QuizController::class, 'results'])->name('quiz.results');
+    Route::post('/quiz/play/{quiz:slug}/bookmark', [QuizController::class, 'toggleBookmark'])->name('quiz.bookmark');
+    Route::post('/quiz/play/{quiz:slug}/mark-completed', [QuizController::class, 'toggleCompleted'])->name('quiz.mark-completed');
+    // Registered after /quiz/play/... so "play" is never swallowed as a category slug.
+    Route::get('/quiz/{category}/{quiz?}', [QuizController::class, 'category'])->name('quiz.category');
 });
 
 // Previews built with sample data — the real features aren't built yet.
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/for-you', fn () => Inertia::render('Member/ForYou'))->name('for-you');
     Route::get('/mistakes', fn () => Inertia::render('Member/Mistakes'))->name('mistakes');
-    Route::get('/saved', fn () => Inertia::render('Member/Saved'))->name('saved');
+    Route::get('/saved', [QuizController::class, 'saved'])->name('saved');
     Route::get('/challenges', fn () => Inertia::render('Member/Challenges'))->name('challenges');
     Route::get('/leaderboard', fn () => Inertia::render('Member/Leaderboard'))->name('leaderboard');
     Route::get('/account', fn () => Inertia::render('Member/Account'))->name('account');
@@ -72,6 +79,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/support', fn () => Inertia::render('Member/Support'))->name('support');
     Route::get('/help-center', fn () => Inertia::render('Member/HelpCenter'))->name('help-center');
     Route::get('/support-email', fn () => Inertia::render('Member/SupportEmail'))->name('support-email');
+    Route::post('/support-email', [SupportController::class, 'store'])->name('support-email.store');
 });
 
 Route::middleware(['auth', 'verified', 'admin'])
@@ -82,6 +90,8 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::get('/audio-quiz/{category}', [AudioQuizController::class, 'show'])->name('audio-quiz.show');
         Route::get('/audio-quiz/{category}/{lesson}', [AudioQuizController::class, 'show'])->name('audio-quiz.lesson');
         Route::post('/audio-quiz/lessons/{quiz}/settings', [AudioQuizController::class, 'updateSettings'])->name('audio-quiz.settings.update');
+        Route::post('/audio-quiz/lessons/{quiz}/reference-audio', [AudioQuizController::class, 'storeReferenceAudioTrack'])->name('audio-quiz.reference-audio.store');
+        Route::delete('/audio-quiz/lessons/{quiz}/reference-audio/{track}', [AudioQuizController::class, 'destroyReferenceAudioTrack'])->name('audio-quiz.reference-audio.destroy');
         Route::post('/audio-quiz/lessons/{quiz}/questions', [AudioQuizController::class, 'storeQuestion'])->name('audio-quiz.questions.store');
         Route::post('/audio-quiz/lessons/{quiz}/questions/bulk', [AudioQuizController::class, 'storeBulkQuestions'])->name('audio-quiz.questions.bulk-store');
         Route::delete('/audio-quiz/questions/{question}', [AudioQuizController::class, 'destroyQuestion'])->name('audio-quiz.questions.destroy');
@@ -93,6 +103,12 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::get('/quizzes/{quiz}/edit', [AdminQuizController::class, 'edit'])->name('quizzes.edit');
         Route::put('/quizzes/{quiz}', [AdminQuizController::class, 'update'])->name('quizzes.update');
         Route::delete('/quizzes/{quiz}', [AdminQuizController::class, 'destroy'])->name('quizzes.destroy');
+
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+        Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
+        Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
+        Route::post('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
     });
 
 Route::middleware('auth')->group(function () {

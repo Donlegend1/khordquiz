@@ -5,6 +5,7 @@ const navLinks = [
     { label: 'Features', href: '/#features' },
     { label: 'How it works', href: '/#how-it-works' },
     { label: 'Categories', href: '/#categories' },
+    { label: 'Pricing', href: '/#pricing' },
     { label: 'FAQs', href: '/#faqs' },
     { label: 'Contact', href: '/#contact' },
 ];
@@ -58,10 +59,10 @@ export default function SiteHeader() {
                         Sign in
                     </a>
                     <a
-                        href="/#download"
+                        href="/#pricing"
                         className="rounded-lg border border-brand bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-dark"
                     >
-                        Start Training
+                        Start Free
                     </a>
                 </div>
 
@@ -145,12 +146,12 @@ export default function SiteHeader() {
                         Sign in
                     </a>
                     <a
-                        href="/#download"
+                        href="/#pricing"
                         onClick={close}
                         tabIndex={menuOpen ? 0 : -1}
                         className="rounded-xl bg-brand px-4 py-3.5 text-center text-base font-medium text-white transition hover:bg-brand-dark"
                     >
-                        Start Training
+                        Start Free
                     </a>
                 </div>
             </div>

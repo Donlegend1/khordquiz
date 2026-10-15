@@ -112,11 +112,21 @@ function CountryPicker({ value, onChange }) {
     );
 }
 
+// The users table has one `name` column, so an existing name is split on its
+// first space into first/last for these two fields — the same shape the
+// signup form already collects, just combined back into `name` on save.
+function splitName(name) {
+    const [first, ...rest] = (name ?? '').trim().split(/\s+/).filter(Boolean);
+    return { first: first ?? '', last: rest.join(' ') };
+}
+
 export default function EditProfile() {
     const { auth } = usePage().props;
     const user = auth.user;
+    const { first, last } = splitName(user.name);
     const { data, setData, patch, processing, errors } = useForm({
-        name: user.name ?? '',
+        first_name: first,
+        last_name: last,
         email: user.email ?? '',
         country: user.country ?? '',
         skill_level: user.skill_level ?? 'Beginner',
@@ -134,20 +144,32 @@ export default function EditProfile() {
             <form onSubmit={submit} className="mx-auto max-w-xl space-y-6">
                 <div className="flex flex-col items-center gap-2 py-2">
                     <span className="flex h-20 w-20 items-center justify-center rounded-full bg-brand/10 text-2xl font-bold text-brand ring-4 ring-white">
-                        {initials(data.name || user.name)}
+                        {initials(`${data.first_name} ${data.last_name}`.trim() || user.name)}
                     </span>
                 </div>
 
                 <div className="grid gap-5 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                    <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Name</label>
-                        <input
-                            type="text"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            className={fieldClass}
-                        />
-                        <InputError message={errors.name} className="mt-1.5" />
+                    <div className="grid gap-5 sm:grid-cols-2">
+                        <div>
+                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">First name</label>
+                            <input
+                                type="text"
+                                value={data.first_name}
+                                onChange={(e) => setData('first_name', e.target.value)}
+                                className={fieldClass}
+                            />
+                            <InputError message={errors.first_name} className="mt-1.5" />
+                        </div>
+                        <div>
+                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Last name</label>
+                            <input
+                                type="text"
+                                value={data.last_name}
+                                onChange={(e) => setData('last_name', e.target.value)}
+                                className={fieldClass}
+                            />
+                            <InputError message={errors.last_name} className="mt-1.5" />
+                        </div>
                     </div>
 
                     <div>

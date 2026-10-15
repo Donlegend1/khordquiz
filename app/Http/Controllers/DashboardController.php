@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+use App\Models\QuizMark;
 use App\Models\User;
 use App\Role;
 use Illuminate\Http\Request;
@@ -31,6 +32,14 @@ class DashboardController extends Controller
     private function adminDashboard(): array
     {
         $members = User::query()->where('role', Role::Member);
+        $completedAttempts = QuizAttempt::query()->where('status', QuizAttempt::STATUS_COMPLETED)->with('quiz')->get();
+
+        $avgAccuracy = null;
+        if ($completedAttempts->isNotEmpty()) {
+            $avgAccuracy = (int) round(
+                $completedAttempts->sum(fn (QuizAttempt $attempt) => $attempt->correct_answers / max(1, $attempt->quiz->question_count)) / $completedAttempts->count() * 100
+            );
+        }
 
         return [
             'stats' => [
@@ -38,7 +47,11 @@ class DashboardController extends Controller
                 'quizzes' => Quiz::query()->count(),
                 'publishedQuizzes' => Quiz::query()->where('is_published', true)->count(),
                 'attempts' => QuizAttempt::query()->count(),
+                'completedAttempts' => $completedAttempts->count(),
+                'avgAccuracy' => $avgAccuracy,
                 'activeStreaks' => (clone $members)->where('current_streak', '>', 0)->count(),
+                'newSignups' => (clone $members)->where('created_at', '>=', now()->subDays(7))->count(),
+                'suspended' => User::query()->whereNotNull('suspended_at')->count(),
             ],
             'recentStreaks' => User::query()
                 ->where('role', Role::Member)
@@ -52,6 +65,18 @@ class DashboardController extends Controller
                     'current_streak' => $member->current_streak,
                     'longest_streak' => $member->longest_streak,
                     'last_practiced_on' => $this->practicedLabel($member->last_practiced_on),
+                ])
+                ->values(),
+            'recentSignups' => User::query()
+                ->where('role', Role::Member)
+                ->latest()
+                ->limit(5)
+                ->get()
+                ->map(fn (User $member) => [
+                    'id' => $member->id,
+                    'name' => $member->name,
+                    'email' => $member->email,
+                    'joined_ago' => $member->created_at->diffForHumans(),
                 ])
                 ->values(),
             'quizzes' => Quiz::query()
@@ -90,6 +115,14 @@ class DashboardController extends Controller
             ->latest('last_played_at')
             ->first();
 
+        // The most recently completed attempt whose quiz still has real
+        // questions — skips over any quiz that's since lost its content (a
+        // catalog edit emptied it, etc.) so this never links to a dead end.
+        $continuePracticing = $resume ? null : $completed
+            ->filter(fn (QuizAttempt $a) => $a->quiz->question_count > 0)
+            ->sortByDesc('completed_at')
+            ->first();
+
         return [
             'streak' => [
                 'current' => $user->current_streak,
@@ -102,6 +135,7 @@ class DashboardController extends Controller
                 'accuracy' => $accuracy,
             ],
             'resume' => $resume ? $this->attemptPayload($resume) : null,
+            'continuePracticing' => $continuePracticing ? $this->attemptPayload($continuePracticing) : null,
             // In-progress attempts already have their own "Continue where you
             // left off" card above, so this is completed quizzes only.
             'recentQuizzes' => (clone $attempts)
@@ -113,6 +147,7 @@ class DashboardController extends Controller
                 ->map(fn (QuizAttempt $attempt) => $this->attemptPayload($attempt))
                 ->values(),
             'achievements' => $this->achievements($user, $allAttempts, $completed),
+            'savedCount' => QuizMark::query()->where('user_id', $user->id)->where('bookmarked', true)->count(),
         ];
     }
 
@@ -171,6 +206,7 @@ class DashboardController extends Controller
             'last_played_at' => $attempt->last_played_at->diffForHumans(),
             'quiz' => [
                 'id' => $quiz->id,
+                'slug' => $quiz->slug,
                 'title' => $quiz->title,
                 'category' => $quiz->category,
                 'difficulty' => $quiz->difficulty,

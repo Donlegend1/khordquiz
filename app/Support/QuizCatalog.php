@@ -97,4 +97,59 @@ class QuizCatalog
     {
         return self::all()[$category] ?? [];
     }
+
+    /**
+     * Sounds a quiz can be played with — ported from the mobile app's
+     * instrumentsFor() (src/lib/quiz-catalog.ts). Relative Pitch and Melodic
+     * Dictation share one set, chord categories share another, and the
+     * Find the Key quizzes use types of recording instead of instruments.
+     *
+     * @return list<string>
+     */
+    public static function soundsFor(string $category, string $title): array
+    {
+        $defaultInstruments = ['Piano', 'Violin', 'Saxophone', 'Guitar', 'Synth'];
+        $singleLineInstruments = ['Piano', 'Violin', 'Saxophone', 'Xylophone', 'Guitar', 'Voice'];
+        $intervalInstruments = ['Piano', 'Violin', 'Strings', 'Guitar', 'Xylophone', 'Choir'];
+        $chordInstruments = ['Piano', 'Guitar', 'Strings', 'Choir', 'Organ', 'Xylophone'];
+        $keyFindingSounds = ['Monophonic', 'Vocal Stems', 'Instruments', 'Ensemble', 'Full Song', 'All'];
+
+        // 'All' mixes every type of recording across the quiz.
+        $soundsByQuiz = [
+            'Find the Key #1' => $keyFindingSounds,
+            'Find the Key #2' => $keyFindingSounds,
+            // Harmonic intervals sit in Relative Pitch but need two notes at
+            // once, so no single-line instruments like Voice.
+            'Harmonic Second' => $intervalInstruments,
+            'Harmonic Third' => $intervalInstruments,
+            'Harmonic Fourth' => $intervalInstruments,
+            'Harmonic Sixth' => $intervalInstruments,
+            'Harmonic Seventh' => $intervalInstruments,
+        ];
+
+        if (isset($soundsByQuiz[$title])) {
+            return $soundsByQuiz[$title];
+        }
+
+        $instrumentsByCategory = [
+            'Basic Triads' => $chordInstruments,
+            'Add 9' => $chordInstruments,
+            '7th Degree Chords' => $chordInstruments,
+            'Secondary 7th Chords' => $chordInstruments,
+            '9th Degree Chords' => $chordInstruments,
+            'Secondary 9th Chords' => $chordInstruments,
+            '11th Degree Chords' => $chordInstruments,
+            'Secondary 11th Chords' => $chordInstruments,
+            '13th Degree Chords' => $chordInstruments,
+            'Extensions' => $chordInstruments,
+            'Chord Progressions' => $chordInstruments,
+            'Modal Voicings' => $chordInstruments,
+            'Intervals' => $intervalInstruments,
+            'Melodic Dictation' => $singleLineInstruments,
+            'Relative Pitch' => $singleLineInstruments,
+            'Scales' => $singleLineInstruments,
+        ];
+
+        return $instrumentsByCategory[$category] ?? $defaultInstruments;
+    }
 }

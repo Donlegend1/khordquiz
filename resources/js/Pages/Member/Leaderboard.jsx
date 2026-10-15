@@ -1,5 +1,5 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head, usePage } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
 // Sample leaderboard, same as the mobile app's own Rank tab (see
@@ -102,7 +102,6 @@ function PodiumSpot({ entry, order }) {
 }
 
 export default function Leaderboard() {
-    const { auth } = usePage().props;
     const [period, setPeriod] = useState('week');
     const board = PERIODS[period];
     const topPercent = Math.max(1, Math.ceil((board.you.rank / board.total) * 100));
@@ -169,19 +168,6 @@ export default function Leaderboard() {
                         <span className="shrink-0 text-sm font-extrabold tabular-nums text-neutral-900">{row.points.toLocaleString('en-US')}</span>
                     </li>
                 ))}
-                <li className="flex items-center gap-3 rounded-xl bg-rose-50 px-3 py-3">
-                    <span className="w-6 shrink-0 text-center text-sm font-bold tabular-nums text-neutral-400">{board.you.rank}</span>
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-neutral-900 text-xs font-extrabold text-white">
-                        You
-                    </span>
-                    <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-extrabold text-neutral-900">{auth.user.name}</p>
-                        <p className="truncate text-xs text-neutral-500">
-                            {board.you.accuracy}% accuracy &middot; {board.you.streak}-day streak
-                        </p>
-                    </div>
-                    <span className="shrink-0 text-sm font-extrabold tabular-nums text-brand">{board.you.points.toLocaleString('en-US')}</span>
-                </li>
             </ul>
         </AppShell>
     );

@@ -3,7 +3,7 @@ import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
 // Quick picks that fill in the subject.
-const topics = ['General question', 'Bug report', 'Billing & purchases', 'Account help'];
+const topics = ['General question', 'Bug report', 'Billing', 'Quiz issue', 'Account help'];
 
 export default function Contact() {
     return (

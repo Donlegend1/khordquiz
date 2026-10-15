@@ -173,7 +173,7 @@ function RankedQuizList({ items, tone }) {
 
 export default function Progress({
     overall,
-    categoriesDone,
+    quizzesCompleted,
     streak,
     goal,
     goalOptions,
@@ -206,7 +206,7 @@ export default function Progress({
                 <div className="mt-5 grid grid-cols-3 gap-3">
                     <StatTile icon={FlameIcon} value={streak} label="Days streak" />
                     <StatTile icon={NoteIcon} value={overall.answered} label="Questions answered" />
-                    <StatTile icon={TrophyIcon} value={categoriesDone.done} label="Categories done" />
+                    <StatTile icon={TrophyIcon} value={quizzesCompleted.done} label="Quizzes done" />
                 </div>
             </section>
 
@@ -318,7 +318,7 @@ export default function Progress({
             </section>
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <h2 className="text-lg font-semibold">Recent quizzes</h2>
+                <h2 className="text-lg font-semibold">Completed quizzes</h2>
 
                 {recentQuizzes.length === 0 ? (
                     <p className="mt-3 text-sm text-neutral-500">No completed quizzes yet. Finish one and it&apos;ll show up here.</p>

@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { PLAN_INFO, sampleSubscription } from '@/lib/subscription';
 import { Head, Link, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 function DiamondIcon(props) {
     return (
@@ -9,6 +10,59 @@ function DiamondIcon(props) {
             <path d="M11 3 8 9l4 12 4-12-3-6" />
             <path d="M2 9h20" />
         </svg>
+    );
+}
+
+function StarIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+            <path d="M12 2.5l2.9 6.4 6.9.7-5.2 4.7 1.5 6.8L12 17.8 5.9 21.1l1.5-6.8-5.2-4.7 6.9-.7L12 2.5z" />
+        </svg>
+    );
+}
+
+function LogOutIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <path d="M15 17l5-5-5-5M20 12H9" />
+            <path d="M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" />
+        </svg>
+    );
+}
+
+function SignOutModal({ open, onClose, user }) {
+    if (!open) return null;
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4" onClick={onClose}>
+            <div className="w-full max-w-sm rounded-2xl bg-white p-6" onClick={(e) => e.stopPropagation()}>
+                <div className="flex flex-col items-center text-center">
+                    <span className="flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-brand">
+                        <LogOutIcon className="h-7 w-7" />
+                    </span>
+                    <p className="mt-3 text-xl font-extrabold text-neutral-900">Sign out?</p>
+                    <p className="mt-1 text-sm text-neutral-500">You&apos;ll need to sign in again to keep training. You can come back any time.</p>
+                </div>
+
+                <div className="mt-5 flex items-center gap-3 rounded-2xl bg-neutral-50 p-3.5">
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-sm font-bold text-brand">{initials(user.name)}</span>
+                    <div className="min-w-0 flex-1">
+                        <p className="text-xs font-semibold text-neutral-500">Signed in as</p>
+                        <p className="truncate text-sm font-bold text-neutral-900">{user.name}</p>
+                        <p className="truncate text-xs text-neutral-500">{user.email}</p>
+                    </div>
+                </div>
+
+                <div className="mt-5 space-y-2">
+                    <Link href={route('logout')} method="post" as="button" className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90">
+                        <LogOutIcon className="h-4 w-4" />
+                        Sign Out
+                    </Link>
+                    <button type="button" onClick={onClose} className="w-full rounded-xl bg-neutral-100 py-3.5 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-200">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
 
@@ -70,6 +124,7 @@ export default function Account() {
     const user = auth.user;
     const sub = sampleSubscription();
     const plan = PLAN_INFO[sub.planId];
+    const [signingOut, setSigningOut] = useState(false);
 
     return (
         <AppShell eyebrow="Member" title="Account" intro="An overview of your profile and subscription.">
@@ -84,9 +139,13 @@ export default function Account() {
                         <p className="text-xl font-extrabold text-neutral-900">{user.name}</p>
                         <p className="text-sm text-neutral-500">{user.email}</p>
                     </div>
-                    <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-3 py-1 text-xs font-bold text-amber-700">
-                        <DiamondIcon className="h-3 w-3" />
-                        Premium
+                    <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                            plan.tier === 'Premium' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'
+                        }`}
+                    >
+                        {plan.tier === 'Premium' ? <DiamondIcon className="h-3 w-3" /> : <StarIcon className="h-3 w-3" />}
+                        {plan.tier}
                     </span>
                 </div>
 
@@ -96,7 +155,11 @@ export default function Account() {
                 <div className="rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
+                            {plan.tier === 'Premium' ? (
+                                <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
+                            ) : (
+                                <StarIcon className="h-[18px] w-[18px] text-slate-300" />
+                            )}
                             <p className="text-[17px] font-extrabold">
                                 {plan.tier} · {plan.label}
                             </p>
@@ -205,17 +268,14 @@ export default function Account() {
                 <div>
                     <SectionLabel title="Account" />
                     <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">
-                        <Link href={route('logout')} method="post" as="button" className="block w-full text-left transition-colors duration-150 hover:bg-rose-50">
+                        <button type="button" onClick={() => setSigningOut(true)} className="block w-full text-left transition-colors duration-150 hover:bg-rose-50">
                             <div className="flex items-center gap-3 px-4 py-3.5">
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-brand">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                                        <path d="M15 17l5-5-5-5M20 12H9" />
-                                        <path d="M13 4H6a2 2 0 00-2 2v12a2 2 0 002 2h7" />
-                                    </svg>
+                                    <LogOutIcon className="h-4 w-4" />
                                 </span>
                                 <span className="text-sm font-semibold text-brand">Sign out</span>
                             </div>
-                        </Link>
+                        </button>
                         <Link href={route('account.delete')} className="block w-full text-left transition-colors duration-150 hover:bg-rose-50">
                             <div className="flex items-center gap-3 border-t border-black/5 px-4 py-3.5">
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-brand">
@@ -231,6 +291,8 @@ export default function Account() {
 
                 <p className="pb-2 text-center text-xs text-neutral-400">KhordQuiz web</p>
             </div>
+
+            <SignOutModal open={signingOut} onClose={() => setSigningOut(false)} user={user} />
         </AppShell>
     );
 }
