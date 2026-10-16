@@ -1,0 +1,1857 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "KhordQuiz API",
+        "description": "API for the KhordQuiz mobile app. Sign in to receive a Sanctum token, then send it as a Bearer token. Catalog, plans, and help are public.",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Create an account",
+                "description": "Creates a member, records that the terms were accepted, and returns a token for profile setup.",
+                "operationId": "register",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Account created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign in",
+                "operationId": "login",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Signed in",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid credentials or validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/user": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Current user",
+                "operationId": "currentUser",
+                "responses": {
+                    "200": {
+                        "description": "Current user",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or revoked token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Sign out",
+                "description": "Revokes the token used for this request. Other devices stay signed in.",
+                "operationId": "logout",
+                "responses": {
+                    "200": {
+                        "description": "Signed out",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or revoked token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/profile": {
+            "patch": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Update profile",
+                "description": "Used after registration to save the avatar and skill level. Send only the fields that should change.",
+                "operationId": "updateProfile",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateProfileRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Profile updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Missing or revoked token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/forgot-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Email a reset code",
+                "description": "Sends a 6-digit code when the email belongs to an account. The response is the same either way. The code expires after 15 minutes.",
+                "operationId": "forgotPassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ForgotPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request accepted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/verify-otp": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify a reset code",
+                "description": "Five wrong attempts cancel the code.",
+                "operationId": "verifyOtp",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerifyOtpRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Code verified",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VerifyOtpResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid or expired code",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/reset-password": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Set a new password",
+                "description": "Uses the reset token from verify-otp and signs every device out.",
+                "operationId": "resetPassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ResetPasswordRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MessageResponse"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid reset session or validation failed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://khordquiz.test",
+                        "description": "KhordQuiz"
+                    }
+                ]
+            }
+        },
+        "/api/v1/catalog": {
+            "get": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "Quiz catalog",
+                "operationId": "catalog",
+                "responses": {
+                    "200": {
+                        "description": "Categories, quizzes, sounds, and question counts"
+                    }
+                }
+            }
+        },
+        "/api/v1/quizzes/{slug}": {
+            "get": {
+                "tags": [
+                    "Catalog"
+                ],
+                "summary": "One quiz",
+                "operationId": "quiz",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Relative Tone Pitch no1"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Quiz"
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/api/v1/plans": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Subscription plans",
+                "operationId": "plans",
+                "responses": {
+                    "200": {
+                        "description": "Monthly, yearly, and lifetime plans"
+                    }
+                }
+            }
+        },
+        "/api/v1/help": {
+            "get": {
+                "tags": [
+                    "Support"
+                ],
+                "summary": "Help Center",
+                "operationId": "help",
+                "parameters": [
+                    {
+                        "name": "topic",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "FAQ sections"
+                    }
+                }
+            }
+        },
+        "/api/v1/home": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Home dashboard",
+                "operationId": "home",
+                "responses": {
+                    "200": {
+                        "description": "Greeting, streak, goal, up next, and achievements"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/for-you": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "For You",
+                "operationId": "forYou",
+                "responses": {
+                    "200": {
+                        "description": "Learning path and weak spots"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/progress": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Progress",
+                "operationId": "progress",
+                "responses": {
+                    "200": {
+                        "description": "Accuracy, categories, week, mistakes, and recent quizzes"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Reset progress",
+                "operationId": "resetProgress",
+                "responses": {
+                    "200": {
+                        "description": "Answers and completions removed. Bookmarks stay."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/progress/goal": {
+            "patch": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Update the daily goal",
+                "operationId": "updateGoal",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "daily_goal"
+                                ],
+                                "properties": {
+                                    "daily_goal": {
+                                        "type": "integer",
+                                        "example": 20
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Goal saved"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/mistakes": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Mistakes to review",
+                "operationId": "mistakes",
+                "responses": {
+                    "200": {
+                        "description": "Up to 10 recent wrong answers"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/leaderboard": {
+            "get": {
+                "tags": [
+                    "Home"
+                ],
+                "summary": "Rank",
+                "operationId": "leaderboard",
+                "parameters": [
+                    {
+                        "name": "period",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "week",
+                                "all"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "top, around, you, and total"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/saved": {
+            "get": {
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Saved quizzes",
+                "operationId": "saved",
+                "responses": {
+                    "200": {
+                        "description": "Bookmarked quizzes, newest first"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/quizzes/{slug}/bookmark": {
+            "post": {
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Save or unsave a quiz",
+                "operationId": "bookmark",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bookmark toggled"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/quizzes/{slug}/sessions": {
+            "post": {
+                "tags": [
+                    "Practice"
+                ],
+                "summary": "Save a finished quiz",
+                "operationId": "recordSession",
+                "parameters": [
+                    {
+                        "name": "slug",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "correct",
+                                    "total"
+                                ],
+                                "properties": {
+                                    "correct": {
+                                        "type": "integer",
+                                        "example": 20
+                                    },
+                                    "total": {
+                                        "type": "integer",
+                                        "example": 25
+                                    },
+                                    "completed": {
+                                        "type": "boolean"
+                                    },
+                                    "answers": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "answer": {
+                                                    "type": "string"
+                                                },
+                                                "picked": {
+                                                    "type": "string"
+                                                },
+                                                "correct": {
+                                                    "type": "boolean"
+                                                },
+                                                "kind": {
+                                                    "type": "string",
+                                                    "enum": [
+                                                        "single",
+                                                        "other"
+                                                    ]
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Session saved"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/challenges": {
+            "get": {
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Challenges",
+                "operationId": "challenges",
+                "responses": {
+                    "200": {
+                        "description": "Challenges for the signed-in student"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Send a challenge",
+                "operationId": "createChallenge",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "slug",
+                                    "score",
+                                    "total"
+                                ],
+                                "properties": {
+                                    "slug": {
+                                        "type": "string"
+                                    },
+                                    "score": {
+                                        "type": "integer",
+                                        "example": 21
+                                    },
+                                    "total": {
+                                        "type": "integer",
+                                        "example": 25
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Challenge and share URL"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/challenges/{challenge}/complete": {
+            "post": {
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Play a received challenge",
+                "operationId": "completeChallenge",
+                "parameters": [
+                    {
+                        "name": "challenge",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "score"
+                                ],
+                                "properties": {
+                                    "score": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Score compared"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/challenges/{challenge}/results": {
+            "post": {
+                "tags": [
+                    "Challenges"
+                ],
+                "summary": "Record a friend result",
+                "operationId": "challengeResult",
+                "parameters": [
+                    {
+                        "name": "challenge",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "score"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Tunde B."
+                                    },
+                                    "avatar": {
+                                        "type": "string",
+                                        "example": "electric-guitar"
+                                    },
+                                    "score": {
+                                        "type": "integer",
+                                        "example": 23
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Result stored"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/suggestions": {
+            "get": {
+                "tags": [
+                    "Suggestions"
+                ],
+                "summary": "Suggestions",
+                "operationId": "suggestions",
+                "responses": {
+                    "200": {
+                        "description": "Sample ideas plus submissions"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Suggestions"
+                ],
+                "summary": "Submit a suggestion",
+                "operationId": "createSuggestion",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "description"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Pending suggestion"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/suggestions/{suggestion}/vote": {
+            "post": {
+                "tags": [
+                    "Suggestions"
+                ],
+                "summary": "Vote on a suggestion",
+                "operationId": "voteSuggestion",
+                "parameters": [
+                    {
+                        "name": "suggestion",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Vote toggled"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/settings": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Settings",
+                "operationId": "settings",
+                "responses": {
+                    "200": {
+                        "description": "Appearance, notifications, instrument, and goal"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Update settings",
+                "operationId": "updateSettings",
+                "responses": {
+                    "200": {
+                        "description": "Settings saved"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/subscription": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Current subscription",
+                "operationId": "subscription",
+                "responses": {
+                    "200": {
+                        "description": "Access, plan, trial, and billing history"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Record a plan",
+                "operationId": "subscribe",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "string",
+                                        "enum": [
+                                            "monthly",
+                                            "yearly",
+                                            "lifetime"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Local plan record. The store still confirms payment."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/subscription/trial": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Start the free trial",
+                "operationId": "startTrial",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "plan_id"
+                                ],
+                                "properties": {
+                                    "plan_id": {
+                                        "type": "string",
+                                        "enum": [
+                                            "monthly",
+                                            "yearly"
+                                        ]
+                                    },
+                                    "provider": {
+                                        "type": "string",
+                                        "enum": [
+                                            "App Store",
+                                            "Google Play"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Trial started"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/subscription/cancel": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Cancel a plan",
+                "operationId": "cancelSubscription",
+                "responses": {
+                    "200": {
+                        "description": "Cancellation scheduled"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/subscription/resume": {
+            "post": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Resume a plan",
+                "operationId": "resumeSubscription",
+                "responses": {
+                    "200": {
+                        "description": "Plan resumed"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/account": {
+            "get": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Account",
+                "operationId": "account",
+                "responses": {
+                    "200": {
+                        "description": "Profile, subscription, and stats"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Delete account",
+                "operationId": "deleteAccount",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "password"
+                                ],
+                                "properties": {
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Account deleted"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/account/email": {
+            "put": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Change email",
+                "operationId": "changeEmail",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "current_password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "current_password": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/account/password": {
+            "put": {
+                "tags": [
+                    "Account"
+                ],
+                "summary": "Change password",
+                "operationId": "changePassword",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "current_password",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "current_password": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password updated"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/chat": {
+            "get": {
+                "tags": [
+                    "Support"
+                ],
+                "summary": "Live chat",
+                "operationId": "chat",
+                "responses": {
+                    "200": {
+                        "description": "Messages, starting with the welcome note"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Support"
+                ],
+                "summary": "Send a chat message",
+                "operationId": "sendChat",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "text"
+                                ],
+                                "properties": {
+                                    "text": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Your message, plus the first automatic reply"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/support": {
+            "post": {
+                "tags": [
+                    "Support"
+                ],
+                "summary": "Email support",
+                "operationId": "supportEmail",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "topic",
+                                    "message"
+                                ],
+                                "properties": {
+                                    "topic": {
+                                        "type": "string",
+                                        "example": "Account"
+                                    },
+                                    "message": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Message stored"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "first_name": {
+                        "type": "string",
+                        "example": "Kings",
+                        "nullable": true
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Don",
+                        "nullable": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Kings Don"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "Nigeria",
+                        "nullable": true
+                    },
+                    "skill_level": {
+                        "type": "string",
+                        "example": "Beginner",
+                        "nullable": true,
+                        "enum": [
+                            "Beginner",
+                            "Intermediate",
+                            "Advanced"
+                        ]
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "piano",
+                        "nullable": true,
+                        "enum": [
+                            "piano",
+                            "electric-guitar",
+                            "note",
+                            "headphones",
+                            "metronome",
+                            "saxophone",
+                            "trumpet",
+                            "violin",
+                            "acoustic-guitar",
+                            "microphone"
+                        ]
+                    },
+                    "current_streak": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "longest_streak": {
+                        "type": "integer",
+                        "example": 0
+                    },
+                    "daily_goal": {
+                        "type": "integer",
+                        "example": 20
+                    },
+                    "terms_accepted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "AuthResponse": {
+                "required": [
+                    "message",
+                    "token",
+                    "token_type",
+                    "user"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Signed in."
+                    },
+                    "token": {
+                        "type": "string",
+                        "example": "1|plain-text-token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "MessageResponse": {
+                "required": [
+                    "message"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Signed out."
+                    }
+                },
+                "type": "object"
+            },
+            "UserResponse": {
+                "required": [
+                    "user"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Profile updated."
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    }
+                },
+                "type": "object"
+            },
+            "ValidationError": {
+                "required": [
+                    "message",
+                    "errors"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "The email field is required."
+                    },
+                    "errors": {
+                        "type": "object",
+                        "example": {
+                            "email": [
+                                "The email field is required."
+                            ]
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterRequest": {
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "password",
+                    "country",
+                    "terms"
+                ],
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "example": "Kings",
+                        "maxLength": 100
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Don",
+                        "maxLength": 100
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com",
+                        "maxLength": 255
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password",
+                        "minLength": 8
+                    },
+                    "country": {
+                        "description": "A country name from the KhordQuiz country list.",
+                        "type": "string",
+                        "example": "Nigeria"
+                    },
+                    "terms": {
+                        "description": "Must be accepted.",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "device_name": {
+                        "type": "string",
+                        "example": "Pixel 8",
+                        "nullable": true,
+                        "maxLength": 255
+                    }
+                },
+                "type": "object"
+            },
+            "LoginRequest": {
+                "required": [
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "password"
+                    },
+                    "device_name": {
+                        "type": "string",
+                        "example": "Pixel 8",
+                        "nullable": true,
+                        "maxLength": 255
+                    }
+                },
+                "type": "object"
+            },
+            "ForgotPasswordRequest": {
+                "required": [
+                    "email"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com"
+                    }
+                },
+                "type": "object"
+            },
+            "VerifyOtpRequest": {
+                "required": [
+                    "email",
+                    "code"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com"
+                    },
+                    "code": {
+                        "description": "Six-digit code from the reset email.",
+                        "type": "string",
+                        "pattern": "^\\d{6}$",
+                        "example": "123456"
+                    }
+                },
+                "type": "object"
+            },
+            "VerifyOtpResponse": {
+                "required": [
+                    "message",
+                    "reset_token"
+                ],
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Code verified."
+                    },
+                    "reset_token": {
+                        "type": "string",
+                        "example": "reset-token"
+                    }
+                },
+                "type": "object"
+            },
+            "ResetPasswordRequest": {
+                "required": [
+                    "email",
+                    "reset_token",
+                    "password",
+                    "password_confirmation"
+                ],
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "kings@example.com"
+                    },
+                    "reset_token": {
+                        "description": "Token returned by verify-otp.",
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "new-password",
+                        "minLength": 8
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "new-password"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateProfileRequest": {
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "example": "Kings",
+                        "maxLength": 100
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Don",
+                        "maxLength": 100
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "Ghana",
+                        "nullable": true
+                    },
+                    "skill_level": {
+                        "type": "string",
+                        "example": "Beginner",
+                        "nullable": true,
+                        "enum": [
+                            "Beginner",
+                            "Intermediate",
+                            "Advanced"
+                        ]
+                    },
+                    "avatar": {
+                        "type": "string",
+                        "example": "piano",
+                        "nullable": true,
+                        "enum": [
+                            "piano",
+                            "electric-guitar",
+                            "note",
+                            "headphones",
+                            "metronome",
+                            "saxophone",
+                            "trumpet",
+                            "violin",
+                            "acoustic-guitar",
+                            "microphone"
+                        ]
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Sanctum token from register or login. Paste the token only; Swagger adds the Bearer prefix.",
+                "scheme": "bearer",
+                "bearerFormat": "Sanctum"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Account creation, sign-in, profile setup, and password reset."
+        },
+        {
+            "name": "Catalog",
+            "description": "Quiz categories and levels from the mobile app."
+        },
+        {
+            "name": "Home",
+            "description": "Home, For You, progress, and the leaderboard."
+        },
+        {
+            "name": "Practice",
+            "description": "Saved quizzes and finished quiz sessions."
+        },
+        {
+            "name": "Challenges",
+            "description": "Friend challenges."
+        },
+        {
+            "name": "Suggestions",
+            "description": "Community ideas. The sample ideas are included."
+        },
+        {
+            "name": "Account",
+            "description": "Settings, subscription, and account management."
+        },
+        {
+            "name": "Support",
+            "description": "Help Center, live chat, and email support."
+        }
+    ]
+}
