@@ -248,11 +248,12 @@ function Achievements({ achievements }) {
 }
 
 // Badge counts match the exact row totals on each page: 5 confused pairs on
-// Mistakes, 4 challenges (1 your turn + 1 pending + 2 completed) on Challenges.
-const quickAccess = [
+// Mistakes, real bookmark count on Saved, 4 challenges (1 your turn + 1
+// pending + 2 completed) on Challenges.
+const quickAccess = (savedCount) => [
     { label: 'For You', icon: LightbulbIcon, route: 'for-you' },
     { label: 'Mistakes', icon: RefreshIcon, route: 'mistakes', count: 5 },
-    { label: 'Saved', icon: BookmarkIcon, route: 'saved' },
+    { label: 'Saved', icon: BookmarkIcon, route: 'saved', count: savedCount },
     { label: 'Challenges', icon: BoltIcon, route: 'challenges', count: 4 },
 ];
 
@@ -266,6 +267,7 @@ const demoNotifications = [
         title: '7-day streak!',
         body: "You've practiced seven days in a row. Keep it going.",
         time: '2 hours ago',
+        read: false,
     },
     {
         id: 2,
@@ -274,6 +276,7 @@ const demoNotifications = [
         title: 'Jordan challenged you',
         body: 'Diatonic Intervals · 25 questions',
         time: '5 hours ago',
+        read: false,
     },
     {
         id: 3,
@@ -282,6 +285,7 @@ const demoNotifications = [
         title: 'New category added',
         body: 'Secondary 9th Chords is now live.',
         time: 'Yesterday',
+        read: false,
     },
     {
         id: 4,
@@ -290,6 +294,7 @@ const demoNotifications = [
         title: 'Pick up where you left off',
         body: 'Diatonic Intervals is 3/4 of the way done.',
         time: '2 days ago',
+        read: false,
     },
     {
         id: 5,
@@ -298,12 +303,19 @@ const demoNotifications = [
         title: 'Accuracy is up',
         body: 'Your weekly accuracy climbed to 75%.',
         time: '3 days ago',
+        read: false,
     },
 ];
 
 function NotificationsBell() {
     const [open, setOpen] = useState(false);
+    const [notifications, setNotifications] = useState(demoNotifications);
     const containerRef = useRef(null);
+    const unreadCount = notifications.filter((item) => !item.read).length;
+
+    const markAllRead = () => {
+        setNotifications((items) => items.map((item) => ({ ...item, read: true })));
+    };
 
     useEffect(() => {
         if (!open) return;
@@ -329,9 +341,9 @@ function NotificationsBell() {
                 className="relative flex h-11 w-11 items-center justify-center rounded-full border border-black/5 bg-white text-neutral-500 transition hover:bg-neutral-50"
             >
                 <BellIcon className="h-5 w-5" />
-                {demoNotifications.length > 0 && (
+                {unreadCount > 0 && (
                     <span className="absolute -right-1 -top-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-brand px-1 text-[11px] font-semibold text-white ring-2 ring-white">
-                        {demoNotifications.length > 9 ? '9+' : demoNotifications.length}
+                        {unreadCount > 9 ? '9+' : unreadCount}
                     </span>
                 )}
             </button>
@@ -340,18 +352,33 @@ function NotificationsBell() {
                 <div className="absolute right-0 top-full z-30 mt-2 w-80 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-xl">
                     <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
                         <p className="font-semibold text-neutral-900">Notifications</p>
+                        {unreadCount > 0 && (
+                            <button
+                                type="button"
+                                onClick={markAllRead}
+                                className="text-xs font-semibold text-brand hover:underline"
+                            >
+                                Mark all read
+                            </button>
+                        )}
                     </div>
 
                     <ul className="max-h-80 divide-y divide-black/5 overflow-y-auto">
-                        {demoNotifications.map((item) => {
+                        {notifications.map((item) => {
                             const Icon = item.icon;
                             return (
-                                <li key={item.id} className="flex gap-3 px-4 py-3">
+                                <li
+                                    key={item.id}
+                                    className={`flex gap-3 px-4 py-3 ${item.read ? '' : 'bg-brand/[0.03]'}`}
+                                >
                                     <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${item.tone}`}>
                                         <Icon className="h-4 w-4" />
                                     </span>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-sm font-medium text-neutral-900">{item.title}</p>
+                                        <div className="flex items-center gap-1.5">
+                                            {!item.read && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />}
+                                            <p className="text-sm font-medium text-neutral-900">{item.title}</p>
+                                        </div>
                                         <p className="mt-0.5 text-sm text-neutral-500">{item.body}</p>
                                         <p className="mt-1 text-xs text-neutral-400">{item.time}</p>
                                     </div>
@@ -366,7 +393,7 @@ function NotificationsBell() {
     );
 }
 
-export default function Dashboard({ streak, stats, resume, recentQuizzes, achievements }) {
+export default function Dashboard({ streak, stats, resume, continuePracticing, recentQuizzes, achievements, savedCount }) {
     const { auth } = usePage().props;
     const firstName = auth.user.name.split(' ')[0];
 
@@ -408,9 +435,9 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, achiev
 
             <section className="mt-8">
                 {resume ? (
-                    <div
-                        title="Playing a quiz from the dashboard is coming soon"
-                        className="mt-4 rounded-2xl bg-brand p-5 text-white sm:p-6"
+                    <Link
+                        href={route('quiz.preview', resume.quiz.slug)}
+                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
                     >
                         <div className="flex items-start gap-4">
                             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
@@ -434,12 +461,49 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, achiev
                             </div>
                             <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
                         </div>
-                    </div>
+                    </Link>
+                ) : continuePracticing ? (
+                    <Link
+                        href={route('quiz.preview', continuePracticing.quiz.slug)}
+                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
+                    >
+                        <div className="flex items-start gap-4">
+                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
+                                <PlayIcon className="h-5 w-5 translate-x-0.5" />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                                    Continue practicing · {continuePracticing.quiz.category}
+                                </p>
+                                <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                                    {continuePracticing.quiz.title}
+                                </h3>
+                                <p className="mt-1.5 text-sm text-white/80">
+                                    Last played {continuePracticing.last_played_at}
+                                </p>
+                            </div>
+                            <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                        </div>
+                    </Link>
                 ) : (
-                    <div className="mt-4 rounded-2xl border border-dashed border-neutral-300 bg-white px-5 py-8 text-sm text-neutral-600">
-                        You don&apos;t have a quiz in progress.
-                        {recentQuizzes[0] && <span> Last one you touched was {recentQuizzes[0].quiz.title}.</span>}
-                    </div>
+                    <Link
+                        href={route('quiz.categories')}
+                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
+                    >
+                        <div className="flex items-start gap-4">
+                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
+                                <PlayIcon className="h-5 w-5 translate-x-0.5" />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                                    New here?
+                                </p>
+                                <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Start here</h3>
+                                <p className="mt-1.5 text-sm text-white/80">Pick a category and take your first quiz.</p>
+                            </div>
+                            <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                        </div>
+                    </Link>
                 )}
             </section>
 
@@ -447,7 +511,7 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, achiev
                 <h2 className="text-lg font-semibold">Quick Access</h2>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                    {quickAccess.map((item) => (
+                    {quickAccess(savedCount).map((item) => (
                         <Link
                             key={item.label}
                             href={route(item.route)}
@@ -470,7 +534,7 @@ export default function Dashboard({ streak, stats, resume, recentQuizzes, achiev
 
             <div className="mt-8 grid gap-8 lg:grid-cols-5">
                 <section className="lg:col-span-3">
-                    <h2 className="text-lg font-semibold">Recent quizzes</h2>
+                    <h2 className="text-lg font-semibold">Completed quizzes</h2>
 
                     <div className="mt-4 overflow-hidden rounded-2xl border border-black/5 bg-white">
                         {recentQuizzes.length === 0 ? (

@@ -4,18 +4,17 @@ import Eyebrow from '@/Components/Site/Eyebrow';
 const steps = [
     {
         title: 'Sign up & Choose your Plan',
-        description:
-            'Create your account, pick an avatar and your level, and get a starting point picked for you. Then choose a plan and start your 7‑day free trial.',
+        description: 'Create your account and your 7‑day free trial starts right away — full access to every quiz from day one.',
     },
     {
         title: 'Pick & Play a Quiz',
         description:
-            'Choose a quiz and the sound it plays in, listen to the reference audio, then answer 25 questions with instant feedback.',
+            'Choose any quiz and the instrument it’s played in, warm up with the reference audio, then answer 25 questions with instant feedback on every one.',
     },
     {
         title: 'Track your Growth',
         description:
-            'See your score, review your mistakes, send the quiz to a friend as a challenge, and keep your streak alive.',
+            'Watch your score climb, revisit every mistake until it sticks, challenge a friend to beat it, and keep your streak alive.',
     },
 ];
 

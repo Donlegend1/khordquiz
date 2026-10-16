@@ -27,13 +27,6 @@ export default function AllInOne() {
                     how you stack up — all in one app.
                 </p>
 
-                <a
-                    href="#download"
-                    className="mt-8 inline-block rounded-md bg-brand px-5 py-3 text-base font-medium text-white transition hover:bg-brand-dark"
-                >
-                    Download App Now
-                </a>
-
                 {/* Phones are cropped at the section's bottom edge. */}
                 <div className="mt-10 flex h-[300px] items-start justify-center sm:h-[320px]">
                     <PhoneFrame

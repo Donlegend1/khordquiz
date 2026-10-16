@@ -112,7 +112,7 @@ export default function Categories() {
                         </p>
                     </div>
                     <a
-                        href="#download"
+                        href="#pricing"
                         className="shrink-0 rounded-md bg-brand px-5 py-3 text-base font-medium text-white transition hover:bg-brand-dark"
                     >
                         Find your starting point

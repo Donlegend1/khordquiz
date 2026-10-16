@@ -15,6 +15,14 @@ function DiamondIcon(props) {
     );
 }
 
+function StarIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+            <path d="M12 2.5l2.9 6.4 6.9.7-5.2 4.7 1.5 6.8L12 17.8 5.9 21.1l1.5-6.8-5.2-4.7 6.9-.7L12 2.5z" />
+        </svg>
+    );
+}
+
 function CheckCircleIcon(props) {
     return (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -69,10 +77,13 @@ function LockIcon(props) {
     );
 }
 
-function Section({ title, children }) {
+function Section({ title, action, children }) {
     return (
         <div className="mb-6">
-            <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">{title}</p>
+            <div className="mb-2 flex items-center justify-between px-1">
+                <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">{title}</p>
+                {action}
+            </div>
             <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">{children}</div>
         </div>
     );
@@ -257,7 +268,7 @@ const CANCEL_REASONS = [
 // There's no feedback table on the web yet, so the reason stays local to this
 // session rather than being persisted — same honesty-about-scope approach as
 // the rest of this sample/preview page.
-function CancelModal({ open, renews, onClose, onConfirm }) {
+function CancelModal({ open, renews, tier, onClose, onConfirm }) {
     const [step, setStep] = useState('reason');
     const [reason, setReason] = useState(null);
     const [otherText, setOtherText] = useState('');
@@ -312,7 +323,7 @@ function CancelModal({ open, renews, onClose, onConfirm }) {
                         Continue
                     </button>
                     <button type="button" onClick={close} className="w-full rounded-xl py-3 text-sm font-semibold text-neutral-600 hover:bg-neutral-50">
-                        Keep Premium
+                        Keep {tier}
                     </button>
                 </div>
             </Modal>
@@ -322,31 +333,34 @@ function CancelModal({ open, renews, onClose, onConfirm }) {
     return (
         <Modal open={open} onClose={close}>
             <div className="flex flex-col items-center text-center">
-                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+                <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-brand">
                     <HeartOffIcon className="h-5 w-5" />
                 </span>
                 <p className="mt-3 text-base font-bold text-neutral-900">Cancel subscription?</p>
-                <p className="mt-1 text-sm text-neutral-500">You&apos;ll keep Premium until {renews} and won&apos;t be charged again.</p>
+                <p className="mt-1 text-sm text-neutral-500">You&apos;ll keep {tier} until {renews} and won&apos;t be charged again.</p>
             </div>
 
-            <ul className="mt-5 space-y-2.5 text-sm">
-                <li className="flex items-start gap-2 text-brand">
-                    <span>✕</span>
-                    <span className="text-neutral-700">Most quiz categories and levels</span>
-                </li>
-                <li className="flex items-start gap-2 text-brand">
-                    <span>✕</span>
-                    <span className="text-neutral-700">Unlimited practice and reviews</span>
-                </li>
-                <li className="flex items-start gap-2 text-brand">
-                    <span>✕</span>
-                    <span className="text-neutral-700">Your personal learning path</span>
-                </li>
-            </ul>
+            <div className="mt-5 rounded-2xl bg-neutral-50 p-4">
+                <p className="text-xs font-semibold text-neutral-500">After {renews} you&apos;ll lose</p>
+                <ul className="mt-2.5 space-y-2.5 text-sm">
+                    <li className="flex items-center gap-2.5">
+                        <LockIcon className="h-4 w-4 shrink-0 text-neutral-400" />
+                        <span className="text-neutral-700">Most quiz categories and levels</span>
+                    </li>
+                    <li className="flex items-center gap-2.5">
+                        <LockIcon className="h-4 w-4 shrink-0 text-neutral-400" />
+                        <span className="text-neutral-700">Unlimited practice and reviews</span>
+                    </li>
+                    <li className="flex items-center gap-2.5">
+                        <LockIcon className="h-4 w-4 shrink-0 text-neutral-400" />
+                        <span className="text-neutral-700">Your personal learning path</span>
+                    </li>
+                </ul>
+            </div>
 
             <div className="mt-6 space-y-2">
                 <button type="button" onClick={close} className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90">
-                    Keep Premium
+                    Keep {tier}
                 </button>
                 <button type="button" onClick={confirm} className="w-full rounded-xl py-3 text-sm font-bold text-brand hover:bg-rose-50">
                     Cancel Subscription
@@ -394,7 +408,11 @@ export default function Subscription() {
                 <div className="mb-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
+                            {plan.tier === 'Premium' ? (
+                                <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
+                            ) : (
+                                <StarIcon className="h-[18px] w-[18px] text-slate-300" />
+                            )}
                             <p className="text-[17px] font-extrabold">
                                 {plan.tier} · {plan.label}
                             </p>
@@ -473,7 +491,14 @@ export default function Subscription() {
                     </Section>
                 )}
 
-                <Section title="Billing history">
+                <Section
+                    title="Billing history"
+                    action={
+                        <button type="button" disabled title="Coming soon" className="cursor-default text-xs font-bold text-brand/60">
+                            View all
+                        </button>
+                    }
+                >
                     {sub.history.map((payment, index) => (
                         <div key={`${payment.date}-${index}`} className={`flex items-center gap-3 px-4 py-3.5 ${index ? 'border-t border-black/5' : ''}`}>
                             <div className="min-w-0 flex-1">
@@ -508,7 +533,7 @@ export default function Subscription() {
 
             <SwitchModal planId={switchingTo} currentId={planId} renews={sub.renews} onClose={() => setSwitchingTo(null)} onConfirm={confirmSwitch} />
             <UpgradeModal open={upgradeOpen} currentId={planId} renews={sub.renews} onClose={() => setUpgradeOpen(false)} onConfirm={confirmUpgrade} />
-            <CancelModal open={cancelOpen} renews={sub.renews} onClose={() => setCancelOpen(false)} onConfirm={confirmCancel} />
+            <CancelModal open={cancelOpen} renews={sub.renews} tier={plan.tier} onClose={() => setCancelOpen(false)} onConfirm={confirmCancel} />
         </AppShell>
     );
 }

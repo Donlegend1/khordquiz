@@ -20,7 +20,8 @@ class ProfileUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:100'],
             'skill_level' => ['nullable', 'string', Rule::in(User::SKILL_LEVELS)],
         ];

@@ -6,6 +6,7 @@ import FinalCta from '@/Components/Site/FinalCta';
 import Features from '@/Components/Site/Features';
 import Hero from '@/Components/Site/Hero';
 import HowItWorks from '@/Components/Site/HowItWorks';
+import Pricing from '@/Components/Site/Pricing';
 import StoreBadges from '@/Components/Site/StoreBadges';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Head } from '@inertiajs/react';
@@ -20,6 +21,7 @@ export default function Welcome() {
             <Categories />
             <AllInOne />
             <StoreBadges />
+            <Pricing />
             <Faqs />
             <Contact />
             <FinalCta />

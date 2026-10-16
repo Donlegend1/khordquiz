@@ -144,6 +144,41 @@ class AudioQuizController extends Controller
         return back()->with('success', 'Lesson updated.');
     }
 
+    public function storeReferenceAudioTrack(Request $request, Quiz $quiz): RedirectResponse
+    {
+        $data = $request->validate([
+            'label' => ['required', 'string', 'max:100'],
+            'name' => ['required', 'string', 'max:150'],
+            'audio' => ['required', 'file', 'mimes:mp3,wav,m4a,aac,ogg,webm', 'max:15360'],
+        ]);
+
+        $tracks = $quiz->reference_audio_tracks ?? [];
+        $tracks[] = [
+            'id' => (string) Str::uuid(),
+            'label' => $data['label'],
+            'name' => $data['name'],
+            'path' => $request->file('audio')->store('quizzes/reference-audio', 'public'),
+        ];
+
+        $quiz->update(['reference_audio_tracks' => $tracks]);
+
+        return back()->with('success', 'Reference audio track added.');
+    }
+
+    public function destroyReferenceAudioTrack(Quiz $quiz, string $track): RedirectResponse
+    {
+        $tracks = collect($quiz->reference_audio_tracks ?? []);
+        $removed = $tracks->firstWhere('id', $track);
+
+        $quiz->update(['reference_audio_tracks' => $tracks->reject(fn ($t) => $t['id'] === $track)->values()->all()]);
+
+        if ($removed) {
+            $this->deleteMedia([$removed['path']]);
+        }
+
+        return back()->with('success', 'Reference audio track removed.');
+    }
+
     public function storeQuestion(Request $request, Quiz $quiz): RedirectResponse
     {
         $isChordTone = in_array($quiz->title, ['Chord Tone Recognition #1', 'Chord Tone Recognition #2'], true);
@@ -362,6 +397,9 @@ class AudioQuizController extends Controller
             'guide_text' => $quiz->guide_text,
             'reference_audio_url' => $this->mediaUrl($quiz->reference_audio_path),
             'keep_reference_audio' => $quiz->reference_audio_path !== null,
+            'reference_audio_tracks' => collect($quiz->reference_audio_tracks ?? [])
+                ->map(fn ($track) => ['id' => $track['id'], 'label' => $track['label'], 'url' => $this->mediaUrl($track['path'])])
+                ->values(),
             'is_published' => $quiz->is_published,
             'questions' => $quiz->questions->map(fn (QuizQuestion $question) => [
                 'id' => $question->id,

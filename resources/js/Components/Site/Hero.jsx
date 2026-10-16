@@ -36,10 +36,10 @@ export default function Hero() {
 
                     <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
                         <a
-                            href="#download"
+                            href="#pricing"
                             className="rounded-md bg-brand px-5 py-3 text-center text-base font-medium text-white transition hover:bg-brand-dark"
                         >
-                            Start Training
+                            Start Free
                         </a>
                         <a
                             href="#features"

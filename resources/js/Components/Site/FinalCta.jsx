@@ -18,10 +18,10 @@ export default function FinalCta() {
                 </p>
 
                 <a
-                    href="#download"
+                    href="#pricing"
                     className="mt-10 inline-block rounded-md bg-brand px-5 py-3 text-base font-medium text-white transition hover:bg-brand-dark"
                 >
-                    Start Training
+                    Start Free
                 </a>
             </div>
         </section>

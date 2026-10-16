@@ -1,9 +1,10 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
 const SUPPORT_EMAIL = 'support@khordquiz.com';
 const MAX_MESSAGE = 2000;
+const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
 const TOPICS = [
     { label: 'Account', hint: 'Sign in, profile or password' },
     { label: 'Billing', hint: 'Payments and subscription' },
@@ -63,6 +64,27 @@ function CheckIcon(props) {
     );
 }
 
+function PaperclipIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <path d="M8.5 12.5l6-6a3.2 3.2 0 014.5 4.5l-8 8a5.5 5.5 0 01-7.8-7.8l7.3-7.3a1.9 1.9 0 012.7 2.7l-7 7" />
+        </svg>
+    );
+}
+
+function CloseIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <path d="M6 6l12 12M18 6L6 18" />
+        </svg>
+    );
+}
+
+function formatFileSize(bytes) {
+    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 function Toggle({ value, onChange }) {
     return (
         <button
@@ -70,9 +92,9 @@ function Toggle({ value, onChange }) {
             role="switch"
             aria-checked={value}
             onClick={() => onChange(!value)}
-            className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-150 ${value ? 'bg-brand' : 'bg-neutral-200'}`}
+            className={`inline-flex h-7 w-12 shrink-0 items-center rounded-full p-1 transition-colors duration-150 ${value ? 'bg-brand' : 'bg-neutral-200'}`}
         >
-            <span className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-150 ${value ? 'translate-x-6' : 'translate-x-1'}`} />
+            <span className={`h-5 w-5 rounded-full bg-white shadow transition-transform duration-150 ${value ? 'translate-x-5' : 'translate-x-0'}`} />
         </button>
     );
 }
@@ -88,13 +110,21 @@ function detectBrowser() {
 }
 
 export default function SupportEmail() {
-    const [topic, setTopic] = useState(null);
     const [pickingTopic, setPickingTopic] = useState(false);
-    const [subject, setSubject] = useState('');
-    const [message, setMessage] = useState('');
-    const [includeDevice, setIncludeDevice] = useState(true);
     const [sent, setSent] = useState(false);
+    const [attachmentError, setAttachmentError] = useState(null);
     const pickerRef = useRef(null);
+    const fileInputRef = useRef(null);
+    const deviceInfo = `App version 1.0.0 · ${detectBrowser()}`;
+
+    const { data, setData, post, processing, errors, reset } = useForm({
+        topic: null,
+        subject: '',
+        message: '',
+        include_device: true,
+        device_info: deviceInfo,
+        attachment: null,
+    });
 
     useEffect(() => {
         if (!pickingTopic) return;
@@ -105,15 +135,32 @@ export default function SupportEmail() {
         return () => document.removeEventListener('mousedown', onPointerDown);
     }, [pickingTopic]);
 
-    const ready = Boolean(topic) && message.trim().length > 0;
-    const deviceInfo = `App version 1.0.0 · ${detectBrowser()}`;
+    const ready = Boolean(data.topic) && data.message.trim().length > 0;
+
+    function chooseFile(file) {
+        setAttachmentError(null);
+        if (!file) {
+            setData('attachment', null);
+            return;
+        }
+        if (file.size > MAX_ATTACHMENT_BYTES) {
+            setAttachmentError('That file is over the 10MB limit.');
+            if (fileInputRef.current) fileInputRef.current.value = '';
+            return;
+        }
+        setData('attachment', file);
+    }
 
     function send() {
-        if (!ready) return;
-        const title = `[${topic}] ${subject.trim() || 'Support request'}`;
-        const body = `${message.trim()}${includeDevice ? `\n\n---\n${deviceInfo}` : ''}`;
-        window.location.href = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(body)}`;
-        setSent(true);
+        if (!ready || processing) return;
+        post(route('support-email.store'), {
+            forceFormData: true,
+            onSuccess: () => {
+                setSent(true);
+                reset();
+                if (fileInputRef.current) fileInputRef.current.value = '';
+            },
+        });
     }
 
     return (
@@ -136,9 +183,9 @@ export default function SupportEmail() {
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
                             <CheckIcon className="h-7 w-7" />
                         </span>
-                        <p className="text-lg font-extrabold text-neutral-900">Your email is ready</p>
+                        <p className="text-lg font-extrabold text-neutral-900">Message sent</p>
                         <p className="max-w-xs text-sm text-neutral-500">
-                            We opened your email app with your message. Send it there and we&apos;ll be in touch soon.
+                            We&apos;ve got your message and will reply by email soon.
                         </p>
                         <Link
                             href={route('support')}
@@ -161,7 +208,7 @@ export default function SupportEmail() {
                                         <TagIcon className="h-4 w-4" />
                                     </span>
                                     <span className="flex-1 text-sm font-semibold text-neutral-900">Topic</span>
-                                    <span className={`text-sm ${topic ? 'text-neutral-900' : 'text-neutral-400'}`}>{topic ?? 'Choose'}</span>
+                                    <span className={`text-sm ${data.topic ? 'text-neutral-900' : 'text-neutral-400'}`}>{data.topic ?? 'Choose'}</span>
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-300">
                                         <path d="M9 5l7 7-7 7" />
                                     </svg>
@@ -170,13 +217,13 @@ export default function SupportEmail() {
                                 {pickingTopic && (
                                     <div className="absolute left-4 right-4 top-full z-20 mt-1 overflow-hidden rounded-xl border border-black/5 bg-white py-1 shadow-lg">
                                         {TOPICS.map((option) => {
-                                            const on = option.label === topic;
+                                            const on = option.label === data.topic;
                                             return (
                                                 <button
                                                     key={option.label}
                                                     type="button"
                                                     onClick={() => {
-                                                        setTopic(option.label);
+                                                        setData('topic', option.label);
                                                         setPickingTopic(false);
                                                     }}
                                                     className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors duration-150 hover:bg-neutral-50"
@@ -199,26 +246,75 @@ export default function SupportEmail() {
                                 </span>
                                 <input
                                     type="text"
-                                    value={subject}
+                                    value={data.subject}
                                     maxLength={100}
-                                    onChange={(e) => setSubject(e.target.value)}
+                                    onChange={(e) => setData('subject', e.target.value)}
                                     placeholder="Subject (optional)"
-                                    className="w-full py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
+                                    className="w-full border-0 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-0 focus:outline-none focus:ring-0"
                                 />
                             </div>
 
                             <div className="border-t border-black/5">
                                 <textarea
-                                    value={message}
+                                    value={data.message}
                                     maxLength={MAX_MESSAGE}
-                                    onChange={(e) => setMessage(e.target.value)}
-                                    placeholder="Describe the issue in as much detail as you can..."
+                                    onChange={(e) => setData('message', e.target.value)}
+                                    placeholder="Describe your request."
                                     rows={6}
-                                    className="w-full resize-none px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
+                                    className="w-full resize-none border-0 px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-0 focus:outline-none focus:ring-0"
                                 />
                                 <p className="px-4 pb-2.5 text-right text-xs text-neutral-300">
-                                    {message.length}/{MAX_MESSAGE}
+                                    {data.message.length}/{MAX_MESSAGE}
                                 </p>
+                            </div>
+
+                            <div className="border-t border-black/5 px-4 py-3.5">
+                                <div className="flex items-center gap-3">
+                                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
+                                        <PaperclipIcon className="h-4 w-4" />
+                                    </span>
+                                    <div className="min-w-0 flex-1">
+                                        {data.attachment ? (
+                                            <>
+                                                <p className="truncate text-sm font-semibold text-neutral-900">{data.attachment.name}</p>
+                                                <p className="text-xs text-neutral-400">{formatFileSize(data.attachment.size)}</p>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="text-sm font-semibold text-neutral-900">Attach a file</p>
+                                                <p className="text-xs text-neutral-400">Image or PDF, up to 10MB</p>
+                                            </>
+                                        )}
+                                    </div>
+                                    {data.attachment ? (
+                                        <button
+                                            type="button"
+                                            onClick={() => chooseFile(null)}
+                                            aria-label="Remove attachment"
+                                            className="shrink-0 text-neutral-300 hover:text-brand"
+                                        >
+                                            <CloseIcon className="h-4 w-4" />
+                                        </button>
+                                    ) : (
+                                        <button
+                                            type="button"
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="shrink-0 rounded-full bg-neutral-100 px-3.5 py-1.5 text-xs font-bold text-neutral-700 transition-colors duration-150 hover:bg-neutral-200"
+                                        >
+                                            Choose file
+                                        </button>
+                                    )}
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/webp,image/gif,application/pdf"
+                                        onChange={(e) => chooseFile(e.target.files?.[0] ?? null)}
+                                        className="hidden"
+                                    />
+                                </div>
+                                {(attachmentError || errors.attachment) && (
+                                    <p className="mt-2 text-xs font-semibold text-brand">{attachmentError || errors.attachment}</p>
+                                )}
                             </div>
                         </div>
 
@@ -232,18 +328,18 @@ export default function SupportEmail() {
                                     <p className="text-sm font-semibold text-neutral-900">Include device info</p>
                                     <p className="text-xs text-neutral-400">{deviceInfo}</p>
                                 </div>
-                                <Toggle value={includeDevice} onChange={setIncludeDevice} />
+                                <Toggle value={data.include_device} onChange={(value) => setData('include_device', value)} />
                             </div>
                         </div>
 
                         <button
                             type="button"
-                            disabled={!ready}
+                            disabled={!ready || processing}
                             onClick={send}
                             className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <SendIcon className="h-4 w-4" />
-                            Send Message
+                            {processing ? 'Sending…' : 'Send Message'}
                         </button>
                     </>
                 )}

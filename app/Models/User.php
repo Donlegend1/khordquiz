@@ -50,6 +50,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'terms_accepted_at' => 'datetime',
+            'suspended_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
             'current_streak' => 'integer',
@@ -62,6 +63,11 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === Role::Admin;
+    }
+
+    public function isSuspended(): bool
+    {
+        return $this->suspended_at !== null;
     }
 
     public function attempts(): HasMany

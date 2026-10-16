@@ -6,6 +6,7 @@ use App\Models\ContactMessage;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
+use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -41,5 +42,20 @@ class ContactMessageReceived extends Mailable
         return new Content(
             text: 'mail.contact-message',
         );
+    }
+
+    /**
+     * @return array<int, Attachment>
+     */
+    public function attachments(): array
+    {
+        if (! $this->contactMessage->attachment_path) {
+            return [];
+        }
+
+        return [
+            Attachment::fromStorageDisk('public', $this->contactMessage->attachment_path)
+                ->as($this->contactMessage->attachment_name ?? basename($this->contactMessage->attachment_path)),
+        ];
     }
 }

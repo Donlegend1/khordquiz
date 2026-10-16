@@ -151,8 +151,8 @@ export default function Login({ status, canResetPassword }) {
                     {/* For visitors without an account yet. */}
                     <p className="mt-5 text-center text-sm text-neutral-600">
                         New to KhordQuiz?{' '}
-                        <a href="/#download" className="font-medium text-brand hover:underline">
-                            Start Training
+                        <a href={route('signup')} className="font-medium text-brand hover:underline">
+                            Start Free Trial
                         </a>
                     </p>
                 </div>
