@@ -38,18 +38,36 @@ QUIZZES = [
 DEGREE_SLUGS = ['do', 're', 'mi', 'fa', 'so', 'la', 'ti']
 OFFSETS = {0: 'do', 2: 're', 4: 'mi', 5: 'fa', 7: 'so', 9: 'la', 11: 'ti'}
 
+# Dual-tonic melodies also uses the 5 chromatic (black-key) degrees. The note
+# bank only has one octave of these (letter-named, no solfege/octave variants,
+# unlike the diatonic degrees) at the native MIDI numbers below — pitch-shift
+# to whichever octave is actually needed.
+CHROMATIC = {1: ('csharp', 61), 3: ('dsharp', 63), 6: ('fsharp', 66), 8: ('gsharp', 68), 10: ('asharp', 70)}
 
-def sample_path(instrument: str, midi: int) -> str:
+
+def sample_path(instrument: str, midi: int, tmpdir: str, tag: str) -> str:
     octave = midi // 12 - 1
     remainder = midi - (octave + 1) * 12
-    if remainder not in OFFSETS:
-        raise ValueError(f'MIDI {midi} is not a diatonic degree (remainder {remainder})')
-    degree = OFFSETS[remainder]
-    suffix = '' if octave == 3 else f'-c{octave}'
-    path = os.path.join(NOTES_DIR, instrument, f'{degree}{suffix}.wav')
+    if remainder in OFFSETS:
+        degree = OFFSETS[remainder]
+        suffix = '' if octave == 3 else f'-c{octave}'
+        path = os.path.join(NOTES_DIR, instrument, f'{degree}{suffix}.wav')
+        if not os.path.exists(path):
+            raise FileNotFoundError(path)
+        return path
+
+    if remainder not in CHROMATIC:
+        raise ValueError(f'MIDI {midi} is not a diatonic or chromatic degree (remainder {remainder})')
+    filename, native_midi = CHROMATIC[remainder]
+    path = os.path.join(NOTES_DIR, instrument, f'{filename}.wav')
     if not os.path.exists(path):
         raise FileNotFoundError(path)
-    return path
+    shift = midi - native_midi
+    if shift == 0:
+        return path
+    shifted = os.path.join(tmpdir, f'{tag}_{filename}_{midi}.wav')
+    run(['sox', path, shifted, 'pitch', str(shift * 100)])
+    return shifted
 
 
 def run(cmd):
@@ -59,11 +77,11 @@ def run(cmd):
 def build_step_source(instrument: str, step, tmpdir: str, index: int) -> str:
     """step is either an int MIDI note, or a list of MIDI notes (dyad) to mix together first."""
     if isinstance(step, list):
-        parts = [sample_path(instrument, n) for n in step]
+        parts = [sample_path(instrument, n, tmpdir, f'step{index}') for n in step]
         out = os.path.join(tmpdir, f'step{index}_dyad.wav')
         run(['sox', '-m', *parts, out, 'gain', '-n', '-3'])
         return out
-    return sample_path(instrument, step)
+    return sample_path(instrument, step, tmpdir, f'step{index}')
 
 
 def build_sequence(instrument: str, steps, out_path: str):

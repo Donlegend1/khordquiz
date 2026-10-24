@@ -14,13 +14,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'email', 'password', 'role', 'suspended_at', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'default_instrument', 'country', 'skill_level', 'avatar', 'language', 'terms_accepted_at', 'plan_choice', 'payment_method', 'plan_started_at', 'plan_expires_at'])]
+#[Fillable(['name', 'first_name', 'last_name', 'email', 'password', 'role', 'suspended_at', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'default_instrument', 'country', 'skill_level', 'avatar', 'language', 'terms_accepted_at', 'plan_choice', 'payment_method', 'plan_started_at', 'plan_expires_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     // Same three options as the mobile app's Edit Profile skill-level picker.
     public const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
