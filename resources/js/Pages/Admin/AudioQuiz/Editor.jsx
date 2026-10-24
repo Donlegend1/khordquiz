@@ -639,7 +639,40 @@ function ProgressionBuilder({ config, slots, onChangeSlot, preview }) {
     );
 }
 
+// Display-only, same as Settings.jsx's INSTRUMENT_LABELS — the stored sound value
+// and every audio path stay "Guitar"; this just clarifies the pill's label now
+// that Jazz Guitar and Bass Guitar sit alongside it.
+const SOUND_LABELS = { Guitar: 'Acoustic Guitar' };
+
+// Same families as the member-facing sound pickers (QuizCategory.jsx's
+// SOUND_CATEGORIES, Settings.jsx's INSTRUMENT_GROUPS) — every category and
+// instrument shows here regardless of what's built for this quiz (see
+// builtSounds in QuestionsPanel, which greys out exactly the unbuilt ones from
+// this quiz's own real data, not a hardcoded list).
+const SOUND_CATEGORIES = [
+    { name: 'Piano', sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
+    { name: 'Guitar', sounds: ['Guitar', 'Jazz Guitar', 'Bass Guitar'] },
+    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Harp'] },
+    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba'] },
+    { name: 'Vocals', sounds: ['Voice'] },
+    { name: 'Percussion', sounds: ['Marimba', 'Celesta', 'Vibraphone'] },
+];
+
 function QuestionsPanel({ quiz }) {
+    const [activeSound, setActiveSound] = useState('Piano');
+    const [activeCategory, setActiveCategory] = useState(
+        SOUND_CATEGORIES.find((category) => category.sounds.includes('Piano'))?.name ?? null
+    );
+    // Once the question pool has generated audio attached (the rendering pipeline's
+    // job), manually uploading one file per question is no longer how content gets
+    // added here — hide that form rather than leaving it sitting there unused.
+    const hasGeneratedAudio = quiz.questions.some((question) => question.audio_variants.length > 0);
+    // Derived from this quiz's actual attached audio, not a hand-maintained list —
+    // a hardcoded SOUNDS array here kept going stale every time a new instrument
+    // was generated (Bass Guitar and Strings both sat grayed-out after being
+    // fully built, because this array wasn't updated alongside them). This can't
+    // go stale the same way.
+    const builtSounds = new Set(quiz.questions.flatMap((question) => question.audio_variants.map((variant) => variant.sound)));
     const preset = presetFor(quiz.category, quiz.title);
     const isBulkKey = quiz.title === 'Find the Key #1' || quiz.title === 'Find the Key #2';
     const lengthConfig = MELODIC_DICTATION_LENGTHS[quiz.title];
@@ -753,195 +786,109 @@ function QuestionsPanel({ quiz }) {
     };
 
     const deleteQuestion = (id) => {
-        router.delete(route('admin.audio-quiz.questions.destroy', id), { preserveScroll: true });
+        if (confirm('Delete this question? This also removes its audio.')) {
+            router.delete(route('admin.audio-quiz.questions.destroy', id), { preserveScroll: true });
+        }
     };
 
     return (
         <div className="mt-5 space-y-5">
-            <div className="rounded-2xl border border-black/5 bg-white p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">{isBulkKey ? 'Bulk add by key' : 'Add question'}</p>
-
-                {isBulkKey ? (
-                    <div className="mt-3">
-                        <p className="mb-3 text-xs text-neutral-400">Pick a key, then drop every audio file for that key at once — each one becomes its own question.</p>
-                        <BulkKeyUploader quizId={quiz.id} choices={preset} />
-                    </div>
-                ) : (
-                <>
-                <div className="mt-3">
-                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">Answers</label>
-                    {isSequence ? (
-                        <>
-                            <p className="mb-2 text-xs text-neutral-400">Tap the notes in order to build the correct melody for this question.</p>
-                            {lengthOptions && (
-                                <div className="mb-3 flex items-center gap-2">
-                                    <span className="text-xs font-semibold text-neutral-500">Notes:</span>
-                                    {lengthOptions.map((option) => (
-                                        <button
-                                            key={option}
-                                            type="button"
-                                            onClick={() => chooseLength(option)}
-                                            className={`h-7 w-7 rounded-full text-xs font-bold transition-colors duration-100 ${
-                                                sequenceLength === option ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                                            }`}
-                                        >
-                                            {option}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                            <SequenceKeyboard
-                                length={sequenceLength}
-                                sequence={sequence}
-                                onTap={(note) => setSequence((prev) => (prev.length < sequenceLength ? [...prev, note] : prev))}
-                                onUndo={() => setSequence((prev) => prev.slice(0, -1))}
-                                onClear={() => setSequence([])}
-                            />
-                        </>
-                    ) : isCompound ? (
-                        <>
-                            <p className="mb-2 text-xs text-neutral-400">Pick the correct quality and inversion for this question.</p>
-                            <CompoundPicker
-                                qualities={compound.qualities}
-                                inversions={compound.inversions}
-                                quality={quality}
-                                inversion={inversion}
-                                onQuality={setQuality}
-                                onInversion={setInversion}
-                            />
-                        </>
-                    ) : isMulti ? (
-                        <>
-                            <p className="mb-2 text-xs text-neutral-400">Select every extension heard in this chord — more than one can be correct.</p>
-                            <MultiPicker options={multiOptions} selected={selectedExtensions} onToggle={toggleExtension} />
-                        </>
-                    ) : isNaming ? (
-                        <>
-                            <p className="mb-2 text-xs text-neutral-400">Build the correct chord name for this question.</p>
-                            <NamingPicker
-                                quality={namingQuality}
-                                degrees={namingDegrees}
-                                exclude={namingExclude}
-                                onQuality={setNamingQuality}
-                                onToggleDegree={toggleNamingDegree}
-                                onExclude={setNamingExclude}
-                                preview={namedChord}
-                            />
-                        </>
-                    ) : isProgression ? (
-                        <>
-                            <p className="mb-2 text-xs text-neutral-400">Build the correct progression, chord by chord.</p>
-                            <ProgressionBuilder config={progressionConfig} slots={progressionSlots} onChangeSlot={changeProgressionSlot} preview={progressionPreview} />
-                        </>
-                    ) : (
-                        <>
-                            {isChordTone && (
-                                <div className="mb-4">
-                                    <p className="mb-1.5 text-xs font-semibold text-neutral-500">Chord quality (reference for the member)</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {CHORD_TONE_QUALITIES.map((option) => (
-                                            <button
-                                                key={option}
-                                                type="button"
-                                                onClick={() => setChordQuality(option)}
-                                                className={`rounded-full px-3.5 py-1.5 text-sm font-semibold transition-colors duration-100 ${
-                                                    chordQuality === option ? 'bg-neutral-900 text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                                                }`}
-                                            >
-                                                {option}
-                                            </button>
-                                        ))}
-                                    </div>
-                                    {errors.quality && <p className="mt-1.5 text-sm text-brand">{errors.quality}</p>}
-                                </div>
-                            )}
-                            <p className="mb-2 text-xs text-neutral-400">Pick the correct option for this question.</p>
-                            <div className="space-y-2">
-                                {data.choices.map((choice, index) => (
-                                    <label
-                                        key={choice}
-                                        className={`flex items-center gap-2 rounded-lg border px-3.5 py-2 text-sm transition-colors duration-150 ${
-                                            data.correct === index ? 'border-brand/40 bg-rose-50' : 'border-neutral-200 bg-neutral-50'
-                                        }`}
-                                    >
-                                        <input
-                                            type="radio"
-                                            checked={data.correct === index}
-                                            onChange={() => setData('correct', index)}
-                                            className="h-4 w-4 shrink-0 text-brand focus:ring-brand"
-                                        />
-                                        <span className="text-neutral-700">{choice}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        </>
-                    )}
-                    {errors.choices && <p className="mt-1.5 text-sm text-brand">{errors.choices}</p>}
-                </div>
-
-                <div className="mt-3">
-                    <label className="mb-1.5 block text-sm font-medium text-neutral-700">Audio file</label>
-                    <input
-                        type="file"
-                        accept="audio/*"
-                        onChange={(e) => setData('audio', e.target.files?.[0] ?? null)}
-                        className="block w-full text-sm text-neutral-600 file:mr-3 file:rounded-md file:border-0 file:bg-neutral-100 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-neutral-800"
-                    />
-                    {errors.audio && <p className="mt-1.5 text-sm text-brand">{errors.audio}</p>}
-                </div>
-
-                <button
-                    type="button"
-                    disabled={
-                        processing ||
-                        (isSequence && sequence.length !== sequenceLength) ||
-                        (isCompound && (!quality || !inversion)) ||
-                        (isMulti && selectedExtensions.length === 0) ||
-                        (isNaming && !namingQuality) ||
-                        (isChordTone && !chordQuality) ||
-                        (isProgression && !progressionPreview)
-                    }
-                    onClick={addQuestion}
-                    className="mt-4 rounded-xl bg-brand px-5 py-2.5 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
-                >
-                    + Add Question
-                </button>
-                </>
-                )}
-            </div>
+            {/* Manual question entry is retired — audio-quiz questions and their audio are
+                generated and attached directly (see scripts/audio/), not uploaded here. */}
 
             {quiz.questions.length > 0 && (
                 <div className="rounded-2xl border border-black/5 bg-white p-5">
-                    <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">
-                        {quiz.questions.length} question{quiz.questions.length === 1 ? '' : 's'} configured
-                    </p>
+                    <div className="flex items-center justify-between gap-3">
+                        <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">
+                            {quiz.questions.length} question{quiz.questions.length === 1 ? '' : 's'} configured
+                        </p>
+                    </div>
+
+                    {/* Every planned category and instrument shows here, not just the ones
+                        with generated audio — an instrument with nothing yet renders as a
+                        dimmer pill and falls through to the "audio not generated yet"
+                        message below, so this list doubles as a what's-left checklist.
+                        Grouped in its own labeled panel (Category above Sound) so the two
+                        rows read as one filter, not two unrelated pill lists. */}
+                    <div className="mt-3 rounded-xl border border-black/5 bg-neutral-50 p-3.5">
+                        <div>
+                            <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-neutral-400">Category</p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {SOUND_CATEGORIES.map((category) => (
+                                    <button
+                                        key={category.name}
+                                        type="button"
+                                        onClick={() => {
+                                            setActiveCategory(category.name);
+                                            if (!category.sounds.includes(activeSound)) setActiveSound(category.sounds[0]);
+                                        }}
+                                        className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${
+                                            activeCategory === category.name
+                                                ? 'bg-neutral-900 text-white'
+                                                : 'bg-white text-neutral-600 ring-1 ring-inset ring-black/10 hover:bg-neutral-100'
+                                        }`}
+                                    >
+                                        {category.name}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="mt-3 border-t border-black/5 pt-3">
+                            <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wide text-neutral-400">Sound</p>
+                            <div className="flex flex-wrap gap-1.5">
+                                {(SOUND_CATEGORIES.find((category) => category.name === activeCategory)?.sounds ?? []).map((sound) => {
+                                    const built = builtSounds.has(sound);
+                                    return (
+                                        <button
+                                            key={sound}
+                                            type="button"
+                                            onClick={() => setActiveSound(sound)}
+                                            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition-colors duration-150 ${
+                                                activeSound === sound
+                                                    ? 'bg-brand text-white'
+                                                    : built
+                                                      ? 'bg-white text-neutral-600 ring-1 ring-inset ring-black/10 hover:bg-neutral-100'
+                                                      : 'bg-white text-neutral-300 ring-1 ring-inset ring-black/5 hover:bg-neutral-50'
+                                            }`}
+                                        >
+                                            {SOUND_LABELS[sound] ?? sound}
+                                            {!built && <span className="ml-1 text-neutral-300">·</span>}
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+
                     <ul className="mt-3 divide-y divide-black/5">
-                        {quiz.questions.map((question) => (
-                            <li key={question.id} className="flex items-start justify-between gap-4 py-3">
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-semibold text-neutral-900">
-                                        {question.prompt}
-                                        {question.sound && <span className="ml-2 rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">{question.sound}</span>}
-                                    </p>
-                                    <div className="mt-1 flex flex-wrap gap-1.5">
-                                        {question.choices.map((choice) => (
-                                            <span
-                                                key={choice}
-                                                className={`rounded-full px-2 py-0.5 text-xs font-medium ${
-                                                    choice === question.answer ? 'bg-emerald-50 text-emerald-700' : 'bg-neutral-100 text-neutral-500'
-                                                }`}
-                                            >
-                                                {choice}
-                                            </span>
-                                        ))}
+                        {quiz.questions.map((question) => {
+                            const variant = question.audio_variants.find((item) => item.sound === activeSound);
+                            return (
+                                <li key={question.id} className="flex items-start justify-between gap-4 py-3">
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-semibold text-neutral-900">
+                                            {question.prompt}
+                                            {question.sound && <span className="ml-2 rounded-full bg-neutral-900 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white">{question.sound}</span>}
+                                        </p>
+                                        <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
+                                            Answer: {question.answer}
+                                        </span>
+                                        {question.audio_url && <audio controls src={question.audio_url} className="mt-2 block h-8 w-full max-w-xs" />}
+                                        <div className="mt-2">
+                                            {variant ? (
+                                                <audio controls src={variant.url} className="h-8 w-full max-w-xs" />
+                                            ) : (
+                                                <p className="text-xs text-neutral-400">{SOUND_LABELS[activeSound] ?? activeSound} audio not generated yet.</p>
+                                            )}
+                                        </div>
                                     </div>
-                                    {question.audio_url && <audio controls src={question.audio_url} className="mt-2 h-8 w-full max-w-xs" />}
-                                </div>
-                                <button type="button" onClick={() => deleteQuestion(question.id)} className="shrink-0 text-neutral-300 hover:text-brand">
-                                    <TrashIcon className="h-4 w-4" />
-                                </button>
-                            </li>
-                        ))}
+                                    <button type="button" onClick={() => deleteQuestion(question.id)} className="shrink-0 text-neutral-300 hover:text-brand">
+                                        <TrashIcon className="h-4 w-4" />
+                                    </button>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             )}

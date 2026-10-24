@@ -60,7 +60,7 @@ const memberNav = [
     { label: 'Quiz', icon: 'quiz', route: 'quiz.categories', alsoCurrent: ['quiz.category', 'quiz.preview', 'quiz.play', 'quiz.results'] },
     { label: 'Progress', icon: 'progress', route: 'progress' },
     { label: 'Rank', icon: 'rank', route: 'leaderboard' },
-    { label: 'Account', icon: 'account', route: 'account' },
+    { label: 'Account', icon: 'account', route: 'account', alsoCurrent: ['profile.edit', 'account.password', 'account.delete'] },
     { label: 'Notifications', icon: 'notifications', route: 'notifications' },
     { label: 'Bookmarks', icon: 'bookmarks', route: 'saved' },
     { label: 'Suggestions', icon: 'suggestions', route: 'suggestions' },
@@ -192,19 +192,23 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
 
             <div className="lg:pl-72">
                 <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-black/5 bg-[#F6F1EC]/90 px-4 backdrop-blur sm:px-8 lg:hidden">
-                    <button
-                        type="button"
-                        className="rounded-md px-2 py-1 text-sm font-medium text-neutral-700 transition-colors duration-200 hover:bg-black/5"
-                        onClick={() => setOpen(true)}
-                    >
-                        Menu
-                    </button>
                     <Link href={route('dashboard')} aria-label="Dashboard" className="flex items-baseline text-lg leading-none tracking-tight">
                         <span className="font-bold text-black">Khord</span>
                         <span className="font-serif font-semibold text-brand">Quiz</span>
                     </Link>
-                    <span className="w-12" />
+                    <button
+                        type="button"
+                        aria-label="Open menu"
+                        className="rounded-md bg-brand p-2 text-white transition-colors duration-200 hover:bg-brand-dark"
+                        onClick={() => setOpen(true)}
+                    >
+                        <svg className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
                 </header>
+
+                <Breadcrumbs items={items} title={title} />
 
                 <main className="px-4 py-6 sm:px-8 sm:py-8">
                     {flash?.success && (
@@ -216,10 +220,24 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                     <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
                         <div>
                             {eyebrow && (
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">{eyebrow}</p>
+                                <p
+                                    className={`text-[11px] font-semibold uppercase tracking-[0.16em] text-brand ${
+                                        route().current('dashboard') ? '' : 'hidden sm:block'
+                                    }`}
+                                >
+                                    {eyebrow}
+                                </p>
                             )}
                             <h1 className="mt-1 text-3xl font-bold tracking-tight text-neutral-900">{title}</h1>
-                            {intro && <p className="mt-1 max-w-2xl text-[15px] text-neutral-600">{intro}</p>}
+                            {intro && (
+                                <p
+                                    className={`mt-1 max-w-2xl text-[15px] text-neutral-600 ${
+                                        route().current('dashboard') ? '' : 'hidden sm:block'
+                                    }`}
+                                >
+                                    {intro}
+                                </p>
+                            )}
                         </div>
                         {action}
                     </div>
@@ -230,6 +248,51 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
 
             <LogOutModal open={loggingOut} onClose={() => setLoggingOut(false)} />
         </div>
+    );
+}
+
+// Mobile-only (the sidebar already shows where you are on larger screens). Skipped on the
+// Dashboard itself, since that's the root everything else branches from. The middle crumb
+// only appears when the current page is a sub-page of a nav section (e.g. Quiz > a category,
+// or Account > Edit Profile) rather than the section's own landing page.
+function Breadcrumbs({ items, title }) {
+    if (route().current('dashboard')) return null;
+
+    const section = items.find((item) => item.current);
+    const onSectionLanding = section && route().current(section.route);
+
+    return (
+        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 overflow-x-auto border-b border-black/5 bg-[#F6F1EC] px-4 py-2.5 text-xs sm:px-8 lg:hidden">
+            <Link href={route('dashboard')} className="shrink-0 font-medium text-neutral-500 transition-colors duration-150 hover:text-neutral-900">
+                Dashboard
+            </Link>
+            {section && (
+                <>
+                    <BreadcrumbSep />
+                    {onSectionLanding ? (
+                        <span className="truncate font-semibold text-neutral-900">{section.label}</span>
+                    ) : (
+                        <Link href={section.href} className="shrink-0 font-medium text-neutral-500 transition-colors duration-150 hover:text-neutral-900">
+                            {section.label}
+                        </Link>
+                    )}
+                </>
+            )}
+            {!onSectionLanding && title && (
+                <>
+                    <BreadcrumbSep />
+                    <span className="truncate font-semibold text-neutral-900">{title}</span>
+                </>
+            )}
+        </nav>
+    );
+}
+
+function BreadcrumbSep() {
+    return (
+        <svg className="h-3 w-3 shrink-0 text-neutral-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="M9 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
     );
 }
 

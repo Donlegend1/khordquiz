@@ -406,28 +406,28 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
         >
             <Head title="Your training" />
 
-            <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl bg-neutral-100 px-5 py-4">
-                    <FlameIcon className="h-6 w-6 text-brand" />
-                    <p className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">{streak.current}</p>
-                    <p className="mt-1 text-sm text-neutral-500">
-                        Day streak <span className="text-neutral-400">· best {streak.longest}</span>
+            <div className="grid grid-cols-3 gap-2 sm:gap-4">
+                <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
+                    <FlameIcon className="h-5 w-5 text-brand sm:h-6 sm:w-6" />
+                    <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">{streak.current}</p>
+                    <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
+                        Day streak <span className="hidden text-neutral-400 sm:inline">· best {streak.longest}</span>
                     </p>
                 </div>
-                <div className="rounded-2xl bg-neutral-100 px-5 py-4">
-                    <TargetIcon className="h-6 w-6 text-brand" />
-                    <p className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">
+                <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
+                    <TargetIcon className="h-5 w-5 text-brand sm:h-6 sm:w-6" />
+                    <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">
                         {stats.accuracy === null ? '—' : `${stats.accuracy}%`}
                     </p>
-                    <p className="mt-1 text-sm text-neutral-500">Accuracy</p>
+                    <p className="mt-1 text-xs text-neutral-500 sm:text-sm">Accuracy</p>
                 </div>
-                <div className="rounded-2xl bg-neutral-100 px-5 py-4">
-                    <BookIcon className="h-6 w-6 text-brand" />
-                    <p className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">{stats.completed}</p>
-                    <p className="mt-1 text-sm text-neutral-500">
+                <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
+                    <BookIcon className="h-5 w-5 text-brand sm:h-6 sm:w-6" />
+                    <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">{stats.completed}</p>
+                    <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
                         Quizzes done
                         {stats.inProgress > 0 && (
-                            <span className="text-neutral-400"> · {stats.inProgress} in progress</span>
+                            <span className="hidden text-neutral-400 sm:inline"> · {stats.inProgress} in progress</span>
                         )}
                     </p>
                 </div>
@@ -437,72 +437,87 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                 {resume ? (
                     <Link
                         href={route('quiz.preview', resume.quiz.slug)}
-                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
+                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
                     >
-                        <div className="flex items-start gap-4">
-                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                                <PlayIcon className="h-5 w-5 translate-x-0.5" />
-                            </span>
-                            <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                    Continue · {resume.quiz.category}
-                                </p>
-                                <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
-                                    {resume.quiz.title}
-                                </h3>
-                                <div className="mt-4 flex items-center gap-3">
-                                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
-                                        <div className="h-full rounded-full bg-white" style={{ width: `${resume.progress}%` }} />
-                                    </div>
-                                    <span className="shrink-0 text-sm text-white/80">
-                                        {resume.stopped_at_question}/{resume.quiz.question_count}
-                                    </span>
-                                </div>
-                            </div>
-                            <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                            <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
+                        </span>
+                        <div className="min-w-0 flex-1 sm:hidden">
+                            <p className="truncate text-xs text-white/80">Continue where you left off</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{resume.quiz.title}</h3>
+                            <p className="truncate text-xs text-white/70">{resume.quiz.category}</p>
                         </div>
+                        <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
+
+                        <div className="hidden min-w-0 flex-1 sm:block">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                                Continue · {resume.quiz.category}
+                            </p>
+                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                                {resume.quiz.title}
+                            </h3>
+                            <div className="mt-4 flex items-center gap-3">
+                                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
+                                    <div className="h-full rounded-full bg-white" style={{ width: `${resume.progress}%` }} />
+                                </div>
+                                <span className="shrink-0 text-sm text-white/80">
+                                    {resume.stopped_at_question}/{resume.quiz.question_count}
+                                </span>
+                            </div>
+                        </div>
+                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
                     </Link>
                 ) : continuePracticing ? (
                     <Link
                         href={route('quiz.preview', continuePracticing.quiz.slug)}
-                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
+                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
                     >
-                        <div className="flex items-start gap-4">
-                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                                <PlayIcon className="h-5 w-5 translate-x-0.5" />
-                            </span>
-                            <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                    Continue practicing · {continuePracticing.quiz.category}
-                                </p>
-                                <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
-                                    {continuePracticing.quiz.title}
-                                </h3>
-                                <p className="mt-1.5 text-sm text-white/80">
-                                    Last played {continuePracticing.last_played_at}
-                                </p>
-                            </div>
-                            <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                            <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
+                        </span>
+                        <div className="min-w-0 flex-1 sm:hidden">
+                            <p className="truncate text-xs text-white/80">Continue practicing</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{continuePracticing.quiz.title}</h3>
+                            <p className="truncate text-xs text-white/70">{continuePracticing.quiz.category}</p>
                         </div>
+                        <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
+
+                        <div className="hidden min-w-0 flex-1 sm:block">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                                Continue practicing · {continuePracticing.quiz.category}
+                            </p>
+                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                                {continuePracticing.quiz.title}
+                            </h3>
+                            <p className="mt-1.5 text-sm text-white/80">
+                                Last played {continuePracticing.last_played_at}
+                            </p>
+                        </div>
+                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
                     </Link>
                 ) : (
                     <Link
                         href={route('quiz.categories')}
-                        className="mt-4 block rounded-2xl bg-brand p-5 text-white transition hover:bg-brand-dark sm:p-6"
+                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
                     >
-                        <div className="flex items-start gap-4">
-                            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white/15">
-                                <PlayIcon className="h-5 w-5 translate-x-0.5" />
-                            </span>
-                            <div className="min-w-0 flex-1">
-                                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                    New here?
-                                </p>
-                                <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Start here</h3>
-                                <p className="mt-1.5 text-sm text-white/80">Pick a category and take your first quiz.</p>
-                            </div>
-                            <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                            <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
+                        </span>
+                        <div className="min-w-0 flex-1 sm:hidden">
+                            <p className="truncate text-xs text-white/80">New here?</p>
+                            <h3 className="truncate text-base font-bold leading-tight">Start here</h3>
+                            <p className="truncate text-xs text-white/70">Pick a category and take your first quiz.</p>
                         </div>
+                        <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
+
+                        <div className="hidden min-w-0 flex-1 sm:block">
+                            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                                New here?
+                            </p>
+                            <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Start here</h3>
+                            <p className="mt-1.5 text-sm text-white/80">Pick a category and take your first quiz.</p>
+                        </div>
+                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
                     </Link>
                 )}
             </section>

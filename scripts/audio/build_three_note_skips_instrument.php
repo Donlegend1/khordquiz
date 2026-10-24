@@ -1,0 +1,45 @@
+<?php
+
+// Attaches one instrument's audio to "3-Note with Skips"'s existing 672-row pool
+// (never recreates rows — see three_note_skips_pool.php / build_three_note_skips_piano.php).
+// Expects $sound, $folderSlug, $base, and $octaveCount to already be set before
+// this is required. Same shape as build_three_note_stepwise_instrument.php.
+
+require __DIR__.'/three_note_skips_pool.php';
+
+use App\Models\Quiz;
+use App\Models\QuizQuestionAudio;
+
+$quiz = Quiz::where('title', '3-Note with Skips')->firstOrFail();
+$patterns = skipsPatterns();
+
+$manifest = [];
+$attached = 0;
+
+foreach ($patterns as $pattern) {
+    $rows = $quiz->questions()->where('answer', $pattern['label'])->orderBy('position')->get(['id']);
+
+    for ($slot = 0; $slot < $octaveCount; $slot++) {
+        $question = $rows[$slot] ?? null;
+        if (!$question) {
+            echo "  missing row for '{$pattern['label']}' slot {$slot}.".PHP_EOL;
+            continue;
+        }
+
+        $absoluteStart = $slot * 7 + $pattern['startDegree'];
+        $midiNotes = array_map(fn ($r) => stepwiseMidiForIndex($absoluteStart + $r, $base), $pattern['relativeIndices']);
+        $fileSlug = "{$pattern['fileSlug']}-o{$slot}";
+        $path = "melodic-dictation/3-note-skips/{$folderSlug}/{$fileSlug}.wav";
+
+        QuizQuestionAudio::updateOrCreate(
+            ['quiz_question_id' => $question->id, 'sound' => $sound],
+            ['audio_path' => $path]
+        );
+
+        $manifest[] = ['file_slug' => $fileSlug, 'notes' => $midiNotes];
+        $attached++;
+    }
+}
+
+file_put_contents(__DIR__."/three_note_skips_{$folderSlug}_manifest.json", json_encode($manifest, JSON_PRETTY_PRINT));
+echo "{$sound}: attached {$attached} rows, manifest written.".PHP_EOL;

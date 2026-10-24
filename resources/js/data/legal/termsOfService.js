@@ -70,7 +70,7 @@ const SECTIONS = [
       p('You may cancel a subscription using the cancellation method provided by KhordQuiz or, where applicable, through the payment provider or platform through which you purchased the subscription.'),
       p('Cancellation normally prevents future charges but does not automatically create a right to a refund for a payment that has already been processed.'),
       p('The cancellation and renewal terms presented to you at the time of purchase form part of your agreement with the Company.'),
-      p('Where a subscription is purchased through Apple In-App Purchase, subscription management, renewal, cancellation, and applicable refund processes may be administered through Apple’s platform and are also subject to Apple’s applicable terms and policies.'),
+      p('Where a subscription is purchased through Apple In-App Purchase or Google Play Billing, subscription management, renewal, cancellation, and applicable refund processes may be administered through the applicable platform and are also subject to that platform’s applicable terms and policies.'),
     ],
   },
   {
@@ -86,11 +86,11 @@ const SECTIONS = [
     title: '9. Payments',
     blocks: [
       p('Payments may be processed through third-party payment providers or platforms, including:'),
-      list('Stripe;', 'PayPal; and', 'Apple In-App Purchase.'),
+      list('Stripe;', 'PayPal;', 'Apple In-App Purchase; and', 'Google Play Billing.'),
       p('When you make a purchase, you authorize the applicable payment provider or platform to process the transaction using the payment method you select.'),
       p('The Company’s handling of payment-related information is described in the KhordQuiz Privacy Policy.'),
-      p('Your use of Stripe, PayPal, or Apple In-App Purchase may also be subject to the applicable terms and policies of those providers or platforms.'),
-      p('For purchases made through Apple In-App Purchase, Apple may process the payment, billing, subscription, and related transaction information. The purchase may also be subject to Apple’s applicable payment and subscription terms.'),
+      p('Your use of Stripe, PayPal, Apple In-App Purchase, or Google Play Billing may also be subject to the applicable terms and policies of those providers or platforms.'),
+      p('For purchases made through Apple In-App Purchase or Google Play Billing, Apple or Google, as applicable, may process the payment, billing, subscription, and related transaction information. The purchase may also be subject to that platform’s applicable payment and subscription terms.'),
     ],
   },
   {
@@ -133,10 +133,12 @@ const SECTIONS = [
     ],
   },
   {
-    title: '14. No User-Generated Content',
+    title: '14. User-Generated Content',
     blocks: [
-      p('KhordQuiz does not currently provide users with a feature for uploading or publishing user-generated content such as photographs, videos, documents, posts, or messages.'),
-      p('Accordingly, you do not receive any license to publish content through KhordQuiz on behalf of other users, and the Company does not claim ownership of content that users upload because the App does not currently provide such an upload feature.'),
+      p('KhordQuiz does not currently provide users with a general feature for uploading or publishing content such as photographs, videos, or documents.'),
+      p('KhordQuiz does include limited user-generated content features — feature suggestions and support messages, sent through the Suggestions feature or Live Chat. A suggestion you submit may be published within the App together with your display name and any votes it receives.'),
+      p('By submitting a suggestion or other feedback, you grant the Company a non-exclusive, royalty-free, worldwide, sublicensable, irrevocable license to use, reproduce, display, and implement that content and any ideas it contains, within KhordQuiz or otherwise, without obligation to compensate or attribute you beyond displaying your display name where the feature itself does so.'),
+      p('Outside of these specific features, you do not receive any license to publish content through KhordQuiz on behalf of other users, and the Company does not claim ownership of content that users submit through them.'),
     ],
   },
   {
@@ -151,7 +153,7 @@ const SECTIONS = [
     title: '16. Third-Party Services',
     blocks: [
       p('KhordQuiz uses third-party services, which may include:'),
-      list('Google for authentication;', 'Apple for authentication and, where applicable, payment processing;', 'Stripe for payment processing; and', 'PayPal for payment processing.'),
+      list('Google for authentication and, where applicable, payment processing;', 'Apple for authentication and, where applicable, payment processing;', 'Supabase for authentication and data storage;', 'RevenueCat for subscription and payment management;', 'Stripe for payment processing; and', 'PayPal for payment processing.'),
       p('Third-party services may operate under their own terms, privacy policies, and other conditions.'),
       p('The Company is not responsible for the independent operation, availability, security, or policies of third-party services, except to the extent liability cannot legally be excluded.'),
     ],

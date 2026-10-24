@@ -29,7 +29,9 @@ class SignupTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard', absolute: false));
+        // Signup no longer lands straight on the dashboard — it goes through the
+        // profile-setup onboarding step first, same as the mobile app's flow.
+        $response->assertRedirect(route('profile-setup.edit', absolute: false));
         $this->assertDatabaseHas('users', [
             'name' => 'Test User',
             'email' => 'test@example.com',

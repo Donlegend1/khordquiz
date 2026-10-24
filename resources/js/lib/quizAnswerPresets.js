@@ -9,11 +9,12 @@ export const SOLFEGE_PRESET = ['Doh', 'Reh', 'Mi', 'Fah', 'Sol', 'Lah', 'Ti'];
 export const KEY_CHOICES = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
 export const SOLFEGE_NOTE_CHOICES = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti'];
 
-// Piano-style keyboard layout, matching app/practice.tsx's SolfegeKeyboard.
-// 8 white keys (the 8th completes the octave visually, same "Do" as the 1st)
-// with 5 black keys in between — none between Mi/Fa or Ti/Do, matching a real
-// keyboard's semitone gaps.
-export const KEYBOARD_WHITE_KEYS = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti', 'Do'];
+// Piano-style keyboard layout. 7 white keys, one per solfège degree — no
+// trailing "Do" to complete the octave visually: these quizzes test solfège
+// (scale-degree) recognition only, never which octave a note is in (stored
+// answers never carry an octave marker either — see stepwiseLabelForIndex()),
+// so a second "Do" key would only invite confusion about why it's there.
+export const KEYBOARD_WHITE_KEYS = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti'];
 export const KEYBOARD_BLACK_KEYS = [
     { afterIndex: 0, note: 'Di' },
     { afterIndex: 1, note: 'Ri' },
@@ -36,8 +37,33 @@ export const SOLFEGE_PAIR_CHOICES = {
 };
 
 export const TRIAD_CHOICES = ['Major', 'Minor', 'Diminished', 'Augmented', 'Suspended'];
+// Basic Triads Levels 6 & 8 only — these are the all-12-keys inversion
+// levels, with no fixed key to anchor against (unlike Levels 5/7, which stay
+// on C throughout). Augmented and Suspended are left out: an augmented triad
+// is symmetric (stacked major 3rds), so root/1st/2nd inversion all have the
+// identical relative interval shape — "E augmented root position" and "C
+// augmented 1st inversion" are the same pitch classes, indistinguishable
+// without absolute pitch. A Sus2 chord's 2nd inversion has that same
+// relative shape as some other root's Sus4 in root position, and Sus4 was
+// never one of this quiz's own answer options to tell them apart with.
+// Major/Minor/Diminished don't have this problem — each inversion keeps its
+// own distinct shape regardless of root.
+export const TRIAD_CHOICES_NO_SYMMETRIC = ['Major', 'Minor', 'Diminished'];
 export const SEVENTH_CHOICES = ['Diminished 7th', 'Dominant 7th', 'Minor 7(♭5)', 'Major 7th', 'Minor 7th'];
+// 7th Degree Chords Levels 6 & 8 only — these are the all-12-keys inversion
+// levels, with no fixed key to anchor against. Diminished 7th is left out:
+// it's a fully symmetric chord (stacked minor 3rds), so root/1st/2nd/3rd
+// inversion all have the identical relative interval shape — same reasoning
+// as Basic Triads excluding Augmented/Suspended from its own Levels 6/8.
+export const SEVENTH_CHOICES_NO_SYMMETRIC = ['Dominant 7th', 'Minor 7(♭5)', 'Major 7th', 'Minor 7th'];
 export const SECONDARY_SEVENTH_CHOICES = ['Augmented 7th', 'Minor-Major 7th', 'Diminished-Major 7th', 'Dominant 7(♭5)', 'Major 7(♯5)', 'Major 7(♭5)'];
+// Secondary 7th Chords Levels 6 & 8 only — these are the all-12-keys
+// inversion levels, with no fixed key to anchor against. Dominant 7(♭5) is
+// left out: it's a tritone-symmetric chord (two tritones stacked a major
+// 3rd apart — [0,4,6,10] maps onto itself transposed a tritone), so its
+// inversions are indistinguishable from each other by ear — same reasoning
+// as 7th Degree Chords excluding Diminished 7th from its own Levels 6/8.
+export const SECONDARY_SEVENTH_CHOICES_NO_SYMMETRIC = ['Augmented 7th', 'Minor-Major 7th', 'Diminished-Major 7th', 'Major 7(♯5)', 'Major 7(♭5)'];
 export const NINTH_CHOICES = ['Major 9th', 'Minor 9th', 'Diminished 7(9)', 'Dominant 9th', 'Minor 9(♭5)', 'Dominant 7(♭9)'];
 export const SECONDARY_NINTH_CHOICES = ['Major 9(♯5)', 'Diminished-Major 9th', 'Dominant 9(♭5)', 'Minor-Major 9th', 'Augmented 9th', 'Major 9(♭5)'];
 export const ELEVENTH_CHOICES = ['Major 9(♯11)', 'Minor 11th', 'Diminished 7(9,11)', 'Dominant 9(♯11)', 'Minor 11(♭5)', 'Dominant 7(♭9,♯11)'];
@@ -52,6 +78,8 @@ export const MELODIC_DICTATION_LENGTHS = {
     '5-Note Melodies': 5,
     'Dual-tonic melodies': [4, 5, 6],
     'Chordal melodies': [4, 5, 6],
+    'Chordal Bass Lines': [4, 5, 6],
+    'Dyad Melodies': 5,
 };
 
 export const TRIAD_INVERSIONS = ['Root Position', '1st Inversion', '2nd Inversion'];
@@ -60,24 +88,35 @@ export const SEVENTH_INVERSIONS = ['Root Position', '1st Inversion', '2nd Invers
 // Quizzes with no single fixed-choice answer — the app has the student pick a
 // chord quality AND an inversion separately (compound: { qualities, inversions }
 // in app/practice.tsx).
+export const ADD9_CHOICES = ['Major add 9', 'Minor add 9', 'Diminished add 9', 'Augmented add 9'];
+
 export const COMPOUND_ANSWER_PRESETS = {
     'Basic Triads': {
         'Basic Triads · Level 5': { qualities: TRIAD_CHOICES, inversions: TRIAD_INVERSIONS },
-        'Basic Triads · Level 6': { qualities: TRIAD_CHOICES, inversions: TRIAD_INVERSIONS },
+        'Basic Triads · Level 6': { qualities: TRIAD_CHOICES_NO_SYMMETRIC, inversions: TRIAD_INVERSIONS },
         'Basic Triads · Level 7': { qualities: TRIAD_CHOICES, inversions: TRIAD_INVERSIONS },
-        'Basic Triads · Level 8': { qualities: TRIAD_CHOICES, inversions: TRIAD_INVERSIONS },
+        'Basic Triads · Level 8': { qualities: TRIAD_CHOICES_NO_SYMMETRIC, inversions: TRIAD_INVERSIONS },
     },
+    // Add 9 never asks the member to identify an inversion/position —
+    // per explicit instruction, that's Basic Triads' thing only. Levels 3/4/
+    // 7/8 still play chords in all 4 rotated positions for audio variety,
+    // but the answer is flat quality-only — see CATEGORY_ANSWER_PRESETS
+    // below, not here.
     '7th Degree Chords': {
         '7th Degree Chords · Level 5': { qualities: SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
-        '7th Degree Chords · Level 6': { qualities: SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
+        '7th Degree Chords · Level 6': { qualities: SEVENTH_CHOICES_NO_SYMMETRIC, inversions: SEVENTH_INVERSIONS },
         '7th Degree Chords · Level 7': { qualities: SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
-        '7th Degree Chords · Level 8': { qualities: SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
+        '7th Degree Chords · Level 8': { qualities: SEVENTH_CHOICES_NO_SYMMETRIC, inversions: SEVENTH_INVERSIONS },
     },
     'Secondary 7th Chords': {
         'Secondary 7th Chords · Level 5': { qualities: SECONDARY_SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
-        'Secondary 7th Chords · Level 6': { qualities: SECONDARY_SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
+        'Secondary 7th Chords · Level 6': { qualities: SECONDARY_SEVENTH_CHOICES_NO_SYMMETRIC, inversions: SEVENTH_INVERSIONS },
         'Secondary 7th Chords · Level 7': { qualities: SECONDARY_SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
-        'Secondary 7th Chords · Level 8': { qualities: SECONDARY_SEVENTH_CHOICES, inversions: SEVENTH_INVERSIONS },
+        'Secondary 7th Chords · Level 8': { qualities: SECONDARY_SEVENTH_CHOICES_NO_SYMMETRIC, inversions: SEVENTH_INVERSIONS },
+        // General does NOT use this compound picker — see
+        // CATEGORY_ANSWER_PRESETS['Secondary 7th Chords'].General below. It
+        // plays all 4 rotated positions for audio variety, but only tests
+        // quality, never inversion.
     },
 };
 
@@ -85,7 +124,7 @@ export function compoundFor(category, title) {
     return COMPOUND_ANSWER_PRESETS[category]?.[title] ?? null;
 }
 
-export const EXTENSION_CHOICES = ['7', '♭9', '9', '11', '♯11', '♭13', '13'];
+export const EXTENSION_CHOICES = ['6', '7', '♭9', '9', '11', '♯11', '♭13', '13'];
 export const DOMINANT_EXTENSION_CHOICES = ['♭9', '9', '♯9', '11', '♯11', '♭13', '13'];
 
 // Quizzes where the student picks several extensions at once rather than one
@@ -113,9 +152,18 @@ export const RECOGNITION_QUALITIES = ['Major 7th', 'Minor 7th', 'Minor 7(♭5)',
 // student build each chord in the progression slot by slot (progression: {
 // degrees, qualities, fixedDegrees, fixedQualities, extensions } in
 // app/practice.tsx).
+// "Chordal Progressions" answers each chord with just its QUALITY (no
+// root/degree — this tests chord-quality recognition only), via
+// `qualityOnly: true`, reusing TRIAD_CHOICES/SEVENTH_CHOICES' exact labels so
+// the vocabulary stays consistent with the rest of this category. Its chord
+// count varies 5-6 per question (same progressions as Chordal melodies /
+// Chordal Bass Lines in Melodic Dictation, whose audio this quiz reuses).
+export const CHORDAL_PROGRESSION_QUALITIES = ['Major', 'Minor', 'Diminished', 'Major 7th', 'Minor 7th', 'Dominant 7th', 'Minor 7(♭5)', 'Diminished 7th'];
+
 export const PROGRESSION_ANSWER_PRESETS = {
     'Chord Progressions': {
         'Diatonic Progression': { length: 4, degreeOptions: PROGRESSION_DEGREES, fixedQualities: DIATONIC_TRIADS },
+        'Chordal Progressions': { length: [5, 6], qualityOnly: true, qualityOptions: CHORDAL_PROGRESSION_QUALITIES },
         'Progression Build #1': { length: 4, degreeOptions: PROGRESSION_DEGREES, qualityOptions: PROGRESSION_QUALITIES },
         'Progression Build #2': { length: 5, degreeOptions: PROGRESSION_DEGREES, qualityOptions: PROGRESSION_SEVENTH_QUALITIES },
         'Progression recognition': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES },
@@ -129,9 +177,15 @@ export function progressionFor(category, title) {
 
 // Builds the composed answer string for a chord progression from its slots,
 // e.g. "2 Minor 7th - 5 Dominant 7th(♭9, 13) - 1 Major 7th". Returns '' while
-// any slot is still missing a degree or quality.
+// any slot is still missing a degree or quality. `qualityOnly` configs (e.g.
+// Chordal Progressions) skip the degree entirely and compose from quality alone.
 export function composeProgression(config, slots) {
     const parts = slots.map((slot, index) => {
+        if (config.qualityOnly) {
+            if (!slot.quality) return null;
+            const extensions = slot.extensions ?? [];
+            return `${slot.quality}${extensions.length ? `(${extensions.join(', ')})` : ''}`;
+        }
         const degree = config.fixedDegrees ? config.fixedDegrees[index] : slot.degree;
         const quality = config.fixedQualities ? (degree ? config.fixedQualities[degree] : null) : slot.quality;
         if (!degree || !quality) return null;
@@ -150,6 +204,25 @@ export const NAMING_QUALITIES = ['Major', 'Minor', 'Augmented', 'Dominant', 'Dim
 // 13 it lets the player cycle through, so each is its own pickable chip here.
 export const NAMING_DEGREES = ['♭5', '6', '7', '9', '♭9', '♯9', '11', '♭11', '♯11', '13', '♭13', '♯13', 'Sus 2', 'Sus 4'];
 export const NAMING_EXCLUDES = ['No 3', 'No 5', 'None'];
+
+// web's real content for "Chord naming" (unlike the app's on-the-fly version)
+// needs an exact-string-match answer (QuizController::answer() compares
+// $data['choice'] === $question->answer) — the quality/degrees/exclude must
+// be recoverable afterwards too, for per-chip correct/incorrect feedback, so
+// a plain built name (lossy — can't always tell which degrees produced it)
+// isn't enough. This pipe-delimited encoding is both: degrees are always
+// sorted into NAMING_DEGREES order first, so the same picks always encode
+// the same way regardless of click order, matching scripts/audio's PHP port
+// of this exact function used to generate the real answer key.
+export function encodeNamingAnswer(quality, degrees, exclude) {
+    const sorted = NAMING_DEGREES.filter((degree) => degrees.includes(degree));
+    return `${quality}|${sorted.join(',')}|${exclude ?? 'None'}`;
+}
+
+export function decodeNamingAnswer(value) {
+    const [quality, degreesPart, exclude] = (value ?? '').split('|');
+    return { quality: quality ?? '', degrees: degreesPart ? degreesPart.split(',') : [], exclude: exclude ?? 'None' };
+}
 
 export function buildNamedChord(quality, degrees, exclude) {
     const has = (degree) => degrees.includes(degree);
@@ -215,7 +288,6 @@ export const CATEGORY_ANSWER_PRESETS = {
         'Harmonic Non-diatonic Intervals': ['Minor 2nd', 'Minor 3rd', 'Tri Tone', 'Minor 6th', 'Minor 7th'],
         'Melodic Intervals: General': ['Minor 2nd', 'Major 2nd', 'Minor 3rd', 'Major 3rd', 'Perfect 4th', 'Tri Tone', 'Perfect 5th', 'Minor 6th', 'Major 6th', 'Minor 7th', 'Major 7th', 'Octave'],
         'Harmonic Intervals: General': ['Minor 2nd', 'Major 2nd', 'Minor 3rd', 'Major 3rd', 'Perfect 4th', 'Tri Tone', 'Perfect 5th', 'Minor 6th', 'Major 6th', 'Minor 7th', 'Major 7th', 'Octave'],
-        'Interval - Patterns': ['Thirds', 'Fourths', 'Fifths', 'Sixths'],
     },
     'Basic Triads': {
         'Basic Triads · Level 1': TRIAD_CHOICES,
@@ -223,11 +295,18 @@ export const CATEGORY_ANSWER_PRESETS = {
         'Basic Triads · Level 3': TRIAD_CHOICES,
         'Basic Triads · Level 4': TRIAD_CHOICES,
     },
+    // Flat quality-only for all 8 levels — Add 9 never tests inversion/
+    // position, even on the levels whose audio cycles through all 4
+    // rotated positions (3/4/7/8) for variety.
     'Add 9': {
-        'Add 9 · Level 1': ['Major add 9', 'Minor add 9', 'Diminished add 9', 'Augmented add 9'],
-        'Add 9 · Level 2': ['Major add 9', 'Minor add 9', 'Diminished add 9', 'Augmented add 9'],
-        'Add 9 · Level 3': ['Major add 9', 'Minor add 9', 'Diminished add 9', 'Augmented add 9'],
-        'Add 9 · Level 4': ['Major add 9', 'Minor add 9', 'Diminished add 9', 'Augmented add 9'],
+        'Add 9 · Level 1': ADD9_CHOICES,
+        'Add 9 · Level 2': ADD9_CHOICES,
+        'Add 9 · Level 3': ADD9_CHOICES,
+        'Add 9 · Level 4': ADD9_CHOICES,
+        'Add 9 · Level 5': ADD9_CHOICES,
+        'Add 9 · Level 6': ADD9_CHOICES,
+        'Add 9 · Level 7': ADD9_CHOICES,
+        'Add 9 · Level 8': ADD9_CHOICES,
     },
     '7th Degree Chords': {
         '7th Degree Chords · Level 1': SEVENTH_CHOICES,
@@ -240,7 +319,10 @@ export const CATEGORY_ANSWER_PRESETS = {
         'Secondary 7th Chords · Level 2': SECONDARY_SEVENTH_CHOICES,
         'Secondary 7th Chords · Level 3': SECONDARY_SEVENTH_CHOICES,
         'Secondary 7th Chords · Level 4': SECONDARY_SEVENTH_CHOICES,
-        General: ['Diminished 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Augmented 7th', 'Minor-Major 7th', 'Dominant 7(♭5)', 'Minor 7th', 'Major 7th', 'Major 7(♯5)', 'Diminished-Major 7th', 'Major 7(♭5)'],
+        // Combines 7th Degree Chords' 5 qualities + Secondary 7th Chords'
+        // 6 = 11 total. Quality-only — never tests inversion, even though
+        // the underlying audio cycles through all 4 rotated positions.
+        General: [...SEVENTH_CHOICES, ...SECONDARY_SEVENTH_CHOICES],
     },
     '9th Degree Chords': {
         '9th Degree Chords · Level 1': NINTH_CHOICES,

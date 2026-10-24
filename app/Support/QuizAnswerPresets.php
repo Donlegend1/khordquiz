@@ -80,7 +80,6 @@ class QuizAnswerPresets
                 'Harmonic Non-diatonic Intervals' => ['Minor 2nd', 'Minor 3rd', 'Tri Tone', 'Minor 6th', 'Minor 7th'],
                 'Melodic Intervals: General' => ['Minor 2nd', 'Major 2nd', 'Minor 3rd', 'Major 3rd', 'Perfect 4th', 'Tri Tone', 'Perfect 5th', 'Minor 6th', 'Major 6th', 'Minor 7th', 'Major 7th', 'Octave'],
                 'Harmonic Intervals: General' => ['Minor 2nd', 'Major 2nd', 'Minor 3rd', 'Major 3rd', 'Perfect 4th', 'Tri Tone', 'Perfect 5th', 'Minor 6th', 'Major 6th', 'Minor 7th', 'Major 7th', 'Octave'],
-                'Interval - Patterns' => ['Thirds', 'Fourths', 'Fifths', 'Sixths'],
             ],
             'Basic Triads' => [
                 'Basic Triads · Level 1' => $triad,

@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Auth\ProfileSetupController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\SignupController;
 use App\Http\Controllers\Auth\VerifyEmailController;
@@ -62,4 +63,10 @@ Route::middleware('auth')->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
+
+    Route::get('profile-setup', [ProfileSetupController::class, 'edit'])
+        ->name('profile-setup.edit');
+
+    Route::post('profile-setup', [ProfileSetupController::class, 'update'])
+        ->name('profile-setup.update');
 });

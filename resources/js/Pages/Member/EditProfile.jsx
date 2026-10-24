@@ -1,8 +1,8 @@
+import CountryPicker from '@/Components/CountryPicker';
 import InputError from '@/Components/InputError';
 import AppShell from '@/Layouts/AppShell';
-import { COUNTRIES } from '@/lib/countries';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 function initials(name) {
     return name
@@ -11,31 +11,6 @@ function initials(name) {
         .slice(0, 2)
         .map((part) => part[0]?.toUpperCase())
         .join('');
-}
-
-function ChevronDownIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M6 9l6 6 6-6" />
-        </svg>
-    );
-}
-
-function CheckIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M5 13l4 4L19 7" />
-        </svg>
-    );
-}
-
-function SearchIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="11" cy="11" r="7" />
-            <path d="M21 21l-4.3-4.3" />
-        </svg>
-    );
 }
 
 function LockIcon(props) {
@@ -49,69 +24,6 @@ function LockIcon(props) {
 
 const fieldClass = 'w-full rounded-xl border border-neutral-200 px-3.5 py-3 text-[15px] text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10';
 
-function CountryPicker({ value, onChange }) {
-    const [open, setOpen] = useState(false);
-    const [query, setQuery] = useState('');
-    const ref = useRef(null);
-    const matches = COUNTRIES.filter((c) => c.toLowerCase().includes(query.trim().toLowerCase()));
-
-    useEffect(() => {
-        if (!open) return;
-        const onPointerDown = (e) => {
-            if (ref.current && !ref.current.contains(e.target)) setOpen(false);
-        };
-        document.addEventListener('mousedown', onPointerDown);
-        return () => document.removeEventListener('mousedown', onPointerDown);
-    }, [open]);
-
-    return (
-        <div className="relative" ref={ref}>
-            <button
-                type="button"
-                onClick={() => setOpen((v) => !v)}
-                className={`${fieldClass} flex items-center justify-between text-left`}
-            >
-                <span className={value ? 'text-neutral-900' : 'text-neutral-400'}>{value || 'Select your country'}</span>
-                <ChevronDownIcon className="h-4 w-4 shrink-0 text-neutral-400" />
-            </button>
-
-            {open && (
-                <div className="absolute left-0 right-0 top-full z-20 mt-1.5 overflow-hidden rounded-xl border border-black/5 bg-white shadow-lg">
-                    <div className="flex items-center gap-2 border-b border-black/5 px-3.5 py-2.5">
-                        <SearchIcon className="h-4 w-4 shrink-0 text-neutral-400" />
-                        <input
-                            autoFocus
-                            type="text"
-                            value={query}
-                            onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search countries"
-                            className="w-full text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
-                        />
-                    </div>
-                    <div className="max-h-60 overflow-y-auto py-1">
-                        {matches.map((country) => (
-                            <button
-                                key={country}
-                                type="button"
-                                onClick={() => {
-                                    onChange(country);
-                                    setOpen(false);
-                                    setQuery('');
-                                }}
-                                className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm text-neutral-800 transition-colors duration-150 hover:bg-neutral-50"
-                            >
-                                {country}
-                                {country === value && <CheckIcon className="h-4 w-4 text-brand" />}
-                            </button>
-                        ))}
-                        {matches.length === 0 && <p className="px-3.5 py-3 text-sm text-neutral-400">No matches.</p>}
-                    </div>
-                </div>
-            )}
-        </div>
-    );
-}
-
 // The users table has one `name` column, so an existing name is split on its
 // first space into first/last for these two fields — the same shape the
 // signup form already collects, just combined back into `name` on save.
@@ -124,7 +36,7 @@ export default function EditProfile() {
     const { auth } = usePage().props;
     const user = auth.user;
     const { first, last } = splitName(user.name);
-    const { data, setData, patch, processing, errors } = useForm({
+    const { data, setData, patch, processing, errors, recentlySuccessful } = useForm({
         first_name: first,
         last_name: last,
         email: user.email ?? '',
@@ -134,7 +46,7 @@ export default function EditProfile() {
 
     const submit = (e) => {
         e.preventDefault();
-        patch(route('profile.update'));
+        patch(route('profile.update'), { preserveScroll: true });
     };
 
     return (
@@ -183,8 +95,8 @@ export default function EditProfile() {
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Country</label>
-                        <CountryPicker value={data.country} onChange={(value) => setData('country', value)} />
+                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Country / Region</label>
+                        <CountryPicker value={data.country} onChange={(value) => setData('country', value)} triggerClassName={fieldClass} />
                         <InputError message={errors.country} className="mt-1.5" />
                     </div>
 
@@ -217,12 +129,17 @@ export default function EditProfile() {
                         disabled={processing}
                         className="flex-1 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
                     >
-                        Save Changes
+                        {processing ? 'Saving…' : 'Save Changes'}
                     </button>
                     <Link href={route('account')} className="rounded-xl px-5 py-3.5 text-sm font-semibold text-neutral-600 hover:bg-neutral-50">
                         Cancel
                     </Link>
                 </div>
+                {recentlySuccessful && (
+                    <p className="text-center text-sm font-semibold text-emerald-700" role="status">
+                        Profile saved.
+                    </p>
+                )}
             </form>
         </AppShell>
     );

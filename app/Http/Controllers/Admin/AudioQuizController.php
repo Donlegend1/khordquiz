@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Concerns\HandlesQuizMedia;
 use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
+use App\Models\QuizQuestionAudio;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -387,6 +388,8 @@ class AudioQuizController extends Controller
      */
     private function quizPayload(Quiz $quiz): array
     {
+        $quiz->loadMissing('questions.audioVariants');
+
         return [
             'id' => $quiz->id,
             'title' => $quiz->title,
@@ -408,6 +411,10 @@ class AudioQuizController extends Controller
                 'answer' => $question->answer,
                 'audio_url' => $this->mediaUrl($question->audio_path),
                 'sound' => $question->sound,
+                'audio_variants' => $question->audioVariants->map(fn (QuizQuestionAudio $variant) => [
+                    'sound' => $variant->sound,
+                    'url' => $this->mediaUrl($variant->audio_path),
+                ])->values(),
             ])->values(),
         ];
     }

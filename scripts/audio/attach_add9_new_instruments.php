@@ -1,0 +1,49 @@
+<?php
+
+// Attaches Trombone, Saxophone, Marimba, Celesta, and Vibraphone audio to
+// Add 9 Levels 1-8's EXISTING question rows (does not rebuild questions —
+// just adds QuizQuestionAudio rows for the 5 new instruments). For each
+// question, reads Piano's existing audio_path (which already encodes the
+// exact key/quality/position slug for that row) and reuses its filename
+// for each new instrument's own folder.
+
+use App\Models\Quiz;
+use App\Models\QuizQuestionAudio;
+
+const NEW_INSTRUMENTS = [
+    'Trombone' => 'trombone', 'Saxophone' => 'saxophone', 'Marimba' => 'marimba',
+    'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
+];
+
+// level title => storage path prefix (matches each level's own convention).
+const LEVEL_PATH_PREFIXES = [
+    'Add 9 · Level 1' => 'add9',
+    'Add 9 · Level 2' => 'add9/level2',
+    'Add 9 · Level 3' => 'add9/level3',
+    'Add 9 · Level 4' => 'add9/level4',
+    'Add 9 · Level 5' => 'add9/level5',
+    'Add 9 · Level 6' => 'add9/level6',
+    'Add 9 · Level 7' => 'add9/level7',
+    'Add 9 · Level 8' => 'add9/level8',
+];
+
+foreach (LEVEL_PATH_PREFIXES as $title => $pathPrefix) {
+    $quiz = Quiz::where('title', $title)->firstOrFail();
+    $attached = 0;
+
+    foreach ($quiz->questions as $question) {
+        $pianoAudio = QuizQuestionAudio::where('quiz_question_id', $question->id)->where('sound', 'Piano')->first();
+        if (!$pianoAudio) continue;
+        $suffix = basename($pianoAudio->audio_path, '.wav');
+
+        foreach (NEW_INSTRUMENTS as $sound => $folderSlug) {
+            QuizQuestionAudio::updateOrCreate(
+                ['quiz_question_id' => $question->id, 'sound' => $sound],
+                ['audio_path' => "{$pathPrefix}/{$folderSlug}/{$suffix}.wav"]
+            );
+            $attached++;
+        }
+    }
+
+    echo "Attached {$attached} rows on \"{$title}\".".PHP_EOL;
+}

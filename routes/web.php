@@ -50,6 +50,10 @@ Route::delete('/settings/progress', [SettingsController::class, 'resetProgress']
     ->middleware(['auth', 'verified'])
     ->name('settings.reset-progress');
 
+Route::patch('/settings/default-instrument', [SettingsController::class, 'updateDefaultInstrument'])
+    ->middleware(['auth', 'verified'])
+    ->name('settings.default-instrument');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz', [QuizController::class, 'categories'])->name('quiz.categories');
     Route::get('/quiz/play/{quiz:slug}', [QuizController::class, 'preview'])->name('quiz.preview');
@@ -109,6 +113,9 @@ Route::middleware(['auth', 'verified', 'admin'])
         Route::post('/users/{user}/suspend', [AdminUserController::class, 'suspend'])->name('users.suspend');
         Route::post('/users/{user}/unsuspend', [AdminUserController::class, 'unsuspend'])->name('users.unsuspend');
         Route::post('/users/{user}/role', [AdminUserController::class, 'updateRole'])->name('users.role');
+        Route::post('/users/{user}/plan', [AdminUserController::class, 'updatePlan'])->name('users.plan');
+        Route::post('/users/{user}/plan/extend', [AdminUserController::class, 'extendPlan'])->name('users.plan.extend');
+        Route::post('/users/{user}/plan/cancel', [AdminUserController::class, 'cancelPlan'])->name('users.plan.cancel');
     });
 
 Route::middleware('auth')->group(function () {

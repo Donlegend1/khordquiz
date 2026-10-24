@@ -1,0 +1,2394 @@
+[
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            24,
+            25,
+            28,
+            29,
+            28,
+            24
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/do-mi-fa-mi-do-o0.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            48,
+            49,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            36,
+            37,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            72,
+            73,
+            76,
+            77,
+            76,
+            72
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/do-mi-fa-mi-do-o1.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            72,
+            73,
+            76,
+            77,
+            76,
+            72
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            72,
+            73,
+            76,
+            77,
+            76,
+            72
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            72,
+            73,
+            76,
+            77,
+            76,
+            72
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            60,
+            61,
+            64,
+            65,
+            64,
+            60
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/do-mi-fa-mi-do-o2.wav",
+        "notes": [
+            72,
+            73,
+            76,
+            77,
+            76,
+            72
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            28,
+            25,
+            24,
+            23,
+            24,
+            28
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/mi-do-til-do-mi-o0.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            52,
+            49,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            40,
+            37,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            76,
+            73,
+            72,
+            71,
+            72,
+            76
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/mi-do-til-do-mi-o1.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            76,
+            73,
+            72,
+            71,
+            72,
+            76
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            76,
+            73,
+            72,
+            71,
+            72,
+            76
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            76,
+            73,
+            72,
+            71,
+            72,
+            76
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            64,
+            61,
+            60,
+            59,
+            60,
+            64
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/mi-do-til-do-mi-o2.wav",
+        "notes": [
+            76,
+            73,
+            72,
+            71,
+            72,
+            76
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            31,
+            32,
+            35,
+            36,
+            35,
+            31
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/so-ti-doh-ti-so-o0.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            55,
+            56,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            43,
+            44,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            79,
+            80,
+            83,
+            84,
+            83,
+            79
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/so-ti-doh-ti-so-o1.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            79,
+            80,
+            83,
+            84,
+            83,
+            79
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            79,
+            80,
+            83,
+            84,
+            83,
+            79
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            79,
+            80,
+            83,
+            84,
+            83,
+            79
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            67,
+            68,
+            71,
+            72,
+            71,
+            67
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/so-ti-doh-ti-so-o2.wav",
+        "notes": [
+            79,
+            80,
+            83,
+            84,
+            83,
+            79
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            33,
+            30,
+            29,
+            28,
+            29,
+            33
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/la-fa-mi-fa-la-o0.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Bass Guitar",
+        "folder": "bass-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/bass-guitar\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            57,
+            54,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "sound": "Trombone",
+        "folder": "trombone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/trombone\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Tuba",
+        "folder": "tuba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/tuba\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            45,
+            42,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Violin",
+        "folder": "violin",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/violin\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            81,
+            78,
+            77,
+            76,
+            77,
+            81
+        ]
+    },
+    {
+        "sound": "Voice",
+        "folder": "voice",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/voice\/la-fa-mi-fa-la-o1.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Celesta",
+        "folder": "celesta",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/celesta\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            81,
+            78,
+            77,
+            76,
+            77,
+            81
+        ]
+    },
+    {
+        "sound": "Cello",
+        "folder": "cello",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/cello\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "EP",
+        "folder": "ep",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/ep\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Guitar",
+        "folder": "guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/guitar\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Harp",
+        "folder": "harp",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/harp\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Jazz Guitar",
+        "folder": "jazz-guitar",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/jazz-guitar\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Marimba",
+        "folder": "marimba",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/marimba\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            81,
+            78,
+            77,
+            76,
+            77,
+            81
+        ]
+    },
+    {
+        "sound": "Organ",
+        "folder": "organ",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/organ\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Piano",
+        "folder": "piano",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/piano\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Saxophone",
+        "folder": "saxophone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/saxophone\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            81,
+            78,
+            77,
+            76,
+            77,
+            81
+        ]
+    },
+    {
+        "sound": "Strings",
+        "folder": "strings",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/strings\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            69,
+            66,
+            65,
+            64,
+            65,
+            69
+        ]
+    },
+    {
+        "sound": "Vibraphone",
+        "folder": "vibraphone",
+        "audio_path": "melodic-dictation\/dual-tonic-melodies\/vibraphone\/la-fa-mi-fa-la-o2.wav",
+        "notes": [
+            81,
+            78,
+            77,
+            76,
+            77,
+            81
+        ]
+    }
+]

@@ -54,7 +54,7 @@ export default function SiteHeader() {
                 <div className="hidden items-center gap-3 md:flex">
                     <a
                         href="/login"
-                        className="rounded-lg border border-gray-300 px-4 py-2.5 text-base font-medium text-gray-900 transition hover:border-gray-900 hover:bg-gray-50"
+                        className="rounded-lg border border-gray-900 bg-gray-900 px-4 py-2.5 text-base font-medium text-white transition hover:bg-black"
                     >
                         Sign in
                     </a>
@@ -141,7 +141,7 @@ export default function SiteHeader() {
                         href="/login"
                         onClick={close}
                         tabIndex={menuOpen ? 0 : -1}
-                        className="rounded-xl border border-gray-300 px-4 py-3.5 text-center text-base font-medium text-gray-900 transition hover:border-gray-900 hover:bg-gray-50"
+                        className="rounded-xl border border-gray-900 bg-gray-900 px-4 py-3.5 text-center text-base font-medium text-white transition hover:bg-black"
                     >
                         Sign in
                     </a>

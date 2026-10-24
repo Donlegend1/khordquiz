@@ -110,14 +110,14 @@ export default function Leaderboard() {
         <AppShell eyebrow="Member" title="Leaderboard" intro="See how your practice stacks up against other members.">
             <Head title="Leaderboard" />
 
-            <div className="mb-6 inline-flex rounded-xl bg-neutral-100 p-1">
+            <div className="mb-6 grid grid-cols-2 gap-2 sm:inline-flex sm:gap-0 sm:rounded-xl sm:bg-neutral-100 sm:p-1">
                 {Object.entries(PERIODS).map(([key, value]) => (
                     <button
                         key={key}
                         type="button"
                         onClick={() => setPeriod(key)}
-                        className={`rounded-lg px-4 py-2 text-sm font-semibold transition-colors duration-150 ${
-                            period === key ? 'bg-brand text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-900'
+                        className={`rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-150 sm:rounded-lg sm:py-2 ${
+                            period === key ? 'bg-brand text-white shadow-sm' : 'bg-neutral-100 text-neutral-500 hover:text-neutral-900 sm:bg-transparent'
                         }`}
                     >
                         {value.label}
@@ -125,19 +125,19 @@ export default function Leaderboard() {
                 ))}
             </div>
 
-            <div className="mb-6 flex flex-col items-center gap-4 rounded-2xl bg-neutral-900 p-6 text-white sm:flex-row sm:gap-6">
-                <div className="flex shrink-0 flex-col items-center text-center sm:items-start sm:text-left">
-                    <span className="text-[11px] font-semibold uppercase tracking-wide text-white/60">Your rank</span>
-                    <span className="text-3xl font-extrabold tabular-nums">#{board.you.rank.toLocaleString('en-US')}</span>
-                    <span className="text-xs text-white/60">of {board.total.toLocaleString('en-US')}</span>
+            <div className="mb-6 flex items-center gap-4 rounded-2xl bg-neutral-900 p-4 text-white sm:gap-6 sm:p-6">
+                <div className="flex shrink-0 flex-col items-start text-left">
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60 sm:text-[11px]">Your rank</span>
+                    <span className="text-2xl font-extrabold tabular-nums sm:text-3xl">#{board.you.rank.toLocaleString('en-US')}</span>
+                    <span className="text-[11px] text-white/60 sm:text-xs">of {board.total.toLocaleString('en-US')}</span>
                 </div>
-                <div className="hidden h-14 w-px bg-white/15 sm:block" />
-                <div className="flex min-w-0 flex-1 flex-col items-center gap-1 text-center sm:items-start sm:text-left">
-                    <span className="text-base font-extrabold tabular-nums">{board.you.points.toLocaleString('en-US')} pts</span>
-                    <span className="text-sm text-white/70">
+                <div className="h-12 w-px shrink-0 bg-white/15 sm:h-14" />
+                <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">
+                    <span className="text-sm font-extrabold tabular-nums sm:text-base">{board.you.points.toLocaleString('en-US')} pts</span>
+                    <span className="truncate text-xs text-white/70 sm:text-sm">
                         {board.ahead.pointsToPass.toLocaleString('en-US')} pts to pass {board.ahead.name}
                     </span>
-                    <span className="mt-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-bold">Top {topPercent}%</span>
+                    <span className="mt-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold sm:text-[11px]">Top {topPercent}%</span>
                 </div>
             </div>
 

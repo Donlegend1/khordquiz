@@ -2,19 +2,6 @@ import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
-// The 12 chromatic piano notes used as literal answers by the note-based quizzes (Find the
-// Note, Find the Key #1/#2) — same files and note names as the mobile app's assets/audio/piano,
-// copied into public/audio/piano so the browser can play them directly.
-const NOTE_FILES = {
-    C: 'c3', 'C#/Db': 'csharp3', D: 'd3', 'D#/Eb': 'dsharp3', E: 'e3', F: 'f3',
-    'F#/Gb': 'fsharp3', G: 'g3', 'G#/Ab': 'gsharp3', A: 'a3', 'A#/Bb': 'asharp3', B: 'b3',
-};
-
-function noteAudio(note) {
-    const file = NOTE_FILES[note];
-    return file ? new Audio(`/audio/piano/${file}.wav`) : null;
-}
-
 function CheckIcon(props) {
     return (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" {...props}>
@@ -64,7 +51,7 @@ function AnswerReview({ records }) {
 
     if (records.length === 0) return null;
 
-    const toggleNote = (position, note) => {
+    const toggleNote = (position, url) => {
         if (playing?.position === position) {
             playing.audio.pause();
             setPlaying(null);
@@ -72,8 +59,7 @@ function AnswerReview({ records }) {
         }
         playing?.audio.pause();
 
-        const audio = noteAudio(note);
-        if (!audio) return;
+        const audio = new Audio(url);
         audio.addEventListener('ended', () => setPlaying((current) => (current?.position === position ? null : current)));
         audio.play().catch(() => {});
         setPlaying({ audio, position });
@@ -93,7 +79,7 @@ function AnswerReview({ records }) {
             {open && (
                 <ul className="divide-y divide-black/5 border-t border-black/5">
                     {records.map((record) => {
-                        const canPlayCorrect = Object.prototype.hasOwnProperty.call(NOTE_FILES, record.answer);
+                        const canPlayCorrect = Boolean(record.audio_url);
                         return (
                             <li key={record.position} className="flex items-center gap-2.5 px-5 py-3">
                                 <span
@@ -116,7 +102,7 @@ function AnswerReview({ records }) {
                                             <button
                                                 type="button"
                                                 aria-label={isPlaying ? 'Pause' : `Play the correct note, ${record.answer}`}
-                                                onClick={() => toggleNote(record.position, record.answer)}
+                                                onClick={() => toggleNote(record.position, record.audio_url)}
                                                 className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150 ${
                                                     isPlaying ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
                                                 }`}

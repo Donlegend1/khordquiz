@@ -30,7 +30,7 @@ class AdminUserManagementTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Admin/Users/Index')
                 ->where('stats.total', 3)
-                ->where('stats.admins', 1)
+                ->where('stats.inactiveMembers', 3)
                 ->has('users.data', 3));
     }
 
@@ -135,5 +135,81 @@ class AdminUserManagementTest extends TestCase
                 ->component('Admin/Users/Show')
                 ->where('member.id', $member->id)
                 ->where('member.email', $member->email));
+    }
+
+    public function test_admin_can_assign_a_plan_to_a_member(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.users.plan', $member), [
+            'plan_choice' => 'yearly',
+            'payment_method' => 'stripe',
+            'plan_expires_at' => now()->addYear()->toDateString(),
+        ]);
+
+        $member->refresh();
+        $this->assertSame('yearly', $member->plan_choice);
+        $this->assertSame('stripe', $member->payment_method);
+        $this->assertNotNull($member->plan_started_at);
+        $this->assertTrue($member->plan_expires_at->isFuture());
+    }
+
+    public function test_assigning_a_lifetime_plan_clears_any_expiry(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create(['plan_choice' => 'monthly', 'plan_expires_at' => now()->addMonth()]);
+
+        $this->actingAs($admin)->post(route('admin.users.plan', $member), ['plan_choice' => 'lifetime']);
+
+        $this->assertNull($member->refresh()->plan_expires_at);
+    }
+
+    public function test_admin_can_extend_a_members_plan(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $expires = now()->addDays(5);
+        $member = User::factory()->create(['plan_choice' => 'monthly', 'plan_expires_at' => $expires]);
+
+        $this->actingAs($admin)->post(route('admin.users.plan.extend', $member), ['days' => 30]);
+
+        $member->refresh();
+        $this->assertTrue($member->plan_expires_at->isSameDay($expires->copy()->addDays(30)));
+    }
+
+    public function test_extending_an_already_expired_plan_counts_from_today(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create(['plan_choice' => 'monthly', 'plan_expires_at' => now()->subDays(10)]);
+
+        $this->actingAs($admin)->post(route('admin.users.plan.extend', $member), ['days' => 30]);
+
+        $this->assertTrue($member->refresh()->plan_expires_at->isSameDay(now()->addDays(30)));
+    }
+
+    public function test_cannot_extend_a_plan_that_was_never_assigned(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create();
+
+        $this->actingAs($admin)->post(route('admin.users.plan.extend', $member), ['days' => 30])->assertStatus(422);
+    }
+
+    public function test_admin_can_cancel_a_members_plan(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create([
+            'plan_choice' => 'yearly',
+            'payment_method' => 'paypal',
+            'plan_started_at' => now(),
+            'plan_expires_at' => now()->addYear(),
+        ]);
+
+        $this->actingAs($admin)->post(route('admin.users.plan.cancel', $member));
+
+        $member->refresh();
+        $this->assertNull($member->plan_choice);
+        $this->assertNull($member->plan_started_at);
+        $this->assertNull($member->plan_expires_at);
     }
 }

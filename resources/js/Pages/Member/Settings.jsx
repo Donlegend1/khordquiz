@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { INSTRUMENT_GROUPS, INSTRUMENT_LABELS, LANGUAGES } from '@/lib/profile-options';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 
 // Most rows here mirror the mobile app's own Settings screen (see app/settings.tsx
@@ -9,8 +10,6 @@ import { useEffect, useRef, useState } from 'react';
 // shortcut. Daily goal is the one row backed by a real column (users.daily_goal),
 // so it reuses the same endpoint as the Progress page's goal picker.
 const APPEARANCES = ['System', 'Light', 'Dark'];
-const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
-const INSTRUMENTS = ['Piano', 'Violin', 'Strings', 'Choir', 'Organ', 'Saxophone', 'Xylophone', 'Guitar', 'Voice', 'Synth'];
 const NOTATIONS = ['Solfège', 'Numbers'];
 const NOTIFICATION_DELIVERIES = ['Push', 'Email', 'Off'];
 
@@ -273,8 +272,15 @@ function TimeRow({ icon: Icon, label, value, onChange, disabled }) {
     );
 }
 
-function PickerRow({ first, icon: Icon, label, hint, options, value, onChange, disabled }) {
+// `groups` (e.g. Default Instrument's Piano/Guitar/Strings/... families) renders a
+// labeled section per group instead of one flat list — `options` stays the plain
+// flat dropdown every other PickerRow (Appearance, Language, Notation) still uses.
+function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onChange, disabled, formatOption = (option) => option }) {
     const [open, setOpen] = useState(false);
+    // Two-step drill-down: the dropdown always opens on just the 6 category names
+    // (no instruments shown yet) — tapping one drills into that category's
+    // instrument list, with a back row to return to the category list.
+    const [activeGroup, setActiveGroup] = useState(null);
     const ref = useRef(null);
 
     useEffect(() => {
@@ -286,31 +292,86 @@ function PickerRow({ first, icon: Icon, label, hint, options, value, onChange, d
         return () => document.removeEventListener('mousedown', onPointerDown);
     }, [open]);
 
+    function toggleOpen() {
+        if (disabled) return;
+        setOpen((current) => {
+            const next = !current;
+            if (next) setActiveGroup(null);
+            return next;
+        });
+    }
+
+    function choose(option) {
+        onChange(option);
+        setOpen(false);
+    }
+
+    function OptionButton({ option }) {
+        return (
+            <button
+                type="button"
+                onClick={() => choose(option)}
+                className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition-colors duration-150 hover:bg-neutral-50 ${
+                    option === value ? 'font-semibold text-brand' : 'text-neutral-700'
+                }`}
+            >
+                {formatOption(option)}
+                {option === value && <span>✓</span>}
+            </button>
+        );
+    }
+
     return (
         <div className="relative" ref={ref}>
-            <RowShell first={first} icon={Icon} label={label} hint={hint} disabled={disabled} onClick={() => !disabled && setOpen((v) => !v)}>
-                <span className="shrink-0 text-sm text-neutral-500">{value}</span>
+            <RowShell first={first} icon={Icon} label={label} hint={hint} disabled={disabled} onClick={toggleOpen}>
+                <span className="shrink-0 text-sm text-neutral-500">{formatOption(value)}</span>
                 <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
             </RowShell>
 
             {open && (
-                <div className="absolute right-4 top-full z-20 mt-1 w-48 overflow-hidden rounded-xl border border-black/5 bg-white py-1 shadow-lg">
-                    {options.map((option) => (
-                        <button
-                            key={option}
-                            type="button"
-                            onClick={() => {
-                                onChange(option);
-                                setOpen(false);
-                            }}
-                            className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition-colors duration-150 hover:bg-neutral-50 ${
-                                option === value ? 'font-semibold text-brand' : 'text-neutral-700'
-                            }`}
-                        >
-                            {option}
-                            {option === value && <span>✓</span>}
-                        </button>
-                    ))}
+                <div className="absolute right-4 top-full z-20 mt-1 max-h-80 w-56 overflow-y-auto overflow-x-hidden rounded-xl border border-black/5 bg-white py-1 shadow-lg">
+                    {groups ? (
+                        activeGroup ? (
+                            <>
+                                <button
+                                    type="button"
+                                    onClick={() => setActiveGroup(null)}
+                                    className="flex w-full items-center gap-1 border-b border-black/5 px-3.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
+                                >
+                                    <ChevronIcon className="h-3 w-3 shrink-0 rotate-180 text-neutral-400" />
+                                    {groups.find((group) => group.name === activeGroup)?.icon && (
+                                        <span className="text-sm leading-none">{groups.find((group) => group.name === activeGroup).icon}</span>
+                                    )}
+                                    {activeGroup}
+                                </button>
+                                {groups.find((group) => group.name === activeGroup).options.map((option) => (
+                                    <OptionButton key={option} option={option} />
+                                ))}
+                            </>
+                        ) : (
+                            groups.map((group) => (
+                                <button
+                                    key={group.name}
+                                    type="button"
+                                    onClick={() => setActiveGroup(group.name)}
+                                    className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm text-neutral-700 transition-colors duration-150 hover:bg-neutral-50"
+                                >
+                                    <span className="flex min-w-0 items-center gap-2">
+                                        {group.icon && <span className="shrink-0 text-base leading-none">{group.icon}</span>}
+                                        <span className="truncate">{group.name}</span>
+                                    </span>
+                                    <span className="flex shrink-0 items-center gap-1.5">
+                                        {group.options.includes(value) && (
+                                            <span className="text-xs font-semibold text-brand">{formatOption(value)}</span>
+                                        )}
+                                        <ChevronIcon className="h-3.5 w-3.5 shrink-0 text-neutral-300" />
+                                    </span>
+                                </button>
+                            ))
+                        )
+                    ) : (
+                        options.map((option) => <OptionButton key={option} option={option} />)
+                    )}
                 </div>
             )}
         </div>
@@ -418,10 +479,18 @@ function ResetProgressSheet({ open, onClose }) {
     );
 }
 
-export default function Settings({ dailyGoal, goalOptions }) {
+export default function Settings({ dailyGoal, goalOptions, defaultInstrument }) {
     const [appearance, setAppearance] = useState('System');
     const [language, setLanguage] = useState('English');
-    const [instrument, setInstrument] = useState('Piano');
+    const [instrument, setInstrument] = useState(defaultInstrument ?? 'Piano');
+
+    // Persisted immediately on pick, same as the Daily goal row — this is what
+    // the quiz-preview page's sound picker reads back to decide which category
+    // (and which specific instrument within it) to pre-select.
+    function chooseInstrument(option) {
+        setInstrument(option);
+        router.patch(route('settings.default-instrument'), { default_instrument: option }, { preserveScroll: true, preserveState: true });
+    }
     const [notation, setNotation] = useState('Solfège');
     const [soundEffects, setSoundEffects] = useState(true);
     const [haptics, setHaptics] = useState(true);
@@ -443,7 +512,15 @@ export default function Settings({ dailyGoal, goalOptions }) {
 
                 <Section title="Practice">
                     <DailyGoalRow current={dailyGoal} options={goalOptions} />
-                    <PickerRow icon={NoteIcon} label="Default instrument" hint="Used for new quizzes" options={INSTRUMENTS} value={instrument} onChange={setInstrument} />
+                    <PickerRow
+                        icon={NoteIcon}
+                        label="Default instrument"
+                        hint="Used for new quizzes"
+                        groups={INSTRUMENT_GROUPS}
+                        value={instrument}
+                        onChange={chooseInstrument}
+                        formatOption={(option) => INSTRUMENT_LABELS[option] ?? option}
+                    />
                     <PickerRow icon={NotationIcon} label="Notation" hint="For quizzes with solfège answers" options={NOTATIONS} value={notation} onChange={setNotation} />
                     <RowShell icon={VolumeIcon} label="Sound effects">
                         <Toggle value={soundEffects} onChange={setSoundEffects} />

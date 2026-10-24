@@ -171,12 +171,16 @@ export default function Account() {
                     </div>
                     <p className="mt-3 text-2xl font-extrabold tabular-nums">{plan.price}</p>
                     <p className="mt-1 text-sm text-white/60">Renews on {sub.renews}.</p>
-                    <Link
-                        href={route('subscription')}
-                        className="mt-4 block rounded-xl bg-white py-3 text-center text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
-                    >
-                        Manage Subscription
-                    </Link>
+                    {sub.provider === 'App Store' || sub.provider === 'Google Play' ? (
+                        <p className="mt-4 text-xs text-white/50">This subscription is managed through the {sub.provider}.</p>
+                    ) : (
+                        <Link
+                            href={route('subscription')}
+                            className="mt-4 block rounded-xl bg-white py-3 text-center text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
+                        >
+                            Manage Subscription
+                        </Link>
+                    )}
                 </div>
 
                 <div>

@@ -32,20 +32,22 @@ class QuizResultsReviewTest extends TestCase
 
         $this->playThrough($user, $quiz, ['C', 'C']);
 
-        $this->actingAs($user)
+        $response = $this->actingAs($user)
             ->get(route('quiz.results', $quiz))
             ->assertOk()
             ->assertInertia(fn (Assert $page) => $page
                 ->component('Member/QuizResults')
                 ->where('result.correct', 1)
-                ->has('review', 2)
-                ->where('review.0.position', 1)
-                ->where('review.0.picked', 'C')
-                ->where('review.0.correct', true)
-                ->where('review.1.position', 2)
-                ->where('review.1.picked', 'C')
-                ->where('review.1.correct', false)
-                ->where('review.1.answer', 'D'));
+                ->has('review', 2));
+
+        // Which of the two questions the attempt's shuffled sequence drew into slot 1
+        // vs 2 is random (see QuizController::buildQuestionSequence) — assert the
+        // right pairing exists rather than a fixed position, so this isn't flaky.
+        $review = collect($response->viewData('page')['props']['review'])->keyBy('answer');
+        $this->assertTrue($review['C']['correct']);
+        $this->assertSame('C', $review['C']['picked']);
+        $this->assertFalse($review['D']['correct']);
+        $this->assertSame('C', $review['D']['picked']);
     }
 
     public function test_retrying_a_quiz_clears_the_previous_review(): void

@@ -1,3 +1,4 @@
+import CountryPicker from '@/Components/CountryPicker';
 import InputError from '@/Components/InputError';
 import { PLAN_INFO } from '@/lib/subscription';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -87,6 +88,7 @@ export default function Signup({ plan: initialPlan }) {
         first_name: '',
         last_name: '',
         email: '',
+        country: '',
         password: '',
         terms: false,
         plan: initialPlan ?? 'yearly',
@@ -235,6 +237,16 @@ export default function Signup({ plan: initialPlan }) {
                                 required
                             />
                             <InputError message={errors.email} className="mt-1.5" />
+                        </div>
+
+                        <div className="mt-4">
+                            <label className="mb-1.5 block text-sm font-medium text-neutral-800">Country / Region</label>
+                            <CountryPicker
+                                value={data.country}
+                                onChange={(value) => setData('country', value)}
+                                triggerClassName={fieldClass(errors.country)}
+                            />
+                            <InputError message={errors.country} className="mt-1.5" />
                         </div>
 
                         <div className="mt-4">

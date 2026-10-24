@@ -381,6 +381,11 @@ export default function Subscription() {
 
     const plan = PLAN_INFO[planId];
     const isLifetime = planId === 'lifetime';
+    // Billed and controlled entirely by the store the member bought through —
+    // the website only mirrors status here, read-only. No in-app-style
+    // plan-switching, upgrading, or cancelling to offer; that only happens on
+    // the device, through the App Store or Google Play itself.
+    const storeManaged = sub.provider === 'App Store' || sub.provider === 'Google Play';
 
     const confirmSwitch = () => {
         setNextPlan(switchingTo === planId ? null : switchingTo);
@@ -436,18 +441,22 @@ export default function Subscription() {
                                 ? `Switches to ${PLAN_INFO[nextPlan].label} (${PLAN_INFO[nextPlan].price}) on ${sub.renews}.`
                                 : `Renews on ${sub.renews}.`}
                     </p>
-                    {cancelling && (
-                        <button
-                            type="button"
-                            onClick={() => setCancelling(false)}
-                            className="mt-4 w-full rounded-xl bg-white py-3 text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
-                        >
-                            Resume Subscription
-                        </button>
+                    {storeManaged ? (
+                        <p className="mt-4 text-xs text-white/50">This subscription is managed through the {sub.provider}.</p>
+                    ) : (
+                        cancelling && (
+                            <button
+                                type="button"
+                                onClick={() => setCancelling(false)}
+                                className="mt-4 w-full rounded-xl bg-white py-3 text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
+                            >
+                                Resume Subscription
+                            </button>
+                        )
                     )}
                 </div>
 
-                {!isLifetime && (
+                {!isLifetime && !storeManaged && (
                     <Section title="Change plan">
                         {PLAN_ORDER.map((id, index) => {
                             const info = PLAN_INFO[id];
@@ -522,13 +531,15 @@ export default function Subscription() {
                     ))}
                 </Section>
 
-                {!cancelling && !isLifetime && (
+                {!cancelling && !isLifetime && !storeManaged && (
                     <button type="button" onClick={() => setCancelOpen(true)} className="block w-full py-2 text-center text-sm font-bold text-brand hover:underline">
                         Cancel Subscription
                     </button>
                 )}
 
-                <p className="mt-6 text-center text-xs text-neutral-400">Questions about billing? Contact us from Support.</p>
+                <p className="mt-6 text-center text-xs text-neutral-400">
+                    {storeManaged ? `To change your plan or cancel, open the KhordQuiz app and manage it through the ${sub.provider}.` : 'Questions about billing? Contact us from Support.'}
+                </p>
             </div>
 
             <SwitchModal planId={switchingTo} currentId={planId} renews={sub.renews} onClose={() => setSwitchingTo(null)} onConfirm={confirmSwitch} />

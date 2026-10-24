@@ -97,42 +97,76 @@ export default function Quiz({ categories }) {
                     <p className="text-sm text-neutral-500">No quizzes are published yet. Check back soon.</p>
                 </div>
             ) : (
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    {categories.map((category) => {
-                        const CategoryIcon = CATEGORY_ICONS[category.name] ?? NoteIcon;
-                        return (
-                            <Link
-                                key={category.slug}
-                                href={route('quiz.category', category.slug)}
-                                className="flex flex-col gap-4 rounded-2xl border border-black/5 bg-gradient-to-br from-white via-neutral-50 to-neutral-100/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-all duration-150 hover:border-brand/15 hover:from-brand/[0.04] hover:via-brand/[0.02] hover:to-brand/[0.04] hover:shadow-sm"
-                            >
-                                <div className="flex items-start justify-between">
-                                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-white to-neutral-200 text-neutral-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+                <>
+                    {/* Compact single-column rows on mobile, matching the app's Quiz tab. */}
+                    <div className="flex flex-col gap-3 sm:hidden">
+                        {categories.map((category) => {
+                            const CategoryIcon = CATEGORY_ICONS[category.name] ?? NoteIcon;
+                            return (
+                                <Link
+                                    key={category.slug}
+                                    href={route('quiz.category', category.slug)}
+                                    className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-4 transition-colors duration-150 active:bg-neutral-50"
+                                >
+                                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-600">
                                         <CategoryIcon className="h-5 w-5" />
                                     </span>
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-base font-bold text-neutral-900">{category.name}</p>
+                                        {category.percent > 0 ? (
+                                            <div className="mt-1.5 flex items-center gap-2">
+                                                <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-200/70">
+                                                    <div className="h-full rounded-full bg-brand" style={{ width: `${category.percent}%` }} />
+                                                </div>
+                                                <span className="shrink-0 text-sm text-neutral-500">{category.percent}%</span>
+                                            </div>
+                                        ) : (
+                                            <p className="mt-0.5 text-sm text-neutral-400">Not attempted yet</p>
+                                        )}
+                                    </div>
                                     <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
-                                </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
 
-                                <div className="min-w-0 flex-1">
-                                    <p className="truncate text-[15px] font-bold text-neutral-900">{category.name}</p>
-                                    <p className="mt-0.5 text-sm text-neutral-400">
-                                        {category.quizCount} {category.quizCount === 1 ? 'quiz' : 'quizzes'}
-                                    </p>
-                                </div>
+                    <div className="hidden sm:grid sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
+                        {categories.map((category) => {
+                            const CategoryIcon = CATEGORY_ICONS[category.name] ?? NoteIcon;
+                            return (
+                                <Link
+                                    key={category.slug}
+                                    href={route('quiz.category', category.slug)}
+                                    className="flex flex-col gap-4 rounded-2xl border border-black/5 bg-gradient-to-br from-white via-neutral-50 to-neutral-100/70 p-5 shadow-[0_1px_2px_rgba(0,0,0,0.03)] transition-all duration-150 hover:border-brand/15 hover:from-brand/[0.04] hover:via-brand/[0.02] hover:to-brand/[0.04] hover:shadow-sm"
+                                >
+                                    <div className="flex items-start justify-between">
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-white to-neutral-200 text-neutral-600 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)]">
+                                            <CategoryIcon className="h-5 w-5" />
+                                        </span>
+                                        <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
+                                    </div>
 
-                                <div>
-                                    <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200/70">
-                                        {category.percent > 0 && <div className="h-full rounded-full bg-brand" style={{ width: `${category.percent}%` }} />}
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-[15px] font-bold text-neutral-900">{category.name}</p>
+                                        <p className="mt-0.5 text-sm text-neutral-400">
+                                            {category.quizCount} {category.quizCount === 1 ? 'quiz' : 'quizzes'}
+                                        </p>
                                     </div>
-                                    <div className="mt-1.5 flex items-center justify-between text-xs text-neutral-400">
-                                        <span>{category.done > 0 ? `${category.done}/${category.quizCount} done` : 'Not attempted yet'}</span>
-                                        <span>{category.percent}%</span>
+
+                                    <div>
+                                        <div className="h-1.5 w-full overflow-hidden rounded-full bg-neutral-200/70">
+                                            {category.percent > 0 && <div className="h-full rounded-full bg-brand" style={{ width: `${category.percent}%` }} />}
+                                        </div>
+                                        <div className="mt-1.5 flex items-center justify-between text-xs text-neutral-400">
+                                            <span>{category.done > 0 ? `${category.done}/${category.quizCount} done` : 'Not attempted yet'}</span>
+                                            <span>{category.percent}%</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </Link>
-                        );
-                    })}
-                </div>
+                                </Link>
+                            );
+                        })}
+                    </div>
+                </>
             )}
         </AppShell>
     );

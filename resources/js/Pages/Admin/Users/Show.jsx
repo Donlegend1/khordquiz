@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head, Link, router, usePage } from '@inertiajs/react';
+import { Head, Link, router, useForm, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 function initials(name) {
     return name
@@ -16,6 +17,172 @@ function InfoRow({ label, value }) {
             <p className="text-sm text-neutral-500">{label}</p>
             <p className="text-sm font-medium text-neutral-900">{value ?? '—'}</p>
         </div>
+    );
+}
+
+const PLAN_LABELS = { lifetime: 'Lifetime', monthly: 'Monthly', yearly: 'Yearly' };
+const EXTEND_OPTIONS = [
+    { days: 7, label: '+7 days' },
+    { days: 30, label: '+30 days' },
+    { days: 90, label: '+90 days' },
+    { days: 365, label: '+1 year' },
+];
+
+// Admin-managed plan controls — set, extend or cancel a member's plan and expiry date.
+// There's still no real billing system behind this (no Stripe/PayPal subscriptions
+// table), so this is a manual override for grants, comps and support cases, not a
+// record of actual payment. Every write here is clearly a human decision, not billing.
+function SubscriptionCard({ member }) {
+    const [editing, setEditing] = useState(false);
+    const form = useForm({
+        plan_choice: member.plan_choice ?? 'monthly',
+        payment_method: member.payment_method ?? '',
+        plan_expires_at: '',
+    });
+
+    const savePlan = (event) => {
+        event.preventDefault();
+        form.post(route('admin.users.plan', member.id), {
+            preserveScroll: true,
+            onSuccess: () => setEditing(false),
+        });
+    };
+
+    const extend = (days) => {
+        router.post(route('admin.users.plan.extend', member.id), { days }, { preserveScroll: true });
+    };
+
+    const cancelPlan = () => {
+        if (confirm(`Cancel ${member.name}'s plan? This clears their plan, payment method and dates.`)) {
+            router.post(route('admin.users.plan.cancel', member.id), {}, { preserveScroll: true });
+        }
+    };
+
+    return (
+        <section>
+            <div className="flex items-center gap-2.5">
+                <h2 className="text-lg font-semibold">Subscription</h2>
+                {member.plan_choice && (
+                    <span
+                        className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium ${
+                            member.plan_expired ? 'bg-amber-50 text-amber-700' : 'bg-emerald-50 text-emerald-700'
+                        }`}
+                    >
+                        {member.plan_expired ? 'Expired' : 'Granted'}
+                    </span>
+                )}
+            </div>
+            <p className="mt-1 text-sm text-neutral-500">
+                Admin-managed — there&apos;s no billing system connected yet, so this is a manual grant, not a confirmed payment.
+            </p>
+
+            <div className="mt-3 overflow-hidden rounded-2xl border border-black/5 bg-white">
+                {!editing ? (
+                    <div className="grid sm:grid-cols-2">
+                        <div className="divide-y divide-black/5 sm:border-r sm:border-black/5">
+                            <InfoRow label="Plan" value={member.plan_choice ? PLAN_LABELS[member.plan_choice] : 'No plan'} />
+                            <InfoRow label="Payment method" value={member.payment_method === 'stripe' ? 'Stripe' : member.payment_method === 'paypal' ? 'PayPal' : null} />
+                            <InfoRow label="Member since" value={member.plan_started_at} />
+                            <InfoRow label="Expires" value={member.plan_choice === 'lifetime' ? 'Never' : member.plan_expires_at} />
+                        </div>
+
+                        <div className="border-t border-black/5 p-4 sm:border-t-0">
+                            <button
+                                type="button"
+                                onClick={() => setEditing(true)}
+                                className="w-full rounded-xl border border-black/10 bg-white py-2.5 text-sm font-semibold text-neutral-900 transition-colors duration-150 hover:bg-neutral-50"
+                            >
+                                {member.plan_choice ? 'Change plan' : 'Assign a plan'}
+                            </button>
+                            {member.plan_choice && member.plan_choice !== 'lifetime' && (
+                                <>
+                                    <p className="mb-2 mt-4 text-xs font-medium text-neutral-500">Extend</p>
+                                    <div className="grid grid-cols-4 gap-2">
+                                        {EXTEND_OPTIONS.map((option) => (
+                                            <button
+                                                key={option.days}
+                                                type="button"
+                                                onClick={() => extend(option.days)}
+                                                className="rounded-lg border border-black/10 bg-white py-2 text-xs font-semibold text-neutral-700 transition-colors duration-150 hover:bg-neutral-50"
+                                            >
+                                                {option.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                            {member.plan_choice && (
+                                <button
+                                    type="button"
+                                    onClick={cancelPlan}
+                                    className="mt-4 w-full rounded-xl py-2.5 text-sm font-bold text-brand transition-colors duration-150 hover:bg-rose-50"
+                                >
+                                    Cancel plan
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                ) : (
+                    <form onSubmit={savePlan} className="grid gap-4 p-5 sm:grid-cols-3 sm:items-end">
+                        <div>
+                            <label className="text-xs font-medium text-neutral-500">Plan</label>
+                            <select
+                                value={form.data.plan_choice}
+                                onChange={(e) => form.setData('plan_choice', e.target.value)}
+                                className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                            >
+                                <option value="monthly">Monthly</option>
+                                <option value="yearly">Yearly</option>
+                                <option value="lifetime">Lifetime</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label className="text-xs font-medium text-neutral-500">Payment method</label>
+                            <select
+                                value={form.data.payment_method}
+                                onChange={(e) => form.setData('payment_method', e.target.value)}
+                                className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                            >
+                                <option value="">Not set</option>
+                                <option value="stripe">Stripe</option>
+                                <option value="paypal">PayPal</option>
+                            </select>
+                        </div>
+                        {form.data.plan_choice !== 'lifetime' ? (
+                            <div>
+                                <label className="text-xs font-medium text-neutral-500">Expires on</label>
+                                <input
+                                    type="date"
+                                    value={form.data.plan_expires_at}
+                                    onChange={(e) => form.setData('plan_expires_at', e.target.value)}
+                                    className="mt-1 w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
+                                />
+                                <p className="mt-1 text-xs text-neutral-400">Blank = no expiry.</p>
+                            </div>
+                        ) : (
+                            <div />
+                        )}
+
+                        <div className="flex gap-2 sm:col-span-3">
+                            <button
+                                type="submit"
+                                disabled={form.processing}
+                                className="flex-1 rounded-xl bg-brand py-2.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60 sm:flex-none sm:px-8"
+                            >
+                                Save
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setEditing(false)}
+                                className="flex-1 rounded-xl border border-black/10 bg-white py-2.5 text-sm font-semibold text-neutral-700 transition-colors duration-150 hover:bg-neutral-50 sm:flex-none sm:px-8"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                )}
+            </div>
+        </section>
     );
 }
 
@@ -99,47 +266,44 @@ export default function Show({ member, recentAttempts, awards }) {
                         )}
                     </div>
 
-                    <div className="mt-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
-                        <InfoRow label="Joined" value={member.joined_at} />
-                        <div className="border-t border-black/5" />
-                        <InfoRow label="Country" value={member.country} />
-                        <div className="border-t border-black/5" />
-                        <InfoRow label="Skill level" value={member.skill_level} />
-                        <div className="border-t border-black/5" />
-                        <InfoRow label="Current streak" value={member.current_streak > 0 ? `${member.current_streak} days` : '0 days'} />
-                        <div className="border-t border-black/5" />
-                        <InfoRow label="Longest streak" value={member.longest_streak > 0 ? `${member.longest_streak} days` : '0 days'} />
-                        <div className="border-t border-black/5" />
-                        <InfoRow label="Last practiced" value={member.last_practiced_on} />
-                        {member.plan_choice && (
-                            <>
-                                <div className="border-t border-black/5" />
-                                <InfoRow label="Plan interest" value={member.plan_choice} />
-                            </>
-                        )}
-                    </div>
-                    {member.plan_choice && (
-                        <p className="mt-2 px-1 text-xs text-neutral-400">
-                            &quot;Plan interest&quot; reflects what the member selected at signup — there&apos;s no billing system connected yet, so this isn&apos;t a confirmed paid subscription.
-                        </p>
-                    )}
+                    <section className="mt-6">
+                        <h2 className="text-lg font-semibold">Account</h2>
+                        <div className="mt-3 divide-y divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white">
+                            <InfoRow label="Joined" value={member.joined_at} />
+                            <InfoRow label="Country" value={member.country} />
+                            <InfoRow label="Skill level" value={member.skill_level} />
+                            <InfoRow label="Last practiced" value={member.last_practiced_on} />
+                        </div>
+                    </section>
                 </div>
 
                 <div className="space-y-6 lg:col-span-2">
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
-                            <p className="text-sm text-neutral-500">Quizzes attempted</p>
-                            <p className="mt-2 text-2xl font-bold tracking-tight">{member.quizzes_attempted}</p>
+                    <SubscriptionCard member={member} />
+
+                    <section>
+                        <h2 className="text-lg font-semibold">Performance</h2>
+                        <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+                            <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
+                                <p className="text-sm text-neutral-500">Attempted</p>
+                                <p className="mt-2 text-2xl font-bold tracking-tight">{member.quizzes_attempted}</p>
+                            </div>
+                            <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
+                                <p className="text-sm text-neutral-500">Completed</p>
+                                <p className="mt-2 text-2xl font-bold tracking-tight">{member.quizzes_completed}</p>
+                            </div>
+                            <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
+                                <p className="text-sm text-neutral-500">Accuracy</p>
+                                <p className="mt-2 text-2xl font-bold tracking-tight">{member.accuracy !== null ? `${member.accuracy}%` : '—'}</p>
+                            </div>
+                            <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
+                                <p className="text-sm text-neutral-500">Streak</p>
+                                <p className="mt-2 text-2xl font-bold tracking-tight">
+                                    {member.current_streak}
+                                    <span className="ml-1 text-sm font-medium text-neutral-400">best {member.longest_streak}</span>
+                                </p>
+                            </div>
                         </div>
-                        <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
-                            <p className="text-sm text-neutral-500">Completed</p>
-                            <p className="mt-2 text-2xl font-bold tracking-tight">{member.quizzes_completed}</p>
-                        </div>
-                        <div className="rounded-2xl border border-black/5 bg-white px-5 py-4">
-                            <p className="text-sm text-neutral-500">Avg. accuracy</p>
-                            <p className="mt-2 text-2xl font-bold tracking-tight">{member.accuracy !== null ? `${member.accuracy}%` : '—'}</p>
-                        </div>
-                    </div>
+                    </section>
 
                     <section>
                         <h2 className="text-lg font-semibold">Recent completed quizzes</h2>

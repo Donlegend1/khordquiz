@@ -42,7 +42,6 @@ export const paths = [
                     'Harmonic Non-diatonic Intervals',
                     'Melodic Intervals: General',
                     'Harmonic Intervals: General',
-                    'Interval - Patterns',
                 ],
             },
             {
@@ -64,7 +63,7 @@ export const paths = [
             {
                 name: 'Add 9',
                 description: 'Hear the colour an added 9th or ♭9 brings to a chord.',
-                levels: 4,
+                levels: 8,
             },
             {
                 name: '7th Degree Chords',
@@ -113,29 +112,29 @@ export const paths = [
             {
                 name: '9th Degree Chords',
                 description: 'Identify ninth chords by their degree in a key.',
-                levels: 4,
+                levels: 6,
             },
             {
                 name: 'Secondary 9th Chords',
                 description: 'Hear secondary chords coloured with ninths.',
-                levels: 4,
+                levels: 6,
                 general: true,
             },
             {
                 name: '11th Degree Chords',
                 description: 'Identify eleventh chords by their degree in a key.',
-                levels: 4,
+                levels: 6,
             },
             {
                 name: 'Secondary 11th Chords',
                 description: 'Hear secondary chords coloured with elevenths.',
-                levels: 4,
+                levels: 6,
                 general: true,
             },
             {
                 name: '13th Degree Chords',
                 description: 'The fullest chords of all — identify thirteenths by ear.',
-                levels: 4,
+                levels: 6,
             },
             {
                 name: 'Extensions',

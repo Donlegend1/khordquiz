@@ -79,11 +79,29 @@ class DashboardController extends Controller
                     'joined_ago' => $member->created_at->diffForHumans(),
                 ])
                 ->values(),
+            // reference_audio_tracks is excluded here — Quiz::summary() never reads
+            // it, and some quizzes' JSON blob is large enough (thousands of
+            // reference tracks) that including it in this ORDER BY query overflows
+            // MySQL's filesort buffer ("Out of sort memory", error 1038).
             'quizzes' => Quiz::query()
+                ->select(['id', 'title', 'category', 'difficulty', 'description', 'question_count', 'is_published', 'created_at'])
                 ->withCount(['attempts', 'questions'])
                 ->latest()
                 ->get()
                 ->map(fn (Quiz $quiz) => $quiz->summary())
+                ->values(),
+            // Real member counts by country, highest first. Members with no country set
+            // (country is optional on Edit Profile) are left out rather than lumped into
+            // an "Unknown" bucket that would just be noise on an admin card.
+            'topCountries' => (clone $members)
+                ->whereNotNull('country')
+                ->where('country', '!=', '')
+                ->selectRaw('country, count(*) as total')
+                ->groupBy('country')
+                ->orderByDesc('total')
+                ->limit(6)
+                ->get()
+                ->map(fn ($row) => ['country' => $row->country, 'count' => $row->total])
                 ->values(),
         ];
     }

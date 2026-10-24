@@ -50,6 +50,7 @@ class SignupController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'country' => 'nullable|string|max:255',
             'password' => ['required', Rules\Password::defaults()],
             'terms' => ['accepted'],
             'plan' => ['required', Rule::in(self::PLANS)],
@@ -59,6 +60,7 @@ class SignupController extends Controller
         $user = User::create([
             'name' => trim($data['first_name'].' '.$data['last_name']),
             'email' => $data['email'],
+            'country' => $data['country'] ?? null,
             'password' => Hash::make($data['password']),
             'role' => Role::Member,
             'terms_accepted_at' => now(),
@@ -70,6 +72,9 @@ class SignupController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Same next step for a trial start and a lifetime purchase — both land
+        // on the profile-setup screen (ProfileSetupController), matching the
+        // mobile app's onboarding flow, before either ever reaches the dashboard.
+        return redirect(route('profile-setup.edit', absolute: false));
     }
 }

@@ -229,20 +229,35 @@ export default function Progress({
             </section>
 
             {resume && (
-                <div title="Playing a quiz from the dashboard is coming soon" className="mt-6 rounded-2xl bg-brand p-5 text-white">
-                    <div className="flex items-center gap-4">
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15">
-                            <PlayIcon className="h-4 w-4 translate-x-0.5" />
-                        </span>
-                        <div className="min-w-0 flex-1">
-                            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-white/70">
-                                Continue where you left off
-                            </p>
-                            <p className="truncate text-lg font-bold">{resume.quiz.title}</p>
-                            <p className="text-sm text-white/70">{resume.quiz.category}</p>
-                        </div>
-                        <ChevronIcon className="h-5 w-5 shrink-0 text-white/60" />
+                <div
+                    title="Playing a quiz from the dashboard is coming soon"
+                    className="mt-6 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white sm:items-start sm:gap-4 sm:p-6"
+                >
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                        <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
+                    </span>
+                    <div className="min-w-0 flex-1 sm:hidden">
+                        <p className="truncate text-xs text-white/80">Continue where you left off</p>
+                        <h3 className="truncate text-base font-bold leading-tight">{resume.quiz.title}</h3>
+                        <p className="truncate text-xs text-white/70">{resume.quiz.category}</p>
                     </div>
+                    <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
+
+                    <div className="hidden min-w-0 flex-1 sm:block">
+                        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+                            Continue · {resume.quiz.category}
+                        </p>
+                        <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">{resume.quiz.title}</h3>
+                        <div className="mt-4 flex items-center gap-3">
+                            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
+                                <div className="h-full rounded-full bg-white" style={{ width: `${resume.progress}%` }} />
+                            </div>
+                            <span className="shrink-0 text-sm text-white/80">
+                                {resume.stopped_at_question}/{resume.quiz.question_count}
+                            </span>
+                        </div>
+                    </div>
+                    <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
                 </div>
             )}
 

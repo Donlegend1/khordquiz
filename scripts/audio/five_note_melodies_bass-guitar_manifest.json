@@ -1,0 +1,702 @@
+[
+    {
+        "file_slug": "do-mi-fa-mi-do-o0",
+        "notes": [
+            36,
+            40,
+            41,
+            40,
+            36
+        ]
+    },
+    {
+        "file_slug": "do-mi-fa-mi-do-o1",
+        "notes": [
+            48,
+            52,
+            53,
+            52,
+            48
+        ]
+    },
+    {
+        "file_slug": "do-lal-sol-lal-do-o0",
+        "notes": [
+            36,
+            33,
+            31,
+            33,
+            36
+        ]
+    },
+    {
+        "file_slug": "do-lal-sol-lal-do-o1",
+        "notes": [
+            48,
+            45,
+            43,
+            45,
+            48
+        ]
+    },
+    {
+        "file_slug": "do-mi-so-fa-mi-o0",
+        "notes": [
+            36,
+            40,
+            43,
+            41,
+            40
+        ]
+    },
+    {
+        "file_slug": "do-mi-so-fa-mi-o1",
+        "notes": [
+            48,
+            52,
+            55,
+            53,
+            52
+        ]
+    },
+    {
+        "file_slug": "do-re-mi-do-lal-o0",
+        "notes": [
+            36,
+            38,
+            40,
+            36,
+            33
+        ]
+    },
+    {
+        "file_slug": "do-re-mi-do-lal-o1",
+        "notes": [
+            48,
+            50,
+            52,
+            48,
+            45
+        ]
+    },
+    {
+        "file_slug": "do-mi-re-fa-mi-o0",
+        "notes": [
+            36,
+            40,
+            38,
+            41,
+            40
+        ]
+    },
+    {
+        "file_slug": "do-mi-re-fa-mi-o1",
+        "notes": [
+            48,
+            52,
+            50,
+            53,
+            52
+        ]
+    },
+    {
+        "file_slug": "re-fa-so-fa-re-o0",
+        "notes": [
+            38,
+            41,
+            43,
+            41,
+            38
+        ]
+    },
+    {
+        "file_slug": "re-fa-so-fa-re-o1",
+        "notes": [
+            50,
+            53,
+            55,
+            53,
+            50
+        ]
+    },
+    {
+        "file_slug": "re-til-lal-til-re-o0",
+        "notes": [
+            38,
+            35,
+            33,
+            35,
+            38
+        ]
+    },
+    {
+        "file_slug": "re-til-lal-til-re-o1",
+        "notes": [
+            50,
+            47,
+            45,
+            47,
+            50
+        ]
+    },
+    {
+        "file_slug": "re-fa-la-so-fa-o0",
+        "notes": [
+            38,
+            41,
+            45,
+            43,
+            41
+        ]
+    },
+    {
+        "file_slug": "re-fa-la-so-fa-o1",
+        "notes": [
+            50,
+            53,
+            57,
+            55,
+            53
+        ]
+    },
+    {
+        "file_slug": "re-mi-fa-re-til-o0",
+        "notes": [
+            38,
+            40,
+            41,
+            38,
+            35
+        ]
+    },
+    {
+        "file_slug": "re-mi-fa-re-til-o1",
+        "notes": [
+            50,
+            52,
+            53,
+            50,
+            47
+        ]
+    },
+    {
+        "file_slug": "re-fa-mi-so-fa-o0",
+        "notes": [
+            38,
+            41,
+            40,
+            43,
+            41
+        ]
+    },
+    {
+        "file_slug": "re-fa-mi-so-fa-o1",
+        "notes": [
+            50,
+            53,
+            52,
+            55,
+            53
+        ]
+    },
+    {
+        "file_slug": "mi-so-la-so-mi-o0",
+        "notes": [
+            40,
+            43,
+            45,
+            43,
+            40
+        ]
+    },
+    {
+        "file_slug": "mi-so-la-so-mi-o1",
+        "notes": [
+            52,
+            55,
+            57,
+            55,
+            52
+        ]
+    },
+    {
+        "file_slug": "mi-do-til-do-mi-o0",
+        "notes": [
+            40,
+            36,
+            35,
+            36,
+            40
+        ]
+    },
+    {
+        "file_slug": "mi-do-til-do-mi-o1",
+        "notes": [
+            52,
+            48,
+            47,
+            48,
+            52
+        ]
+    },
+    {
+        "file_slug": "mi-so-ti-la-so-o0",
+        "notes": [
+            40,
+            43,
+            47,
+            45,
+            43
+        ]
+    },
+    {
+        "file_slug": "mi-so-ti-la-so-o1",
+        "notes": [
+            52,
+            55,
+            59,
+            57,
+            55
+        ]
+    },
+    {
+        "file_slug": "mi-fa-so-mi-do-o0",
+        "notes": [
+            40,
+            41,
+            43,
+            40,
+            36
+        ]
+    },
+    {
+        "file_slug": "mi-fa-so-mi-do-o1",
+        "notes": [
+            52,
+            53,
+            55,
+            52,
+            48
+        ]
+    },
+    {
+        "file_slug": "mi-so-fa-la-so-o0",
+        "notes": [
+            40,
+            43,
+            41,
+            45,
+            43
+        ]
+    },
+    {
+        "file_slug": "mi-so-fa-la-so-o1",
+        "notes": [
+            52,
+            55,
+            53,
+            57,
+            55
+        ]
+    },
+    {
+        "file_slug": "fa-la-ti-la-fa-o0",
+        "notes": [
+            41,
+            45,
+            47,
+            45,
+            41
+        ]
+    },
+    {
+        "file_slug": "fa-la-ti-la-fa-o1",
+        "notes": [
+            53,
+            57,
+            59,
+            57,
+            53
+        ]
+    },
+    {
+        "file_slug": "fa-re-do-re-fa-o0",
+        "notes": [
+            41,
+            38,
+            36,
+            38,
+            41
+        ]
+    },
+    {
+        "file_slug": "fa-re-do-re-fa-o1",
+        "notes": [
+            53,
+            50,
+            48,
+            50,
+            53
+        ]
+    },
+    {
+        "file_slug": "fa-la-doh-ti-la-o0",
+        "notes": [
+            41,
+            45,
+            48,
+            47,
+            45
+        ]
+    },
+    {
+        "file_slug": "fa-la-doh-ti-la-o1",
+        "notes": [
+            53,
+            57,
+            60,
+            59,
+            57
+        ]
+    },
+    {
+        "file_slug": "fa-so-la-fa-re-o0",
+        "notes": [
+            41,
+            43,
+            45,
+            41,
+            38
+        ]
+    },
+    {
+        "file_slug": "fa-so-la-fa-re-o1",
+        "notes": [
+            53,
+            55,
+            57,
+            53,
+            50
+        ]
+    },
+    {
+        "file_slug": "fa-la-so-ti-la-o0",
+        "notes": [
+            41,
+            45,
+            43,
+            47,
+            45
+        ]
+    },
+    {
+        "file_slug": "fa-la-so-ti-la-o1",
+        "notes": [
+            53,
+            57,
+            55,
+            59,
+            57
+        ]
+    },
+    {
+        "file_slug": "so-ti-doh-ti-so-o0",
+        "notes": [
+            43,
+            47,
+            48,
+            47,
+            43
+        ]
+    },
+    {
+        "file_slug": "so-ti-doh-ti-so-o1",
+        "notes": [
+            55,
+            59,
+            60,
+            59,
+            55
+        ]
+    },
+    {
+        "file_slug": "so-mi-re-mi-so-o0",
+        "notes": [
+            43,
+            40,
+            38,
+            40,
+            43
+        ]
+    },
+    {
+        "file_slug": "so-mi-re-mi-so-o1",
+        "notes": [
+            55,
+            52,
+            50,
+            52,
+            55
+        ]
+    },
+    {
+        "file_slug": "so-ti-reh-doh-ti-o0",
+        "notes": [
+            43,
+            47,
+            50,
+            48,
+            47
+        ]
+    },
+    {
+        "file_slug": "so-ti-reh-doh-ti-o1",
+        "notes": [
+            55,
+            59,
+            62,
+            60,
+            59
+        ]
+    },
+    {
+        "file_slug": "so-la-ti-so-mi-o0",
+        "notes": [
+            43,
+            45,
+            47,
+            43,
+            40
+        ]
+    },
+    {
+        "file_slug": "so-la-ti-so-mi-o1",
+        "notes": [
+            55,
+            57,
+            59,
+            55,
+            52
+        ]
+    },
+    {
+        "file_slug": "so-ti-la-doh-ti-o0",
+        "notes": [
+            43,
+            47,
+            45,
+            48,
+            47
+        ]
+    },
+    {
+        "file_slug": "so-ti-la-doh-ti-o1",
+        "notes": [
+            55,
+            59,
+            57,
+            60,
+            59
+        ]
+    },
+    {
+        "file_slug": "la-doh-reh-doh-la-o0",
+        "notes": [
+            45,
+            48,
+            50,
+            48,
+            45
+        ]
+    },
+    {
+        "file_slug": "la-doh-reh-doh-la-o1",
+        "notes": [
+            57,
+            60,
+            62,
+            60,
+            57
+        ]
+    },
+    {
+        "file_slug": "la-fa-mi-fa-la-o0",
+        "notes": [
+            45,
+            41,
+            40,
+            41,
+            45
+        ]
+    },
+    {
+        "file_slug": "la-fa-mi-fa-la-o1",
+        "notes": [
+            57,
+            53,
+            52,
+            53,
+            57
+        ]
+    },
+    {
+        "file_slug": "la-doh-mih-reh-doh-o0",
+        "notes": [
+            45,
+            48,
+            52,
+            50,
+            48
+        ]
+    },
+    {
+        "file_slug": "la-doh-mih-reh-doh-o1",
+        "notes": [
+            57,
+            60,
+            64,
+            62,
+            60
+        ]
+    },
+    {
+        "file_slug": "la-ti-doh-la-fa-o0",
+        "notes": [
+            45,
+            47,
+            48,
+            45,
+            41
+        ]
+    },
+    {
+        "file_slug": "la-ti-doh-la-fa-o1",
+        "notes": [
+            57,
+            59,
+            60,
+            57,
+            53
+        ]
+    },
+    {
+        "file_slug": "la-doh-ti-reh-doh-o0",
+        "notes": [
+            45,
+            48,
+            47,
+            50,
+            48
+        ]
+    },
+    {
+        "file_slug": "la-doh-ti-reh-doh-o1",
+        "notes": [
+            57,
+            60,
+            59,
+            62,
+            60
+        ]
+    },
+    {
+        "file_slug": "ti-reh-mih-reh-ti-o0",
+        "notes": [
+            47,
+            50,
+            52,
+            50,
+            47
+        ]
+    },
+    {
+        "file_slug": "ti-reh-mih-reh-ti-o1",
+        "notes": [
+            59,
+            62,
+            64,
+            62,
+            59
+        ]
+    },
+    {
+        "file_slug": "ti-so-fa-so-ti-o0",
+        "notes": [
+            47,
+            43,
+            41,
+            43,
+            47
+        ]
+    },
+    {
+        "file_slug": "ti-so-fa-so-ti-o1",
+        "notes": [
+            59,
+            55,
+            53,
+            55,
+            59
+        ]
+    },
+    {
+        "file_slug": "ti-reh-fah-mih-reh-o0",
+        "notes": [
+            47,
+            50,
+            53,
+            52,
+            50
+        ]
+    },
+    {
+        "file_slug": "ti-reh-fah-mih-reh-o1",
+        "notes": [
+            59,
+            62,
+            65,
+            64,
+            62
+        ]
+    },
+    {
+        "file_slug": "ti-doh-reh-ti-so-o0",
+        "notes": [
+            47,
+            48,
+            50,
+            47,
+            43
+        ]
+    },
+    {
+        "file_slug": "ti-doh-reh-ti-so-o1",
+        "notes": [
+            59,
+            60,
+            62,
+            59,
+            55
+        ]
+    },
+    {
+        "file_slug": "ti-reh-doh-mih-reh-o0",
+        "notes": [
+            47,
+            50,
+            48,
+            52,
+            50
+        ]
+    },
+    {
+        "file_slug": "ti-reh-doh-mih-reh-o1",
+        "notes": [
+            59,
+            62,
+            60,
+            64,
+            62
+        ]
+    }
+]

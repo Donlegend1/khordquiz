@@ -19,8 +19,13 @@ class QuizController extends Controller
 
     public function index(): Response
     {
+        // reference_audio_tracks is excluded here — Quiz::summary() never reads
+        // it, and some quizzes' JSON blob is large enough (thousands of
+        // reference tracks) that including it in this ORDER BY query overflows
+        // MySQL's filesort buffer ("Out of sort memory", error 1038).
         return Inertia::render('Admin/Quizzes/Index', [
             'quizzes' => Quiz::query()
+                ->select(['id', 'title', 'category', 'difficulty', 'description', 'question_count', 'is_published', 'created_at'])
                 ->withCount(['attempts', 'questions'])
                 ->latest()
                 ->paginate(10)

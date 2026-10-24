@@ -11,6 +11,11 @@ namespace App\Support;
  */
 class QuizCatalog
 {
+    // Same list as resources/js/Pages/Member/Settings.jsx's LANGUAGES — kept in
+    // sync by hand (that copy is what the picker UI renders; this one is what
+    // ProfileSetupController validates incoming language values against).
+    public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
+
     /**
      * @return array<string, list<string>>
      */
@@ -25,13 +30,13 @@ class QuizCatalog
                 'Find the Key #1', 'Find the Key #2',
             ],
             'Melodic Dictation' => [
-                '3-Note Stepwise', '3-Note with Skips', '5-Note Melodies',
-                'Dual-tonic melodies', 'Chordal melodies',
+                '3-Note Stepwise', '3-Note with Skips', '5-Note Melodies', 'Dyad Melodies',
+                'Dual-tonic melodies', 'Chordal melodies', 'Chordal Bass Lines',
             ],
             'Intervals' => [
                 'Melodic Diatonic Intervals', 'Harmonic Diatonic Intervals',
                 'Melodic Non-diatonic Intervals', 'Harmonic Non-diatonic Intervals',
-                'Melodic Intervals: General', 'Harmonic Intervals: General', 'Interval - Patterns',
+                'Melodic Intervals: General', 'Harmonic Intervals: General',
             ],
             'Basic Triads' => [
                 'Basic Triads · Level 1', 'Basic Triads · Level 2', 'Basic Triads · Level 3',
@@ -40,6 +45,7 @@ class QuizCatalog
             ],
             'Add 9' => [
                 'Add 9 · Level 1', 'Add 9 · Level 2', 'Add 9 · Level 3', 'Add 9 · Level 4',
+                'Add 9 · Level 5', 'Add 9 · Level 6', 'Add 9 · Level 7', 'Add 9 · Level 8',
             ],
             '7th Degree Chords' => [
                 '7th Degree Chords · Level 1', '7th Degree Chords · Level 2', '7th Degree Chords · Level 3',
@@ -54,29 +60,34 @@ class QuizCatalog
             '9th Degree Chords' => [
                 '9th Degree Chords · Level 1', '9th Degree Chords · Level 2',
                 '9th Degree Chords · Level 3', '9th Degree Chords · Level 4',
+                '9th Degree Chords · Level 5', '9th Degree Chords · Level 6',
             ],
             'Secondary 9th Chords' => [
                 'Secondary 9th Chords · Level 1', 'Secondary 9th Chords · Level 2',
-                'Secondary 9th Chords · Level 3', 'Secondary 9th Chords · Level 4', 'General',
+                'Secondary 9th Chords · Level 3', 'Secondary 9th Chords · Level 4',
+                'Secondary 9th Chords · Level 5', 'Secondary 9th Chords · Level 6', 'General',
             ],
             '11th Degree Chords' => [
                 '11th Degree Chords · Level 1', '11th Degree Chords · Level 2',
                 '11th Degree Chords · Level 3', '11th Degree Chords · Level 4',
+                '11th Degree Chords · Level 5', '11th Degree Chords · Level 6',
             ],
             'Secondary 11th Chords' => [
                 'Secondary 11th Chords · Level 1', 'Secondary 11th Chords · Level 2',
-                'Secondary 11th Chords · Level 3', 'Secondary 11th Chords · Level 4', 'General',
+                'Secondary 11th Chords · Level 3', 'Secondary 11th Chords · Level 4',
+                'Secondary 11th Chords · Level 5', 'Secondary 11th Chords · Level 6', 'General',
             ],
             '13th Degree Chords' => [
                 '13th Degree Chords · Level 1', '13th Degree Chords · Level 2',
                 '13th Degree Chords · Level 3', '13th Degree Chords · Level 4',
+                '13th Degree Chords · Level 5', '13th Degree Chords · Level 6',
             ],
             'Extensions' => [
                 'Chord Tone Recognition #1', 'Chord Tone Recognition #2', 'Major Chord Extentions',
                 'Minor Chord Extentions', 'Dominant Chord Extentions', 'Chord naming',
             ],
             'Chord Progressions' => [
-                'Cadences', 'Diatonic Progression', 'Progression Build #1', 'Progression Build #2',
+                'Cadences', 'Diatonic Progression', 'Chordal Progressions', 'Progression Build #1', 'Progression Build #2',
                 'Passing Progression', 'Progression recognition', '2-5-1 chord degree', 'Dom resolution',
             ],
             'Modal Voicings' => [
@@ -108,10 +119,10 @@ class QuizCatalog
      */
     public static function soundsFor(string $category, string $title): array
     {
-        $defaultInstruments = ['Piano', 'Violin', 'Saxophone', 'Guitar', 'Synth'];
-        $singleLineInstruments = ['Piano', 'Violin', 'Saxophone', 'Xylophone', 'Guitar', 'Voice'];
-        $intervalInstruments = ['Piano', 'Violin', 'Strings', 'Guitar', 'Xylophone', 'Choir'];
-        $chordInstruments = ['Piano', 'Guitar', 'Strings', 'Choir', 'Organ', 'Xylophone'];
+        $defaultInstruments = ['Piano', 'Violin', 'Saxophone', 'Guitar'];
+        $singleLineInstruments = ['Piano', 'Violin', 'Saxophone', 'Marimba', 'Guitar', 'Voice'];
+        $intervalInstruments = ['Piano', 'Violin', 'Strings', 'Guitar', 'Marimba', 'Voice', 'Saxophone'];
+        $chordInstruments = ['Piano', 'Guitar', 'Strings', 'Voice', 'Organ', 'Marimba'];
         $keyFindingSounds = ['Monophonic', 'Vocal Stems', 'Instruments', 'Ensemble', 'Full Song', 'All'];
 
         // 'All' mixes every type of recording across the quiz.
@@ -123,24 +134,35 @@ class QuizCatalog
             'Harmonic Second' => $intervalInstruments,
             'Harmonic Third' => $intervalInstruments,
             'Harmonic Fourth' => $intervalInstruments,
+            'Harmonic Fifth' => $intervalInstruments,
             'Harmonic Sixth' => $intervalInstruments,
             'Harmonic Seventh' => $intervalInstruments,
+            // Dyad Melodies plays simultaneous 2-note dyads, same requirement
+            // as the Harmonic interval quizzes above — no single-line instruments.
+            'Dyad Melodies' => $intervalInstruments,
         ];
 
         if (isset($soundsByQuiz[$title])) {
             return $soundsByQuiz[$title];
         }
 
+        // Basic Triads and Add 9 got Trombone, Saxophone (Brass) and Celesta,
+        // Vibraphone (Percussion) recorded first — Marimba was already in
+        // $chordInstruments. Other chord categories don't have this audio
+        // yet, so they keep the shared $chordInstruments list until each
+        // gets the same build.
+        $fullBrassPercussionInstruments = [...$chordInstruments, 'Saxophone', 'Trombone', 'Celesta', 'Vibraphone'];
+
         $instrumentsByCategory = [
-            'Basic Triads' => $chordInstruments,
-            'Add 9' => $chordInstruments,
-            '7th Degree Chords' => $chordInstruments,
-            'Secondary 7th Chords' => $chordInstruments,
-            '9th Degree Chords' => $chordInstruments,
-            'Secondary 9th Chords' => $chordInstruments,
-            '11th Degree Chords' => $chordInstruments,
-            'Secondary 11th Chords' => $chordInstruments,
-            '13th Degree Chords' => $chordInstruments,
+            'Basic Triads' => $fullBrassPercussionInstruments,
+            'Add 9' => $fullBrassPercussionInstruments,
+            '7th Degree Chords' => $fullBrassPercussionInstruments,
+            'Secondary 7th Chords' => $fullBrassPercussionInstruments,
+            '9th Degree Chords' => $fullBrassPercussionInstruments,
+            'Secondary 9th Chords' => $fullBrassPercussionInstruments,
+            '11th Degree Chords' => $fullBrassPercussionInstruments,
+            'Secondary 11th Chords' => $fullBrassPercussionInstruments,
+            '13th Degree Chords' => $fullBrassPercussionInstruments,
             'Extensions' => $chordInstruments,
             'Chord Progressions' => $chordInstruments,
             'Modal Voicings' => $chordInstruments,
@@ -151,5 +173,27 @@ class QuizCatalog
         ];
 
         return $instrumentsByCategory[$category] ?? $defaultInstruments;
+    }
+
+    /**
+     * Every instrument a member can set as their Default Instrument, across every
+     * family — including ones with no generated audio yet (Organ, Cello, Harp,
+     * Trombone, Tuba, Celesta, Vibraphone, Bass Guitar, String Ensemble). Kept in
+     * sync by hand with the category groupings in QuizCategory.jsx (SOUND_CATEGORIES)
+     * and Settings.jsx (INSTRUMENT_GROUPS) — one list, three places, no shared
+     * JS/PHP import between them.
+     *
+     * @return list<string>
+     */
+    public static function allInstruments(): array
+    {
+        return [
+            'Piano', 'EP', 'Upright Piano', 'Organ',
+            'Guitar', 'Jazz Guitar', 'Bass Guitar',
+            'Violin', 'Strings', 'Cello', 'Harp',
+            'Saxophone', 'Trombone', 'Tuba',
+            'Voice',
+            'Marimba', 'Celesta', 'Vibraphone',
+        ];
     }
 }
