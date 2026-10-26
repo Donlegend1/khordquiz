@@ -673,7 +673,18 @@ class QuizController extends Controller
 
     private function quizHasAudioFor(Quiz $quiz, string $sound): bool
     {
-        return $quiz->questions()->whereHas('audioVariants', fn ($query) => $query->where('sound', $sound))->exists();
+        if ($quiz->questions()->whereHas('audioVariants', fn ($query) => $query->where('sound', $sound))->exists()) {
+            return true;
+        }
+
+        // Live-mixing fallback — see questionLiveNotes()/liveNotesFromAnswer().
+        // No quiz_question_audio row exists for this sound on any question
+        // here, but the instrument might still have real note samples
+        // recorded; checked against one real question's answer (not every
+        // question) as a representative sample of the quiz's note range.
+        $sample = $quiz->questions()->first();
+
+        return $sample && $this->liveNotesFromAnswer($quiz, $sample, $sound) !== null;
     }
 
     // The question's audio storage path in whichever sound the attempt is playing
@@ -706,19 +717,52 @@ class QuizController extends Controller
     // this existed.
     //
     // @return list<array{url: string, offset: float}>|null
-    private function questionLiveNotes(QuizQuestion $question, ?string $sound): ?array
+    private function questionLiveNotes(Quiz $quiz, QuizQuestion $question, ?string $sound): ?array
     {
         $path = $this->questionAudioPath($question, $sound);
         $notes = $path ? NoteSample::resolve($path) : null;
 
+        if ($notes) {
+            return array_map(fn (array $note) => [
+                'url' => Storage::disk('public')->url(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
+                'offset' => $note['offset'],
+            ], $notes);
+        }
+
+        // No quiz_question_audio row for this instrument at all — but it
+        // might still have real note samples recorded, just never attached
+        // to this quiz specifically. Build straight from the answer instead
+        // of requiring a pre-generated combination file, same fallback the
+        // admin editor's "Live mix" preview uses for unattached instruments
+        // (AudioQuizController::missingInstrumentPreviews) — this is what
+        // actually makes a newly-recorded instrument playable by a real
+        // student without a one-off attach script per quiz.
+        return $this->liveNotesFromAnswer($quiz, $question, $sound);
+    }
+
+    // @return list<array{url: string, offset: float}>|null
+    private function liveNotesFromAnswer(Quiz $quiz, QuizQuestion $question, ?string $sound): ?array
+    {
+        $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
+        if (! $slug) {
+            return null;
+        }
+
+        $timing = str_contains($quiz->title, 'Harmonic') ? 'harmonic' : 'melodic';
+        $notes = NoteSample::fromAnswer($question->answer, $timing);
         if (! $notes) {
             return null;
         }
 
-        return array_map(fn (array $note) => [
-            'url' => Storage::disk('public')->url(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
+        $paths = array_map(fn (array $note) => NoteSample::path($slug, $note['degree'], $note['octave']), $notes);
+        if (collect($paths)->contains(fn ($path) => ! Storage::disk('public')->exists($path))) {
+            return null;
+        }
+
+        return array_map(fn (array $note, string $path) => [
+            'url' => Storage::disk('public')->url($path),
             'offset' => $note['offset'],
-        ], $notes);
+        ], $notes, $paths);
     }
 
     // One audio URL per note in this sound, keyed by the note's label exactly as
@@ -811,7 +855,7 @@ class QuizController extends Controller
                 // Live-mixing engine data — see questionLiveNotes(). Present
                 // only for Relative Pitch today; every other category gets
                 // null here and keeps playing audio_url as one file.
-                'notes' => $this->questionLiveNotes($question, $attempt->sound),
+                'notes' => $this->questionLiveNotes($quiz, $question, $attempt->sound),
                 // For variable-length sequence quizzes (Dual-tonic/Chordal
                 // melodies), lets the member-facing keyboard size its answer
                 // slots to the real question instead of asking the member to

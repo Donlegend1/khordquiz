@@ -145,6 +145,46 @@ class NoteSample
         return self::NATURAL_LETTER_TO_DEGREE[$label] ?? null;
     }
 
+    /**
+     * Builds live-mix note data straight from a question's own answer text
+     * ("Re", "Do - Mi") instead of an existing audio_path — lets an
+     * instrument become playable the moment it has a note sample library on
+     * disk, with no quiz_question_audio row ever attached for it. Mirrors
+     * the mobile app's src/lib/note-sample.ts parseSolfegeAnswer() exactly
+     * (keep the two in sync by hand) — both rely only on the diatonic
+     * scale-degree wrap fallback (no explicit-marker filename to read),
+     * which is safe here: every interval file in storage/app/public/
+     * intervals/ that DOES carry an explicit marker agrees with what this
+     * fallback alone would have computed (checked across every 2nd-7th —
+     * see NoteSample's class doc), so there's no case where skipping the
+     * marker changes the answer.
+     *
+     * @return list<array{degree: string, octave: int, offset: float}>|null
+     *         null when $answer isn't a plain solfège degree or pair.
+     */
+    public static function fromAnswer(string $answer, string $timing): ?array
+    {
+        $parts = array_map('trim', explode(' - ', $answer));
+
+        if (count($parts) === 1) {
+            return self::isSingleDegree($parts[0])
+                ? [['degree' => $parts[0], 'octave' => self::BASE_OCTAVE, 'offset' => 0.0]]
+                : null;
+        }
+
+        if (count($parts) !== 2 || ! isset(self::DEGREE_SLUGS[$parts[0]]) || ! isset(self::DEGREE_SLUGS[$parts[1]])) {
+            return null;
+        }
+
+        [$degree1, $degree2] = $parts;
+        $octave2 = self::BASE_OCTAVE + (self::degreeIndex($degree2) < self::degreeIndex($degree1) ? 1 : 0);
+
+        return [
+            ['degree' => $degree1, 'octave' => self::BASE_OCTAVE, 'offset' => 0.0],
+            ['degree' => $degree2, 'octave' => $octave2, 'offset' => $timing === 'melodic' ? self::MELODIC_NOTE_SPACING_SECONDS : 0.0],
+        ];
+    }
+
     private static function degreeIndex(string $degree): int
     {
         return array_search($degree, self::DEGREE_ORDER, true);
