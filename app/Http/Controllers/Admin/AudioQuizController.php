@@ -431,7 +431,7 @@ class AudioQuizController extends Controller
                 // ones where the answer itself names one note directly. Lets
                 // an admin preview an instrument by ear before any dedicated
                 // audio pipeline run has touched this quiz.
-                'missing_instrument_previews' => $this->missingInstrumentPreviews($question),
+                'missing_instrument_previews' => $this->missingInstrumentPreviews($quiz, $question),
             ])->values(),
         ];
     }
@@ -452,13 +452,10 @@ class AudioQuizController extends Controller
     }
 
     // @return list<array{sound: string, notes: list<array{url: string, offset: float}>}>
-    private function missingInstrumentPreviews(QuizQuestion $question): array
+    private function missingInstrumentPreviews(Quiz $quiz, QuizQuestion $question): array
     {
-        if (! NoteSample::isSingleDegree($question->answer)) {
-            return [];
-        }
-
         $have = $question->audioVariants->pluck('sound')->all();
+        $timing = str_contains($quiz->title, 'Harmonic') ? 'harmonic' : 'melodic';
 
         $previews = [];
         foreach (QuizCatalog::SOUND_SLUGS as $sound => $slug) {
@@ -466,22 +463,49 @@ class AudioQuizController extends Controller
                 continue;
             }
 
-            $path = NoteSample::path($slug, $question->answer, 3);
-            if (! Storage::disk('public')->exists($path)) {
-                // The instrument might only have this pitch recorded under
-                // the other naming scheme (e.g. re.wav instead of d.wav) —
-                // same sound, just not under the exact filename this
-                // question's own answer maps to.
-                $equivalent = NoteSample::equivalentDegree($question->answer);
-                $path = $equivalent ? NoteSample::path($slug, $equivalent, 3) : null;
-                if (! $path || ! Storage::disk('public')->exists($path)) {
-                    continue;
-                }
+            $notes = $this->previewNotesFor($slug, $question->answer, $timing);
+            if ($notes === null) {
+                continue;
             }
 
-            $previews[] = ['sound' => $sound, 'notes' => [['url' => $this->mediaUrl($path), 'offset' => 0.0]]];
+            $previews[] = ['sound' => $sound, 'notes' => $notes];
         }
 
         return $previews;
+    }
+
+    // Builds the preview straight from the answer (NoteSample::fromAnswer —
+    // same fallback the member-facing quiz player uses, see QuizController::
+    // liveNotesFromAnswer) and checks every resolved note's file actually
+    // exists for $slug before offering it. Handles both single-note answers
+    // (Find the Note, RTP1/2) and interval pairs (Melodic/Harmonic 2nd-7th) —
+    // the admin's old version only ever handled the single-note case.
+    //
+    // @return list<array{url: string, offset: float}>|null
+    private function previewNotesFor(string $slug, string $answer, string $timing): ?array
+    {
+        $notes = NoteSample::fromAnswer($answer, $timing);
+        if ($notes === null) {
+            return null;
+        }
+
+        $resolved = [];
+        foreach ($notes as $note) {
+            $path = NoteSample::path($slug, $note['degree'], $note['octave']);
+            if (! Storage::disk('public')->exists($path)) {
+                // Single-note answers might only have this pitch recorded
+                // under the other naming scheme (e.g. re.wav instead of
+                // d.wav) — same sound, just not under this exact filename.
+                $equivalent = NoteSample::equivalentDegree($note['degree']);
+                $path = $equivalent ? NoteSample::path($slug, $equivalent, $note['octave']) : null;
+                if (! $path || ! Storage::disk('public')->exists($path)) {
+                    return null;
+                }
+            }
+
+            $resolved[] = ['url' => $this->mediaUrl($path), 'offset' => $note['offset']];
+        }
+
+        return $resolved;
     }
 }
