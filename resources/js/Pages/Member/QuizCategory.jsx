@@ -225,14 +225,13 @@ function TubaIcon({ size = 22 }) {
 // Display-only, same pattern as Settings.jsx's INSTRUMENT_LABELS — the stored
 // sound value and every audio path stay "Guitar"; this just clarifies the tile's
 // label now that Harpejji and Bass Guitar sit in the same category.
-const INSTRUMENT_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
+const INSTRUMENT_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone', Voice: 'Solo Choir' };
 
 const INSTRUMENT_EMOJI = {
     All: '🔀',
     'Audience Choir': '🎤',
     'Bass Guitar': '🎸',
     Bassoon: '🪈',
-    'Bulgarian Choir': '🎤',
     Cello: '🎻',
     Celesta: '🔔',
     Clarinet: '🪈',
@@ -270,7 +269,7 @@ const SOUND_CATEGORIES = [
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];

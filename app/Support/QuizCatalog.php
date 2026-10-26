@@ -27,7 +27,7 @@ class QuizCatalog
         'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
         'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
         'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
-        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir', 'Bulgarian Choir' => 'bulgarian-choir',
+        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir',
         'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
         'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
     ];
@@ -208,7 +208,7 @@ class QuizCatalog
             'Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar',
             'Violin', 'Strings', 'Cello', 'Upright Bass',
             'Saxophone', 'Trombone', 'Tuba', 'Trumpet',
-            'Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir',
+            'Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir',
             'Marimba', 'Steel Drum', 'Celesta', 'Vibraphone',
             'Flute', 'Clarinet', 'Oboe', 'Bassoon',
         ];

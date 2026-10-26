@@ -670,7 +670,7 @@ function ProgressionBuilder({ config, slots, onChangeSlot, preview }) {
 // Display-only, same as Settings.jsx's INSTRUMENT_LABELS — the stored sound value
 // and every audio path stay "Guitar"; this just clarifies the pill's label now
 // that Harpejji and Bass Guitar sit alongside it.
-const SOUND_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
+const SOUND_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone', Voice: 'Solo Choir' };
 
 // Same families as the member-facing sound pickers (QuizCategory.jsx's
 // SOUND_CATEGORIES, Settings.jsx's INSTRUMENT_GROUPS) — every category and
@@ -682,7 +682,7 @@ const SOUND_CATEGORIES = [
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
