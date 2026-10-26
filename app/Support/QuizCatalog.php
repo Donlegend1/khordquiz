@@ -189,11 +189,12 @@ class QuizCatalog
     {
         return [
             'Piano', 'EP', 'Upright Piano', 'Organ',
-            'Guitar', 'Jazz Guitar', 'Bass Guitar',
-            'Violin', 'Strings', 'Cello', 'Harp',
-            'Saxophone', 'Trombone', 'Tuba',
-            'Voice',
-            'Marimba', 'Celesta', 'Vibraphone',
+            'Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar',
+            'Violin', 'Strings', 'Cello', 'Upright Bass',
+            'Saxophone', 'Trombone', 'Tuba', 'Trumpet',
+            'Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir',
+            'Marimba', 'Steel Drum', 'Celesta', 'Vibraphone',
+            'Flute', 'Clarinet', 'Oboe', 'Bassoon',
         ];
     }
 }

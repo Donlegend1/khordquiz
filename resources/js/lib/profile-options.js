@@ -11,16 +11,17 @@ export const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deu
 // own component, but the groupings themselves should stay identical.
 export const INSTRUMENT_GROUPS = [
     { name: 'Piano', icon: '🎹', options: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', icon: '🎸', options: ['Guitar', 'Jazz Guitar', 'Bass Guitar'] },
-    { name: 'Strings', icon: '🎻', options: ['Violin', 'Strings', 'Cello', 'Harp'] },
-    { name: 'Brass', icon: '🎺', options: ['Saxophone', 'Trombone', 'Tuba'] },
-    { name: 'Vocals', icon: '🎤', options: ['Voice'] },
-    { name: 'Percussion', icon: '🥁', options: ['Marimba', 'Celesta', 'Vibraphone'] },
+    { name: 'Guitar', icon: '🎸', options: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
+    { name: 'Strings', icon: '🎻', options: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
+    { name: 'Brass', icon: '🎺', options: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
+    { name: 'Vocals', icon: '🎤', options: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Percussion', icon: '🥁', options: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
+    { name: 'Woodwinds', icon: '🪈', options: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
 
 // Display-only — the underlying value stays "Piano"/"EP" everywhere else; this just
 // makes the two piano options clearly distinct from each other in any picker.
-export const INSTRUMENT_LABELS = { Piano: 'Grand Piano', EP: 'EP Piano', Guitar: 'Acoustic Guitar' };
+export const INSTRUMENT_LABELS = { Piano: 'Grand Piano', EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
 
 export const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
 

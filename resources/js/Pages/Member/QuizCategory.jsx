@@ -199,22 +199,8 @@ function StringsIcon({ size = 22 }) {
     );
 }
 
-// Unicode has no dedicated harp emoji — 🪕 (the one previously used here) is a
-// banjo — so this is drawn instead, same reasoning as Marimba/Strings/Organ above.
-function HarpIcon({ size = 22 }) {
-    const strings = [5, 7.5, 10, 12.5, 15, 17.5];
-    return (
-        <svg width={size} height={size} viewBox="0 0 26 26">
-            <path d="M5 4 C5 2 8 1 10 2 L21 7 C22 7.5 22 9 20.5 9 L19 9 L19 22 L16.5 22 L16.5 9.5 L7.5 9.5 L7.5 22 L5 22 Z" fill="#C9A24B" stroke="#8D6E34" strokeWidth={0.6} />
-            {strings.map((x) => (
-                <line key={x} x1={x} y1={6} x2={x} y2={21} stroke="#F4E4B0" strokeWidth={0.6} />
-            ))}
-        </svg>
-    );
-}
-
 // Unicode's only brass-instrument emoji is 🎺 (trumpet) — no trombone or tuba
-// of their own — so both are drawn instead, same reasoning as Harp above.
+// of their own — so both are drawn instead, same reasoning as Marimba/Strings/Organ above.
 function TromboneIcon({ size = 22 }) {
     return (
         <svg width={size} height={size} viewBox="0 0 26 26">
@@ -238,23 +224,35 @@ function TubaIcon({ size = 22 }) {
 
 // Display-only, same pattern as Settings.jsx's INSTRUMENT_LABELS — the stored
 // sound value and every audio path stay "Guitar"; this just clarifies the tile's
-// label now that Jazz Guitar and Bass Guitar sit in the same category.
-const INSTRUMENT_LABELS = { Guitar: 'Acoustic Guitar' };
+// label now that Harpejji and Bass Guitar sit in the same category.
+const INSTRUMENT_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
 
 const INSTRUMENT_EMOJI = {
     All: '🔀',
+    'Audience Choir': '🎤',
     'Bass Guitar': '🎸',
+    Bassoon: '🪈',
+    'Bulgarian Choir': '🎤',
     Cello: '🎻',
     Celesta: '🔔',
+    Clarinet: '🪈',
     Ensemble: '🎻',
+    'Ensemble Choir': '🎤',
     EP: '🎹',
+    'Electric Guitar': '🎸',
+    Flute: '🪈',
     'Full Song': '💿',
     Guitar: '🎸',
+    Harpejji: '🎸',
     Instruments: '🎹',
-    'Jazz Guitar': '🎸',
     Monophonic: '🪈',
+    Oboe: '🪈',
     Piano: '🎹',
     Saxophone: '🎷',
+    'Steel Drum': '🥁',
+    'Sustained Choir': '🎤',
+    Trumpet: '🎺',
+    'Upright Bass': '🎻',
     'Vocal Stems': '🎙️',
     Violin: '🎻',
     Voice: '🎤',
@@ -264,16 +262,17 @@ const INSTRUMENT_EMOJI = {
 // design" pass: UI-only, grouping whatever sounds a quiz already offers
 // (QuizCatalog::soundsFor on the backend) into families, nothing about which
 // sounds a quiz offers changes here. Several of these sounds don't exist for
-// any quiz yet (Organ, Cello, Harp, Trumpet, Flute, Celesta, Vibraphone,
+// any quiz yet (Organ, Cello, Upright Bass, Trumpet, Flute, Celesta, Vibraphone,
 // Bass Guitar) — they simply won't appear until a quiz's `sounds` list
 // actually includes them.
 const SOUND_CATEGORIES = [
     { name: 'Piano', sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', sounds: ['Guitar', 'Jazz Guitar', 'Bass Guitar'] },
-    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Harp'] },
-    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba'] },
-    { name: 'Vocals', sounds: ['Voice'] },
-    { name: 'Percussion', sounds: ['Marimba', 'Celesta', 'Vibraphone'] },
+    { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
+    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
+    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
+    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
+    { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
 
 const CATEGORY_EMOJI = {
@@ -329,9 +328,9 @@ function resolveDefaultSound(defaultInstrument, quizSounds, availableSounds) {
     return quizSounds.find((sound) => real.includes(sound)) ?? quizSounds[0];
 }
 
-// Percussion here is all mallet instruments (Marimba, Celesta, Vibraphone) — no
-// drums — so it reuses MarimbaIcon instead of a 🥁 drum emoji, which would
-// misrepresent what's actually in the category.
+// Mostly mallet instruments (Marimba, Celesta, Vibraphone), so the category tab
+// reuses MarimbaIcon rather than a generic 🥁 drum emoji — Steel Drum gets its
+// own 🥁 at the per-sound level instead (see INSTRUMENT_EMOJI above).
 function CategoryIcon({ name, size = 22 }) {
     if (name === 'Percussion') return <MarimbaIcon size={size} />;
     return <span style={{ fontSize: size * 0.85 }}>{CATEGORY_EMOJI[name] ?? '🎵'}</span>;
@@ -341,7 +340,6 @@ function SoundIcon({ sound, size = 22 }) {
     if (sound === 'Marimba') return <MarimbaIcon size={size} />;
     if (sound === 'Strings') return <StringsIcon size={size} />;
     if (sound === 'Organ') return <OrganIcon size={size} />;
-    if (sound === 'Harp') return <HarpIcon size={size} />;
     if (sound === 'Trombone') return <TromboneIcon size={size} />;
     if (sound === 'Tuba') return <TubaIcon size={size} />;
     return <span style={{ fontSize: size * 0.85 }}>{INSTRUMENT_EMOJI[sound] ?? '🎵'}</span>;

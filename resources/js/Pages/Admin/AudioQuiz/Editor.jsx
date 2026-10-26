@@ -641,8 +641,8 @@ function ProgressionBuilder({ config, slots, onChangeSlot, preview }) {
 
 // Display-only, same as Settings.jsx's INSTRUMENT_LABELS — the stored sound value
 // and every audio path stay "Guitar"; this just clarifies the pill's label now
-// that Jazz Guitar and Bass Guitar sit alongside it.
-const SOUND_LABELS = { Guitar: 'Acoustic Guitar' };
+// that Harpejji and Bass Guitar sit alongside it.
+const SOUND_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
 
 // Same families as the member-facing sound pickers (QuizCategory.jsx's
 // SOUND_CATEGORIES, Settings.jsx's INSTRUMENT_GROUPS) — every category and
@@ -651,11 +651,12 @@ const SOUND_LABELS = { Guitar: 'Acoustic Guitar' };
 // this quiz's own real data, not a hardcoded list).
 const SOUND_CATEGORIES = [
     { name: 'Piano', sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', sounds: ['Guitar', 'Jazz Guitar', 'Bass Guitar'] },
-    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Harp'] },
-    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba'] },
-    { name: 'Vocals', sounds: ['Voice'] },
-    { name: 'Percussion', sounds: ['Marimba', 'Celesta', 'Vibraphone'] },
+    { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
+    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
+    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
+    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
+    { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
 
 function QuestionsPanel({ quiz }) {

@@ -40,11 +40,12 @@ class QuizController extends Controller
     // membership, kept in sync by hand same as QuizCatalog::allInstruments().
     private const SOUND_SLUGS = [
         'Piano' => 'piano', 'EP' => 'ep', 'Upright Piano' => 'upright-piano', 'Organ' => 'organ',
-        'Guitar' => 'guitar', 'Jazz Guitar' => 'jazz-guitar', 'Bass Guitar' => 'bass-guitar',
-        'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Harp' => 'harp',
-        'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba',
-        'Voice' => 'voice',
-        'Marimba' => 'marimba', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
+        'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
+        'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
+        'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
+        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir', 'Bulgarian Choir' => 'bulgarian-choir',
+        'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
+        'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
     ];
 
     public function saved(Request $request): Response
@@ -647,7 +648,7 @@ class QuizController extends Controller
     // preview's own fallback. Null for quizzes with no sound options at all.
     // Accepts either one of the quiz's official picker options, or any sound that
     // actually has generated audio for this quiz — the second clause matters for
-    // Default-Instrument-only variants (EP, Jazz Guitar, Bass Guitar, Organ, …):
+    // Default-Instrument-only variants (EP, Harpejji, Bass Guitar, Organ, …):
     // they're deliberately never a picker option, but a member's saved default
     // still needs to reach here as-is instead of being silently discarded back to
     // the picker's first option, or picking a category whose default resolves to
