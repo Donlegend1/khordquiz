@@ -63,7 +63,11 @@ def main():
         render_note(dest, args.program, midi, args.soundfont)
         written.append((midi, filename))
 
-        if octave == 3:
+        # Find the Note's chromatic letter scheme uses octave 4, not the
+        # solfège scheme's octave 3 — see build_note_bank.py's matching
+        # comment for how this was confirmed (against Piano's own existing,
+        # correct letter files).
+        if octave == 4:
             letter_dest = os.path.join(out_dir, f'{LETTER_EQUIVALENTS[OFFSETS[remainder]]}.wav')
             render_note(letter_dest, args.program, midi, args.soundfont)
             written.append((midi, os.path.basename(letter_dest)))

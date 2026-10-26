@@ -137,10 +137,17 @@ def main():
             shutil.copy(seg, dest)
             written.append((midi, filename))
 
-            # Octave 3 (bare filename, no "-c" suffix) also gets the letter-
-            # scheme equivalent Find the Note uses — same audio, just copied
-            # under its other name.
-            if octave == 3 and remainder in OFFSETS:
+            # Find the Note's chromatic letter scheme is its OWN octave
+            # convention, separate from the solfège scheme's (bare filename
+            # = octave 3) — confirmed against Piano's existing, untouched
+            # letter files: c.wav through b.wav run C4->B4, octave 4, not 3.
+            # Sharps are already captured preferring octave 4 (see below),
+            # so octave 4 is the one that keeps this instrument's own
+            # chromatic run internally consistent (previously copied from
+            # octave 3, which put e.g. "d.wav" a full octave+ below
+            # "dsharp.wav" — audibly wrong, caught by ear on Acoustic
+            # Guitar's Find the Note).
+            if octave == 4 and remainder in OFFSETS:
                 letter_dest = os.path.join(out_dir, f'{LETTER_EQUIVALENTS[OFFSETS[remainder]]}.wav')
                 shutil.copy(seg, letter_dest)
                 written.append((midi, os.path.basename(letter_dest)))
