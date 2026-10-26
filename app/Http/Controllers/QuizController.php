@@ -737,7 +737,7 @@ class QuizController extends Controller
     {
         $path = $this->questionAudioPath($question, $sound);
 
-        return $path ? Storage::disk('public')->url($path) : null;
+        return $path ? NoteSample::url($path) : null;
     }
 
     // Live-mixing engine data: the individual note sample(s) to combine at
@@ -756,7 +756,7 @@ class QuizController extends Controller
 
         if ($notes) {
             return array_map(fn (array $note) => [
-                'url' => Storage::disk('public')->url(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
+                'url' => NoteSample::url(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
                 'offset' => $note['offset'],
             ], $notes);
         }
@@ -792,7 +792,7 @@ class QuizController extends Controller
         }
 
         return array_map(fn (array $note, string $path) => [
-            'url' => Storage::disk('public')->url($path),
+            'url' => NoteSample::url($path),
             'offset' => $note['offset'],
         ], $notes, $paths);
     }
@@ -813,7 +813,7 @@ class QuizController extends Controller
             ->mapWithKeys(function (QuizQuestion $question) use ($sound) {
                 $path = $question->audioVariants->firstWhere('sound', $sound)?->audio_path;
 
-                return $path ? [$question->answer => Storage::disk('public')->url($path)] : [];
+                return $path ? [$question->answer => NoteSample::url($path)] : [];
             })
             ->all();
     }
@@ -848,7 +848,7 @@ class QuizController extends Controller
         $notes = $onlyNote ? array_intersect_key(self::NOTE_SLUGS, [$onlyNote => true]) : self::NOTE_SLUGS;
 
         return collect($notes)
-            ->mapWithKeys(fn ($noteSlug, $note) => [$note => Storage::disk('public')->url("notes/{$slug}/{$noteSlug}{$suffix}.wav")])
+            ->mapWithKeys(fn ($noteSlug, $note) => [$note => NoteSample::url("notes/{$slug}/{$noteSlug}{$suffix}.wav")])
             ->all();
     }
 

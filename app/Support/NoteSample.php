@@ -207,11 +207,45 @@ class NoteSample
             return Storage::disk('public')->exists($path);
         }
 
-        [$slug, $filename] = [$m[1], $m[2]];
-        $files = Cache::remember("note-sample-files:{$slug}", 3600, fn () => collect(Storage::disk('public')->files("notes/{$slug}"))
-            ->map(fn ($file) => basename($file))
-            ->all());
+        [, $slug, $filename] = $m;
 
-        return in_array($filename, $files, true);
+        return array_key_exists($filename, self::instrumentFiles($slug));
+    }
+
+    // The disk URL for a note sample, with a `?v={mtime}` cache-buster — a
+    // sample bank gets rebuilt in place at the same filename whenever a
+    // range gets corrected or a recording gets re-processed (this project
+    // is mid-content-build, so that's routine, not rare), and without this
+    // every browser that already loaded the old audio keeps playing it from
+    // cache indefinitely, even though the quiz prompt and the tappable
+    // keyboard both resolve to the exact same underlying file — confirmed
+    // by direct comparison, it's a caching issue, not a resolution bug.
+    public static function url(string $path): string
+    {
+        $url = Storage::disk('public')->url($path);
+
+        if (! preg_match('#^notes/([^/]+)/([^/]+)$#', $path, $m)) {
+            return $url;
+        }
+
+        [, $slug, $filename] = $m;
+        $mtime = self::instrumentFiles($slug)[$filename] ?? null;
+
+        return $mtime ? "{$url}?v={$mtime}" : $url;
+    }
+
+    // Cached {filename => mtime} for one instrument's notes/ folder —
+    // shared by sampleExists() and url() so a sample bank rebuild only
+    // costs one fresh directory listing (next cache miss), not a stat()
+    // call per note per quiz per request.
+    private static function instrumentFiles(string $slug): array
+    {
+        return Cache::remember("note-sample-files:{$slug}", 3600, function () use ($slug) {
+            $disk = Storage::disk('public');
+
+            return collect($disk->files("notes/{$slug}"))
+                ->mapWithKeys(fn ($file) => [basename($file) => $disk->lastModified($file)])
+                ->all();
+        });
     }
 }

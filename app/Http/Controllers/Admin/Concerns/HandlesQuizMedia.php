@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Concerns;
 
+use App\Support\NoteSample;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,8 +44,15 @@ trait HandlesQuizMedia
         }
     }
 
+    // NoteSample::url() adds a `?v={mtime}` cache-buster for note/{slug}/...
+    // paths specifically (a sample bank gets rebuilt in place at the same
+    // filename whenever a range gets corrected, so without this a browser
+    // that already loaded the old audio keeps it from cache indefinitely —
+    // and falls back to a plain Storage URL for every other kind of media
+    // this is also used for (video, reference audio, uploaded question
+    // audio), so this covers both without a separate helper.
     private function mediaUrl(?string $path): ?string
     {
-        return $path ? Storage::disk('public')->url($path) : null;
+        return $path ? NoteSample::url($path) : null;
     }
 }
