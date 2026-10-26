@@ -16,6 +16,22 @@ class QuizCatalog
     // ProfileSetupController validates incoming language values against).
     public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 
+    // Every instrument's storage folder slug (storage/app/public/notes/{slug}/…) —
+    // mirrors QuizCategory.jsx's SOUND_CATEGORIES / Settings.jsx's INSTRUMENT_GROUPS
+    // membership, kept in sync by hand same as allInstruments(). Was previously
+    // QuizController's own private copy — moved here so AudioQuizController (and
+    // anything else that needs "instrument name → storage slug") has one source
+    // instead of a second private duplicate.
+    public const SOUND_SLUGS = [
+        'Piano' => 'piano', 'EP' => 'ep', 'Upright Piano' => 'upright-piano', 'Organ' => 'organ',
+        'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
+        'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
+        'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
+        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir', 'Bulgarian Choir' => 'bulgarian-choir',
+        'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
+        'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
+    ];
+
     /**
      * @return array<string, list<string>>
      */

@@ -7,6 +7,7 @@ use App\Models\QuizAttempt;
 use App\Models\QuizAttemptAnswer;
 use App\Models\QuizMark;
 use App\Models\QuizQuestion;
+use App\Support\NoteSample;
 use App\Support\QuizAnswerPresets;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
@@ -35,18 +36,8 @@ class QuizController extends Controller
         'F#/Gb' => 'fsharp', 'G' => 'g', 'G#/Ab' => 'gsharp', 'A' => 'a', 'A#/Bb' => 'asharp', 'B' => 'b',
     ];
 
-    // Every instrument's storage folder slug (storage/app/public/notes/{slug}/…) —
-    // mirrors QuizCategory.jsx's SOUND_CATEGORIES / Settings.jsx's INSTRUMENT_GROUPS
-    // membership, kept in sync by hand same as QuizCatalog::allInstruments().
-    private const SOUND_SLUGS = [
-        'Piano' => 'piano', 'EP' => 'ep', 'Upright Piano' => 'upright-piano', 'Organ' => 'organ',
-        'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
-        'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
-        'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
-        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir', 'Bulgarian Choir' => 'bulgarian-choir',
-        'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
-        'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
-    ];
+    // Instrument name → storage folder slug — see QuizCatalog::SOUND_SLUGS
+    // (moved there so AudioQuizController can reuse it too).
 
     public function saved(Request $request): Response
     {
@@ -685,19 +676,49 @@ class QuizController extends Controller
         return $quiz->questions()->whereHas('audioVariants', fn ($query) => $query->where('sound', $sound))->exists();
     }
 
-    // The question's audio in whichever sound the attempt is playing in, from the
-    // generated-audio pipeline (quiz_question_audio — see its migration). Falls back
-    // to the question's own single audio_path for quizzes the pipeline hasn't
-    // reached yet, same as before this existed; null if neither has anything.
-    private function questionAudioUrl(QuizQuestion $question, ?string $sound): ?string
+    // The question's audio storage path in whichever sound the attempt is playing
+    // in, from the generated-audio pipeline (quiz_question_audio — see its
+    // migration). Falls back to the question's own single audio_path for quizzes
+    // the pipeline hasn't reached yet, same as before this existed; null if
+    // neither has anything.
+    private function questionAudioPath(QuizQuestion $question, ?string $sound): ?string
     {
         $path = $sound
             ? $question->audioVariants()->where('sound', $sound)->value('audio_path')
             : null;
 
-        $path ??= $question->audio_path;
+        return $path ?? $question->audio_path;
+    }
+
+    private function questionAudioUrl(QuizQuestion $question, ?string $sound): ?string
+    {
+        $path = $this->questionAudioPath($question, $sound);
 
         return $path ? Storage::disk('public')->url($path) : null;
+    }
+
+    // Live-mixing engine data: the individual note sample(s) to combine at
+    // playback time, derived from the same storage path questionAudioUrl()
+    // resolves (see NoteSample) — no separate "which notes" column needed.
+    // Null wherever NoteSample doesn't recognize the path shape (anything
+    // outside the Relative Pitch category today), so the frontend falls back
+    // to playing audio_url directly as one pre-rendered file, same as before
+    // this existed.
+    //
+    // @return list<array{url: string, offset: float}>|null
+    private function questionLiveNotes(QuizQuestion $question, ?string $sound): ?array
+    {
+        $path = $this->questionAudioPath($question, $sound);
+        $notes = $path ? NoteSample::resolve($path) : null;
+
+        if (! $notes) {
+            return null;
+        }
+
+        return array_map(fn (array $note) => [
+            'url' => Storage::disk('public')->url(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
+            'offset' => $note['offset'],
+        ], $notes);
     }
 
     // One audio URL per note in this sound, keyed by the note's label exactly as
@@ -746,7 +767,7 @@ class QuizController extends Controller
     private function defaultInstrumentKeyboardAudio(Request $request, ?string $onlyNote = null): array
     {
         $sound = $request->user()?->default_instrument;
-        $slug = self::SOUND_SLUGS[$sound] ?? self::SOUND_SLUGS['Piano'];
+        $slug = QuizCatalog::SOUND_SLUGS[$sound] ?? QuizCatalog::SOUND_SLUGS['Piano'];
         $suffix = self::KEYBOARD_NOTE_SUFFIXES[$sound] ?? '';
         $notes = $onlyNote ? array_intersect_key(self::NOTE_SLUGS, [$onlyNote => true]) : self::NOTE_SLUGS;
 
@@ -787,6 +808,10 @@ class QuizController extends Controller
                 // up with its correct answer missing from the options shown.
                 'choices' => $this->choicesFor($quiz, $question),
                 'audio_url' => $this->questionAudioUrl($question, $attempt->sound),
+                // Live-mixing engine data — see questionLiveNotes(). Present
+                // only for Relative Pitch today; every other category gets
+                // null here and keeps playing audio_url as one file.
+                'notes' => $this->questionLiveNotes($question, $attempt->sound),
                 // For variable-length sequence quizzes (Dual-tonic/Chordal
                 // melodies), lets the member-facing keyboard size its answer
                 // slots to the real question instead of asking the member to

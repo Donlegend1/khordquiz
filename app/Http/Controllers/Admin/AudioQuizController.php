@@ -7,10 +7,12 @@ use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAudio;
+use App\Support\NoteSample;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -410,12 +412,76 @@ class AudioQuizController extends Controller
                 'choices' => $question->choices,
                 'answer' => $question->answer,
                 'audio_url' => $this->mediaUrl($question->audio_path),
+                'notes' => $this->liveNotes($question->audio_path),
                 'sound' => $question->sound,
                 'audio_variants' => $question->audioVariants->map(fn (QuizQuestionAudio $variant) => [
                     'sound' => $variant->sound,
                     'url' => $this->mediaUrl($variant->audio_path),
+                    // "Play live-mixed" next to the existing player — lets an
+                    // admin A/B the old pre-rendered file against exactly what
+                    // the member-facing live-mixing engine now produces for
+                    // this question/instrument (QuizController::
+                    // questionLiveNotes is the member-facing twin of this).
+                    'notes' => $this->liveNotes($variant->audio_path),
                 ])->values(),
+                // Instruments with no quiz_question_audio row at all (no
+                // generated audio for this question) but that DO have a base
+                // note sample recorded — single-note questions only (Find the
+                // Note, Relative Tone Pitch #1/#2), since those are the only
+                // ones where the answer itself names one note directly. Lets
+                // an admin preview an instrument by ear before any dedicated
+                // audio pipeline run has touched this quiz.
+                'missing_instrument_previews' => $this->missingInstrumentPreviews($question),
             ])->values(),
         ];
+    }
+
+    // @return list<array{url: string, offset: float}>|null
+    private function liveNotes(?string $path): ?array
+    {
+        $notes = $path ? NoteSample::resolve($path) : null;
+
+        if (! $notes) {
+            return null;
+        }
+
+        return array_map(fn (array $note) => [
+            'url' => $this->mediaUrl(NoteSample::path($note['slug'], $note['degree'], $note['octave'])),
+            'offset' => $note['offset'],
+        ], $notes);
+    }
+
+    // @return list<array{sound: string, notes: list<array{url: string, offset: float}>}>
+    private function missingInstrumentPreviews(QuizQuestion $question): array
+    {
+        if (! NoteSample::isSingleDegree($question->answer)) {
+            return [];
+        }
+
+        $have = $question->audioVariants->pluck('sound')->all();
+
+        $previews = [];
+        foreach (QuizCatalog::SOUND_SLUGS as $sound => $slug) {
+            if (in_array($sound, $have, true)) {
+                continue;
+            }
+
+            $path = NoteSample::path($slug, $question->answer, 3);
+            if (! Storage::disk('public')->exists($path)) {
+                // The instrument might only have this pitch recorded under
+                // the other naming scheme (e.g. re.wav instead of d.wav) —
+                // same sound, just not under the exact filename this
+                // question's own answer maps to.
+                $equivalent = NoteSample::equivalentDegree($question->answer);
+                $path = $equivalent ? NoteSample::path($slug, $equivalent, 3) : null;
+                if (! $path || ! Storage::disk('public')->exists($path)) {
+                    continue;
+                }
+            }
+
+            $previews[] = ['sound' => $sound, 'notes' => [['url' => $this->mediaUrl($path), 'offset' => 0.0]]];
+        }
+
+        return $previews;
     }
 }

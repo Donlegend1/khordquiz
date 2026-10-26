@@ -1,4 +1,5 @@
 import AppShell from '@/Layouts/AppShell';
+import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
@@ -35,6 +36,33 @@ function TrashIcon(props) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
             <path d="M5 7h14M9 7V5.5A1.5 1.5 0 0110.5 4h3A1.5 1.5 0 0115 5.5V7m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
         </svg>
+    );
+}
+
+// Only rendered where `notes` is non-null (NoteSample resolved the real
+// audio_path — Relative Pitch's solfège questions today), right alongside
+// the existing <audio controls> preview of the old pre-rendered file — lets
+// an admin A/B the two instead of having to trust the live-mixing engine's
+// note/timing math blind. Reuses the exact same engine the member-facing
+// quiz player uses (resources/js/lib/audio-engine.js), so this plays
+// precisely what a student would hear.
+function LiveMixButton({ notes }) {
+    const [playing, setPlaying] = useState(false);
+
+    function play() {
+        setPlaying(true);
+        playNotes(notes, { onEnded: () => setPlaying(false) }).catch(() => setPlaying(false));
+    }
+
+    return (
+        <button
+            type="button"
+            onClick={play}
+            disabled={playing}
+            className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-brand disabled:opacity-50"
+        >
+            {playing ? 'Playing…' : '▶ Live mix'}
+        </button>
     );
 }
 
@@ -875,13 +903,34 @@ function QuestionsPanel({ quiz }) {
                                         <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
                                             Answer: {question.answer}
                                         </span>
-                                        {question.audio_url && <audio controls src={question.audio_url} className="mt-2 block h-8 w-full max-w-xs" />}
+                                        {question.audio_url && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <audio controls src={question.audio_url} className="block h-8 w-full max-w-xs" />
+                                                {question.notes && <LiveMixButton notes={question.notes} />}
+                                            </div>
+                                        )}
                                         <div className="mt-2">
                                             {variant ? (
-                                                <audio controls src={variant.url} className="h-8 w-full max-w-xs" />
-                                            ) : (
-                                                <p className="text-xs text-neutral-400">{SOUND_LABELS[activeSound] ?? activeSound} audio not generated yet.</p>
-                                            )}
+                                                <div className="flex items-center gap-2">
+                                                    <audio controls src={variant.url} className="h-8 w-full max-w-xs" />
+                                                    {variant.notes && <LiveMixButton notes={variant.notes} />}
+                                                </div>
+                                            ) : (() => {
+                                                // No generated audio for this quiz/question — but the
+                                                // instrument's own note sample library might already
+                                                // have the pitch this question needs (e.g. a bank built
+                                                // before any dedicated audio pipeline run touched this
+                                                // quiz) — see AudioQuizController::missingInstrumentPreviews.
+                                                const preview = question.missing_instrument_previews.find((item) => item.sound === activeSound);
+                                                return preview ? (
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-xs text-neutral-400">No audio generated for this quiz yet, but a sample exists:</p>
+                                                        <LiveMixButton notes={preview.notes} />
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-neutral-400">{SOUND_LABELS[activeSound] ?? activeSound} audio not generated yet.</p>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
                                     <button type="button" onClick={() => deleteQuestion(question.id)} className="shrink-0 text-neutral-300 hover:text-brand">

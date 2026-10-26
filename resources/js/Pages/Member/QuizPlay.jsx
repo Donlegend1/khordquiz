@@ -1,4 +1,5 @@
 import AnswerBuilder, { answerLabelFor, answerTypeFor, baseChordFor, buildChordName } from '@/Components/Quiz/AnswerBuilder';
+import { playNotes } from '@/lib/audio-engine';
 import { buildNamedChord, decodeNamingAnswer } from '@/lib/quizAnswerPresets';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
@@ -104,24 +105,60 @@ const WAVEFORM_BARS = [8, 14, 10, 18, 22, 13, 9, 16, 20, 11, 15, 24, 12, 9, 17, 
 // sound — see QuizController::questionAudioUrl) it actually plays and autoplays
 // once; without one, it's the same design, just inert. The student can replay it
 // as many times as they want with the play button itself.
-function AudioStimulus({ questionKey, src }) {
+//
+// `notes` (QuizController::questionLiveNotes — Relative Pitch only today) takes
+// priority over `src` when present: individual note samples get combined live
+// via the Web Audio engine (resources/js/lib/audio-engine.js) instead of
+// fetching one pre-rendered file. Every other category still has `notes` as
+// null and plays `src` through a plain <audio> element exactly as before.
+function AudioStimulus({ questionKey, src, notes }) {
     const audioRef = useRef(null);
     const [playing, setPlaying] = useState(false);
+    const liveStopRef = useRef(null);
+    const live = notes && notes.length > 0;
 
-    // A new question swaps the <audio> element's src — reset so the old
-    // question's playing state doesn't linger on the new one, then autoplay it
-    // once. Browsers can silently block autoplay outside a user gesture; this
+    function stopLive() {
+        liveStopRef.current?.stop();
+        liveStopRef.current = null;
+    }
+
+    function playLive() {
+        stopLive();
+        setPlaying(true);
+        playNotes(notes, { onEnded: () => setPlaying(false) })
+            .then((handle) => {
+                liveStopRef.current = handle;
+            })
+            .catch(() => setPlaying(false));
+    }
+
+    // A new question swaps the audio source — reset so the old question's
+    // playing state doesn't linger on the new one, then autoplay it once.
+    // Browsers can silently block autoplay outside a user gesture; this
     // follows the Submit/Next click closely enough to work in practice, and
     // fails quietly (the student can still press play) if a browser blocks it.
     useEffect(() => {
         setPlaying(false);
-        if (src && audioRef.current) {
+        if (live) {
+            playLive();
+        } else if (src && audioRef.current) {
             audioRef.current.currentTime = 0;
             audioRef.current.play().catch(() => {});
         }
-    }, [questionKey, src]);
+        return stopLive;
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [questionKey, src, live]);
 
     function toggle() {
+        if (live) {
+            if (playing) {
+                stopLive();
+                setPlaying(false);
+            } else {
+                playLive();
+            }
+            return;
+        }
         if (!src) {
             setPlaying((current) => !current);
             return;
@@ -136,7 +173,7 @@ function AudioStimulus({ questionKey, src }) {
 
     return (
         <div className="rounded-2xl bg-neutral-50 px-6 py-6 text-center">
-            {src && (
+            {!live && src && (
                 <audio
                     key={src}
                     ref={audioRef}
@@ -253,7 +290,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                         <p className="mt-6 text-center text-lg font-bold leading-snug text-neutral-900">{question.prompt}</p>
 
                         <div className="mt-5">
-                            <AudioStimulus questionKey={progress.current} src={question.audio_url} />
+                            <AudioStimulus questionKey={progress.current} src={question.audio_url} notes={question.notes} />
                         </div>
 
                         {baseChordFor(quiz.category, quiz.title) && (() => {
