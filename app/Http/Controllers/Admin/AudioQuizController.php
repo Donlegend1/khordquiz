@@ -492,13 +492,13 @@ class AudioQuizController extends Controller
         $resolved = [];
         foreach ($notes as $note) {
             $path = NoteSample::path($slug, $note['degree'], $note['octave']);
-            if (! Storage::disk('public')->exists($path)) {
+            if (! NoteSample::sampleExists($path)) {
                 // Single-note answers might only have this pitch recorded
                 // under the other naming scheme (e.g. re.wav instead of
                 // d.wav) — same sound, just not under this exact filename.
                 $equivalent = NoteSample::equivalentDegree($note['degree']);
                 $path = $equivalent ? NoteSample::path($slug, $equivalent, $note['octave']) : null;
-                if (! $path || ! Storage::disk('public')->exists($path)) {
+                if (! $path || ! NoteSample::sampleExists($path)) {
                     return null;
                 }
             }

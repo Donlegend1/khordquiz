@@ -700,8 +700,18 @@ function QuestionsPanel({ quiz }) {
     // a hardcoded SOUNDS array here kept going stale every time a new instrument
     // was generated (Bass Guitar and Strings both sat grayed-out after being
     // fully built, because this array wasn't updated alongside them). This can't
-    // go stale the same way.
-    const builtSounds = new Set(quiz.questions.flatMap((question) => question.audio_variants.map((variant) => variant.sound)));
+    // go stale the same way. Also counts a sound as "built" when the live-mixing
+    // engine can already cover it (missing_instrument_previews — see
+    // AudioQuizController::missingInstrumentPreviews) even with no
+    // quiz_question_audio rows pre-attached at all: the live-mixing engine is
+    // the actual source of truth going forward, not just the old pre-rendered
+    // pipeline, so an instrument it can already play shouldn't read as unbuilt.
+    const builtSounds = new Set(
+        quiz.questions.flatMap((question) => [
+            ...question.audio_variants.map((variant) => variant.sound),
+            ...question.missing_instrument_previews.map((preview) => preview.sound),
+        ])
+    );
     const preset = presetFor(quiz.category, quiz.title);
     const isBulkKey = quiz.title === 'Find the Key #1' || quiz.title === 'Find the Key #2';
     const lengthConfig = MELODIC_DICTATION_LENGTHS[quiz.title];

@@ -2,6 +2,9 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
+
 /**
  * Resolves the live-mixing engine's "which single-note sample files, at what
  * offsets" from the storage paths the generated-audio pipeline already wrote
@@ -188,5 +191,27 @@ class NoteSample
     private static function degreeIndex(string $degree): int
     {
         return array_search($degree, self::DEGREE_ORDER, true);
+    }
+
+    // Whether a sample file exists for $path (storage/app/public/-relative,
+    // same shape path()/resolve() use). Checking every instrument's sample
+    // existence with a live Storage::exists() call for every question on
+    // every quiz in a category listing was measured taking ~10s on a single
+    // page load (29 instruments × ~17 quizzes, each a filesystem stat) —
+    // this instead lists each instrument's notes/ folder once (cached) and
+    // checks the filename in memory, since that folder only changes when a
+    // sample bank is rebuilt, not on every request.
+    public static function sampleExists(string $path): bool
+    {
+        if (! preg_match('#^notes/([^/]+)/([^/]+)$#', $path, $m)) {
+            return Storage::disk('public')->exists($path);
+        }
+
+        [$slug, $filename] = [$m[1], $m[2]];
+        $files = Cache::remember("note-sample-files:{$slug}", 3600, fn () => collect(Storage::disk('public')->files("notes/{$slug}"))
+            ->map(fn ($file) => basename($file))
+            ->all());
+
+        return in_array($filename, $files, true);
     }
 }

@@ -146,7 +146,17 @@ class QuizController extends Controller
                 // quiz without question-specific info — real question_count
                 // still drives actual quiz-taking below, this is display only.
                 'question_count' => $quiz->question_count > 0 ? $quiz->question_count : 25,
-                'sounds' => QuizCatalog::soundsFor($quiz->category, $quiz->title),
+                // Merges in every instrument the live-mixing engine alone can
+                // already cover (see liveMixAvailableSounds) — naturally a
+                // no-op for every category it doesn't support yet (Melodic
+                // Dictation, chord quizzes, …), since NoteSample::fromAnswer()
+                // only ever resolves a Relative Pitch-shaped single-note or
+                // interval answer, so this can't add a tile with nothing
+                // behind it to an unsupported quiz type.
+                'sounds' => collect(QuizCatalog::soundsFor($quiz->category, $quiz->title))
+                    ->merge($liveMixSounds = $this->liveMixAvailableSounds($quiz))
+                    ->unique()
+                    ->values(),
                 // Every sound this quiz actually has generated audio for — a superset
                 // of `sounds` above, since Default-Instrument-only variants (EP, Jazz
                 // Guitar, Bass Guitar, Organ, …) get real audio generated for a quiz
@@ -158,6 +168,7 @@ class QuizController extends Controller
                     ->with('audioVariants:quiz_question_id,sound')
                     ->get()
                     ->flatMap(fn ($question) => $question->audioVariants->pluck('sound'))
+                    ->merge($liveMixSounds)
                     ->unique()
                     ->values(),
                 'referenceAudioTracks' => collect($referenceAudioTracksByQuizId->get($quiz->id) ?? [])
@@ -687,6 +698,27 @@ class QuizController extends Controller
         return $sample && $this->liveNotesFromAnswer($quiz, $sample, $sound) !== null;
     }
 
+    // Every sound the live-mixing engine alone can already cover for this
+    // quiz, with no quiz_question_audio rows pre-attached at all — merged
+    // into 'availableSounds' in category() so the member-facing sound
+    // picker shows (and can actually play) an instrument like this, not
+    // just ones the old per-quiz generation pipeline already touched.
+    //
+    // @return list<string>
+    private function liveMixAvailableSounds(Quiz $quiz): array
+    {
+        $sample = $quiz->questions()->first();
+        if (! $sample) {
+            return [];
+        }
+
+        return collect(QuizCatalog::SOUND_SLUGS)
+            ->keys()
+            ->filter(fn (string $sound) => $this->liveNotesFromAnswer($quiz, $sample, $sound) !== null)
+            ->values()
+            ->all();
+    }
+
     // The question's audio storage path in whichever sound the attempt is playing
     // in, from the generated-audio pipeline (quiz_question_audio — see its
     // migration). Falls back to the question's own single audio_path for quizzes
@@ -755,7 +787,7 @@ class QuizController extends Controller
         }
 
         $paths = array_map(fn (array $note) => NoteSample::path($slug, $note['degree'], $note['octave']), $notes);
-        if (collect($paths)->contains(fn ($path) => ! Storage::disk('public')->exists($path))) {
+        if (collect($paths)->contains(fn ($path) => ! NoteSample::sampleExists($path))) {
             return null;
         }
 
