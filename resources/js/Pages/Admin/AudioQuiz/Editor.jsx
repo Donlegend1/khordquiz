@@ -682,7 +682,7 @@ const SOUND_CATEGORIES = [
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir'] },
+    { name: 'Vocals', sounds: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
@@ -845,8 +845,10 @@ function QuestionsPanel({ quiz }) {
 
                     {/* Every planned category and instrument shows here, not just the ones
                         with generated audio — an instrument with nothing yet renders as a
-                        dimmer pill and falls through to the "audio not generated yet"
-                        message below, so this list doubles as a what's-left checklist.
+                        dimmer pill; selecting it shows only the question rows it actually
+                        has something playable for (see the questions list's filter below),
+                        so this pill list doubles as a what's-left checklist without the
+                        question list itself padding out with dead rows.
                         Grouped in its own labeled panel (Category above Sound) so the two
                         rows read as one filter, not two unrelated pill lists. */}
                     <div className="mt-3 rounded-xl border border-black/5 bg-neutral-50 p-3.5">
@@ -900,8 +902,30 @@ function QuestionsPanel({ quiz }) {
                         </div>
                     </div>
 
+                    {(() => {
+                        // Nothing playable for this instrument at all on a given question
+                        // (no generated audio, no live-mix fallback either — e.g. a
+                        // Relative Tone Pitch #2 position outside this instrument's real
+                        // range) — the row would only ever show a dead "audio not
+                        // generated" line, so it's dropped instead of listing it as a
+                        // checklist item with no path to ever being resolved.
+                        const visibleQuestions = quiz.questions.filter((question) => {
+                            if (question.audio_variants.find((item) => item.sound === activeSound)) return true;
+
+                            return question.missing_instrument_previews.some((item) => item.sound === activeSound);
+                        });
+
+                        if (visibleQuestions.length === 0) {
+                            return (
+                                <p className="mt-3 text-xs text-neutral-400">
+                                    No {SOUND_LABELS[activeSound] ?? activeSound} audio or samples for this quiz.
+                                </p>
+                            );
+                        }
+
+                        return (
                     <ul className="mt-3 divide-y divide-black/5">
-                        {quiz.questions.map((question) => {
+                        {visibleQuestions.map((question) => {
                             const variant = question.audio_variants.find((item) => item.sound === activeSound);
                             return (
                                 <li key={question.id} className="flex items-start justify-between gap-4 py-3">
@@ -931,14 +955,15 @@ function QuestionsPanel({ quiz }) {
                                                 // have the pitch this question needs (e.g. a bank built
                                                 // before any dedicated audio pipeline run touched this
                                                 // quiz) — see AudioQuizController::missingInstrumentPreviews.
+                                                // The list above is already filtered to rows where one
+                                                // of these two branches has something to show, so this
+                                                // preview is guaranteed to exist here.
                                                 const preview = question.missing_instrument_previews.find((item) => item.sound === activeSound);
-                                                return preview ? (
+                                                return (
                                                     <div className="flex items-center gap-2">
                                                         <p className="text-xs text-neutral-400">No audio generated for this quiz yet, but a sample exists:</p>
                                                         <LiveMixButton notes={preview.notes} />
                                                     </div>
-                                                ) : (
-                                                    <p className="text-xs text-neutral-400">{SOUND_LABELS[activeSound] ?? activeSound} audio not generated yet.</p>
                                                 );
                                             })()}
                                         </div>
@@ -950,6 +975,8 @@ function QuestionsPanel({ quiz }) {
                             );
                         })}
                     </ul>
+                        );
+                    })()}
                 </div>
             )}
         </div>

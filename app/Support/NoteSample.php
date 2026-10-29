@@ -35,6 +35,20 @@ use Illuminate\Support\Facades\Storage;
  */
 class NoteSample
 {
+    /** Scientific-pitch pool shared by the generator and keyboard audio map. */
+    public const SCIENTIFIC_PITCH_OCTAVES = [1, 2, 3, 4, 5, 6, 7];
+
+    /** Inclusive MIDI pitch limits for Find the Pitch; other quizzes retain their registers. */
+    private const SCIENTIFIC_PITCH_RANGES = [
+        'piano' => [36, 95],
+        'ep' => [36, 95],
+        'upright-piano' => [36, 95],
+        'organ' => [36, 95],
+        'harpejji' => [48, 107],
+        'voice' => [43, 79],
+        'ensemble-choir' => [40, 86],
+    ];
+
     private const DEGREE_ORDER = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti'];
 
     private const DEGREE_SLUGS = ['Do' => 'do', 'Re' => 're', 'Mi' => 'mi', 'Fa' => 'fa', 'So' => 'so', 'La' => 'la', 'Ti' => 'ti'];
@@ -46,7 +60,7 @@ class NoteSample
     // are always solfège-only (Find the Note has no 2-note questions), so
     // this never needs to appear in the DEGREE_ORDER/wrap-math side of
     // things — only as an extra name this single-note branch recognizes.
-    private const CHROMATIC_SLUGS = [
+    public const CHROMATIC_SLUGS = [
         'C' => 'c', 'C#/Db' => 'csharp', 'D' => 'd', 'D#/Eb' => 'dsharp', 'E' => 'e', 'F' => 'f',
         'F#/Gb' => 'fsharp', 'G' => 'g', 'G#/Ab' => 'gsharp', 'A' => 'a', 'A#/Bb' => 'asharp', 'B' => 'b',
     ];
@@ -72,13 +86,136 @@ class NoteSample
 
     private const BASE_OCTAVE = 3;
 
+    // Instruments whose live-mix base octave sits a step below the quiz's
+    // usual octave 3 — a real bass's open strings sit closer to octave 2.
+    // Same convention already established for Find the Note/RTP1 via
+    // QuizController::KEYBOARD_NOTE_SUFFIXES, extended here so it applies
+    // everywhere the live-mixing engine resolves a note from an instrument
+    // slug (resolve() and fromAnswer() below) — previously only those two
+    // quiz types got the lower octave, via manually pre-rendered audio;
+    // every other quiz that falls back to live mix (Melodic Second and
+    // the rest) was still silently defaulting to octave 3 for these
+    // instruments regardless of what any pre-rendered audio elsewhere said.
+    private const BASE_OCTAVE_OVERRIDES = [
+        'bass-guitar' => 2,
+        // Upright Bass is deliberately NOT here — its note bank was rebuilt
+        // from a new real recording covering only C3-C5 (no octave 2 at
+        // all), so it now uses the default base octave 3 like most
+        // instruments instead of the old override.
+        // Bassoon's real range reaches down to B1 — 3-Note Stepwise/Skips
+        // were deliberately built starting at C2 to use that extra low
+        // range, same reasoning as Bass Guitar/Upright Bass above.
+        'bassoon' => 2,
+        // These instruments' Melodic Dictation quizzes (3-Note Stepwise,
+        // 3-Note with Skips, 5-Note Melodies, Dyad Melodies) were built in
+        // an earlier session starting at a non-default octave per
+        // instrument — discovered when the admin "Live mix" preview was
+        // silently reconstructing the wrong octave for them (for Cello/
+        // Strings/Tuba/Violin this actually caused real content to be
+        // misidentified as out-of-range and deleted; restored afterward).
+        // Guitar and the whole Piano family (Piano/EP/Upright Piano/Organ)
+        // are deliberately NOT here — their Melodic Dictation audio was
+        // standardized to the default octave 3 (C3 base, A2-C6 hard range)
+        // instead of restoring their old octave-2 content.
+        'harp' => 2,
+        'jazz-guitar' => 2,
+        'cello' => 2,
+        'strings' => 2,
+        'tuba' => 1,
+        'violin' => 4,
+    ];
+
+    // Instruments whose note bank was built from real individually-recorded
+    // chromatic notes at every octave (not the legacy single-sample-plus-
+    // pitch-shift scheme every other instrument still uses) — their bare
+    // chromatic filename genuinely is octave 3, same as diatonic notes, so
+    // no "-1" compensation is needed when computing which file a chromatic
+    // note at a given true octave lives in.
+    private const FULL_CHROMATIC_BANK_SLUGS = [
+        'piano', 'ep', 'upright-piano', 'organ', 'guitar', 'electric-guitar', 'harpejji',
+        'strings', 'upright-bass', 'flute', 'oboe', 'marimba', 'steel-drum',
+        'ensemble-choir', 'sustained-choir', 'tropar-choir',
+    ];
+
+    // Per-instrument, per-VARIANT register shift applied to Chordal melodies
+    // ("orig" — the close-position voicing) and Chordal Bass Lines ("drop2" —
+    // the same progression with its 2nd-from-top voice dropped an octave)
+    // when each instrument's audio was built. Restricted to whole-octave
+    // shifts only (never a plain interval like +7/-7), since shifting by
+    // anything other than a multiple of 12 semitones moves the whole
+    // progression out of the key of C (confirmed: an earlier version of this
+    // table used +7/-7 "for maximum coverage" and it silently broke the key
+    // for 8 instruments — some chords landed on pitch classes outside the
+    // diatonic set). The two variants are optimized INDEPENDENTLY (not one
+    // shared shift) since drop2's lower bass note often needs a different
+    // octave-safe shift than the original voicing to stay in range — e.g.
+    // Saxophone's orig fits at shift 0 but its drop2 only fits at shift 12.
+    // Picked per instrument/variant as whichever octave-safe shift maximized
+    // how many of the 13 progressions were fully playable in that
+    // instrument's real recorded range; chords need more simultaneous range
+    // than a single melody line, so some instrument/variant combinations
+    // still miss a few regardless. Bass Guitar, Tuba, and Upright Bass are
+    // excluded entirely by explicit request, not a range limitation. Keep in
+    // sync by hand with whatever shift a future rebuild uses.
+    private const CHORDAL_TRANSPOSE_SEMITONES = [
+        'guitar' => ['orig' => 0, 'drop2' => 0],
+        'electric-guitar' => ['orig' => 0, 'drop2' => 0],
+        'harpejji' => ['orig' => 0, 'drop2' => 0],
+        'violin' => ['orig' => 0, 'drop2' => 12],
+        'strings' => ['orig' => 0, 'drop2' => 0],
+        'cello' => ['orig' => -12, 'drop2' => 0],
+        'saxophone' => ['orig' => 0, 'drop2' => 12],
+        'trombone' => ['orig' => 0, 'drop2' => 0],
+        'trumpet' => ['orig' => 0, 'drop2' => 12],
+        'voice' => ['orig' => -12, 'drop2' => -12],
+        'tropar-choir' => ['orig' => 0, 'drop2' => 0],
+        'ensemble-choir' => ['orig' => 0, 'drop2' => 0],
+        'sustained-choir' => ['orig' => 0, 'drop2' => 12],
+        'marimba' => ['orig' => 0, 'drop2' => 12],
+        'steel-drum' => ['orig' => 0, 'drop2' => 0],
+        'celesta' => ['orig' => 0, 'drop2' => 12],
+        'vibraphone' => ['orig' => 0, 'drop2' => 12],
+        'flute' => ['orig' => 0, 'drop2' => 12],
+        'clarinet' => ['orig' => 0, 'drop2' => 12],
+        'oboe' => ['orig' => 0, 'drop2' => 12],
+        'bassoon' => ['orig' => -12, 'drop2' => 0],
+    ];
+
+    // Find the Note and Relative Tone Pitch #1 only (the two single-degree
+    // branches in fromAnswer() below) — per explicit request,
+    // piano/guitar/strings/brass/woodwind families play one octave higher
+    // than their resolved default, with named exceptions per family that
+    // already sit at the right register on their own: Bass Guitar (guitar
+    // family), Upright Bass (strings family), Tuba (brass family), Clarinet
+    // (woodwind family).
+    private const SINGLE_DEGREE_OCTAVE_UP_SLUGS = [
+        'piano', 'ep', 'organ', 'upright-piano',
+        'guitar', 'electric-guitar', 'harpejji',
+        'strings', 'cello', 'violin',
+        'trombone', 'trumpet',
+        'flute', 'oboe', 'bassoon',
+    ];
+
+    private static function baseOctave(?string $slug): int
+    {
+        return self::BASE_OCTAVE_OVERRIDES[$slug] ?? self::BASE_OCTAVE;
+    }
+
     /**
      * @return list<array{slug: string, degree: string, octave: int, offset: float}>|null
-     *         null when $path doesn't match either known shape (caller should
-     *         fall back to playing $path directly as one pre-rendered file).
+     *                                                                                    null when $path doesn't match either known shape (caller should
+     *                                                                                    fall back to playing $path directly as one pre-rendered file).
      */
     public static function resolve(string $path): ?array
     {
+        if (str_starts_with($path, 'add9/')) {
+            return AddNineSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'basic-triads/')) {
+            return BasicTriadSamples::resolve($path);
+        }
+
         if (preg_match('#^notes/([^/]+)/([a-z]+)(?:-c(\d))?\.wav$#', $path, $m)) {
             $degree = array_search($m[2], self::DEGREE_SLUGS, true);
             $degree = $degree !== false ? $degree : array_search($m[2], self::CHROMATIC_SLUGS, true);
@@ -89,9 +226,24 @@ class NoteSample
             return [[
                 'slug' => $m[1],
                 'degree' => $degree,
+                // A bare filename (no "-cN" suffix) always means BASE_OCTAVE —
+                // that's path()'s own convention, independent of any per-
+                // instrument BASE_OCTAVE_OVERRIDES (those only steer where
+                // fromAnswer() starts searching, never change what a stored
+                // filename itself means). Using baseOctave($m[1]) here used to
+                // silently misread e.g. Cello's "do.wav" (true octave 3) as
+                // octave 2, landing on a different, real "do-c2.wav" instead —
+                // wrong pitch, no error, since that file coincidentally exists.
                 'octave' => ($m[3] ?? '') !== '' ? (int) $m[3] : self::BASE_OCTAVE,
                 'offset' => 0.0,
             ]];
+        }
+
+        if (preg_match('#^reference-intervals/live-v1/(melodic|harmonic)/([a-z-]+)/(\d+)-(\d+)\.wav$#', $path, $matches)) {
+            [, $timing, $slug, $first, $second] = $matches;
+            $notes = IntervalSamples::notesForPair((int) $first, (int) $second, $timing, $slug);
+
+            return $notes === null ? null : array_map(fn (array $note) => ['slug' => $slug, ...$note], $notes);
         }
 
         if (preg_match('#^intervals/(melodic|harmonic)-[a-z]+/([^/]+)/([a-z]+)-([a-z]+)(2?)\.wav$#', $path, $m)) {
@@ -102,16 +254,281 @@ class NoteSample
                 return null;
             }
 
+            $base = self::baseOctave($slug);
             $wraps = $explicitWrap === '2' || self::degreeIndex($degree2) < self::degreeIndex($degree1);
-            $octave2 = self::BASE_OCTAVE + ($wraps ? 1 : 0);
+            $octave2 = $base + ($wraps ? 1 : 0);
 
             return [
-                ['slug' => $slug, 'degree' => $degree1, 'octave' => self::BASE_OCTAVE, 'offset' => 0.0],
+                ['slug' => $slug, 'degree' => $degree1, 'octave' => $base, 'offset' => 0.0],
                 ['slug' => $slug, 'degree' => $degree2, 'octave' => $octave2, 'offset' => $timing === 'melodic' ? self::MELODIC_NOTE_SPACING_SECONDS : 0.0],
             ];
         }
 
+        // melodic-dictation/{3-note-stepwise,3-note-skips,5-note-melodies}/{slug}/
+        // {degree1}-{degree2}-...-{degreeN}-o{slot}.wav — every melodic-dictation
+        // quiz whose patterns are a plain note sequence (as opposed to Dyad/Chordal
+        // quizzes' voicings) reuses stepwiseSlugForIndex() directly for its
+        // filenames (three_note_stepwise_pool.php, three_note_skips_pool.php,
+        // five_note_melodies_pool.php), so they all share this one shape
+        // regardless of note count. Each degree slug optionally carries a run of
+        // "h" (lands an octave above the pattern's own first note) or "l" (an
+        // octave below), same convention as the interval quizzes'
+        // apostrophe/comma markers, just applied within the melody's own window —
+        // this just reverses stepwiseSlugForIndex(). "o{slot}" is which of the
+        // pool's starting octaves this row is — slot directly adds to the base
+        // octave since each slot shifts the whole pattern up exactly one diatonic
+        // octave.
+        if (preg_match('#^melodic-dictation/(?:3-note-stepwise|3-note-skips|5-note-melodies)/([^/]+)/((?:[a-z]+(?:h+|l+)?-)+[a-z]+(?:h+|l+)?)-o(\d)\.wav$#', $path, $m)) {
+            [, $slug, $noteSlugs, $slot] = $m;
+            $base = self::baseOctave($slug) + (int) $slot;
+
+            $notes = [];
+            foreach (explode('-', $noteSlugs) as $i => $noteSlug) {
+                if (! preg_match('#^([a-z]+?)(h+|l+)?$#', $noteSlug, $nm)) {
+                    return null;
+                }
+                $degree = array_search($nm[1], self::DEGREE_SLUGS, true);
+                if ($degree === false) {
+                    return null;
+                }
+                $shift = match (true) {
+                    ($nm[2] ?? '') === '' => 0,
+                    $nm[2][0] === 'h' => strlen($nm[2]),
+                    default => -strlen($nm[2]),
+                };
+
+                $notes[] = [
+                    'slug' => $slug,
+                    'degree' => $degree,
+                    'octave' => $base + $shift,
+                    'offset' => $i * self::MELODIC_NOTE_SPACING_SECONDS,
+                ];
+            }
+
+            return $notes;
+        }
+
+        // melodic-dictation/dyad-melodies/{slug}/{fileSlug}-o{slot}.wav — each
+        // position is TWO simultaneous notes (a diatonic 3rd or 4th harmony
+        // below a top melody note), but the filename only encodes the TOP
+        // line (dyadMelodyPatterns() reuses 5-Note Melodies' fileSlug
+        // verbatim), so which interval each position uses isn't recoverable
+        // from the filename text alone — it depends on that pattern's
+        // position in the pool (scripts/audio/dyad_melodies_pool.php
+        // alternates 3rd/4th per note based on a running pattern index).
+        // Look the pattern up by its fileSlug instead of regex-decoding it.
+        if (preg_match('#^melodic-dictation/dyad-melodies/([^/]+)/(.+)-o(\d)\.wav$#', $path, $m)) {
+            [, $slug, $fileSlug, $slot] = $m;
+
+            static $dyadPatternsByFileSlug = null;
+            if ($dyadPatternsByFileSlug === null) {
+                require_once base_path('scripts/audio/dyad_melodies_pool.php');
+                $dyadPatternsByFileSlug = [];
+                foreach (dyadMelodyPatterns() as $pattern) {
+                    $dyadPatternsByFileSlug[$pattern['fileSlug']] = $pattern;
+                }
+            }
+
+            $pattern = $dyadPatternsByFileSlug[$fileSlug] ?? null;
+            if (! $pattern) {
+                return null;
+            }
+
+            $base = self::baseOctave($slug) + (int) $slot;
+            $notes = [];
+            foreach ($pattern['dyads'] as $i => $dyad) {
+                foreach (['harmonyIdx', 'topIdx'] as $key) {
+                    $idx = $dyad[$key];
+                    $octaveShift = intdiv($idx, 7);
+                    $degreeIndex = $idx % 7;
+                    if ($degreeIndex < 0) {
+                        $degreeIndex += 7;
+                        $octaveShift--;
+                    }
+
+                    $notes[] = [
+                        'slug' => $slug,
+                        'degree' => self::DEGREE_ORDER[$degreeIndex],
+                        'octave' => $base + $octaveShift,
+                        'offset' => $i * self::MELODIC_NOTE_SPACING_SECONDS,
+                    ];
+                }
+            }
+
+            return $notes;
+        }
+
+        // melodic-dictation/dual-tonic-melodies/{slug}/{fileSlug}-o{slot}.wav
+        // — same "look the pattern up by its fileSlug" approach as Dyad
+        // Melodies above, for the same reason: a chromatic passing tone's
+        // filename segment ("dos", "fis", ...) only encodes WHICH diatonic
+        // note it sits a half-step above, not which octave slot — that's
+        // recovered from the pattern's own 'notes' definition instead.
+        // Chromatic notes map to a nominal octave via plain MIDI//12-1
+        // bucketing (matching how the chromatic sample bank itself is
+        // suffixed) rather than the diatonic degree-index math above, since
+        // a chromatic passing tone isn't on the 7-degree scale at all.
+        if (preg_match('#^melodic-dictation/dual-tonic-melodies/([^/]+)/(.+)-o(\d)\.wav$#', $path, $m)) {
+            [, $slug, $fileSlug, $slot] = $m;
+
+            static $dualTonicPatternsByFileSlug = null;
+            if ($dualTonicPatternsByFileSlug === null) {
+                require_once base_path('scripts/audio/dual_tonic_melodies_pool.php');
+                $dualTonicPatternsByFileSlug = [];
+                foreach (dualTonicMelodyPatterns() as $pattern) {
+                    $dualTonicPatternsByFileSlug[$pattern['fileSlug']] = $pattern;
+                }
+            }
+
+            $pattern = $dualTonicPatternsByFileSlug[$fileSlug] ?? null;
+            if (! $pattern) {
+                return null;
+            }
+
+            $base = self::baseOctave($slug) + (int) $slot;
+            $absoluteMidiBase = ($base + 1) * 12; // octave number -> absolute MIDI of that octave's Do
+            $chromaticNames = [1 => 'C#/Db', 3 => 'D#/Eb', 6 => 'F#/Gb', 8 => 'G#/Ab', 10 => 'A#/Bb'];
+
+            $notes = [];
+            foreach ($pattern['notes'] as $i => $n) {
+                if ($n['type'] === 'diatonic') {
+                    $octaveShift = intdiv($n['idx'], 7);
+                    $degreeIndex = $n['idx'] % 7;
+                    if ($degreeIndex < 0) {
+                        $degreeIndex += 7;
+                        $octaveShift--;
+                    }
+
+                    $notes[] = [
+                        'slug' => $slug,
+                        'degree' => self::DEGREE_ORDER[$degreeIndex],
+                        'octave' => $base + $octaveShift,
+                        'offset' => $i * self::MELODIC_NOTE_SPACING_SECONDS,
+                    ];
+
+                    continue;
+                }
+
+                $midi = self::stepwiseMidiForDegreeIndex($n['idx'], $absoluteMidiBase) + 1;
+                $trueOctave = intdiv($midi, 12) - 1;
+                $remainder = $midi - ($trueOctave + 1) * 12;
+                if (! isset($chromaticNames[$remainder])) {
+                    return null;
+                }
+
+                // Legacy chromatic sample files are recorded a full octave
+                // higher than their suffix implies (confirmed by
+                // measurement: a "bare"/no-suffix file like asharp.wav is
+                // really A#4, not A#3 like a bare diatonic file would be) —
+                // path()'s suffix rule still only omits the suffix at
+                // octave 3, so the octave handed to it must be shifted down
+                // by 1 to land on the file that actually sounds at
+                // $trueOctave. Instruments in FULL_CHROMATIC_BANK_SLUGS have
+                // real recordings at every octave instead, with no such
+                // offset — their bare file genuinely is octave 3.
+                $octaveShift = in_array($slug, self::FULL_CHROMATIC_BANK_SLUGS, true) ? 0 : 1;
+                $notes[] = [
+                    'slug' => $slug,
+                    'degree' => $chromaticNames[$remainder],
+                    'octave' => $trueOctave - $octaveShift,
+                    'offset' => $i * self::MELODIC_NOTE_SPACING_SECONDS,
+                ];
+            }
+
+            return $notes;
+        }
+
+        // melodic-dictation/chordal-melodies/{slug}/p{i}-(orig|drop2).wav —
+        // shared verbatim by Chordal Bass Lines too (same audio file, just a
+        // different stored answer/label pointing at it — see
+        // scripts/audio/share_chordal_melody_bass_audio.php), so both quizzes'
+        // paths always live under the chordal-melodies folder regardless of
+        // which quiz's row references them. Each "note" here is actually a
+        // simultaneous CHORD (several notes sharing one offset), unlike every
+        // other branch above. $i indexes chordalLiteralProgressions();
+        // "orig" is that pattern's close-position voicing, "drop2" is the
+        // same progression with its 2nd-from-top voice dropped an octave.
+        // An optional "-up12" suffix raises the whole progression one octave
+        // without changing shared files used by the other chordal quiz.
+        if (preg_match('#^melodic-dictation/chordal-melodies/([^/]+)/p(\d+)-(orig|drop2)(?:-up(12))?\.wav$#', $path, $m)) {
+            [, $slug, $i, $variant] = $m;
+
+            static $chordalProgressions = null;
+            if ($chordalProgressions === null) {
+                require_once base_path('scripts/audio/chordal_melodies_pool.php');
+                $chordalProgressions = chordalLiteralProgressions();
+            }
+
+            $steps = $chordalProgressions[(int) $i] ?? null;
+            if ($steps === null) {
+                return null;
+            }
+
+            $voicings = chordalBuildVoicings($steps);
+            if ($variant === 'drop2') {
+                $voicings = chordalDrop2Voicings($voicings);
+            }
+
+            $transpose = (self::CHORDAL_TRANSPOSE_SEMITONES[$slug][$variant] ?? 0) + (int) ($m[4] ?? 0);
+            $chromaticNames = [1 => 'C#/Db', 3 => 'D#/Eb', 6 => 'F#/Gb', 8 => 'G#/Ab', 10 => 'A#/Bb'];
+
+            $notes = [];
+            foreach ($voicings as $step => $chord) {
+                foreach ($chord as $midi) {
+                    $midi += $transpose;
+                    $octave = intdiv($midi, 12) - 1;
+                    $remainder = $midi - ($octave + 1) * 12;
+                    $noteOctave = $octave;
+
+                    if (isset($chromaticNames[$remainder])) {
+                        // Chordal banks normally use literal octave filenames.
+                        // Solo Choir's raised variants handle their older sharp
+                        // naming convention separately below.
+                        $degree = $chromaticNames[$remainder];
+                        // Solo Choir's sharp recordings use the legacy filename
+                        // register (fsharp.wav is F#4). Raised variants must use
+                        // that storage offset to preserve the intended pitch.
+                        if ($slug === 'voice' && isset($m[4])) {
+                            $noteOctave--;
+                        }
+                    } else {
+                        $degreeIndex = array_search($remainder, self::DEGREE_SEMITONES, true);
+                        $degree = self::DEGREE_ORDER[$degreeIndex];
+                    }
+
+                    if (! self::sampleExists(self::path($slug, $degree, $noteOctave))) {
+                        return null;
+                    }
+
+                    $notes[] = [
+                        'slug' => $slug,
+                        'degree' => $degree,
+                        'octave' => $noteOctave,
+                        'offset' => $step * self::MELODIC_NOTE_SPACING_SECONDS,
+                    ];
+                }
+            }
+
+            return $notes;
+        }
+
         return null;
+    }
+
+    // Mirrors scripts/audio/three_note_stepwise_pool.php's stepwiseMidiForIndex()
+    // — duplicated here (rather than requiring that file for one function) since
+    // this is the only place in resolve() that needs raw MIDI instead of a
+    // degree+octave pair.
+    private static function stepwiseMidiForDegreeIndex(int $idx, int $base): int
+    {
+        $octave = intdiv($idx, 7);
+        $degree = $idx % 7;
+        if ($degree < 0) {
+            $degree += 7;
+            $octave--;
+        }
+
+        return $base + $octave * 12 + self::DEGREE_SEMITONES[$degree];
     }
 
     /**
@@ -162,17 +579,110 @@ class NoteSample
      * see NoteSample's class doc), so there's no case where skipping the
      * marker changes the answer.
      *
+     * $slug picks the instrument's live-mix base octave (see
+     * BASE_OCTAVE_OVERRIDES) — optional and defaulting to the standard
+     * octave 3 so existing call sites that don't care which instrument
+     * (or don't yet know it) keep behaving exactly as before.
+     *
      * @return list<array{degree: string, octave: int, offset: float}>|null
-     *         null when $answer isn't a plain solfège degree or pair.
+     *                                                                      null when $answer isn't a plain solfège degree or pair.
      */
-    public static function fromAnswer(string $answer, string $timing): ?array
+    public static function fromAnswer(string $answer, string $timing, ?string $slug = null): ?array
     {
-        $parts = array_map('trim', explode(' - ', $answer));
+        $base = self::baseOctave($slug);
+        // Fourth-and-wider interval answers that wrap into the next octave
+        // carry a trailing "'" on the second degree (e.g. "So - Do'") -
+        // confirmed redundant with the index-comparison wrap rule below
+        // (checked against every apostrophe-marked answer in quiz_questions:
+        // 0 disagreements), so it's only ever a parsing concern here, not a
+        // second source of truth - stripped before any degree lookup.
+        $parts = array_map(fn ($part) => rtrim(trim($part), "'"), explode(' - ', $answer));
 
         if (count($parts) === 1) {
-            return self::isSingleDegree($parts[0])
-                ? [['degree' => $parts[0], 'octave' => self::BASE_OCTAVE, 'offset' => 0.0]]
-                : null;
+            if (isset(self::DEGREE_SLUGS[$parts[0]])) {
+                // $base itself can be missing for some instrument/degree
+                // combinations (e.g. Tuba has no "do-c1.wav" at its own
+                // override octave 1, only octave 2 upward) — search upward
+                // to the always-present octave 3 for the lowest real file,
+                // same fallback the letter-scheme branch below already has.
+                $octave = $base;
+                if ($slug !== null) {
+                    foreach (range($base, self::BASE_OCTAVE) as $candidate) {
+                        if (self::sampleExists(self::path($slug, $parts[0], $candidate))) {
+                            $octave = $candidate;
+                            break;
+                        }
+                    }
+                }
+
+                // Relative Tone Pitch #1 only, per the same explicit request
+                // as Find the Note — bump one octave up from there when a
+                // real file exists a step higher, else leave it alone. This
+                // branch is only reached by RTP1 (interval quizzes use the
+                // two-degree branch below; Melodic Dictation doesn't call
+                // fromAnswer() at all), so it can't leak into anything else.
+                if ($slug !== null && in_array($slug, self::SINGLE_DEGREE_OCTAVE_UP_SLUGS, true)
+                    && self::sampleExists(self::path($slug, $parts[0], $octave + 1))
+                ) {
+                    $octave++;
+                }
+
+                return [['degree' => $parts[0], 'octave' => $octave, 'offset' => 0.0]];
+            }
+            // Find the Note's chromatic letter scheme (C, C#/Db, D, ...)
+            // isn't built for every octave on every instrument the way the
+            // solfège scheme is — some instruments (e.g. Bass Guitar) do
+            // have a real lower-octave letter set matching their solfège
+            // baseOctave() override, others only ever got one fixed octave
+            // (path()'s "bare" octave 3), and the 16 instruments rebuilt
+            // from real recordings this session got no letter files at all,
+            // only solfège ones. Try, in order: this instrument's own
+            // (possibly overridden) base octave upward to the always-present
+            // octave 3 — not straight to octave 3, since a bass instrument's
+            // override octave can be missing just one or two degrees (e.g.
+            // Tuba has no "Do" at octave 1, but does at octave 2) and should
+            // still land as low as real content allows, not jump all the
+            // way up — trying the natural-letter's pitch-identical solfège
+            // equivalent at each octave too before moving on.
+            if (isset(self::CHROMATIC_SLUGS[$parts[0]])) {
+                $degree = $parts[0];
+                $equivalent = self::equivalentDegree($degree);
+                $found = null;
+                foreach (range($base, self::BASE_OCTAVE) as $octave) {
+                    if ($slug === null) {
+                        break;
+                    }
+                    if (self::sampleExists(self::path($slug, $degree, $octave))) {
+                        $found = ['degree' => $degree, 'octave' => $octave];
+                        break;
+                    }
+                    if ($equivalent !== null && self::sampleExists(self::path($slug, $equivalent, $octave))) {
+                        $found = ['degree' => $equivalent, 'octave' => $octave];
+                        break;
+                    }
+                }
+                $found ??= ['degree' => $equivalent ?? $degree, 'octave' => self::BASE_OCTAVE];
+
+                // Find the Note only, per explicit request: these instruments
+                // sat too low/neutral by default, so bump up one octave —
+                // only if a real file exists a step higher (trying the
+                // solfège equivalent too, same as the search above, since
+                // e.g. Trombone has "do-c4.wav" but no letter-scheme
+                // "c-c4.wav"), else leave the found octave alone rather
+                // than silently fail.
+                if ($slug !== null && in_array($slug, self::SINGLE_DEGREE_OCTAVE_UP_SLUGS, true)) {
+                    $nextOctave = $found['octave'] + 1;
+                    if (self::sampleExists(self::path($slug, $found['degree'], $nextOctave))) {
+                        $found['octave'] = $nextOctave;
+                    } elseif ($equivalent !== null && self::sampleExists(self::path($slug, $equivalent, $nextOctave))) {
+                        $found = ['degree' => $equivalent, 'octave' => $nextOctave];
+                    }
+                }
+
+                return [['degree' => $found['degree'], 'octave' => $found['octave'], 'offset' => 0.0]];
+            }
+
+            return null;
         }
 
         if (count($parts) !== 2 || ! isset(self::DEGREE_SLUGS[$parts[0]]) || ! isset(self::DEGREE_SLUGS[$parts[1]])) {
@@ -180,12 +690,113 @@ class NoteSample
         }
 
         [$degree1, $degree2] = $parts;
-        $octave2 = self::BASE_OCTAVE + (self::degreeIndex($degree2) < self::degreeIndex($degree1) ? 1 : 0);
+        $octave1 = $base;
+        // Same fallback as the single-degree branch above: $base itself can
+        // be missing (e.g. Tuba has no "do-c1.wav" at its own override
+        // octave 1) — search upward to octave 3 for the lowest real file,
+        // shifting both notes together so the interval itself stays intact.
+        if ($slug !== null) {
+            foreach (range($base, self::BASE_OCTAVE) as $candidate) {
+                if (self::sampleExists(self::path($slug, $degree1, $candidate))) {
+                    $octave1 = $candidate;
+                    break;
+                }
+            }
+        }
+        $octave2 = $octave1 + (self::degreeIndex($degree2) < self::degreeIndex($degree1) ? 1 : 0);
+
+        // A wrap-up pair can land on an octave a given instrument never
+        // recorded (e.g. Tropar Choir has no la-c4.wav, so "Ti - La'" fails
+        // at the usual octave) — shift both notes down one octave together
+        // (preserving the interval) when that lower pair does exist, rather
+        // than excluding the instrument from the whole quiz over one gap.
+        if ($slug !== null
+            && (! self::sampleExists(self::path($slug, $degree1, $octave1)) || ! self::sampleExists(self::path($slug, $degree2, $octave2)))
+            && self::sampleExists(self::path($slug, $degree1, $octave1 - 1))
+            && self::sampleExists(self::path($slug, $degree2, $octave2 - 1))
+        ) {
+            $octave1--;
+            $octave2--;
+        }
+
+        // The Melodic/Harmonic interval quizzes, same explicit request as
+        // Find the Note/RTP1 — bump both notes up one octave together (never
+        // just one, or the interval itself would shrink/grow) only when real
+        // files exist for both at the higher octave.
+        if ($slug !== null && in_array($slug, self::SINGLE_DEGREE_OCTAVE_UP_SLUGS, true)
+            && self::sampleExists(self::path($slug, $degree1, $octave1 + 1))
+            && self::sampleExists(self::path($slug, $degree2, $octave2 + 1))
+        ) {
+            $octave1++;
+            $octave2++;
+        }
 
         return [
-            ['degree' => $degree1, 'octave' => self::BASE_OCTAVE, 'offset' => 0.0],
+            ['degree' => $degree1, 'octave' => $octave1, 'offset' => 0.0],
             ['degree' => $degree2, 'octave' => $octave2, 'offset' => $timing === 'melodic' ? self::MELODIC_NOTE_SPACING_SECONDS : 0.0],
         ];
+    }
+
+    /**
+     * Resolve an explicit octave without the register guessing used by fromAnswer().
+     *
+     * @return list<array{degree: string, octave: int, offset: float}>|null
+     */
+    public static function fromScientificPitchAnswer(string $answer, ?string $slug = null): ?array
+    {
+        if (! preg_match('/^(.+?)(\d+)$/', $answer, $matches) || ! isset(self::CHROMATIC_SLUGS[$matches[1]])) {
+            return null;
+        }
+
+        $degree = $matches[1];
+        $octave = (int) $matches[2];
+        $range = self::SCIENTIFIC_PITCH_RANGES[$slug] ?? null;
+        $pitch = ($octave + 1) * 12 + array_search($degree, array_keys(self::CHROMATIC_SLUGS), true);
+        if ($range !== null && ($pitch < $range[0] || $pitch > $range[1])) {
+            return null;
+        }
+
+        // Legacy sharp files sound one octave above their filename's register
+        // (the same storage offset resolve() handles for dual-tonic melodies).
+        // This is a deterministic filename conversion, never a pitch fallback.
+        if ($slug !== null && str_contains($degree, '#') && ! in_array($slug, self::FULL_CHROMATIC_BANK_SLUGS, true)) {
+            $octave--;
+        }
+        if ($slug !== null && ! self::sampleExists(self::path($slug, $degree, $octave))) {
+            $degree = self::equivalentDegree($degree);
+            if ($degree === null || ! self::sampleExists(self::path($slug, $degree, $octave))) {
+                return null;
+            }
+        }
+
+        return [['degree' => $degree, 'octave' => $octave, 'offset' => 0.0]];
+    }
+
+    /**
+     * An actual MIDI pitch mapped to a recorded file, without quiz register
+     * guessing or Find the Pitch's presentation-only instrument limits.
+     *
+     * @return array{degree: string, octave: int, offset: float}|null
+     */
+    public static function fromRecordedMidiPitch(int $midi, string $slug): ?array
+    {
+        if ($midi < 0 || $midi > 127) {
+            return null;
+        }
+        $label = array_keys(self::CHROMATIC_SLUGS)[$midi % 12];
+        $degree = self::equivalentDegree($label) ?? $label;
+        // Measured register offsets in these current recorded banks. This
+        // mapping is isolated to Intervals; existing quiz registers are unchanged.
+        $registerOffset = ['organ' => 1, 'harpejji' => 1, 'upright-bass' => 2][$slug] ?? 0;
+        $octave = intdiv($midi, 12) - 1 + $registerOffset;
+        if (str_contains($degree, '#') && ! in_array($slug, [...self::FULL_CHROMATIC_BANK_SLUGS, 'celesta', 'vibraphone'], true)) {
+            $octave--;
+        }
+        if (! self::sampleExists(self::path($slug, $degree, $octave))) {
+            return null;
+        }
+
+        return ['degree' => $degree, 'octave' => $octave, 'offset' => 0.0];
     }
 
     private static function degreeIndex(string $degree): int
@@ -220,18 +831,37 @@ class NoteSample
     // cache indefinitely, even though the quiz prompt and the tappable
     // keyboard both resolve to the exact same underlying file — confirmed
     // by direct comparison, it's a caching issue, not a resolution bug.
+    //
+    // Pre-rendered interval files (intervals/{melodic|harmonic}-{ordinal}/
+    // {slug}/{pair}.wav), melodic-dictation/{quiz-slug}/{slug}/{file}.wav,
+    // and every other pre-rendered-combination shape this project has added
+    // since) get rebuilt in place the exact same way — same staleness risk,
+    // just a differently-shaped path, so any of them is handled here too,
+    // via a direct stat instead of the cached per-instrument directory
+    // listing notes/ uses (these paths come from specific known
+    // quiz_question_audio rows one at a time, not scanned/checked in bulk
+    // per quiz like notes/ is, so there's no hot loop here to justify the
+    // same caching). Keeping this a blanket "anything outside notes/" rule,
+    // rather than one regex per content folder, so a future new folder
+    // shape doesn't silently fall through uncached the way intervals/ and
+    // melodic-dictation/ both already did before this existed.
     public static function url(string $path): string
     {
         $url = Storage::disk('public')->url($path);
+        $disk = Storage::disk('public');
 
-        if (! preg_match('#^notes/([^/]+)/([^/]+)$#', $path, $m)) {
-            return $url;
+        if (preg_match('#^notes/([^/]+)/([^/]+)$#', $path, $m)) {
+            [, $slug, $filename] = $m;
+            $mtime = self::instrumentFiles($slug)[$filename] ?? null;
+
+            return $mtime ? "{$url}?v={$mtime}" : $url;
         }
 
-        [, $slug, $filename] = $m;
-        $mtime = self::instrumentFiles($slug)[$filename] ?? null;
+        if ($disk->exists($path)) {
+            return "{$url}?v=".$disk->lastModified($path);
+        }
 
-        return $mtime ? "{$url}?v={$mtime}" : $url;
+        return $url;
     }
 
     // Cached {filename => mtime} for one instrument's notes/ folder —

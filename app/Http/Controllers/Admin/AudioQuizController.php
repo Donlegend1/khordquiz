@@ -7,12 +7,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAudio;
+use App\Support\AddNineSamples;
+use App\Support\BasicTriadSamples;
+use App\Support\IntervalSamples;
 use App\Support\NoteSample;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -314,6 +317,7 @@ class AudioQuizController extends Controller
         $multiExtensionLevels = ['Major Chord Extentions', 'Minor Chord Extentions', 'Dominant Chord Extentions'];
 
         return match (true) {
+            $quiz->title === 'Find the Pitch' => 'Listen to the note and tap it on the keyboard.',
             $quiz->category === 'Melodic Dictation' => 'Listen to the melody and build the sequence of notes you hear.',
             in_array($quiz->title, $compoundTriadLevels, true) => 'Listen to the triad and identify its quality and inversion.',
             in_array($quiz->title, $compoundChordLevels, true) => 'Listen to the chord and identify its quality and inversion.',
@@ -339,9 +343,9 @@ class AudioQuizController extends Controller
     }
 
     /**
-     * @return \Illuminate\Support\Collection<int, array<string, mixed>>
+     * @return Collection<int, array<string, mixed>>
      */
-    private function lessonsFor(string $category): \Illuminate\Support\Collection
+    private function lessonsFor(string $category): Collection
     {
         $real = Quiz::query()
             ->where('category', $category)
@@ -457,13 +461,48 @@ class AudioQuizController extends Controller
         $have = $question->audioVariants->pluck('sound')->all();
         $timing = str_contains($quiz->title, 'Harmonic') ? 'harmonic' : 'melodic';
 
+        // Relative Tone Pitch #2's pool reuses the same bare-degree answer
+        // text as RTP1/Find the Note ("Do", "Re", ...), but unlike those
+        // quizzes a bare degree here does NOT mean "play it at octave 3" —
+        // each position has its own real intended octave (2-6), only
+        // recoverable from its attached quiz_question_audio row. With no row
+        // (the instrument's real range doesn't reach this position - e.g.
+        // Acoustic Guitar has no octave-2 Do/Re/Mi/Fa), NoteSample::fromAnswer()
+        // would silently guess octave 3, which is wrong exactly as often as
+        // it's right and was confirmed audible as notes "jumping around"
+        // between octaves while stepping through a quiz. No row here means
+        // genuinely no sample at the right pitch, so no preview, full stop.
+        // Find the Key #1/#2 answer with chromatic letter names ("C",
+        // "C#/Db", ...) for an entirely different reason — identifying a
+        // song excerpt's key, not naming/playing a single note — but that
+        // answer format happens to be exactly what NoteSample::fromAnswer()
+        // recognizes as a playable single degree, so it was offering a
+        // "Live mix" preview that plays one decontextualized piano note for
+        // a question that's actually about a whole song. These two quizzes
+        // have no real content yet at all (sounds deliberately emptied —
+        // see QuizCatalog::soundsFor()), so there's nothing meaningful to
+        // preview regardless.
+        if (in_array($quiz->title, ['Relative Tone Pitch #2', 'Find the Key #1', 'Find the Key #2'], true)) {
+            return [];
+        }
+
         $previews = [];
         foreach (QuizCatalog::SOUND_SLUGS as $sound => $slug) {
             if (in_array($sound, $have, true)) {
                 continue;
             }
 
-            $notes = $this->previewNotesFor($slug, $question->answer, $timing);
+            if (in_array($quiz->category, ['Basic Triads', 'Add 9'], true)) {
+                $resolved = $quiz->category === 'Add 9'
+                    ? AddNineSamples::forQuestion($question, $slug)
+                    : BasicTriadSamples::forQuestion($question, $slug);
+                $notes = $resolved === null ? null : array_map(fn (array $note) => [
+                    'url' => $this->mediaUrl(NoteSample::path($slug, $note['degree'], $note['octave'])),
+                    'offset' => $note['offset'],
+                ], $resolved);
+            } else {
+                $notes = $this->previewNotesFor($slug, $question->answer, $timing, $quiz->title, $quiz->category);
+            }
             if ($notes === null) {
                 continue;
             }
@@ -482,9 +521,13 @@ class AudioQuizController extends Controller
     // the admin's old version only ever handled the single-note case.
     //
     // @return list<array{url: string, offset: float}>|null
-    private function previewNotesFor(string $slug, string $answer, string $timing): ?array
+    private function previewNotesFor(string $slug, string $answer, string $timing, string $quizTitle, string $category): ?array
     {
-        $notes = NoteSample::fromAnswer($answer, $timing);
+        $notes = match (true) {
+            $category === 'Intervals' => IntervalSamples::fromAnswer($answer, $timing, $slug),
+            $quizTitle === 'Find the Pitch' => NoteSample::fromScientificPitchAnswer($answer, $slug),
+            default => NoteSample::fromAnswer($answer, $timing, $slug),
+        };
         if ($notes === null) {
             return null;
         }

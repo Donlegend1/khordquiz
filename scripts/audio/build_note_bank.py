@@ -25,9 +25,6 @@ import subprocess
 import shutil
 import tempfile
 import os
-import wave
-import audioop
-import math
 import argparse
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -53,10 +50,15 @@ def midi_to_filename(midi):
 
 
 def detect_pitch(path, start=0.0, duration=1.0):
-    result = subprocess.run(
-        ['python3', os.path.join(SCRIPT_DIR, 'detect_pitch.py'), path, str(start), str(duration)],
-        capture_output=True, text=True,
-    )
+    # detect_pitch.py only understands plain 16-bit PCM; re-encode a scratch
+    # copy so pitch detection works regardless of the segment's own bit depth
+    # (the segment file itself, used for the final note bank, is untouched).
+    with tempfile.NamedTemporaryFile(suffix='.wav') as tmp16:
+        subprocess.run(['sox', path, '-e', 'signed-integer', '-b', '16', tmp16.name], check=True)
+        result = subprocess.run(
+            ['python3', os.path.join(SCRIPT_DIR, 'detect_pitch.py'), tmp16.name, str(start), str(duration)],
+            capture_output=True, text=True,
+        )
     for token in result.stdout.split():
         if token.startswith('midi='):
             return float(token.split('=')[1].split('(')[0])
@@ -64,21 +66,33 @@ def detect_pitch(path, start=0.0, duration=1.0):
 
 
 def split_by_silence(raw_wav, out_dir, min_silence='1.0', threshold='0.5%', fallback=False, min_duration=1.0):
-    sixteen = os.path.join(out_dir, 'norm16.wav')
-    subprocess.run(['sox', raw_wav, '-e', 'signed-integer', '-b', '16', sixteen], check=True)
+    # Split at the source's native bit depth (just re-wrapped as signed-integer
+    # PCM so sox/wave can read it) — previously this forced 16-bit here, and
+    # since segments are copied straight out of this file into the final note
+    # bank, every instrument built via this script was silently downgraded to
+    # 16-bit even when the source recording was 24-bit (caught on Grand Piano,
+    # which sounded lower quality than its 24-bit siblings EP/Organ/Upright Piano).
+    bit_depth = subprocess.run(['soxi', '-b', raw_wav], check=True, capture_output=True, text=True).stdout.strip()
+    native = os.path.join(out_dir, 'native.wav')
+    subprocess.run(['sox', raw_wav, '-e', 'signed-integer', '-b', bit_depth, native], check=True)
     pattern = os.path.join(out_dir, 'note.wav')
     silence_spec = ['1', '0.3', '1%'] if fallback else ['1', min_silence, threshold]
     subprocess.run(
-        ['sox', sixteen, pattern, 'silence', '1', '0.05', threshold, *silence_spec, ':', 'newfile', ':', 'restart'],
+        # -e/-b on the output forces plain signed-integer PCM instead of sox's
+        # WAVE_FORMAT_EXTENSIBLE for non-16-bit depths, which Python's wave
+        # module can't parse.
+        ['sox', native, '-e', 'signed-integer', '-b', bit_depth, pattern,
+         'silence', '1', '0.05', threshold, *silence_spec, ':', 'newfile', ':', 'restart'],
         check=True, capture_output=True,
     )
     segments = sorted(f for f in os.listdir(out_dir) if f.startswith('note') and f.endswith('.wav'))
     results = []
     for name in segments:
         path = os.path.join(out_dir, name)
-        w = wave.open(path, 'rb')
-        duration = w.getnframes() / w.getframerate()
-        w.close()
+        # soxi, not python's wave module: sox writes 24-bit PCM as
+        # WAVE_FORMAT_EXTENSIBLE, which wave.open() can't parse (it only
+        # understands 16-bit's plain PCM tag).
+        duration = float(subprocess.run(['soxi', '-D', path], check=True, capture_output=True, text=True).stdout.strip())
         if duration >= min_duration:
             results.append(path)
     return results

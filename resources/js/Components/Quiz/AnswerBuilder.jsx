@@ -1,5 +1,8 @@
 import { Fragment, useEffect, useState } from 'react';
+import PitchKeyboardChoices from './PitchKeyboardChoices';
 import {
+    NOTE_WHITE_KEYS,
+    NOTE_BLACK_KEYS,
     KEYBOARD_BLACK_KEYS,
     KEYBOARD_WHITE_KEYS,
     MELODIC_DICTATION_LENGTHS,
@@ -47,6 +50,7 @@ export function answerTypeFor(category, title) {
     if (multiFor(category, title)) return 'multi';
     if (title === 'Chord naming') return 'naming';
     if (progressionFor(category, title)) return 'progression';
+    if (title === 'Find the Pitch') return 'pitch-keyboard';
     if (title === 'Find the Note' || title === 'Find the Key #1' || title === 'Find the Key #2') return 'keyboard';
     return 'flat';
 }
@@ -59,6 +63,7 @@ const ANSWER_LABELS = {
     progression: 'Build the progression you hear, chord by chord',
     sequence: 'Tap the notes in order to build the melody you hear',
     keyboard: 'Choose the correct note',
+    'pitch-keyboard': 'Choose the correct note',
 };
 
 export function answerLabelFor(category, title) {
@@ -119,17 +124,6 @@ function ChipButton({ active, disabled, ...props }) {
         />
     );
 }
-
-// Piano-style keyboard, letter-named (C–B) rather than solfège — matches the app's
-// VirtualKeyboard (app/practice.tsx), used instead of a flat list for "Find the Note".
-const NOTE_WHITE_KEYS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-const NOTE_BLACK_KEYS = [
-    { afterIndex: 0, note: 'C#/Db' },
-    { afterIndex: 1, note: 'D#/Eb' },
-    { afterIndex: 3, note: 'F#/Gb' },
-    { afterIndex: 4, note: 'G#/Ab' },
-    { afterIndex: 5, note: 'A#/Bb' },
-];
 
 // Matches app/practice.tsx's colorsFor(): before answering, only the tapped choice is
 // highlighted; after answering, the right answer turns green and a wrong pick turns red,
@@ -1018,6 +1012,18 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
                 onChangeSlot={(index, field, value) => setSlots((prev) => prev.map((slot, i) => (i === index ? { ...slot, [field]: value } : slot)))}
                 onClear={() => setSlots(emptySlots(progressionConfig))}
                 resetToken={resetToken}
+            />
+        );
+    }
+
+    if (type === 'pitch-keyboard') {
+        return (
+            <PitchKeyboardChoices
+                answered={answered}
+                correctAnswer={correctAnswer}
+                value={flatChoice}
+                onChange={setFlatChoice}
+                keyboardAudio={keyboardAudio}
             />
         );
     }

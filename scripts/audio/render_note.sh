@@ -42,7 +42,10 @@ if [ "${DRY:-0}" = "1" ]; then
 fi
 
 python3 -I "$SCRIPT_DIR/make_note_midi.py" "$TMP_MID" "$PROGRAM" "$VELOCITY" "$BEATS" "${NOTES[@]}"
-fluidsynth -ni $DRY_FLAGS -F "$TMP_WAV" -r 44100 -q "$SF2" "$TMP_MID"
-sox "$TMP_WAV" "$OUT" gain -n -8 trim 0 2.2 fade 0 2.2 0.2
+# audio.file.format=s24, audio.sample-rate=48000: fluidsynth defaults to 16-bit/
+# 44.1kHz, one bit depth below every real-sample instrument's 24-bit/48kHz —
+# matched here so GM-rendered instruments aren't a quality step down.
+fluidsynth -ni $DRY_FLAGS -F "$TMP_WAV" -r 48000 -o audio.file.format=s24 -q "$SF2" "$TMP_MID"
+sox "$TMP_WAV" -b 24 "$OUT" gain -n -8 trim 0 2.2 fade 0 2.2 0.2
 
 rm -f "$TMP_MID" "$TMP_WAV"

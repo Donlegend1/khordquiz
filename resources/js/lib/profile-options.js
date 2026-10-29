@@ -14,7 +14,7 @@ export const INSTRUMENT_GROUPS = [
     { name: 'Guitar', icon: '🎸', options: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', icon: '🎻', options: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', icon: '🎺', options: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', icon: '🎤', options: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir'] },
+    { name: 'Vocals', icon: '🎤', options: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', icon: '🥁', options: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', icon: '🪈', options: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];

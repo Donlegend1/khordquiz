@@ -22,6 +22,15 @@ export const KEYBOARD_BLACK_KEYS = [
     { afterIndex: 4, note: 'Si' },
     { afterIndex: 5, note: 'Li' },
 ];
+export const NOTE_WHITE_KEYS = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+export const NOTE_BLACK_KEYS = [
+    { afterIndex: 0, note: 'C#/Db' },
+    { afterIndex: 1, note: 'D#/Eb' },
+    { afterIndex: 3, note: 'F#/Gb' },
+    { afterIndex: 4, note: 'G#/Ab' },
+    { afterIndex: 5, note: 'A#/Bb' },
+];
+
 export const BLACK_KEY_RATIO = 0.64;
 export const blackKeyWidth = (whiteKeys) => `${(100 / whiteKeys) * BLACK_KEY_RATIO}%`;
 export const blackKeyLeft = (afterIndex, whiteKeys) =>

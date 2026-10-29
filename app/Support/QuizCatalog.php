@@ -27,7 +27,7 @@ class QuizCatalog
         'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
         'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
         'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
-        'Voice' => 'voice', 'Audience Choir' => 'audience-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir',
+        'Voice' => 'voice', 'Tropar Choir' => 'tropar-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir',
         'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
         'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
     ];
@@ -39,7 +39,7 @@ class QuizCatalog
     {
         return [
             'Relative Pitch' => [
-                'Find the Note', 'Relative Tone Pitch #1', 'Relative Tone Pitch #2',
+                'Find the Note', 'Find the Pitch', 'Relative Tone Pitch #1', 'Relative Tone Pitch #2',
                 'Melodic Second', 'Harmonic Second', 'Melodic Third', 'Harmonic Third',
                 'Melodic Fourth', 'Harmonic Fourth', 'Melodic Fifth', 'Harmonic Fifth',
                 'Melodic Sixth', 'Harmonic Sixth', 'Melodic Seventh', 'Harmonic Seventh',
@@ -139,20 +139,50 @@ class QuizCatalog
         $singleLineInstruments = ['Piano', 'Violin', 'Saxophone', 'Marimba', 'Guitar', 'Voice'];
         $intervalInstruments = ['Piano', 'Violin', 'Strings', 'Guitar', 'Marimba', 'Voice', 'Saxophone'];
         $chordInstruments = ['Piano', 'Guitar', 'Strings', 'Voice', 'Organ', 'Marimba'];
+
+        // Relative Pitch (Find the Note, RTP1/RTP2, Melodic/Harmonic 2nd-7th)
+        // was pinned to the small $singleLineInstruments/$intervalInstruments
+        // lists above from when only a handful of instruments had real
+        // audio — every instrument in allInstruments() now does, so this
+        // quiz category gets the full roster instead.
+        $relativePitchMelodic = self::allInstruments();
+        // Harmonic quizzes play two notes at once — a solo voice/choir
+        // recording can't realistically harmonize with itself the way an
+        // instrument can, so the vocal family stays out of this one list
+        // (matches the original reasoning for excluding Voice here, just
+        // extended to the newer vocal instruments).
+        $relativePitchHarmonic = array_values(array_diff(
+            $relativePitchMelodic,
+            ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir']
+        ));
+
+        // Find the Key #1/#2 use types of RECORDING, not instruments — kept
+        // as category options even with no real content behind them yet, so
+        // the admin "sound" picker still has somewhere to upload audio
+        // against per recording type. Restored after being briefly emptied —
+        // that hid the picker, but the user wants these upload targets to
+        // keep existing regardless of whether content's been recorded yet.
         $keyFindingSounds = ['Monophonic', 'Vocal Stems', 'Instruments', 'Ensemble', 'Full Song', 'All'];
 
-        // 'All' mixes every type of recording across the quiz.
         $soundsByQuiz = [
             'Find the Key #1' => $keyFindingSounds,
             'Find the Key #2' => $keyFindingSounds,
-            // Harmonic intervals sit in Relative Pitch but need two notes at
-            // once, so no single-line instruments like Voice.
-            'Harmonic Second' => $intervalInstruments,
-            'Harmonic Third' => $intervalInstruments,
-            'Harmonic Fourth' => $intervalInstruments,
-            'Harmonic Fifth' => $intervalInstruments,
-            'Harmonic Sixth' => $intervalInstruments,
-            'Harmonic Seventh' => $intervalInstruments,
+            'Find the Note' => $relativePitchMelodic,
+            'Find the Pitch' => $relativePitchMelodic,
+            'Relative Tone Pitch #1' => $relativePitchMelodic,
+            'Relative Tone Pitch #2' => $relativePitchMelodic,
+            'Melodic Second' => $relativePitchMelodic,
+            'Melodic Third' => $relativePitchMelodic,
+            'Melodic Fourth' => $relativePitchMelodic,
+            'Melodic Fifth' => $relativePitchMelodic,
+            'Melodic Sixth' => $relativePitchMelodic,
+            'Melodic Seventh' => $relativePitchMelodic,
+            'Harmonic Second' => $relativePitchHarmonic,
+            'Harmonic Third' => $relativePitchHarmonic,
+            'Harmonic Fourth' => $relativePitchHarmonic,
+            'Harmonic Fifth' => $relativePitchHarmonic,
+            'Harmonic Sixth' => $relativePitchHarmonic,
+            'Harmonic Seventh' => $relativePitchHarmonic,
             // Dyad Melodies plays simultaneous 2-note dyads, same requirement
             // as the Harmonic interval quizzes above — no single-line instruments.
             'Dyad Melodies' => $intervalInstruments,
@@ -182,7 +212,7 @@ class QuizCatalog
             'Extensions' => $chordInstruments,
             'Chord Progressions' => $chordInstruments,
             'Modal Voicings' => $chordInstruments,
-            'Intervals' => $intervalInstruments,
+            'Intervals' => self::allInstruments(),
             'Melodic Dictation' => $singleLineInstruments,
             'Relative Pitch' => $singleLineInstruments,
             'Scales' => $singleLineInstruments,
@@ -208,7 +238,7 @@ class QuizCatalog
             'Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar',
             'Violin', 'Strings', 'Cello', 'Upright Bass',
             'Saxophone', 'Trombone', 'Tuba', 'Trumpet',
-            'Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir',
+            'Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir',
             'Marimba', 'Steel Drum', 'Celesta', 'Vibraphone',
             'Flute', 'Clarinet', 'Oboe', 'Bassoon',
         ];

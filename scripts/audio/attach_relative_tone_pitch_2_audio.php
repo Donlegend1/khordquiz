@@ -14,21 +14,48 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAudio;
 
+// Octave lists are deliberately generous (1-7) for every instrument — the
+// file-existence check in the attach loop below trims each one down to
+// exactly its own real recorded range, so there's no need to hand-curate a
+// cap per instrument here (and no risk of silently missing newly-available
+// octaves after a note bank gets rebuilt with a wider real range).
+$wideRange = [1, 2, 3, 4, 5, 6, 7];
 $sounds = [
-    'Piano' => ['slug' => 'piano', 'octaves' => [2, 3, 4, 5, 6]],
-    'EP' => ['slug' => 'ep', 'octaves' => [2, 3, 4, 5, 6]],
-    // Marimba's C7 is its real documented top (a standard concert marimba spans
-    // C2-C7) — not a stretch like the others, just the instrument's full range.
-    'Marimba' => ['slug' => 'marimba', 'octaves' => [2, 3, 4, 5, 6, 7]],
-    'Guitar' => ['slug' => 'guitar', 'octaves' => [2, 3, 4, 5, 6]],
-    'Jazz Guitar' => ['slug' => 'jazz-guitar', 'octaves' => [2, 3, 4, 5, 6]],
-    // Violin tested up to C7 but the GM sample got audibly synthetic/thin that
-    // high — capped at C6 instead.
+    'Piano' => ['slug' => 'piano', 'octaves' => $wideRange],
+    'EP' => ['slug' => 'ep', 'octaves' => $wideRange],
+    'Upright Piano' => ['slug' => 'upright-piano', 'octaves' => $wideRange],
+    'Organ' => ['slug' => 'organ', 'octaves' => $wideRange],
+    'Marimba' => ['slug' => 'marimba', 'octaves' => $wideRange],
+    'Guitar' => ['slug' => 'guitar', 'octaves' => $wideRange],
+    'Electric Guitar' => ['slug' => 'electric-guitar', 'octaves' => $wideRange],
+    'Harpejji' => ['slug' => 'harpejji', 'octaves' => $wideRange],
+    'Strings' => ['slug' => 'strings', 'octaves' => $wideRange],
+    'Upright Bass' => ['slug' => 'upright-bass', 'octaves' => $wideRange],
+    // Violin tested up to C7 but the GM sample got audibly synthetic/thin
+    // that high — capped at C6.
     'Violin' => ['slug' => 'violin', 'octaves' => [4, 5, 6]],
-    // C6 is altissimo register for alto sax (an advanced extended technique,
-    // not an ordinary note) — accepted anyway per listening test.
+    // C6 is altissimo register for alto sax (an advanced extended
+    // technique, not an ordinary note) — accepted anyway per listening test.
     'Saxophone' => ['slug' => 'saxophone', 'octaves' => [3, 4, 5, 6]],
     'Voice' => ['slug' => 'voice', 'octaves' => [3, 4, 5, 6]],
+    'Trombone' => ['slug' => 'trombone', 'octaves' => $wideRange],
+    'Trumpet' => ['slug' => 'trumpet', 'octaves' => $wideRange],
+    'Tuba' => ['slug' => 'tuba', 'octaves' => $wideRange],
+    // Tropar Choir replaces Audience Choir in the catalog.
+    'Tropar Choir' => ['slug' => 'tropar-choir', 'octaves' => $wideRange],
+    'Ensemble Choir' => ['slug' => 'ensemble-choir', 'octaves' => $wideRange],
+    'Sustained Choir' => ['slug' => 'sustained-choir', 'octaves' => $wideRange],
+    'Steel Drum' => ['slug' => 'steel-drum', 'octaves' => $wideRange],
+    'Flute' => ['slug' => 'flute', 'octaves' => $wideRange],
+    'Clarinet' => ['slug' => 'clarinet', 'octaves' => $wideRange],
+    'Oboe' => ['slug' => 'oboe', 'octaves' => $wideRange],
+    'Bassoon' => ['slug' => 'bassoon', 'octaves' => $wideRange],
+    'Cello' => ['slug' => 'cello', 'octaves' => $wideRange],
+    'Celesta' => ['slug' => 'celesta', 'octaves' => $wideRange],
+    'Harp' => ['slug' => 'harp', 'octaves' => $wideRange],
+    'Jazz Guitar' => ['slug' => 'jazz-guitar', 'octaves' => $wideRange],
+    'Vibraphone' => ['slug' => 'vibraphone', 'octaves' => $wideRange],
+    'Bass Guitar' => ['slug' => 'bass-guitar', 'octaves' => $wideRange],
 ];
 
 $degreeSlug = ['Do' => 'do', 'Re' => 're', 'Mi' => 'mi', 'Fa' => 'fa', 'So' => 'so', 'La' => 'la', 'Ti' => 'ti'];
@@ -40,15 +67,29 @@ $attached = 0;
 foreach ($ids as $octave => $byDegree) {
     foreach ($byDegree as $degree => $questionId) {
         $question = QuizQuestion::find($questionId);
-        if (!$question) continue;
+        if (! $question) {
+            continue;
+        }
 
         foreach ($sounds as $soundLabel => $config) {
-            if (!in_array((int) $octave, $config['octaves'], true)) continue;
+            if (! in_array((int) $octave, $config['octaves'], true)) {
+                continue;
+            }
 
             $filename = $octave == 3 ? "{$degreeSlug[$degree]}.wav" : "{$degreeSlug[$degree]}-c{$octave}.wav";
+            $relativePath = "notes/{$config['slug']}/{$filename}";
+            // The configured octave list is a ceiling, not a guarantee — an
+            // instrument's note bank can be rebuilt with a narrower real
+            // range (e.g. Guitar only has so-c2 through fa-c5, not the full
+            // C2-C6 listed above), so skip anything not actually on disk
+            // rather than attach a row pointing at a file that doesn't exist.
+            if (! is_file(storage_path("app/public/{$relativePath}"))) {
+                continue;
+            }
+
             QuizQuestionAudio::updateOrCreate(
                 ['quiz_question_id' => $question->id, 'sound' => $soundLabel],
-                ['audio_path' => "notes/{$config['slug']}/{$filename}"]
+                ['audio_path' => $relativePath]
             );
             $attached++;
         }

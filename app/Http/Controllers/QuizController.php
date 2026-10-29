@@ -7,6 +7,9 @@ use App\Models\QuizAttempt;
 use App\Models\QuizAttemptAnswer;
 use App\Models\QuizMark;
 use App\Models\QuizQuestion;
+use App\Support\AddNineSamples;
+use App\Support\BasicTriadSamples;
+use App\Support\IntervalSamples;
 use App\Support\NoteSample;
 use App\Support\QuizAnswerPresets;
 use App\Support\QuizCatalog;
@@ -135,6 +138,26 @@ class QuizController extends Controller
             $attempt = $attempts->get($quiz->id);
             $mark = $marks->get($quiz->id);
 
+            // Every sound this quiz actually has pre-generated audio attached
+            // for, regardless of static category/title tables — ground truth
+            // from the DB rather than a hand-maintained list, so a newly-built
+            // instrument's tile appears automatically without another code
+            // change here. (Melodic Dictation combo files are built/attached
+            // per instrument per quiz over time — a static list would always
+            // lag behind what's actually been recorded.)
+            $attachedSounds = $quiz->questions()
+                ->with('audioVariants:quiz_question_id,sound')
+                ->get()
+                ->flatMap(fn ($question) => $question->audioVariants->pluck('sound'))
+                ->unique()
+                // Only the current 27-instrument roster — some quizzes still
+                // carry attached rows under pre-consolidation names (Harp,
+                // Jazz Guitar) that predate today's Harpejji/guitar-family
+                // lineup and were never re-added to SOUND_SLUGS; those stay
+                // out of the picker rather than resurfacing as a tile.
+                ->filter(fn ($sound) => isset(QuizCatalog::SOUND_SLUGS[$sound]))
+                ->values();
+
             return [
                 'available' => true,
                 'slug' => $quiz->slug,
@@ -152,22 +175,20 @@ class QuizController extends Controller
                 // Dictation, chord quizzes, …), since NoteSample::fromAnswer()
                 // only ever resolves a Relative Pitch-shaped single-note or
                 // interval answer, so this can't add a tile with nothing
-                // behind it to an unsupported quiz type.
+                // behind it to an unsupported quiz type — plus every instrument
+                // with real attached audio above, so the picker always reflects
+                // what's actually been recorded instead of a hand-curated list
+                // going stale as more instruments get built.
                 'sounds' => collect(QuizCatalog::soundsFor($quiz->category, $quiz->title))
                     ->merge($liveMixSounds = $this->liveMixAvailableSounds($quiz))
+                    ->merge($attachedSounds)
                     ->unique()
                     ->values(),
                 // Every sound this quiz actually has generated audio for — a superset
-                // of `sounds` above, since Default-Instrument-only variants (EP, Jazz
-                // Guitar, Bass Guitar, Organ, …) get real audio generated for a quiz
-                // without ever being one of its pickable category tiles. The preview
-                // page uses this (not `sounds`) to decide whether a member's specific
-                // Default Instrument should play outright, vs. falling back to
-                // whatever this quiz's category tile offers.
-                'availableSounds' => $quiz->questions()
-                    ->with('audioVariants:quiz_question_id,sound')
-                    ->get()
-                    ->flatMap(fn ($question) => $question->audioVariants->pluck('sound'))
+                // of `sounds` above only in that it also covers whatever
+                // liveMixAvailableSounds adds; kept for the preview page's
+                // Default-Instrument fallback logic.
+                'availableSounds' => $attachedSounds
                     ->merge($liveMixSounds)
                     ->unique()
                     ->values(),
@@ -340,6 +361,22 @@ class QuizController extends Controller
                 'completed_at' => null,
             ]);
         } else {
+            if ($quiz->title === 'Find the Pitch') {
+                $gradedCount = $attempt->stopped_at_question - 1;
+                if ($request->session()->has($this->feedbackSessionKey($attempt, $attempt->stopped_at_question))) {
+                    $gradedCount++;
+                }
+                $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
+                $remainingIds = array_slice($attempt->question_sequence ?? [], $gradedCount);
+                $hasUnavailablePitch = $quiz->questions()->whereIn('id', $remainingIds)->get()
+                    ->contains(fn (QuizQuestion $question) => $slug === null || NoteSample::fromScientificPitchAnswer($question->answer, $slug) === null);
+                if ($attempt->sound !== $sound || $hasUnavailablePitch) {
+                    $attempt->question_sequence = array_merge(
+                        array_slice($attempt->question_sequence ?? [], 0, $gradedCount),
+                        array_slice($this->buildQuestionSequence($quiz, $sound), 0, max(0, $quiz->question_count - $gradedCount)),
+                    );
+                }
+            }
             // Resuming an in-progress attempt — the preview's sound picker is shown
             // (and re-choosable) every time, so pick up whatever's selected now
             // rather than leaving the attempt on whatever sound (or none) it had
@@ -591,7 +628,14 @@ class QuizController extends Controller
             }
         }
 
-        $poolIds = $query->pluck('id')->all();
+        if ($quiz->title === 'Find the Pitch') {
+            $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
+            $poolIds = $slug ? $query->get()
+                ->filter(fn (QuizQuestion $question) => NoteSample::fromScientificPitchAnswer($question->answer, $slug) !== null)
+                ->pluck('id')->all() : [];
+        } else {
+            $poolIds = $query->pluck('id')->all();
+        }
 
         return $this->fairLappedShuffle($poolIds, max(1, $quiz->question_count));
     }
@@ -684,6 +728,12 @@ class QuizController extends Controller
 
     private function quizHasAudioFor(Quiz $quiz, string $sound): bool
     {
+        if ($quiz->title === 'Find the Pitch') {
+            return $quiz->questions()->get()->contains(
+                fn (QuizQuestion $question) => $this->liveNotesFromAnswer($quiz, $question, $sound) !== null
+            );
+        }
+
         if ($quiz->questions()->whereHas('audioVariants', fn ($query) => $query->where('sound', $sound))->exists()) {
             return true;
         }
@@ -707,6 +757,15 @@ class QuizController extends Controller
     // @return list<string>
     private function liveMixAvailableSounds(Quiz $quiz): array
     {
+        if ($quiz->title === 'Find the Pitch') {
+            $questions = $quiz->questions()->get();
+
+            return collect(QuizCatalog::SOUND_SLUGS)->keys()
+                ->filter(fn (string $sound) => $questions->contains(
+                    fn (QuizQuestion $question) => $this->liveNotesFromAnswer($quiz, $question, $sound) !== null
+                ))->values()->all();
+        }
+
         $sample = $quiz->questions()->first();
         if (! $sample) {
             return [];
@@ -780,8 +839,24 @@ class QuizController extends Controller
             return null;
         }
 
+        // See AudioQuizController::missingInstrumentPreviews() for why RTP2
+        // never uses this fallback: a bare degree answer there doesn't imply
+        // octave 3 the way it does for RTP1/Find the Note, so guessing would
+        // be wrong as often as right. Find the Key #1/#2 answer with the
+        // same chromatic letter names for an unrelated reason (naming a
+        // song's key, not a note to play) and have no real content yet.
+        if (in_array($quiz->title, ['Relative Tone Pitch #2', 'Find the Key #1', 'Find the Key #2'], true)) {
+            return null;
+        }
+
         $timing = str_contains($quiz->title, 'Harmonic') ? 'harmonic' : 'melodic';
-        $notes = NoteSample::fromAnswer($question->answer, $timing);
+        $notes = match (true) {
+            $quiz->category === 'Add 9' => AddNineSamples::forQuestion($question, $slug),
+            $quiz->category === 'Basic Triads' => BasicTriadSamples::forQuestion($question, $slug),
+            $quiz->category === 'Intervals' => IntervalSamples::fromAnswer($question->answer, $timing, $slug),
+            $quiz->title === 'Find the Pitch' => NoteSample::fromScientificPitchAnswer($question->answer, $slug),
+            default => NoteSample::fromAnswer($question->answer, $timing, $slug),
+        };
         if (! $notes) {
             return null;
         }
@@ -818,6 +893,29 @@ class QuizController extends Controller
             ->all();
     }
 
+    /** @return array<string, string> Exact pitch labels mapped to available samples. */
+    private function pitchKeyboardAudioMap(?string $sound): array
+    {
+        $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
+        if ($slug === null) {
+            return [];
+        }
+
+        $map = [];
+        foreach (NoteSample::SCIENTIFIC_PITCH_OCTAVES as $octave) {
+            foreach (array_keys(NoteSample::CHROMATIC_SLUGS) as $label) {
+                $answer = "{$label}{$octave}";
+                $notes = NoteSample::fromScientificPitchAnswer($answer, $slug);
+                if ($notes !== null) {
+                    $note = $notes[0];
+                    $map[$answer] = NoteSample::url(NoteSample::path($slug, $note['degree'], $note['octave']));
+                }
+            }
+        }
+
+        return $map;
+    }
+
     // Fallback for any "tap a note name" keyboard whose own quiz has no per-
     // instrument note audio in its pool to resolve from (Find the Key #1/#2 —
     // their own `sound` picker is song-recording types like "Monophonic", not an
@@ -834,21 +932,45 @@ class QuizController extends Controller
     // (the quiz's base C3 octave) except where listed here — Bass Guitar's own
     // base octave was moved down to C2-C3 (a real bass's open low string sits
     // closer to C2 than C3), but its bare files stay C3 since RTP2 still reuses
-    // them as its own C3-octave entries; this keyboard reads the "-c2" set
-    // instead so it matches Find the Note/RTP1's octave, not RTP2's.
-    private const KEYBOARD_NOTE_SUFFIXES = [
-        'Bass Guitar' => '-c2',
+    // them as its own C3-octave entries; this keyboard reads the octave-2 set
+    // instead so it matches Find the Note/RTP1's octave, not RTP2's. Upright
+    // Bass used to follow the same pattern, but its individual-note-file
+    // rebuild gave it a different real range (C3-C5, no C2 content at all —
+    // see NoteSample's BASE_OCTAVE_OVERRIDES comment for the same change) —
+    // left at the default octave 3 now rather than pointing at octave-2 files
+    // that no longer exist.
+    private const KEYBOARD_NOTE_OCTAVES = [
+        'Bass Guitar' => 2,
     ];
 
     private function defaultInstrumentKeyboardAudio(Request $request, ?string $onlyNote = null): array
     {
         $sound = $request->user()?->default_instrument;
         $slug = QuizCatalog::SOUND_SLUGS[$sound] ?? QuizCatalog::SOUND_SLUGS['Piano'];
-        $suffix = self::KEYBOARD_NOTE_SUFFIXES[$sound] ?? '';
+        $octave = self::KEYBOARD_NOTE_OCTAVES[$sound] ?? 3;
         $notes = $onlyNote ? array_intersect_key(self::NOTE_SLUGS, [$onlyNote => true]) : self::NOTE_SLUGS;
 
         return collect($notes)
-            ->mapWithKeys(fn ($noteSlug, $note) => [$note => NoteSample::url("notes/{$slug}/{$noteSlug}{$suffix}.wav")])
+            ->keys()
+            ->mapWithKeys(function ($note) use ($slug, $octave) {
+                $path = NoteSample::path($slug, $note, $octave);
+                if (! NoteSample::sampleExists($path)) {
+                    // The instruments rebuilt from individual note recordings
+                    // this session only got solfège-named natural files (do,
+                    // re, mi, ...), not the original letter-named scheme this
+                    // keyboard was built against (c, d, e, ...) — sharps are
+                    // unaffected (both schemes already share the same literal
+                    // csharp.wav etc.), so this only ever matters for the 7
+                    // naturals. Fall back to the pitch-identical solfège
+                    // degree rather than serving a URL with nothing behind it.
+                    $equivalent = NoteSample::equivalentDegree($note);
+                    if ($equivalent !== null) {
+                        $path = NoteSample::path($slug, $equivalent, $octave);
+                    }
+                }
+
+                return [$note => NoteSample::url($path)];
+            })
             ->all();
     }
 
@@ -907,8 +1029,10 @@ class QuizController extends Controller
                 // Find the Key #2 restricts this to just the reference note — every
                 // other key is deliberately muted. Still empty for every other quiz,
                 // so the keyboard stays silent on tap there, same as before.
-                'keyboard_audio' => $this->keyboardAudioMap($quiz, $attempt->sound)
-                    ?: $this->defaultInstrumentKeyboardAudio($request, $referenceNote),
+                'keyboard_audio' => $quiz->title === 'Find the Pitch'
+                    ? $this->pitchKeyboardAudioMap($attempt->sound)
+                    : ($this->keyboardAudioMap($quiz, $attempt->sound)
+                        ?: $this->defaultInstrumentKeyboardAudio($request, $referenceNote)),
                 // Which key the keyboard highlights as the reference note (Find the
                 // Key #2 only) — shuffled fresh per question, not a fixed "G".
                 'reference_note' => $referenceNote,

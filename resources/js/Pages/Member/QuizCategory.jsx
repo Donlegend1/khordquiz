@@ -229,7 +229,7 @@ const INSTRUMENT_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 
 
 const INSTRUMENT_EMOJI = {
     All: '🔀',
-    'Audience Choir': '🎤',
+    'Tropar Choir': '🎤',
     'Bass Guitar': '🎸',
     Bassoon: '🪈',
     Cello: '🎻',
@@ -269,7 +269,7 @@ const SOUND_CATEGORIES = [
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir'] },
+    { name: 'Vocals', sounds: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
@@ -286,30 +286,17 @@ function categoryFor(sound) {
     return SOUND_CATEGORIES.find((category) => category.sounds.includes(sound))?.name ?? null;
 }
 
-// Settings → Default instrument is a specific instrument (e.g. "Bass Guitar"),
-// not just a category — checked against `availableSounds` (every sound this quiz
-// actually has generated audio for) rather than `quizSounds` (the picker's
-// *pickable* tiles), since Default-Instrument-only variants like EP, Jazz
-// Guitar, Bass Guitar and Organ get real audio without ever being a tile of
-// their own — that's the whole point of the substitution (picking the Guitar
-// category should play Bass Guitar if that's the member's default, not fall
-// back to plain Guitar just because Bass Guitar isn't a selectable tile).
-// Otherwise fall back to whichever sound this quiz offers within that
-// instrument's *category* (e.g. default "EP" + a quiz that only has "Piano"
-// built → "Piano", not some unrelated sound), so a member's category
-// preference still carries over even before every instrument in it has
-// generated audio. No match at all (no default set, or its category isn't
-// offered here) falls back to the quiz's own first sound, same as before any
-// of this existed.
-// Every branch below is gated on actually having real audio (availableSounds)
-// wherever it's known — never just the static catalog list (quizSounds) — so
-// this can never resolve to a sound with nothing recorded behind it. Without
-// this, a member defaulted to e.g. Marimba could silently start a quiz with
-// `sound: 'Marimba'` even though that quiz's Percussion tile is hidden (no
-// real Marimba audio exists for it): the category-match fallback used to
-// search quizSounds alone, which only reflects what a category CLAIMS to
-// offer, not what was actually recorded — the Start Quiz button would then
-// submit a sound whose Play button does nothing.
+// Graceful fallback resolver — given a *preferred* instrument, finds the
+// closest reasonable match among a pool that might not contain it exactly:
+// the preferred instrument itself if available, else a sibling in its same
+// family, else just the first option. Used today for matching the member's
+// in-quiz sound selection to a Reference Audio track, since reference
+// recordings are their own smaller content pool and don't necessarily cover
+// every instrument a quiz has real question audio for — missing a reference
+// clip is a minor convenience gap, not a misleading one, so a graceful
+// substitute here is fine (unlike the question sound picker itself, which
+// uses the strict resolveExactSound below instead — see its own comment for
+// why silent substitution there was actually the problem, not the fix).
 function resolveDefaultSound(defaultInstrument, quizSounds, availableSounds) {
     if (!quizSounds || quizSounds.length === 0) return null;
     // Placeholder quizzes report no availableSounds at all — fall back to the
@@ -325,6 +312,41 @@ function resolveDefaultSound(defaultInstrument, quizSounds, availableSounds) {
     }
 
     return quizSounds.find((sound) => real.includes(sound)) ?? quizSounds[0];
+}
+
+// The question sound picker's initial selection — deliberately strict, unlike
+// resolveDefaultSound above. Pre-fills the member's Default Instrument only
+// when it's an exact match for something this quiz actually has real audio
+// for; otherwise leaves the picker empty rather than silently substituting a
+// family sibling or "whatever's first". A silent substitution used to mean a
+// member defaulted to Bass Guitar could open a quiz with no Bass Guitar audio
+// and find themselves already set to Guitar (or something else) without ever
+// choosing it — and separately, Reference Audio resolved its own instrument
+// independently, so the two could disagree with nothing to tell the member
+// why. Requiring an explicit tap here means there's exactly one decision
+// instead of two silent ones, and Reference Audio (see ReferenceAudioModal)
+// now follows this same selection instead of re-deciding on its own.
+function resolveExactSound(defaultInstrument, quizSounds, availableSounds) {
+    if (!defaultInstrument) return null;
+    const real = availableSounds?.length ? availableSounds : quizSounds;
+    return real?.includes(defaultInstrument) ? defaultInstrument : null;
+}
+
+// Find the Key #1/#2's "sounds" are recording types (Monophonic, Full Song,
+// …), not instruments — resolveExactSound above never has anything to match
+// a Default Instrument against there, so it always comes back empty and the
+// member would always have to tap a tile before starting. "All" exists
+// specifically as this picker's no-filter option, so pre-select it instead
+// of leaving the picker blank for a category where there's no real default
+// to resolve in the first place.
+function resolveInitialSound(defaultInstrument, quizSounds, availableSounds) {
+    const exact = resolveExactSound(defaultInstrument, quizSounds, availableSounds);
+    if (exact) return exact;
+
+    const soundsAreInstruments = (quizSounds?.length ?? 0) > 0 && categoryFor(quizSounds[0]) !== null;
+    if (!soundsAreInstruments && quizSounds?.includes('All')) return 'All';
+
+    return null;
 }
 
 // Mostly mallet instruments (Marimba, Celesta, Vibraphone), so the category tab
@@ -562,12 +584,24 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="mt-2.5 flex w-full items-center gap-2.5 rounded-xl border border-black/10 bg-white px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-50"
+                className={`mt-2.5 flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-50 ${
+                    sound ? 'border-black/10 bg-white' : 'border-brand/30 bg-brand/5'
+                }`}
             >
-                <SoundIcon sound={sound} />
-                <span className="flex-1 text-sm font-semibold text-neutral-900">{INSTRUMENT_LABELS[sound] ?? sound}</span>
-                {sound === defaultInstrument && (
-                    <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">Default</span>
+                {sound ? (
+                    <>
+                        <SoundIcon sound={sound} />
+                        <span className="flex-1 text-sm font-semibold text-neutral-900">{INSTRUMENT_LABELS[sound] ?? sound}</span>
+                        {sound === defaultInstrument && (
+                            <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">Default</span>
+                        )}
+                    </>
+                ) : (
+                    // The member's Default Instrument isn't available for this
+                    // quiz (see resolveExactSound) — nothing pre-filled, so
+                    // Start Quiz/Reference Audio stay disabled until they tap
+                    // in and pick one of what IS actually available below.
+                    <span className="flex-1 text-sm font-semibold text-brand">Choose a sound to continue</span>
                 )}
                 <ChevronDownIcon className="h-4 w-4 text-neutral-400" />
             </button>
@@ -683,10 +717,17 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
     );
 }
 
-// Opened from the button next to Start Quiz. Always plays the one track matching
-// the member's Default Instrument (same category-primary fallback as the question
-// sound picker) — whatever sound the member separately picks for the quiz
-// questions below has no bearing on this. Most quizzes have exactly one
+// Opened from the button next to Start Quiz. Plays the track matching whatever
+// instrument the member has selected in the question sound picker above (not
+// their account-wide Default Instrument) — so Reference Audio and the quiz
+// questions are guaranteed to agree on which instrument is playing, since
+// they now both read from the same single selection instead of each
+// resolving their own independently. Reference recordings are a smaller
+// content pool than question audio though, so the exact selected instrument
+// might not have its own clip — resolveDefaultSound's graceful family-sibling
+// fallback still applies for that narrower gap (a missing reference clip is a
+// minor convenience miss, not a misleading one, unlike question audio
+// silently playing in the wrong instrument). Most quizzes have exactly one
 // track per instrument (a single reference scale) and autoplay it directly;
 // quizzes with several distinct clips per instrument (e.g. Melodic Diatonic
 // Intervals' one demo per interval type) show the same single-track player
@@ -698,13 +739,13 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
 // and small tabs switch inversion within the current quality — a flat
 // "1 of 15" scrub was too many taps to compare a single chord's inversions,
 // and doesn't match how a member actually wants to browse these.
-function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
+function ReferenceAudioModal({ tracks, sound, onClose }) {
     const matchingTracks = useMemo(() => {
         const trackSounds = tracks.map((t) => t.sound).filter(Boolean);
-        const resolved = resolveDefaultSound(defaultInstrument, trackSounds);
+        const resolved = resolveDefaultSound(sound, trackSounds);
         const forResolved = tracks.filter((t) => t.sound === resolved);
         return forResolved.length > 0 ? forResolved : tracks.length > 0 ? [tracks[0]] : [];
-    }, [tracks, defaultInstrument]);
+    }, [tracks, sound]);
 
     // Grouped mode only kicks in when EVERY matching track has a "{X} · {Y}"
     // label — a quiz with a mix of plain and compound labels just falls back
@@ -884,12 +925,12 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
 function DetailPane({ quiz }) {
     const defaultInstrument = usePage().props.auth?.user?.default_instrument ?? null;
     const [processing, setProcessing] = useState(false);
-    const [sound, setSound] = useState(resolveDefaultSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
+    const [sound, setSound] = useState(resolveInitialSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
     const [blockedNotice, setBlockedNotice] = useState(false);
     const [audioModalOpen, setAudioModalOpen] = useState(false);
 
     useEffect(() => {
-        setSound(resolveDefaultSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
+        setSound(resolveInitialSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
         setBlockedNotice(false);
         setAudioModalOpen(false);
     }, [quiz?.slug]);
@@ -913,6 +954,19 @@ function DetailPane({ quiz }) {
     // leftover in-progress attempt (e.g. after a cancelled retry) — otherwise
     // restarting it would make an already-earned completion look undone.
     const showsCompleted = completed || quiz.manuallyCompleted;
+
+    // Only quizzes that actually offer a sound picker need one chosen before
+    // starting — a quiz with no sounds at all (SoundPicker renders nothing)
+    // shouldn't get blocked waiting on a selection that was never offered.
+    const soundRequired = (quiz.sounds?.length ?? 0) > 0;
+    const soundMissing = soundRequired && !sound;
+    // Find the Key #1/#2's "sounds" are recording types (Monophonic, Full
+    // Song, …), not instruments — categoryFor() only recognizes real
+    // instrument names, so it comes back null for these. The member's
+    // Default Instrument was never meant to apply here (there's nothing to
+    // default to), so the missing-sound message shouldn't name it or imply
+    // it was looked for and failed.
+    const soundsAreInstruments = (quiz.sounds?.length ?? 0) > 0 && categoryFor(quiz.sounds[0]) !== null;
 
     function toggleCompleted() {
         router.post(route('quiz.mark-completed', quiz.slug), {}, { preserveScroll: true, preserveState: true });
@@ -1024,7 +1078,7 @@ function DetailPane({ quiz }) {
             <div className="mt-6 flex gap-2.5">
                 <button
                     type="button"
-                    disabled={processing}
+                    disabled={processing || soundMissing}
                     onClick={start}
                     className="flex-1 rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
                 >
@@ -1033,20 +1087,28 @@ function DetailPane({ quiz }) {
                 {quiz.referenceAudioTracks.length > 0 && (
                     <button
                         type="button"
+                        disabled={soundMissing}
                         onClick={() => setAudioModalOpen(true)}
-                        className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98]"
+                        className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98] disabled:opacity-50"
                     >
                         <HeadsetIcon className="h-5 w-5" />
                         Listen Mode
                     </button>
                 )}
             </div>
+            {soundMissing && (
+                <p className="mt-2.5 text-center text-sm text-brand">
+                    {soundsAreInstruments && defaultInstrument
+                        ? `${INSTRUMENT_LABELS[defaultInstrument] ?? defaultInstrument} isn't available for this quiz — choose a sound above to continue.`
+                        : 'Choose a sound above to continue.'}
+                </p>
+            )}
             {blockedNotice && (
                 <p className="mt-2.5 text-center text-sm text-neutral-500">Questions for this quiz haven&apos;t been added yet.</p>
             )}
 
             {audioModalOpen && (
-                <ReferenceAudioModal tracks={quiz.referenceAudioTracks} defaultInstrument={defaultInstrument} onClose={() => setAudioModalOpen(false)} />
+                <ReferenceAudioModal tracks={quiz.referenceAudioTracks} sound={sound} onClose={() => setAudioModalOpen(false)} />
             )}
 
             {quiz.available ? (
