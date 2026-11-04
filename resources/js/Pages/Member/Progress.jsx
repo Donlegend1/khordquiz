@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 function FlameIcon(props) {
     return (
@@ -101,6 +102,7 @@ function StatTile({ icon: Icon, value, label }) {
 }
 
 function GoalPicker({ current, options }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const { data, setData, patch, processing } = useForm({ daily_goal: current });
@@ -127,7 +129,7 @@ function GoalPicker({ current, options }) {
                 className="inline-flex items-center gap-1.5 rounded-full bg-neutral-100 px-3.5 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-200"
             >
                 <TuneIcon className="h-4 w-4" />
-                Change
+                {t('Change')}
             </button>
 
             {open && (
@@ -142,7 +144,7 @@ function GoalPicker({ current, options }) {
                                 value === data.daily_goal ? 'font-semibold text-brand' : 'text-neutral-700'
                             }`}
                         >
-                            {value} questions
+                            {t(':count questions', { count: value })}
                             {value === data.daily_goal && <span>✓</span>}
                         </button>
                     ))}
@@ -153,13 +155,14 @@ function GoalPicker({ current, options }) {
 }
 
 function RankedQuizList({ items, tone }) {
+    const t = useTrans();
     return (
         <ul className="mt-3 divide-y divide-black/5">
             {items.map((item) => (
-                <li key={item.quiz.title} title="Coming soon" className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
+                <li key={item.quiz.title} title={t('Coming soon')} className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
                     <div className="min-w-0 flex-1">
-                        <p className="font-medium text-neutral-900">{item.quiz.title}</p>
-                        <p className="mt-0.5 text-sm text-neutral-500">{item.quiz.category}</p>
+                        <p className="font-medium text-neutral-900">{t(item.quiz.title)}</p>
+                        <p className="mt-0.5 text-sm text-neutral-500">{t(item.quiz.category)}</p>
                     </div>
                     <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${tone(item.accuracy)}`}>
                         {item.accuracy}%
@@ -183,40 +186,41 @@ export default function Progress({
     week,
     recentQuizzes,
 }) {
+    const t = useTrans();
     const goalRemaining = Math.max(0, goal.target - goal.done);
     const goalPercent = goal.target > 0 ? Math.min(100, Math.round((goal.done / goal.target) * 100)) : 0;
     const weekTotal = week.reduce((sum, day) => sum + day.count, 0);
     const weekMax = Math.max(1, ...week.map((day) => day.count));
 
     return (
-        <AppShell eyebrow="Member" title="Your progress" intro="How your practice is adding up.">
-            <Head title="Your progress" />
+        <AppShell eyebrow={t('Member')} title={t('Your progress')} intro={t('How your practice is adding up.')}>
+            <Head title={t('Your progress')} />
 
             <section className="rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <p className="text-sm text-neutral-500">Overall accuracy</p>
+                <p className="text-sm text-neutral-500">{t('Overall accuracy')}</p>
                 <div className="mt-1 flex flex-wrap items-baseline justify-between gap-2">
                     <p className="text-5xl font-bold tracking-tight text-emerald-600">
                         {overall.accuracy === null ? '—' : `${overall.accuracy}%`}
                     </p>
                     <p className="text-sm text-neutral-500">
-                        {overall.correct} of {overall.answered} correct
+                        {t(':correct of :answered correct', { correct: overall.correct, answered: overall.answered })}
                     </p>
                 </div>
 
                 <div className="mt-5 grid grid-cols-3 gap-3">
-                    <StatTile icon={FlameIcon} value={streak} label="Days streak" />
-                    <StatTile icon={NoteIcon} value={overall.answered} label="Questions answered" />
-                    <StatTile icon={TrophyIcon} value={quizzesCompleted.done} label="Quizzes done" />
+                    <StatTile icon={FlameIcon} value={streak} label={t('Days streak')} />
+                    <StatTile icon={NoteIcon} value={overall.answered} label={t('Questions answered')} />
+                    <StatTile icon={TrophyIcon} value={quizzesCompleted.done} label={t('Quizzes done')} />
                 </div>
             </section>
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">Today&apos;s goal</h2>
+                    <h2 className="text-lg font-semibold">{t("Today's goal")}</h2>
                     <GoalPicker current={goal.target} options={goalOptions} />
                 </div>
                 <p className="mt-1 text-sm text-neutral-500">
-                    {goalRemaining === 0 ? "You're there — nice work." : `${goalRemaining} questions to go`}
+                    {goalRemaining === 0 ? t("You're there — nice work.") : t(':count questions to go', { count: goalRemaining })}
                 </p>
                 <div className="mt-4 flex items-center gap-3">
                     <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-100">
@@ -230,24 +234,24 @@ export default function Progress({
 
             {resume && (
                 <div
-                    title="Playing a quiz from the dashboard is coming soon"
+                    title={t('Playing a quiz from the dashboard is coming soon')}
                     className="mt-6 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white sm:items-start sm:gap-4 sm:p-6"
                 >
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
                         <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                     </span>
                     <div className="min-w-0 flex-1 sm:hidden">
-                        <p className="truncate text-xs text-white/80">Continue where you left off</p>
-                        <h3 className="truncate text-base font-bold leading-tight">{resume.quiz.title}</h3>
-                        <p className="truncate text-xs text-white/70">{resume.quiz.category}</p>
+                        <p className="truncate text-xs text-white/80">{t('Continue where you left off')}</p>
+                        <h3 className="truncate text-base font-bold leading-tight">{t(resume.quiz.title)}</h3>
+                        <p className="truncate text-xs text-white/70">{t(resume.quiz.category)}</p>
                     </div>
                     <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
 
                     <div className="hidden min-w-0 flex-1 sm:block">
                         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                            Continue · {resume.quiz.category}
+                            {t('Continue')} · {t(resume.quiz.category)}
                         </p>
-                        <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">{resume.quiz.title}</h3>
+                        <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">{t(resume.quiz.title)}</h3>
                         <div className="mt-4 flex items-center gap-3">
                             <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
                                 <div className="h-full rounded-full bg-white" style={{ width: `${resume.progress}%` }} />
@@ -263,8 +267,8 @@ export default function Progress({
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-baseline justify-between">
-                    <h2 className="text-lg font-semibold">Needs work</h2>
-                    <span className="text-sm text-neutral-400">Below 65% accuracy</span>
+                    <h2 className="text-lg font-semibold">{t('Needs work')}</h2>
+                    <span className="text-sm text-neutral-400">{t('Below 65% accuracy')}</span>
                 </div>
                 {needsWork.length > 0 ? (
                     <RankedQuizList
@@ -272,7 +276,7 @@ export default function Progress({
                         tone={(accuracy) => (accuracy < 40 ? 'bg-red-50 text-red-700' : 'bg-orange-50 text-orange-700')}
                     />
                 ) : (
-                    <p className="mt-3 text-sm text-neutral-500">Your weakest quizzes will show here once you&apos;ve practised a few.</p>
+                    <p className="mt-3 text-sm text-neutral-500">{t("Your weakest quizzes will show here once you've practised a few.")}</p>
                 )}
             </section>
 
@@ -280,32 +284,41 @@ export default function Progress({
                 <div className="flex items-baseline justify-between">
                     <h2 className="flex items-center gap-2 text-lg font-semibold">
                         <StarIcon className="h-4 w-4 text-amber-500" />
-                        Strongest
+                        {t('Strongest')}
                     </h2>
-                    <span className="text-sm text-neutral-400">Above 65% accuracy</span>
+                    <span className="text-sm text-neutral-400">{t('Above 65% accuracy')}</span>
                 </div>
                 {strongest.length > 0 ? (
                     <RankedQuizList items={strongest} tone={() => 'bg-emerald-50 text-emerald-700'} />
                 ) : (
-                    <p className="mt-3 text-sm text-neutral-500">Your best quizzes will show here once you&apos;ve practised a few.</p>
+                    <p className="mt-3 text-sm text-neutral-500">{t("Your best quizzes will show here once you've practised a few.")}</p>
                 )}
             </section>
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-baseline justify-between">
-                    <h2 className="text-lg font-semibold">Most confused</h2>
+                    <h2 className="text-lg font-semibold">{t('Most confused')}</h2>
                     <Link href={route('mistakes')} className="text-sm font-semibold text-brand hover:text-brand-dark">
-                        See all
+                        {t('See all')}
                     </Link>
                 </div>
 
                 <ul className="mt-3 space-y-2.5">
                     {confusions.map((item) => (
                         <li key={`${item.picked}-${item.answer}`} className="rounded-2xl bg-[#FBEDEC] px-4 py-3 text-sm text-neutral-800">
-                            You picked <span className="font-semibold text-brand">{item.picked}</span> when it was{' '}
-                            <span className="font-semibold text-emerald-700">{item.answer}</span>
+                            {t('You picked :picked when it was :answer')
+                                .split(/(:picked|:answer)/)
+                                .map((part, i) =>
+                                    part === ':picked' ? (
+                                        <span key={i} className="font-semibold text-brand">{item.picked}</span>
+                                    ) : part === ':answer' ? (
+                                        <span key={i} className="font-semibold text-emerald-700">{item.answer}</span>
+                                    ) : (
+                                        part
+                                    ),
+                                )}
                             <span className="mt-0.5 block text-neutral-500">
-                                {item.count} {item.count === 1 ? 'time' : 'times'}
+                                {item.count === 1 ? t(':count time', { count: item.count }) : t(':count times', { count: item.count })}
                             </span>
                         </li>
                     ))}
@@ -314,8 +327,8 @@ export default function Progress({
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-baseline justify-between">
-                    <h2 className="text-lg font-semibold">This week</h2>
-                    <span className="text-sm text-neutral-400">{weekTotal} this week</span>
+                    <h2 className="text-lg font-semibold">{t('This week')}</h2>
+                    <span className="text-sm text-neutral-400">{t(':count this week', { count: weekTotal })}</span>
                 </div>
 
                 <div className="mt-6 flex items-end justify-between gap-2" style={{ height: '120px' }}>
@@ -333,10 +346,10 @@ export default function Progress({
             </section>
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <h2 className="text-lg font-semibold">Completed quizzes</h2>
+                <h2 className="text-lg font-semibold">{t('Completed quizzes')}</h2>
 
                 {recentQuizzes.length === 0 ? (
-                    <p className="mt-3 text-sm text-neutral-500">No completed quizzes yet. Finish one and it&apos;ll show up here.</p>
+                    <p className="mt-3 text-sm text-neutral-500">{t("No completed quizzes yet. Finish one and it'll show up here.")}</p>
                 ) : (
                     <ul className="mt-3 divide-y divide-black/5">
                         {recentQuizzes.map((attempt) => (
@@ -345,9 +358,9 @@ export default function Progress({
                                     <QuizNoteIcon className="h-5 w-5" />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="truncate font-semibold text-neutral-900">{attempt.quiz.title}</p>
+                                    <p className="truncate font-semibold text-neutral-900">{t(attempt.quiz.title)}</p>
                                     <p className="mt-0.5 truncate text-sm text-neutral-500">
-                                        {attempt.quiz.category} · {attempt.last_played_at}
+                                        {t(attempt.quiz.category)} · {attempt.last_played_at}
                                     </p>
                                 </div>
                                 <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${scoreTone(attempt.score)}`}>

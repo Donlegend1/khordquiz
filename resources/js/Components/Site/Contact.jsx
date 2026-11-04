@@ -1,11 +1,14 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
+import { tk, useTrans } from '@/lib/i18n';
 import { useForm } from '@inertiajs/react';
 import { useState } from 'react';
 
-// Quick picks that fill in the subject.
-const topics = ['General question', 'Bug report', 'Billing', 'Quiz issue', 'Account help'];
+// Quick picks that fill in the subject (in the visitor's language).
+const topics = [tk('General question'), tk('Bug report'), tk('Billing'), tk('Quiz issue'), tk('Account help')];
 
 export default function Contact() {
+    const t = useTrans();
+
     return (
         <section
             id="contact"
@@ -13,12 +16,12 @@ export default function Contact() {
         >
             <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1fr_1.2fr] lg:items-center lg:gap-16 lg:px-[100px] lg:py-20">
                 <div>
-                    <Eyebrow>Contact</Eyebrow>
+                    <Eyebrow>{t('Contact')}</Eyebrow>
 
                     <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-                        We&apos;re here
+                        {t("We're here")}
                         <br />
-                        <span className="font-display font-semibold tracking-normal text-brand">to help.</span>
+                        <span className="font-display font-semibold tracking-normal text-brand">{t('to help.')}</span>
                     </h2>
                 </div>
 
@@ -29,6 +32,7 @@ export default function Contact() {
 }
 
 function ContactForm() {
+    const t = useTrans();
     const [sent, setSent] = useState(false);
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
         name: '',
@@ -57,16 +61,16 @@ function ContactForm() {
                         <path d="M5 12.5l4.5 4.5L19 7.5" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
                 </span>
-                <h3 className="mt-5 text-2xl font-bold text-neutral-900">Message sent</h3>
+                <h3 className="mt-5 text-2xl font-bold text-neutral-900">{t('Message sent')}</h3>
                 <p className="mt-2 max-w-[340px] text-neutral-600">
-                    Thanks for getting in touch. We&apos;ll reply to the email address you gave us.
+                    {t("Thanks for getting in touch. We'll reply to the email address you gave us.")}
                 </p>
                 <button
                     type="button"
                     onClick={() => setSent(false)}
                     className="mt-6 text-sm font-medium text-brand hover:underline"
                 >
-                    Send another message
+                    {t('Send another message')}
                 </button>
             </div>
         );
@@ -79,7 +83,7 @@ function ContactForm() {
             className="rounded-2xl border border-gray-100 bg-white p-6 shadow-[0_6px_24px_-8px_rgba(17,24,39,0.12)] sm:p-8"
         >
             <div className="grid gap-5 sm:grid-cols-2">
-                <Field label="Your name" error={errors.name}>
+                <Field label={t('Your name')} error={errors.name}>
                     <input
                         type="text"
                         autoComplete="name"
@@ -88,7 +92,7 @@ function ContactForm() {
                         className={inputClass(errors.name)}
                     />
                 </Field>
-                <Field label="Email address" error={errors.email}>
+                <Field label={t('Email address')} error={errors.email}>
                     <input
                         type="email"
                         autoComplete="email"
@@ -100,12 +104,12 @@ function ContactForm() {
             </div>
 
             <div className="mt-5">
-                <Field label="Subject" error={errors.subject}>
+                <Field label={t('Subject')} error={errors.subject}>
                     <input
                         type="text"
                         value={data.subject}
                         onChange={(e) => setData('subject', e.target.value)}
-                        placeholder="What's this about?"
+                        placeholder={t("What's this about?")}
                         className={inputClass(errors.subject)}
                     />
                 </Field>
@@ -115,31 +119,31 @@ function ContactForm() {
                             key={topic}
                             type="button"
                             onClick={() => {
-                                setData('subject', topic);
+                                setData('subject', t(topic));
                                 clearErrors('subject');
                             }}
                             className={`rounded-full border px-3 py-1 text-xs font-medium transition ${
-                                data.subject === topic
+                                data.subject === t(topic)
                                     ? 'border-brand bg-brand/10 text-brand'
                                     : 'border-gray-200 text-neutral-600 hover:border-gray-300 hover:text-neutral-900'
                             }`}
                         >
-                            {topic}
+                            {t(topic)}
                         </button>
                     ))}
                 </div>
             </div>
 
             <div className="mt-5">
-                <Field label="Message" error={errors.message}>
+                <Field label={t('Message')} error={errors.message}>
                     <textarea
                         rows={6}
                         value={data.message}
                         onChange={(e) => setData('message', e.target.value)}
                         placeholder={
-                            data.subject === 'Bug report'
-                                ? 'What went wrong? Include your device, operating system and app version if you can.'
-                                : 'How can we help?'
+                            data.subject === t('Bug report')
+                                ? t('What went wrong? Include your device, operating system and app version if you can.')
+                                : t('How can we help?')
                         }
                         className={`${inputClass(errors.message)} resize-y`}
                     />
@@ -161,13 +165,13 @@ function ContactForm() {
             </div>
 
             <div className="mt-6 flex flex-col-reverse items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-xs text-neutral-500">We only use your details to reply to you.</p>
+                <p className="text-xs text-neutral-500">{t('We only use your details to reply to you.')}</p>
                 <button
                     type="submit"
                     disabled={processing}
                     className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                 >
-                    {processing ? 'Sending…' : 'Send message'}
+                    {processing ? t('Sending…') : t('Send message')}
                     {!processing && <SendIcon />}
                 </button>
             </div>

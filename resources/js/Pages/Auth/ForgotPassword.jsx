@@ -1,5 +1,6 @@
 import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useTrans } from '@/lib/i18n';
 
 const fieldClass = (error) =>
     `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 ${
@@ -9,6 +10,7 @@ const fieldClass = (error) =>
     }`;
 
 export default function ForgotPassword({ status }) {
+    const t = useTrans();
     const { data, setData, post, processing, errors } = useForm({
         email: '',
     });
@@ -32,16 +34,16 @@ export default function ForgotPassword({ status }) {
                 backgroundSize: '48px 48px, 48px 48px, 100% 100%',
             }}
         >
-            <Head title="Forgot Password" />
+            <Head title={t('Forgot Password')} />
 
             <main className="flex flex-1 items-center justify-center px-6 py-16">
                 <div className="w-full max-w-[520px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
-                    <Link href="/" aria-label="KhordQuiz home" className="mx-auto mb-2 block w-fit">
+                    <Link href="/" aria-label={t('KhordQuiz home')} className="mx-auto mb-2 block w-fit">
                         <img src="/images/logo-mark.png" alt="KhordQuiz" width="287" height="192" className="block h-14 w-auto" />
                     </Link>
-                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">Forgot your password?</h1>
+                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">{t('Forgot your password?')}</h1>
                     <p className="mt-2 text-center text-sm text-neutral-500">
-                        Enter the email associated with your account and we&apos;ll send you a link to reset your password.
+                        {t("Enter the email associated with your account and we'll send you a link to reset your password.")}
                     </p>
 
                     {status && (
@@ -53,7 +55,7 @@ export default function ForgotPassword({ status }) {
                     <form onSubmit={submit} className="mt-6">
                         <div>
                             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Email
+                                {t('Email')}
                             </label>
                             <input
                                 id="email"
@@ -75,14 +77,14 @@ export default function ForgotPassword({ status }) {
                             disabled={processing}
                             className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {processing ? 'Sending…' : 'Email Password Reset Link'}
+                            {processing ? t('Sending…') : t('Email Password Reset Link')}
                         </button>
                     </form>
 
                     <p className="mt-5 text-center text-sm text-neutral-600">
-                        Remembered it after all?{' '}
+                        {t('Remembered it after all?')}{' '}
                         <Link href={route('login')} className="font-medium text-brand hover:underline">
-                            Back to sign in
+                            {t('Back to sign in')}
                         </Link>
                     </p>
                 </div>

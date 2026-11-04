@@ -2,6 +2,7 @@ import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 const fieldClass = (error) =>
     `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 ${
@@ -11,6 +12,7 @@ const fieldClass = (error) =>
     }`;
 
 export default function Login({ status, canResetPassword }) {
+    const t = useTrans();
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
@@ -39,14 +41,14 @@ export default function Login({ status, canResetPassword }) {
                 backgroundSize: '48px 48px, 48px 48px, 100% 100%',
             }}
         >
-            <Head title="Sign in" />
+            <Head title={t('Sign in')} />
 
             <main className="flex flex-1 items-center justify-center px-6 py-16">
                 <div className="w-full max-w-[520px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
-                    <Link href="/" aria-label="KhordQuiz home" className="mx-auto mb-2 block w-fit">
+                    <Link href="/" aria-label={t('KhordQuiz home')} className="mx-auto mb-2 block w-fit">
                         <img src="/images/logo-mark.png" alt="KhordQuiz" width="287" height="192" className="block h-14 w-auto" />
                     </Link>
-                    <h1 className="sr-only">Sign in</h1>
+                    <h1 className="sr-only">{t('Sign in')}</h1>
 
                     {status && (
                         <div className="mt-5 rounded-lg border border-green-200 bg-green-50 px-3.5 py-2.5 text-sm font-medium text-green-700">
@@ -57,7 +59,7 @@ export default function Login({ status, canResetPassword }) {
                     <form onSubmit={submit} className="mt-6">
                         <div>
                             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Email
+                                {t('Email')}
                             </label>
                             <input
                                 id="email"
@@ -76,7 +78,7 @@ export default function Login({ status, canResetPassword }) {
 
                         <div className="mt-4">
                             <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Password
+                                {t('Password')}
                             </label>
                             <div className="relative">
                                 <input
@@ -86,14 +88,14 @@ export default function Login({ status, canResetPassword }) {
                                     value={data.password}
                                     className={`${fieldClass(errors.password)} pe-16`}
                                     autoComplete="current-password"
-                                    placeholder="Password"
+                                    placeholder={t('Password')}
                                     onChange={(e) => setData('password', e.target.value)}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword((visible) => !visible)}
-                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    aria-label={showPassword ? t('Hide password') : t('Show password')}
                                     aria-pressed={showPassword}
                                     className="absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-500 hover:text-neutral-900"
                                 >
@@ -126,7 +128,7 @@ export default function Login({ status, canResetPassword }) {
                                     className="text-brand focus:ring-brand/30"
                                     onChange={(e) => setData('remember', e.target.checked)}
                                 />
-                                <span className="ms-2 text-sm text-neutral-600">Remember me</span>
+                                <span className="ms-2 text-sm text-neutral-600">{t('Remember me')}</span>
                             </label>
 
                             {canResetPassword && (
@@ -134,7 +136,7 @@ export default function Login({ status, canResetPassword }) {
                                     href={route('password.request')}
                                     className="text-sm font-medium text-brand hover:underline"
                                 >
-                                    Forgot password?
+                                    {t('Forgot password?')}
                                 </Link>
                             )}
                         </div>
@@ -144,15 +146,15 @@ export default function Login({ status, canResetPassword }) {
                             disabled={processing}
                             className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {processing ? 'Signing in…' : 'Sign in'}
+                            {processing ? t('Signing in…') : t('Sign in')}
                         </button>
                     </form>
 
                     {/* For visitors without an account yet. */}
                     <p className="mt-5 text-center text-sm text-neutral-600">
-                        New to KhordQuiz?{' '}
+                        {t('New to KhordQuiz?')}{' '}
                         <a href={route('signup')} className="font-medium text-brand hover:underline">
-                            Start Free Trial
+                            {t('Start Free Trial')}
                         </a>
                     </p>
                 </div>

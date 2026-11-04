@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 function PlayIcon(props) {
     return (
@@ -225,7 +226,7 @@ function TubaIcon({ size = 22 }) {
 // Display-only, same pattern as Settings.jsx's INSTRUMENT_LABELS — the stored
 // sound value and every audio path stay "Guitar"; this just clarifies the tile's
 // label now that Harpejji and Bass Guitar sit in the same category.
-const INSTRUMENT_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
+const INSTRUMENT_LABELS = { EP: tk('Rhodes'), Guitar: tk('Acoustic Guitar'), Saxophone: tk('Tenor Saxophone') };
 
 const INSTRUMENT_EMOJI = {
     All: '🔀',
@@ -265,14 +266,16 @@ const INSTRUMENT_EMOJI = {
 // any quiz yet (Organ, Cello, Upright Bass, Trumpet, Flute, Celesta, Vibraphone,
 // Bass Guitar) — they simply won't appear until a quiz's `sounds` list
 // actually includes them.
+// `name` doubles as an identifier (compared, keyed into CATEGORY_EMOJI) — it's
+// only translated where it's displayed; `pickPrompt` is the drill-in subtitle.
 const SOUND_CATEGORIES = [
-    { name: 'Piano', sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
-    { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
-    { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
-    { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
-    { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
+    { name: tk('Piano'), pickPrompt: tk('Pick which piano instrument plays this quiz.'), sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
+    { name: tk('Guitar'), pickPrompt: tk('Pick which guitar instrument plays this quiz.'), sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
+    { name: tk('Strings'), pickPrompt: tk('Pick which strings instrument plays this quiz.'), sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
+    { name: tk('Brass'), pickPrompt: tk('Pick which brass instrument plays this quiz.'), sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
+    { name: tk('Vocals'), pickPrompt: tk('Pick which vocals instrument plays this quiz.'), sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: tk('Percussion'), pickPrompt: tk('Pick which percussion instrument plays this quiz.'), sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
+    { name: tk('Woodwinds'), pickPrompt: tk('Pick which woodwinds instrument plays this quiz.'), sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
 
 const CATEGORY_EMOJI = {
@@ -376,6 +379,7 @@ function StatusDot({ quiz, inverted, large }) {
 }
 
 function SidebarRow({ quiz, categorySlug, selected }) {
+    const t = useTrans();
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
@@ -394,7 +398,7 @@ function SidebarRow({ quiz, categorySlug, selected }) {
                 <PlayIcon className="h-3.5 w-3.5" />
             </span>
             <p className={`min-w-0 flex-1 truncate text-sm font-semibold ${selected ? 'text-white' : 'text-neutral-900'}`}>
-                {quiz.title}
+                {t(quiz.title)}
             </p>
             <StatusDot quiz={quiz} inverted={selected} />
         </Link>
@@ -405,6 +409,7 @@ function SidebarRow({ quiz, categorySlug, selected }) {
 // status dot on the right) — tapping still navigates to its own preview screen rather than
 // opening inline, so unlike SidebarRow this is a plain navigation, not preserveState.
 function MobileCategoryRow({ quiz, categorySlug, selected }) {
+    const t = useTrans();
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
@@ -420,7 +425,7 @@ function MobileCategoryRow({ quiz, categorySlug, selected }) {
                 <PlayIcon className="h-3.5 w-3.5" />
             </span>
             <p className={`min-w-0 flex-1 truncate text-sm font-semibold ${selected ? 'text-white' : 'text-neutral-900'}`}>
-                {quiz.title}
+                {t(quiz.title)}
             </p>
             <StatusDot quiz={quiz} inverted={selected} />
         </Link>
@@ -458,6 +463,7 @@ function VideoEmbed({ html, className }) {
 // recording types, not instruments) and as the per-category tile row below the
 // category tabs.
 function SoundTiles({ sounds, sound, onSelect }) {
+    const t = useTrans();
     return (
         <div className="mt-2.5 flex flex-wrap gap-2.5 sm:flex-nowrap">
             {sounds.map((option) => {
@@ -473,7 +479,7 @@ function SoundTiles({ sounds, sound, onSelect }) {
                     >
                         <SoundIcon sound={option} />
                         <span className={`truncate text-xs ${active ? 'font-bold text-brand' : 'font-medium text-neutral-600'}`}>
-                            {INSTRUMENT_LABELS[option] ?? option}
+                            {t(INSTRUMENT_LABELS[option] ?? option)}
                         </span>
                     </button>
                 );
@@ -490,6 +496,7 @@ function SoundTiles({ sounds, sound, onSelect }) {
 // (e.g. Strings specifically, not whichever Strings-family instrument
 // resolves by default) is always exactly one tap.
 function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSounds }) {
+    const t = useTrans();
     // `sounds` is a narrow, curated "one tile per family" list (e.g. just
     // "Piano", never EP/Upright Piano/Organ alongside it) — kept around only
     // as the fallback for placeholder quizzes with no real audio yet at all.
@@ -550,7 +557,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
     if (categories.length === 0) {
         return (
             <div className="mt-4">
-                <p className="text-xs font-semibold text-neutral-700">Choose a sound</p>
+                <p className="text-xs font-semibold text-neutral-700">{t('Choose a sound')}</p>
                 <SoundTiles sounds={sounds} sound={sound} onSelect={onSelect} />
             </div>
         );
@@ -558,7 +565,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
 
     return (
         <div className="mt-4">
-            <p className="text-xs font-semibold text-neutral-700">Choose a sound</p>
+            <p className="text-xs font-semibold text-neutral-700">{t('Choose a sound')}</p>
 
             <button
                 type="button"
@@ -566,9 +573,9 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                 className="mt-2.5 flex w-full items-center gap-2.5 rounded-xl border border-black/10 bg-white px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-50"
             >
                 <SoundIcon sound={sound} />
-                <span className="flex-1 text-sm font-semibold text-neutral-900">{INSTRUMENT_LABELS[sound] ?? sound}</span>
+                <span className="flex-1 text-sm font-semibold text-neutral-900">{t(INSTRUMENT_LABELS[sound] ?? sound)}</span>
                 {sound === defaultInstrument && (
-                    <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">Default</span>
+                    <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">{t('Default')}</span>
                 )}
                 <ChevronDownIcon className="h-4 w-4 text-neutral-400" />
             </button>
@@ -596,11 +603,11 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                 <span className="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-brand">
                                     {drillCategory ? <CategoryIcon name={drillCategory} size={26} /> : <SpeakerIcon className="h-6 w-6" />}
                                 </span>
-                                <p className="mt-3 text-xl font-extrabold text-neutral-900">{drillCategory ?? 'Choose a sound'}</p>
+                                <p className="mt-3 text-xl font-extrabold text-neutral-900">{drillCategory ? t(drillCategory) : t('Choose a sound')}</p>
                                 <p className="mt-1 text-sm text-neutral-500">
                                     {drillCategory
-                                        ? `Pick which ${drillCategory.toLowerCase()} instrument plays this quiz.`
-                                        : 'Pick which instrument plays this quiz.'}
+                                        ? t(SOUND_CATEGORIES.find((category) => category.name === drillCategory)?.pickPrompt ?? 'Pick which instrument plays this quiz.')
+                                        : t('Pick which instrument plays this quiz.')}
                                 </p>
                             </div>
 
@@ -611,7 +618,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                     className="mx-auto mt-3 flex items-center gap-1 text-xs font-semibold text-neutral-400 hover:text-neutral-600"
                                 >
                                     <ChevronLeftIcon className="h-3.5 w-3.5" />
-                                    All categories
+                                    {t('All categories')}
                                 </button>
                             )}
 
@@ -627,10 +634,10 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                                   className="flex w-full items-center gap-2.5 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-100"
                                               >
                                                   <CategoryIcon name={category.name} size={18} />
-                                                  <span className="flex-1 text-sm font-medium text-neutral-800">{category.name}</span>
+                                                  <span className="flex-1 text-sm font-medium text-neutral-800">{t(category.name)}</span>
                                                   {pickedHere && (
                                                       <span className="text-sm font-semibold text-brand">
-                                                          {INSTRUMENT_LABELS[pickedHere] ?? pickedHere}
+                                                          {t(INSTRUMENT_LABELS[pickedHere] ?? pickedHere)}
                                                       </span>
                                                   )}
                                                   <ChevronDownIcon className="h-4 w-4 -rotate-90 text-neutral-400" />
@@ -656,11 +663,11 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                                       <span
                                                           className={`flex-1 text-sm ${active ? 'font-semibold text-brand' : 'font-medium text-neutral-800'}`}
                                                       >
-                                                          {INSTRUMENT_LABELS[option] ?? option}
+                                                          {t(INSTRUMENT_LABELS[option] ?? option)}
                                                       </span>
                                                       {isDefault && (
                                                           <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
-                                                              Default
+                                                              {t('Default')}
                                                           </span>
                                                       )}
                                                       {active && <CheckIcon className="h-4 w-4 text-brand" />}
@@ -674,7 +681,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                 onClick={closeMenu}
                                 className="mt-4 w-full rounded-xl py-3 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-100"
                             >
-                                Cancel
+                                {t('Cancel')}
                             </button>
                         </div>
                     </div>
@@ -700,6 +707,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
 // "1 of 15" scrub was too many taps to compare a single chord's inversions,
 // and doesn't match how a member actually wants to browse these.
 function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
+    const trans = useTrans();
     const matchingTracks = useMemo(() => {
         const trackSounds = tracks.map((t) => t.sound).filter(Boolean);
         const resolved = resolveDefaultSound(defaultInstrument, trackSounds);
@@ -769,9 +777,9 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-white/50">
                         <HeadsetIcon className="h-[18px] w-[18px]" />
-                        <p className="text-xs font-semibold">Reference Audio</p>
+                        <p className="text-xs font-semibold">{trans('Reference Audio')}</p>
                     </div>
-                    <button type="button" onClick={onClose} aria-label="Close" className="text-white/50 hover:text-white">
+                    <button type="button" onClick={onClose} aria-label={trans('Close')} className="text-white/50 hover:text-white">
                         <CloseIcon className="h-5 w-5" />
                     </button>
                 </div>
@@ -791,10 +799,10 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                         />
 
                         <div className="mt-5 flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5">
-                            <button type="button" onClick={restart} aria-label="Restart" className="shrink-0 text-white/70 hover:text-white">
+                            <button type="button" onClick={restart} aria-label={trans('Restart')} className="shrink-0 text-white/70 hover:text-white">
                                 <RestartIcon className="h-5 w-5" />
                             </button>
-                            <button type="button" onClick={togglePlay} aria-label={playing ? 'Pause' : 'Play'} className="shrink-0 text-white">
+                            <button type="button" onClick={togglePlay} aria-label={playing ? trans('Pause') : trans('Play')} className="shrink-0 text-white">
                                 {playing ? <PauseIcon className="h-5 w-5" /> : <PlayTriangleIcon className="h-5 w-5" />}
                             </button>
                             <input
@@ -812,8 +820,8 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                             />
                         </div>
 
-                        <p className="mt-6 text-center text-sm text-white/50">Listen and familiarize yourself with the sound.</p>
-                        <p className="font-display mt-3 text-center text-4xl font-semibold">{group ? group.label : track.label}</p>
+                        <p className="mt-6 text-center text-sm text-white/50">{trans('Listen and familiarize yourself with the sound.')}</p>
+                        <p className="font-display mt-3 text-center text-4xl font-semibold">{trans(group ? group.label : track.label)}</p>
 
                         {group && group.tracks.length > 1 && (
                             <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
@@ -826,7 +834,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                                             index === subIndex ? 'bg-brand text-white' : 'bg-white/10 text-white/70 hover:bg-white/15'
                                         }`}
                                     >
-                                        {groupTrack.subLabel}
+                                        {trans(groupTrack.subLabel)}
                                     </button>
                                 ))}
                             </div>
@@ -835,7 +843,9 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                         {hasMultiple && (
                             <div className="mt-6 flex flex-col items-center gap-2.5">
                                 <p className="text-xs text-white/40">
-                                    {group ? `${groupIndex + 1} of ${groups.length}` : `${clipIndex + 1} of ${matchingTracks.length}`}
+                                    {group
+                                        ? trans(':done of :total', { done: groupIndex + 1, total: groups.length })
+                                        : trans(':done of :total', { done: clipIndex + 1, total: matchingTracks.length })}
                                 </p>
                                 <div className="flex items-center gap-3">
                                     {(group ? groupIndex > 0 : clipIndex > 0) && (
@@ -851,7 +861,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                                             }}
                                             className="rounded-lg bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-rose-700"
                                         >
-                                            Previous
+                                            {trans('Previous')}
                                         </button>
                                     )}
                                     {(group ? groupIndex < groups.length - 1 : clipIndex < matchingTracks.length - 1) && (
@@ -867,7 +877,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                                             }}
                                             className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-emerald-700"
                                         >
-                                            Next
+                                            {trans('Next')}
                                         </button>
                                     )}
                                 </div>
@@ -875,7 +885,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                         )}
                     </>
                 ) : (
-                    <p className="mt-10 text-center text-sm text-white/50">No reference audio has been added for this quiz yet.</p>
+                    <p className="mt-10 text-center text-sm text-white/50">{trans('No reference audio has been added for this quiz yet.')}</p>
                 )}
             </div>
         </div>
@@ -883,6 +893,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
 }
 
 function DetailPane({ quiz }) {
+    const t = useTrans();
     const defaultInstrument = usePage().props.auth?.user?.default_instrument ?? null;
     const [processing, setProcessing] = useState(false);
     const [sound, setSound] = useState(resolveDefaultSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
@@ -898,7 +909,7 @@ function DetailPane({ quiz }) {
     if (!quiz) {
         return (
             <div className="flex h-full min-h-[320px] items-center justify-center rounded-2xl border border-black/5 bg-white p-8 text-center text-sm text-neutral-500">
-                No quizzes in this category are ready yet. Check back soon.
+                {t('No quizzes in this category are ready yet. Check back soon.')}
             </div>
         );
     }
@@ -926,9 +937,9 @@ function DetailPane({ quiz }) {
     // Same DEFAULT_TIPS the mobile app falls back to for every quiz it has no
     // specific override for (app/quiz-preview.tsx) — not invented copy.
     const tips = [
-        'Use headphones for best results.',
-        'Listen carefully before answering.',
-        'Take your time and answer the questions.',
+        t('Use headphones for best results.'),
+        t('Listen carefully before answering.'),
+        t('Take your time and answer the questions.'),
     ];
 
     function start() {
@@ -944,12 +955,12 @@ function DetailPane({ quiz }) {
         <div className="rounded-2xl border border-black/5 bg-white p-6 sm:p-7">
             <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                    <h2 className="text-2xl font-bold text-neutral-900">{quiz.title}</h2>
+                    <h2 className="text-2xl font-bold text-neutral-900">{t(quiz.title)}</h2>
                 </div>
                 {showsCompleted && (
                     <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700">
                         <CheckIcon className="h-3.5 w-3.5" />
-                        Completed
+                        {t('Completed')}
                     </span>
                 )}
             </div>
@@ -961,7 +972,7 @@ function DetailPane({ quiz }) {
                 />
             ) : (
                 <div className="-mx-6 mt-5 flex aspect-video items-center justify-center rounded-2xl bg-neutral-100 text-sm text-neutral-400 sm:-mx-7">
-                    No video for this quiz yet
+                    {t('No video for this quiz yet')}
                 </div>
             )}
 
@@ -971,8 +982,8 @@ function DetailPane({ quiz }) {
                         <GaugeIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                     </span>
                     <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">Difficulty</p>
-                        <p className="text-sm font-bold text-neutral-900">{quiz.difficulty}</p>
+                        <p className="text-xs text-neutral-400">{t('Difficulty')}</p>
+                        <p className="text-sm font-bold text-neutral-900">{t(quiz.difficulty)}</p>
                     </div>
                 </div>
                 <div className="flex flex-col items-center gap-1.5 rounded-xl border border-black/5 bg-neutral-50 px-2 py-3 text-center sm:flex-row sm:items-center sm:gap-3 sm:px-3.5 sm:text-left">
@@ -980,7 +991,7 @@ function DetailPane({ quiz }) {
                         <HelpIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                     </span>
                     <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">Questions</p>
+                        <p className="text-xs text-neutral-400">{t('Questions')}</p>
                         <p className="text-sm font-bold text-neutral-900">{quiz.question_count}</p>
                     </div>
                 </div>
@@ -989,8 +1000,8 @@ function DetailPane({ quiz }) {
                         <RepeatIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
                     </span>
                     <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">Attempts</p>
-                        <p className="text-sm font-bold text-neutral-900">Unlimited</p>
+                        <p className="text-xs text-neutral-400">{t('Attempts')}</p>
+                        <p className="text-sm font-bold text-neutral-900">{t('Unlimited')}</p>
                     </div>
                 </div>
             </div>
@@ -998,7 +1009,7 @@ function DetailPane({ quiz }) {
             <div className="mt-4 rounded-2xl border border-black/5 bg-neutral-50 p-4">
                 <div className="flex items-center gap-2 text-neutral-400">
                     <BulbIcon className="h-4 w-4" />
-                    <p className="text-xs font-semibold">Tips</p>
+                    <p className="text-xs font-semibold">{t('Tips')}</p>
                 </div>
                 <ul className="mt-2 space-y-1.5">
                     {tips.map((tip) => (
@@ -1019,7 +1030,7 @@ function DetailPane({ quiz }) {
             />
 
             {completed && quiz.score !== null && (
-                <p className="mt-4 text-sm font-semibold text-emerald-700">Last attempt: {quiz.score}% correct</p>
+                <p className="mt-4 text-sm font-semibold text-emerald-700">{t('Last attempt: :score% correct', { score: quiz.score })}</p>
             )}
 
             <div className="mt-6 flex gap-2.5">
@@ -1029,7 +1040,7 @@ function DetailPane({ quiz }) {
                     onClick={start}
                     className="flex-1 rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
                 >
-                    {resuming ? 'Continue Quiz' : completed ? 'Retry Quiz' : 'Start Quiz'}
+                    {resuming ? t('Continue Quiz') : completed ? t('Retry Quiz') : t('Start Quiz')}
                 </button>
                 {quiz.referenceAudioTracks.length > 0 && (
                     <button
@@ -1038,12 +1049,12 @@ function DetailPane({ quiz }) {
                         className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98]"
                     >
                         <HeadsetIcon className="h-5 w-5" />
-                        Listen Mode
+                        {t('Listen Mode')}
                     </button>
                 )}
             </div>
             {blockedNotice && (
-                <p className="mt-2.5 text-center text-sm text-neutral-500">Questions for this quiz haven&apos;t been added yet.</p>
+                <p className="mt-2.5 text-center text-sm text-neutral-500">{t("Questions for this quiz haven't been added yet.")}</p>
             )}
 
             {audioModalOpen && (
@@ -1060,12 +1071,12 @@ function DetailPane({ quiz }) {
                         }`}
                     >
                         <CheckCircleIcon className="h-5 w-5" />
-                        {quiz.manuallyCompleted ? 'Completed' : 'Mark as Completed'}
+                        {quiz.manuallyCompleted ? t('Completed') : t('Mark as Completed')}
                     </button>
                     <button
                         type="button"
                         onClick={toggleBookmark}
-                        aria-label={quiz.bookmarked ? 'Remove bookmark' : 'Bookmark this quiz'}
+                        aria-label={quiz.bookmarked ? t('Remove bookmark') : t('Bookmark this quiz')}
                         className={`flex min-h-[48px] w-[52px] shrink-0 items-center justify-center rounded-xl border-[1.5px] transition-colors duration-150 ${
                             quiz.bookmarked ? 'border-brand text-brand' : 'border-neutral-300 text-neutral-400'
                         }`}
@@ -1081,17 +1092,17 @@ function DetailPane({ quiz }) {
                     <button
                         type="button"
                         disabled
-                        title="Coming soon"
+                        title={t('Coming soon')}
                         className="flex min-h-[48px] flex-1 cursor-default items-center justify-center gap-2 rounded-xl border-[1.5px] border-brand/40 text-sm font-bold text-brand/40"
                     >
                         <CheckCircleIcon className="h-5 w-5" />
-                        Mark as Completed
+                        {t('Mark as Completed')}
                     </button>
                     <button
                         type="button"
                         disabled
-                        title="Coming soon"
-                        aria-label="Bookmark this quiz"
+                        title={t('Coming soon')}
+                        aria-label={t('Bookmark this quiz')}
                         className="flex min-h-[48px] w-[52px] shrink-0 cursor-default items-center justify-center rounded-xl border-[1.5px] border-neutral-200 text-neutral-300"
                     >
                         <BookmarkIcon className="h-5 w-5" />
@@ -1103,11 +1114,12 @@ function DetailPane({ quiz }) {
 }
 
 export default function QuizCategory({ category, categorySlug, selectedSlug, quizzes, progress }) {
+    const t = useTrans();
     const selected = quizzes.find((quiz) => quiz.slug === selectedSlug) ?? quizzes[0] ?? null;
 
     return (
-        <AppShell eyebrow="Start Quiz" title={category} intro="Pick a quiz to begin.">
-            <Head title={selected ? `${selected.title} · ${category}` : category} />
+        <AppShell eyebrow={t('Start Quiz')} title={t(category)} intro={t('Pick a quiz to begin.')}>
+            <Head title={selected ? `${t(selected.title)} · ${t(category)}` : t(category)} />
 
             {/* Mobile: the list and the preview are two separate screens, like the app — never
                 both stacked on one page. selectedSlug only exists once a specific quiz is in
@@ -1120,7 +1132,7 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                         className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-500 transition-colors duration-150 hover:text-neutral-900"
                     >
                         <ChevronLeftIcon className="h-4 w-4" />
-                        {category}
+                        {t(category)}
                     </Link>
                     <DetailPane quiz={selected} />
                 </div>
@@ -1128,7 +1140,7 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                 <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm lg:hidden">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">
-                            {progress.done}/{progress.total} Completed
+                            {t(':done/:total Completed', { done: progress.done, total: progress.total })}
                         </span>
                         <span className="font-semibold text-neutral-500">{progress.percent}%</span>
                     </div>
@@ -1153,7 +1165,7 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                 <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">
-                            {progress.done}/{progress.total} Completed
+                            {t(':done/:total Completed', { done: progress.done, total: progress.total })}
                         </span>
                         <span className="font-semibold text-neutral-500">{progress.percent}%</span>
                     </div>

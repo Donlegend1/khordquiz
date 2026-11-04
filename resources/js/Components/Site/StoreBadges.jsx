@@ -1,8 +1,12 @@
+import { useTrans } from '@/lib/i18n';
+
 // TODO: replace with the live store listings once published.
 const APP_STORE_URL = '#';
 const PLAY_STORE_URL = '#';
 
 export default function StoreBadges() {
+    const t = useTrans();
+
     return (
         <section id="download" className="scroll-mt-[88px] bg-white">
             <div className="mx-auto max-w-7xl px-6 py-16 lg:px-[100px] lg:py-20">
@@ -23,19 +27,27 @@ export default function StoreBadges() {
                             iOS &amp; Android
                         </span>
                         <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">
-                            Available on the{' '}
-                            <span className="font-display font-semibold tracking-normal">App Store</span>
-                            <br className="hidden sm:inline" /> and{' '}
-                            <span className="font-display font-semibold tracking-normal">Google Play.</span>
+                            {/* The store names are styled, so they're slotted into the translated sentence. */}
+                            {t('Available on the :appStore and :googlePlay.')
+                                .split(/(:appStore|:googlePlay)/)
+                                .map((part, index) =>
+                                    part === ':appStore' || part === ':googlePlay' ? (
+                                        <span key={index} className="font-display font-semibold tracking-normal">
+                                            {part === ':appStore' ? 'App Store' : 'Google Play'}
+                                        </span>
+                                    ) : (
+                                        part
+                                    ),
+                                )}
                         </h2>
                         <p className="mx-auto mt-4 max-w-[460px] text-base leading-relaxed text-white/80 lg:mx-0">
-                            Download KhordQuiz, start your 7-day free trial, and train your ear wherever you go.
+                            {t('Download KhordQuiz, start your 7-day free trial, and train your ear wherever you go.')}
                         </p>
                     </div>
 
                     <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row lg:mt-0 lg:shrink-0 lg:flex-col">
-                        <StoreButton href={APP_STORE_URL} eyebrow="Download on the" store="App Store" icon={<AppleIcon />} />
-                        <StoreButton href={PLAY_STORE_URL} eyebrow="Get it on" store="Google Play" icon={<PlayIcon />} />
+                        <StoreButton href={APP_STORE_URL} eyebrow={t('Download on the')} store="App Store" icon={<AppleIcon />} />
+                        <StoreButton href={PLAY_STORE_URL} eyebrow={t('Get it on')} store="Google Play" icon={<PlayIcon />} />
                     </div>
                 </div>
             </div>

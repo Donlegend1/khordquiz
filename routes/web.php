@@ -50,6 +50,10 @@ Route::delete('/settings/progress', [SettingsController::class, 'resetProgress']
     ->middleware(['auth', 'verified'])
     ->name('settings.reset-progress');
 
+Route::patch('/settings/language', [SettingsController::class, 'updateLanguage'])
+    ->middleware(['auth', 'verified'])
+    ->name('settings.language');
+
 Route::patch('/settings/default-instrument', [SettingsController::class, 'updateDefaultInstrument'])
     ->middleware(['auth', 'verified'])
     ->name('settings.default-instrument');

@@ -57,7 +57,7 @@ class UserPreference extends Model
             'email' => $user->email,
             'first_name' => $user->first_name,
             'haptics' => $this->haptics,
-            'language' => $this->language,
+            'language' => $user->language ?? $this->language ?? 'English',
             'last_name' => $user->last_name,
             'push_notifications' => $this->push_notifications,
             'reminder_time' => $this->reminder_time,

@@ -36,9 +36,9 @@ class StoreSupportMessageRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'message.min' => 'Please tell us a little more — at least 10 characters.',
-            'attachment.max' => 'Attachments can be up to 10MB.',
-            'attachment.mimes' => 'Attachments must be an image (JPG, PNG, WEBP, GIF) or a PDF.',
+            'message.min' => __('Please tell us a little more — at least 10 characters.'),
+            'attachment.max' => __('Attachments can be up to 10MB.'),
+            'attachment.mimes' => __('Attachments must be an image (JPG, PNG, WEBP, GIF) or a PDF.'),
         ];
     }
 }

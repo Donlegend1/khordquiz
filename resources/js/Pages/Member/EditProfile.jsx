@@ -1,6 +1,7 @@
 import CountryPicker from '@/Components/CountryPicker';
 import InputError from '@/Components/InputError';
 import AppShell from '@/Layouts/AppShell';
+import { tk, useTrans } from '@/lib/i18n';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -22,6 +23,9 @@ function LockIcon(props) {
     );
 }
 
+// Values are sent to the server as-is; only the button text is translated.
+const SKILL_LEVELS = [tk('Beginner'), tk('Intermediate'), tk('Advanced')];
+
 const fieldClass = 'w-full rounded-xl border border-neutral-200 px-3.5 py-3 text-[15px] text-neutral-900 focus:border-neutral-900 focus:outline-none focus:ring-2 focus:ring-neutral-900/10';
 
 // The users table has one `name` column, so an existing name is split on its
@@ -33,6 +37,7 @@ function splitName(name) {
 }
 
 export default function EditProfile() {
+    const t = useTrans();
     const { auth } = usePage().props;
     const user = auth.user;
     const { first, last } = splitName(user.name);
@@ -50,8 +55,8 @@ export default function EditProfile() {
     };
 
     return (
-        <AppShell eyebrow="Member" title="Edit Profile" intro="Update your name, email, country and skill level.">
-            <Head title="Edit Profile" />
+        <AppShell eyebrow={t('Member')} title={t('Edit Profile')} intro={t('Update your name, email, country and skill level.')}>
+            <Head title={t('Edit Profile')} />
 
             <form onSubmit={submit} className="mx-auto max-w-xl space-y-6">
                 <div className="flex flex-col items-center gap-2 py-2">
@@ -63,7 +68,7 @@ export default function EditProfile() {
                 <div className="grid gap-5 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                     <div className="grid gap-5 sm:grid-cols-2">
                         <div>
-                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">First name</label>
+                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">{t('First name')}</label>
                             <input
                                 type="text"
                                 value={data.first_name}
@@ -73,7 +78,7 @@ export default function EditProfile() {
                             <InputError message={errors.first_name} className="mt-1.5" />
                         </div>
                         <div>
-                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Last name</label>
+                            <label className="mb-1.5 block text-sm font-semibold text-neutral-700">{t('Last name')}</label>
                             <input
                                 type="text"
                                 value={data.last_name}
@@ -85,25 +90,25 @@ export default function EditProfile() {
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Email</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">{t('Email')}</label>
                         <div className={`${fieldClass} flex items-center gap-2.5 bg-neutral-50 text-neutral-500`}>
                             <LockIcon className="h-3.5 w-3.5 shrink-0 text-neutral-400" />
                             <span className="truncate">{data.email}</span>
                         </div>
-                        <p className="mt-1.5 text-xs text-neutral-400">Contact support to change the email on your account.</p>
+                        <p className="mt-1.5 text-xs text-neutral-400">{t('Contact support to change the email on your account.')}</p>
                         <InputError message={errors.email} className="mt-1.5" />
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Country / Region</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">{t('Country / Region')}</label>
                         <CountryPicker value={data.country} onChange={(value) => setData('country', value)} triggerClassName={fieldClass} />
                         <InputError message={errors.country} className="mt-1.5" />
                     </div>
 
                     <div>
-                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">Skill level</label>
+                        <label className="mb-1.5 block text-sm font-semibold text-neutral-700">{t('Skill level')}</label>
                         <div className="flex rounded-xl bg-neutral-100 p-1">
-                            {['Beginner', 'Intermediate', 'Advanced'].map((level) => {
+                            {SKILL_LEVELS.map((level) => {
                                 const active = level === data.skill_level;
                                 return (
                                     <button
@@ -114,7 +119,7 @@ export default function EditProfile() {
                                             active ? 'bg-brand text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-700'
                                         }`}
                                     >
-                                        {level}
+                                        {t(level)}
                                     </button>
                                 );
                             })}
@@ -129,15 +134,15 @@ export default function EditProfile() {
                         disabled={processing}
                         className="flex-1 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
                     >
-                        {processing ? 'Saving…' : 'Save Changes'}
+                        {processing ? t('Saving…') : t('Save Changes')}
                     </button>
                     <Link href={route('account')} className="rounded-xl px-5 py-3.5 text-sm font-semibold text-neutral-600 hover:bg-neutral-50">
-                        Cancel
+                        {t('Cancel')}
                     </Link>
                 </div>
                 {recentlySuccessful && (
                     <p className="text-center text-sm font-semibold text-emerald-700" role="status">
-                        Profile saved.
+                        {t('Profile saved.')}
                     </p>
                 )}
             </form>

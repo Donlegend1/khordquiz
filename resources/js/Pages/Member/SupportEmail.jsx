@@ -1,16 +1,19 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 const SUPPORT_EMAIL = 'support@khordquiz.com';
 const MAX_MESSAGE = 2000;
 const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+// `label` is the value sent to the server (StoreSupportMessageRequest::TOPICS),
+// so it stays English; it's only translated where it's displayed.
 const TOPICS = [
-    { label: 'Account', hint: 'Sign in, profile or password' },
-    { label: 'Billing', hint: 'Payments and subscription' },
-    { label: 'Quiz issue', hint: 'A question, answer or sound' },
-    { label: 'Bug report', hint: "Something isn't working" },
-    { label: 'Other', hint: 'Anything else' },
+    { label: tk('Account'), hint: tk('Sign in, profile or password') },
+    { label: tk('Billing'), hint: tk('Payments and subscription') },
+    { label: tk('Quiz issue'), hint: tk('A question, answer or sound') },
+    { label: tk('Bug report'), hint: tk("Something isn't working") },
+    { label: tk('Other'), hint: tk('Anything else') },
 ];
 
 function MailIcon(props) {
@@ -80,9 +83,9 @@ function CloseIcon(props) {
     );
 }
 
-function formatFileSize(bytes) {
-    if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+function formatFileSize(bytes, t) {
+    if (bytes < 1024 * 1024) return t(':size KB', { size: Math.round(bytes / 1024) });
+    return t(':size MB', { size: (bytes / (1024 * 1024)).toFixed(1) });
 }
 
 function Toggle({ value, onChange }) {
@@ -110,11 +113,13 @@ function detectBrowser() {
 }
 
 export default function SupportEmail() {
+    const t = useTrans();
     const [pickingTopic, setPickingTopic] = useState(false);
     const [sent, setSent] = useState(false);
     const [attachmentError, setAttachmentError] = useState(null);
     const pickerRef = useRef(null);
     const fileInputRef = useRef(null);
+    // Sent to the support team as-is, so the submitted value stays English.
     const deviceInfo = `App version 1.0.0 · ${detectBrowser()}`;
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -144,7 +149,7 @@ export default function SupportEmail() {
             return;
         }
         if (file.size > MAX_ATTACHMENT_BYTES) {
-            setAttachmentError('That file is over the 10MB limit.');
+            setAttachmentError(t('That file is over the 10MB limit.'));
             if (fileInputRef.current) fileInputRef.current.value = '';
             return;
         }
@@ -164,8 +169,8 @@ export default function SupportEmail() {
     }
 
     return (
-        <AppShell eyebrow="Member" title="Email Support" intro="Send our team a message and we'll get back to you.">
-            <Head title="Email Support" />
+        <AppShell eyebrow={t('Member')} title={t('Email Support')} intro={t("Send our team a message and we'll get back to you.")}>
+            <Head title={t('Email Support')} />
 
             <div className="mx-auto max-w-2xl">
                 <div className="mb-6 flex items-center gap-3 rounded-2xl bg-rose-50 p-3.5">
@@ -174,7 +179,7 @@ export default function SupportEmail() {
                     </span>
                     <div>
                         <p className="text-sm font-bold text-neutral-900">{SUPPORT_EMAIL}</p>
-                        <p className="text-xs text-neutral-500">We usually reply within 24 hours.</p>
+                        <p className="text-xs text-neutral-500">{t('We usually reply within 24 hours.')}</p>
                     </div>
                 </div>
 
@@ -183,20 +188,20 @@ export default function SupportEmail() {
                         <span className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
                             <CheckIcon className="h-7 w-7" />
                         </span>
-                        <p className="text-lg font-extrabold text-neutral-900">Message sent</p>
+                        <p className="text-lg font-extrabold text-neutral-900">{t('Message sent')}</p>
                         <p className="max-w-xs text-sm text-neutral-500">
-                            We&apos;ve got your message and will reply by email soon.
+                            {t("We've got your message and will reply by email soon.")}
                         </p>
                         <Link
                             href={route('support')}
                             className="mt-2 w-full max-w-xs rounded-xl bg-brand py-3 text-center text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                         >
-                            Back to Support
+                            {t('Back to Support')}
                         </Link>
                     </div>
                 ) : (
                     <>
-                        <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Your request</p>
+                        <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">{t('Your request')}</p>
                         <div className="mb-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
                             <div className="relative" ref={pickerRef}>
                                 <button
@@ -207,8 +212,8 @@ export default function SupportEmail() {
                                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
                                         <TagIcon className="h-4 w-4" />
                                     </span>
-                                    <span className="flex-1 text-sm font-semibold text-neutral-900">Topic</span>
-                                    <span className={`text-sm ${data.topic ? 'text-neutral-900' : 'text-neutral-400'}`}>{data.topic ?? 'Choose'}</span>
+                                    <span className="flex-1 text-sm font-semibold text-neutral-900">{t('Topic')}</span>
+                                    <span className={`text-sm ${data.topic ? 'text-neutral-900' : 'text-neutral-400'}`}>{data.topic ? t(data.topic) : t('Choose')}</span>
                                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-neutral-300">
                                         <path d="M9 5l7 7-7 7" />
                                     </svg>
@@ -229,8 +234,8 @@ export default function SupportEmail() {
                                                     className="flex w-full items-center gap-3 px-3.5 py-2.5 text-left transition-colors duration-150 hover:bg-neutral-50"
                                                 >
                                                     <div className="min-w-0 flex-1">
-                                                        <p className={`text-sm font-semibold ${on ? 'text-brand' : 'text-neutral-900'}`}>{option.label}</p>
-                                                        <p className="text-xs text-neutral-400">{option.hint}</p>
+                                                        <p className={`text-sm font-semibold ${on ? 'text-brand' : 'text-neutral-900'}`}>{t(option.label)}</p>
+                                                        <p className="text-xs text-neutral-400">{t(option.hint)}</p>
                                                     </div>
                                                     {on && <CheckIcon className="h-4 w-4 shrink-0 text-brand" />}
                                                 </button>
@@ -249,7 +254,7 @@ export default function SupportEmail() {
                                     value={data.subject}
                                     maxLength={100}
                                     onChange={(e) => setData('subject', e.target.value)}
-                                    placeholder="Subject (optional)"
+                                    placeholder={t('Subject (optional)')}
                                     className="w-full border-0 py-3 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-0 focus:outline-none focus:ring-0"
                                 />
                             </div>
@@ -259,7 +264,7 @@ export default function SupportEmail() {
                                     value={data.message}
                                     maxLength={MAX_MESSAGE}
                                     onChange={(e) => setData('message', e.target.value)}
-                                    placeholder="Describe your request."
+                                    placeholder={t('Describe your request.')}
                                     rows={6}
                                     className="w-full resize-none border-0 px-4 py-3.5 text-sm text-neutral-900 placeholder:text-neutral-400 focus:border-0 focus:outline-none focus:ring-0"
                                 />
@@ -277,12 +282,12 @@ export default function SupportEmail() {
                                         {data.attachment ? (
                                             <>
                                                 <p className="truncate text-sm font-semibold text-neutral-900">{data.attachment.name}</p>
-                                                <p className="text-xs text-neutral-400">{formatFileSize(data.attachment.size)}</p>
+                                                <p className="text-xs text-neutral-400">{formatFileSize(data.attachment.size, t)}</p>
                                             </>
                                         ) : (
                                             <>
-                                                <p className="text-sm font-semibold text-neutral-900">Attach a file</p>
-                                                <p className="text-xs text-neutral-400">Image or PDF, up to 10MB</p>
+                                                <p className="text-sm font-semibold text-neutral-900">{t('Attach a file')}</p>
+                                                <p className="text-xs text-neutral-400">{t('Image or PDF, up to 10MB')}</p>
                                             </>
                                         )}
                                     </div>
@@ -290,7 +295,7 @@ export default function SupportEmail() {
                                         <button
                                             type="button"
                                             onClick={() => chooseFile(null)}
-                                            aria-label="Remove attachment"
+                                            aria-label={t('Remove attachment')}
                                             className="shrink-0 text-neutral-300 hover:text-brand"
                                         >
                                             <CloseIcon className="h-4 w-4" />
@@ -301,7 +306,7 @@ export default function SupportEmail() {
                                             onClick={() => fileInputRef.current?.click()}
                                             className="shrink-0 rounded-full bg-neutral-100 px-3.5 py-1.5 text-xs font-bold text-neutral-700 transition-colors duration-150 hover:bg-neutral-200"
                                         >
-                                            Choose file
+                                            {t('Choose file')}
                                         </button>
                                     )}
                                     <input
@@ -318,15 +323,15 @@ export default function SupportEmail() {
                             </div>
                         </div>
 
-                        <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">Options</p>
+                        <p className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-neutral-400">{t('Options')}</p>
                         <div className="mb-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
                             <div className="flex items-center gap-3 px-4 py-3.5">
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-neutral-100 text-neutral-600">
                                     <PhoneIcon className="h-4 w-4" />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-semibold text-neutral-900">Include device info</p>
-                                    <p className="text-xs text-neutral-400">{deviceInfo}</p>
+                                    <p className="text-sm font-semibold text-neutral-900">{t('Include device info')}</p>
+                                    <p className="text-xs text-neutral-400">{t('App version :version · :browser', { version: '1.0.0', browser: detectBrowser() })}</p>
                                 </div>
                                 <Toggle value={data.include_device} onChange={(value) => setData('include_device', value)} />
                             </div>
@@ -339,7 +344,7 @@ export default function SupportEmail() {
                             className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             <SendIcon className="h-4 w-4" />
-                            {processing ? 'Sending…' : 'Send Message'}
+                            {processing ? t('Sending…') : t('Send Message')}
                         </button>
                     </>
                 )}

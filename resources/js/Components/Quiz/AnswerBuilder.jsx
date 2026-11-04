@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 import {
     KEYBOARD_BLACK_KEYS,
     KEYBOARD_WHITE_KEYS,
@@ -51,14 +52,15 @@ export function answerTypeFor(category, title) {
     return 'flat';
 }
 
+// English translation keys — callers render them with t(answerLabelFor(...)).
 const ANSWER_LABELS = {
-    flat: 'Choose the correct answer',
-    compound: 'Choose the quality and inversion you hear',
-    multi: 'Select every extension you hear — more than one can be correct',
-    naming: 'Build the chord name you hear',
-    progression: 'Build the progression you hear, chord by chord',
-    sequence: 'Tap the notes in order to build the melody you hear',
-    keyboard: 'Choose the correct note',
+    flat: tk('Choose the correct answer'),
+    compound: tk('Choose the quality and inversion you hear'),
+    multi: tk('Select every extension you hear — more than one can be correct'),
+    naming: tk('Build the chord name you hear'),
+    progression: tk('Build the progression you hear, chord by chord'),
+    sequence: tk('Tap the notes in order to build the melody you hear'),
+    keyboard: tk('Choose the correct note'),
 };
 
 export function answerLabelFor(category, title) {
@@ -145,6 +147,7 @@ function gradedClasses({ answered, choice, correctAnswer, value }) {
 // the Key #2 only) — one key stays visually marked throughout, independent of
 // selection/answered state, so the member always has that anchor pitch in view.
 function NoteKeyboardChoices({ answered, correctAnswer, value, onChange, keyboardAudio, referenceNote }) {
+    const t = useTrans();
     const keyClass = (note, activeClass) => {
         const state = gradedClasses({ answered, choice: note, correctAnswer, value });
         if (state === 'selected' || state === 'correct') return activeClass.active;
@@ -167,7 +170,14 @@ function NoteKeyboardChoices({ answered, correctAnswer, value, onChange, keyboar
         <div>
             {referenceNote && (
                 <p className="mb-2 text-center text-xs text-neutral-500">
-                    The highlighted key (<span className="font-semibold text-amber-600">{referenceNote}</span>) is your reference note.
+                    {t('The highlighted key (:note) is your reference note.', { note: '\u0000' })
+                        .split('\u0000')
+                        .map((part, i) => (
+                            <Fragment key={i}>
+                                {i > 0 && <span className="font-semibold text-amber-600">{referenceNote}</span>}
+                                {part}
+                            </Fragment>
+                        ))}
                 </p>
             )}
             <div className="relative flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
@@ -214,6 +224,7 @@ function NoteKeyboardChoices({ answered, correctAnswer, value, onChange, keyboar
 }
 
 function FlatChoices({ answered, choices, correctAnswer, value, onChange }) {
+    const t = useTrans();
     return (
         <div className="grid gap-2.5 sm:grid-cols-2">
             {choices.map((choice, index) => {
@@ -245,7 +256,7 @@ function FlatChoices({ answered, choices, correctAnswer, value, onChange }) {
                         <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${badge}`}>
                             {CHOICE_LETTERS[index] ?? index + 1}
                         </span>
-                        {choice}
+                        {t(choice)}
                     </button>
                 );
             })}
@@ -304,12 +315,13 @@ function RadioRow({ children, disabled, onClick, state }) {
 // is "{quality} · {inversion}" (see AnswerBuilder's compound onChange below),
 // split back apart here so each group grades against its own half.
 function CompoundChoices({ answered, compound, correctAnswer, quality, inversion, onQuality, onInversion }) {
+    const t = useTrans();
     const [correctQuality, correctInversion] = correctAnswer ? correctAnswer.split(' · ') : [null, null];
 
     return (
         <div className="grid gap-4 sm:grid-cols-[3fr_2fr] sm:items-start">
             <div className="rounded-2xl border border-black/5 bg-neutral-50 p-5">
-                <StepHeading step={1}>Select the chord quality</StepHeading>
+                <StepHeading step={1}>{t('Select the chord quality')}</StepHeading>
                 <div className="space-y-2.5">
                     {compound.qualities.map((option) => (
                         <RadioRow
@@ -318,14 +330,14 @@ function CompoundChoices({ answered, compound, correctAnswer, quality, inversion
                             disabled={answered}
                             onClick={() => onQuality(option)}
                         >
-                            {option}
+                            {t(option)}
                         </RadioRow>
                     ))}
                 </div>
             </div>
 
             <div className="rounded-2xl border border-black/5 bg-neutral-50 p-5">
-                <StepHeading step={2}>Select the inversion</StepHeading>
+                <StepHeading step={2}>{t('Select the inversion')}</StepHeading>
                 <div className="space-y-2.5">
                     {compound.inversions.map((option) => (
                         <RadioRow
@@ -334,7 +346,7 @@ function CompoundChoices({ answered, compound, correctAnswer, quality, inversion
                             disabled={answered}
                             onClick={() => onInversion(option)}
                         >
-                            {option}
+                            {t(option)}
                         </RadioRow>
                     ))}
                 </div>
@@ -412,11 +424,12 @@ function ExtensionCheckboxGrid({ answered, options, selected, correctPicks, onTo
 // Multi-select chip grid — matches the app's multi-select (multi: true in
 // app/practice.tsx): more than one option can be part of the correct answer.
 function MultiChoices({ answered, options, selected, onToggle }) {
+    const t = useTrans();
     return (
         <div className="flex flex-wrap gap-2">
             {options.map((option) => (
                 <ChipButton key={option} active={selected.includes(option)} disabled={answered} onClick={() => onToggle(option)}>
-                    {option}
+                    {t(option)}
                 </ChipButton>
             ))}
         </div>
@@ -430,6 +443,7 @@ function MultiChoices({ answered, options, selected, onToggle }) {
 // green even if the member never picked it — "here's what you missed" — and
 // any wrongly-picked one turns red).
 function NamingPanel({ answered, correct, hint, isActive, note, onToggle, options, step, title }) {
+    const t = useTrans();
     return (
         <div className="rounded-2xl border border-black/5 bg-neutral-50 p-4">
             <div className="flex items-center gap-2.5">
@@ -458,7 +472,7 @@ function NamingPanel({ answered, correct, hint, isActive, note, onToggle, option
                         >
                             {isRevealedCorrect && <CheckIcon className="h-3.5 w-3.5" />}
                             {isWrongSelected && <CloseIconSmall className="h-3.5 w-3.5" />}
-                            {option}
+                            {t(option)}
                         </button>
                     );
                 })}
@@ -489,13 +503,14 @@ function CheckIcon(props) {
 // preview pill included (the part the chosen degrees/exclude add shows in
 // red, same as the app).
 function NamingChoices({ answered, correctAnswer, quality, degrees, exclude, onQuality, onToggleDegree, onExclude, preview }) {
+    const t = useTrans();
     const correct = correctAnswer ? decodeNamingAnswer(correctAnswer) : null;
     return (
         <div className="space-y-4">
             <div className="rounded-xl border border-black/5 bg-white px-5 py-3.5 text-center shadow-sm">
                 {quality ? (
                     <p className="text-xl font-extrabold text-neutral-900">
-                        {quality}
+                        {t(quality)}
                         <span className="text-brand">{preview.slice(quality.length)}</span>
                     </p>
                 ) : (
@@ -507,32 +522,32 @@ function NamingChoices({ answered, correctAnswer, quality, degrees, exclude, onQ
                 answered={answered}
                 correct={correct ? [correct.quality] : []}
                 isActive={(option) => quality === option}
-                note="Pick one"
+                note={t('Pick one')}
                 onToggle={onQuality}
                 options={NAMING_QUALITIES}
                 step={1}
-                title="Chord Quality"
+                title={t('Chord Quality')}
             />
             <NamingPanel
                 answered={answered}
                 correct={correct ? correct.degrees : []}
                 isActive={(option) => degrees.includes(option)}
-                note="Select all that apply"
+                note={t('Select all that apply')}
                 onToggle={onToggleDegree}
                 options={NAMING_DEGREES}
                 step={2}
-                title="Chord Degree"
+                title={t('Chord Degree')}
             />
             <NamingPanel
                 answered={answered}
                 correct={correct ? [correct.exclude] : []}
-                hint='Select "None" if no notes are excluded.'
+                hint={t('Select "None" if no notes are excluded.')}
                 isActive={(option) => exclude === option}
-                note="Pick one"
+                note={t('Pick one')}
                 onToggle={onExclude}
                 options={NAMING_EXCLUDES}
                 step={3}
-                title="Exclude (if any)"
+                title={t('Exclude (if any)')}
             />
         </div>
     );
@@ -558,6 +573,7 @@ const SHORT_QUALITY = { Major: 'Maj', Minor: 'Min', Diminished: 'Dim' };
 // both degree and quality land, unless the quiz also has an extensions step
 // (then advancing is manual via "Next Chord").
 function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSlot, onClear, resetToken }) {
+    const t = useTrans();
     const [activeIndex, setActiveIndex] = useState(0);
     useEffect(() => setActiveIndex(0), [resetToken]);
 
@@ -614,7 +630,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
     return (
         <div>
             <div className="flex items-center justify-between">
-                <p className="text-[13px] font-semibold text-neutral-400">Your Progression</p>
+                <p className="text-[13px] font-semibold text-neutral-400">{t('Your Progression')}</p>
                 {!answered && (
                     <button
                         type="button"
@@ -626,7 +642,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                         className="flex items-center gap-1 text-[13px] font-bold text-neutral-900 disabled:pointer-events-none disabled:opacity-35"
                     >
                         <UndoIcon className="h-3.5 w-3.5" />
-                        Clear
+                        {t('Clear')}
                     </button>
                 )}
             </div>
@@ -654,11 +670,11 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                 type="button"
                                 disabled={answered}
                                 onClick={() => setActiveIndex(index)}
-                                aria-label={`Chord ${index + 1}`}
+                                aria-label={t('Chord :number', { number: index + 1 })}
                                 className={`flex min-h-[58px] flex-1 flex-col items-center justify-center gap-0.5 rounded-xl border-[1.5px] px-0.5 py-1.5 transition-colors duration-150 ${classes}`}
                             >
                                 {!config.qualityOnly && <span className="text-xl font-extrabold">{degree ?? '?'}</span>}
-                                <span className={`truncate text-[11px] font-semibold ${quality ? '' : 'opacity-50'}`}>{quality ?? 'Quality'}</span>
+                                <span className={`truncate text-[11px] font-semibold ${quality ? '' : 'opacity-50'}`}>{quality ? t(quality) : t('Quality')}</span>
                                 {extensions.length > 0 && <span className="truncate text-[10px] font-medium opacity-80">{extensions.join(', ')}</span>}
                             </button>
                             {index < indices.length - 1 && <ChevronRightIcon className="h-3 w-3 shrink-0 text-neutral-300" />}
@@ -670,14 +686,14 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
             {!answered && (
                 <div className="mt-2.5 rounded-2xl border border-black/10 p-3.5">
                     <div className="flex items-center justify-between">
-                        <p className="text-[15px] font-extrabold text-neutral-900">Chord {activeIndex + 1}</p>
+                        <p className="text-[15px] font-extrabold text-neutral-900">{t('Chord :number', { number: activeIndex + 1 })}</p>
                         {config.extensionOptions && activeIndex < config.length - 1 && (
                             <button
                                 type="button"
                                 onClick={() => setActiveIndex(activeIndex + 1)}
                                 className="flex items-center gap-0.5 text-[13px] font-bold text-neutral-900"
                             >
-                                Next Chord
+                                {t('Next Chord')}
                                 <ChevronRightIcon className="h-3.5 w-3.5" />
                             </button>
                         )}
@@ -685,7 +701,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
 
                     {!config.qualityOnly && !config.fixedDegrees && (
                         <div className="mt-3.5">
-                            <p className="mb-2 text-xs font-semibold text-neutral-400">Number</p>
+                            <p className="mb-2 text-xs font-semibold text-neutral-400">{t('Number')}</p>
                             <div className="flex gap-1.5">
                                 {config.degreeOptions.map((option) =>
                                     config.fixedQualities ? (
@@ -699,7 +715,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                         >
                                             <span className="text-lg font-extrabold">{option}</span>
                                             <span className={`text-[10px] font-semibold ${currentDegree === option ? 'text-white/80' : 'text-neutral-400'}`}>
-                                                {SHORT_QUALITY[config.fixedQualities[option]] ?? config.fixedQualities[option]}
+                                                {t(SHORT_QUALITY[config.fixedQualities[option]] ?? config.fixedQualities[option])}
                                             </span>
                                         </button>
                                     ) : (
@@ -721,7 +737,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
 
                     {!config.fixedQualities && (
                         <div className={config.qualityOnly && config.fixedDegrees ? '' : 'mt-3.5'}>
-                            <p className="mb-2 text-xs font-semibold text-neutral-400">Quality</p>
+                            <p className="mb-2 text-xs font-semibold text-neutral-400">{t('Quality')}</p>
                             <div className="flex flex-wrap gap-1.5">
                                 {config.qualityOptions.map((option) => (
                                     <button
@@ -735,7 +751,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                                 : 'bg-neutral-100 font-medium text-neutral-700 hover:bg-neutral-200'
                                         }`}
                                     >
-                                        {option}
+                                        {t(option)}
                                     </button>
                                 ))}
                             </div>
@@ -745,7 +761,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                     {config.extensionOptions && (
                         <div className="mt-3.5">
                             <p className="mb-2 text-xs font-semibold text-neutral-400">
-                                Degrees <span className="font-medium text-neutral-300">(optional)</span>
+                                {t('Degrees')} <span className="font-medium text-neutral-300">{t('(optional)')}</span>
                             </p>
                             <div className="flex flex-wrap gap-1.5">
                                 {config.extensionOptions.map((option) => {
@@ -759,7 +775,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                                 on ? 'bg-neutral-900 font-bold text-white' : 'bg-neutral-100 font-medium text-neutral-700 hover:bg-neutral-200'
                                             }`}
                                         >
-                                            {option}
+                                            {t(option)}
                                         </button>
                                     );
                                 })}
@@ -781,6 +797,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
 const SEQUENCE_QUIZZES_WITHOUT_CHROMATIC_NOTES = new Set(['3-Note Stepwise', '3-Note with Skips', '5-Note Melodies']);
 
 function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle, onTap, onUndo, onClear }) {
+    const t = useTrans();
     const slots = Array.from({ length }, (_, index) => sequence[index] ?? null);
     const blackKeysInert = SEQUENCE_QUIZZES_WITHOUT_CHROMATIC_NOTES.has(quizTitle);
     const correctNotes = correctAnswer ? correctAnswer.split(' ') : [];
@@ -811,8 +828,8 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                         type="button"
                         disabled={answered || sequence.length === 0}
                         onClick={onUndo}
-                        title="Undo"
-                        aria-label="Undo"
+                        title={t('Undo')}
+                        aria-label={t('Undo')}
                         className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors duration-150 hover:bg-neutral-200 hover:text-neutral-900 disabled:pointer-events-none disabled:opacity-30"
                     >
                         <UndoIcon className="h-4 w-4" />
@@ -821,8 +838,8 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                         type="button"
                         disabled={answered || sequence.length === 0}
                         onClick={onClear}
-                        title="Clear"
-                        aria-label="Clear"
+                        title={t('Clear')}
+                        aria-label={t('Clear')}
                         className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors duration-150 hover:bg-rose-100 hover:text-rose-700 disabled:pointer-events-none disabled:opacity-30"
                     >
                         <TrashIcon className="h-4 w-4" />

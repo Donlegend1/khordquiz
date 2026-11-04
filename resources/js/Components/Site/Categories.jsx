@@ -1,8 +1,9 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
 import { pathQuizCount, paths, quizCount, totals } from '@/data/quizCatalog';
+import { tk, useTrans } from '@/lib/i18n';
 import { useState } from 'react';
 
-// Static class strings so Tailwind keeps them.
+// Static class strings so Tailwind keeps them. Keyed by the English level name (an identifier here).
 const accents = {
     Beginner: { dot: 'bg-emerald-500', tint: 'bg-emerald-50 text-emerald-700' },
     Intermediate: { dot: 'bg-amber-500', tint: 'bg-amber-50 text-amber-700' },
@@ -10,13 +11,14 @@ const accents = {
 };
 
 const stats = [
-    { value: totals.quizzes, label: 'Quizzes' },
-    { value: totals.categories, label: 'Categories' },
-    { value: '5,000+', label: 'Audio samples' },
-    { value: paths.length, label: 'Learning paths' },
+    { value: totals.quizzes, label: tk('Quizzes') },
+    { value: totals.categories, label: tk('Categories') },
+    { value: '5,000+', label: tk('Audio samples') },
+    { value: paths.length, label: tk('Learning paths') },
 ];
 
 export default function Categories() {
+    const t = useTrans();
     const [active, setActive] = useState(0);
     const path = paths[active];
     const accent = accents[path.level];
@@ -30,28 +32,27 @@ export default function Categories() {
                 <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
                     <div>
                         <Eyebrow>
-                            {totals.categories} Categories · {totals.quizzes} Quizzes
+                            {t(':categories Categories · :quizzes Quizzes', { categories: totals.categories, quizzes: totals.quizzes })}
                         </Eyebrow>
 
                         <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-neutral-900 sm:text-4xl">
-                            From a single note to
+                            {t('From a single note to')}
                             <br />
-                            <span className="font-display font-semibold tracking-normal text-brand">full progressions.</span>
+                            <span className="font-display font-semibold tracking-normal text-brand">{t('full progressions.')}</span>
                         </h2>
 
                         <p className="mt-4 max-w-[520px] text-base leading-relaxed text-neutral-700">
-                            Every quiz sits on a learning path, in the order KhordQuiz teaches it. Pick your level and
-                            you always know what to practise next.
+                            {t('Every quiz sits on a learning path, in the order KhordQuiz teaches it. Pick your level and you always know what to practise next.')}
                         </p>
                     </div>
 
                     <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[460px]">
                         {stats.map((stat) => (
                             <div key={stat.label} className="rounded-xl border border-white bg-white/70 px-4 py-3 shadow-sm">
-                                <dt className="sr-only">{stat.label}</dt>
+                                <dt className="sr-only">{t(stat.label)}</dt>
                                 <dd className="text-2xl font-bold tracking-tight text-neutral-900">{stat.value}</dd>
                                 <dd className="text-xs text-neutral-600" aria-hidden="true">
-                                    {stat.label}
+                                    {t(stat.label)}
                                 </dd>
                             </div>
                         ))}
@@ -61,7 +62,7 @@ export default function Categories() {
                 {/* Level tabs */}
                 <div
                     role="tablist"
-                    aria-label="Learning paths"
+                    aria-label={t('Learning paths')}
                     className="mt-12 grid grid-cols-3 gap-1 rounded-xl bg-white p-1 shadow-sm ring-1 ring-gray-200 sm:inline-grid"
                 >
                     {paths.map((item, index) => {
@@ -80,20 +81,20 @@ export default function Categories() {
                             >
                                 <span className="flex items-center gap-2 text-sm font-semibold sm:text-base">
                                     <span className={`h-2 w-2 rounded-full ${accents[item.level].dot}`} />
-                                    {item.level}
+                                    {t(item.level)}
                                 </span>
                                 <span className={`mt-0.5 block text-xs ${selected ? 'text-white/70' : 'text-neutral-500'}`}>
-                                    {pathQuizCount(item)} quizzes
+                                    {t(':count quizzes', { count: pathQuizCount(item) })}
                                 </span>
                             </button>
                         );
                     })}
                 </div>
 
-                <div id="path-panel" role="tabpanel" aria-label={`${path.level} path`} className="mt-6">
+                <div id="path-panel" role="tabpanel" aria-label={t(':level path', { level: t(path.level) })} className="mt-6">
                     <p className="text-base text-neutral-700">
-                        <span className="font-semibold text-neutral-900">{path.level} path · </span>
-                        {path.intro}
+                        <span className="font-semibold text-neutral-900">{t(':level path', { level: t(path.level) })} · </span>
+                        {t(path.intro)}
                     </p>
 
                     <ol className="mt-6 grid gap-4 md:grid-cols-2">
@@ -106,16 +107,16 @@ export default function Categories() {
                 {/* Closing nudge */}
                 <div className="mt-10 flex flex-col items-start gap-5 rounded-2xl bg-neutral-900 px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-8">
                     <div>
-                        <p className="text-lg font-semibold">Not sure where to start?</p>
+                        <p className="text-lg font-semibold">{t('Not sure where to start?')}</p>
                         <p className="mt-1 text-sm text-white/70">
-                            Choose your level when you sign up and KhordQuiz hands you a starting point from your path.
+                            {t('Choose your level when you sign up and KhordQuiz hands you a starting point from your path.')}
                         </p>
                     </div>
                     <a
                         href="#pricing"
                         className="shrink-0 rounded-md bg-brand px-5 py-3 text-base font-medium text-white transition hover:bg-brand-dark"
                     >
-                        Find your starting point
+                        {t('Find your starting point')}
                     </a>
                 </div>
             </div>
@@ -124,6 +125,7 @@ export default function Categories() {
 }
 
 function CategoryCard({ category, step, accent }) {
+    const t = useTrans();
     const count = quizCount(category);
 
     return (
@@ -137,22 +139,22 @@ function CategoryCard({ category, step, accent }) {
 
                 <div className="min-w-0 flex-1">
                     <div className="flex items-start justify-between gap-3">
-                        <h3 className="text-lg font-semibold leading-snug text-neutral-900">{category.name}</h3>
+                        <h3 className="text-lg font-semibold leading-snug text-neutral-900">{t(category.name)}</h3>
                         <span className="shrink-0 rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-neutral-700">
-                            {count} {count === 1 ? 'quiz' : 'quizzes'}
+                            {count === 1 ? t(':count quiz', { count }) : t(':count quizzes', { count })}
                         </span>
                     </div>
-                    <p className="mt-1 text-sm text-neutral-600">{category.description}</p>
+                    <p className="mt-1 text-sm text-neutral-600">{t(category.description)}</p>
                 </div>
             </div>
 
-            <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={`${category.name} quizzes`}>
+            <ul className="mt-4 flex flex-wrap gap-1.5" aria-label={t(':category quizzes', { category: t(category.name) })}>
                 {category.quizzes
-                    ? category.quizzes.map((quiz) => <QuizChip key={quiz}>{quiz}</QuizChip>)
+                    ? category.quizzes.map((quiz) => <QuizChip key={quiz}>{t(quiz)}</QuizChip>)
                     : Array.from({ length: category.levels }, (_, index) => (
-                          <QuizChip key={index}>Level {index + 1}</QuizChip>
+                          <QuizChip key={index}>{t('Level :number', { number: index + 1 })}</QuizChip>
                       ))}
-                {category.general && <QuizChip>General</QuizChip>}
+                {category.general && <QuizChip>{t('General')}</QuizChip>}
             </ul>
         </li>
     );

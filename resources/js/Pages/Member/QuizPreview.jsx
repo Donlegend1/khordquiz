@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
+import { useTrans } from '@/lib/i18n';
 
 const DIFFICULTY_TONE = {
     Beginner: 'bg-emerald-50 text-emerald-700',
@@ -36,6 +37,7 @@ function BulbIcon(props) {
 }
 
 export default function QuizPreview({ quiz, attempt }) {
+    const t = useTrans();
     const { post, processing } = useForm();
 
     function start() {
@@ -44,30 +46,30 @@ export default function QuizPreview({ quiz, attempt }) {
 
     const resuming = attempt?.status === 'in_progress';
     const tips = [
-        'Read each prompt carefully before choosing an answer.',
-        'There is one correct answer for every question.',
-        'Take your time — your progress is saved as you go.',
+        t('Read each prompt carefully before choosing an answer.'),
+        t('There is one correct answer for every question.'),
+        t('Take your time — your progress is saved as you go.'),
     ];
 
     return (
-        <AppShell eyebrow={quiz.category} title={quiz.title} intro={quiz.description}>
-            <Head title={quiz.title} />
+        <AppShell eyebrow={t(quiz.category)} title={t(quiz.title)} intro={t(quiz.description)}>
+            <Head title={t(quiz.title)} />
 
             <div className="mx-auto max-w-2xl">
                 <div className="grid grid-cols-2 gap-3">
                     <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-4">
                         <GaugeIcon className="h-5 w-5 text-neutral-400" />
                         <div>
-                            <p className="text-xs text-neutral-400">Difficulty</p>
+                            <p className="text-xs text-neutral-400">{t('Difficulty')}</p>
                             <span className={`mt-0.5 inline-block rounded-full px-2 py-0.5 text-xs font-semibold ${DIFFICULTY_TONE[quiz.difficulty] ?? 'bg-neutral-100 text-neutral-600'}`}>
-                                {quiz.difficulty}
+                                {t(quiz.difficulty)}
                             </span>
                         </div>
                     </div>
                     <div className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white p-4">
                         <HelpIcon className="h-5 w-5 text-neutral-400" />
                         <div>
-                            <p className="text-xs text-neutral-400">Questions</p>
+                            <p className="text-xs text-neutral-400">{t('Questions')}</p>
                             <p className="text-base font-bold text-neutral-900">{quiz.question_count}</p>
                         </div>
                     </div>
@@ -76,7 +78,7 @@ export default function QuizPreview({ quiz, attempt }) {
                 <div className="mt-4 rounded-2xl border border-black/5 bg-white p-4">
                     <div className="flex items-center gap-2 text-neutral-400">
                         <BulbIcon className="h-4 w-4" />
-                        <p className="text-xs font-semibold">Tips</p>
+                        <p className="text-xs font-semibold">{t('Tips')}</p>
                     </div>
                     <ul className="mt-2 space-y-1.5">
                         {tips.map((tip) => (
@@ -89,9 +91,9 @@ export default function QuizPreview({ quiz, attempt }) {
 
                 {attempt?.status === 'completed' && (
                     <div className="mt-4 flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3">
-                        <p className="text-sm font-semibold text-emerald-800">Last attempt: {attempt.score}% correct</p>
+                        <p className="text-sm font-semibold text-emerald-800">{t('Last attempt: :score% correct', { score: attempt.score })}</p>
                         <Link href={route('quiz.results', quiz.slug)} className="text-sm font-semibold text-emerald-700 hover:underline">
-                            View results
+                            {t('View results')}
                         </Link>
                     </div>
                 )}
@@ -99,7 +101,7 @@ export default function QuizPreview({ quiz, attempt }) {
                 {resuming && (
                     <div className="mt-4 rounded-2xl bg-rose-50 px-4 py-3">
                         <p className="text-sm font-semibold text-brand">
-                            In progress — question {attempt.stopped_at_question} of {quiz.question_count}
+                            {t('In progress — question :current of :total', { current: attempt.stopped_at_question, total: quiz.question_count })}
                         </p>
                     </div>
                 )}
@@ -110,7 +112,7 @@ export default function QuizPreview({ quiz, attempt }) {
                     onClick={start}
                     className="mt-6 w-full rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
                 >
-                    {resuming ? 'Continue Quiz' : attempt?.status === 'completed' ? 'Retry Quiz' : 'Start Quiz'}
+                    {resuming ? t('Continue Quiz') : attempt?.status === 'completed' ? t('Retry Quiz') : t('Start Quiz')}
                 </button>
             </div>
         </AppShell>

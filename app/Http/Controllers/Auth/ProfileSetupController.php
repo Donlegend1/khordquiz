@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Support\Locales;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class ProfileSetupController extends Controller
         return Inertia::render('Auth/ProfileSetup', [
             'avatars' => User::AVATARS,
             'skillLevels' => User::SKILL_LEVELS,
-            'languages' => QuizCatalog::LANGUAGES,
+            'languages' => Locales::labels(),
             'instruments' => QuizCatalog::allInstruments(),
             'user' => [
                 'avatar' => $user->avatar,
@@ -40,7 +41,7 @@ class ProfileSetupController extends Controller
         $data = $request->validate([
             'avatar' => ['required', 'string', 'in:' . implode(',', User::AVATARS)],
             'skill_level' => ['required', 'string', 'in:' . implode(',', User::SKILL_LEVELS)],
-            'language' => ['required', 'string', 'in:' . implode(',', QuizCatalog::LANGUAGES)],
+            'language' => ['required', 'string', 'in:' . implode(',', Locales::labels())],
             'default_instrument' => ['required', 'string', 'in:' . implode(',', QuizCatalog::allInstruments())],
         ]);
 

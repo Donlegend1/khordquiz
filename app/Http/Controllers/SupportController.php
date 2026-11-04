@@ -53,6 +53,6 @@ class SupportController extends Controller
             Log::error('Support message email failed', ['id' => $contactMessage->id, 'error' => $e->getMessage()]);
         }
 
-        return back()->with('success', 'Your message has been sent. We usually reply within 24 hours.');
+        return back()->with('success', __('Your message has been sent. We usually reply within 24 hours.'));
     }
 }

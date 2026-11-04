@@ -2,26 +2,36 @@ import { LEGAL_CONTACT_EMAIL } from '@/data/legal/helpers';
 import { PRIVACY_POLICY } from '@/data/legal/privacyPolicy';
 import { TERMS_OF_SERVICE } from '@/data/legal/termsOfService';
 import SiteLayout from '@/Layouts/SiteLayout';
+import { tk, useLocale, useTrans } from '@/lib/i18n';
 import { Head, Link } from '@inertiajs/react';
 import { Fragment } from 'react';
 
+// The document bodies stay in English (legally binding wording) — only the page chrome is translated.
 const documents = {
-    privacy: { document: PRIVACY_POLICY, href: '/privacy-policy' },
-    terms: { document: TERMS_OF_SERVICE, href: '/terms' },
+    privacy: { document: PRIVACY_POLICY, label: tk('Privacy Policy'), href: '/privacy-policy' },
+    terms: { document: TERMS_OF_SERVICE, label: tk('Terms of Service'), href: '/terms' },
+};
+
+// effectiveDate is written out in English (e.g. "October 2, 2026"); show it in the viewer's locale.
+const formatDate = (value, locale) => {
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale, { year: 'numeric', month: 'long', day: 'numeric' });
 };
 
 const sectionId = (index) => `section-${index + 1}`;
 
 export default function Legal({ page }) {
-    const { document } = documents[page];
+    const t = useTrans();
+    const locale = useLocale();
+    const { document, label } = documents[page];
 
     return (
         <SiteLayout>
-            <Head title={document.title} />
+            <Head title={t(label)} />
 
             <div className="bg-gradient-to-b from-[#F3F6FB] to-white">
                 <div className="mx-auto max-w-7xl px-6 pb-10 pt-14 lg:px-[100px] lg:pt-20">
-                    <nav aria-label="Legal documents" className="flex gap-2">
+                    <nav aria-label={t('Legal documents')} className="flex gap-2">
                         {Object.entries(documents).map(([key, item]) => (
                             <Link
                                 key={key}
@@ -32,20 +42,20 @@ export default function Legal({ page }) {
                                         : 'bg-white text-neutral-700 ring-1 ring-inset ring-gray-200 hover:bg-gray-50'
                                 }`}
                             >
-                                {item.document.title}
+                                {t(item.label)}
                             </Link>
                         ))}
                     </nav>
 
-                    <h1 className="mt-6 text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl">{document.title}</h1>
-                    <p className="mt-3 text-sm text-neutral-500">Effective {document.effectiveDate}</p>
+                    <h1 className="mt-6 text-4xl font-bold tracking-tight text-neutral-900 sm:text-5xl">{t(label)}</h1>
+                    <p className="mt-3 text-sm text-neutral-500">{t('Effective :date', { date: formatDate(document.effectiveDate, locale) })}</p>
                 </div>
             </div>
 
             <div className="mx-auto grid max-w-7xl gap-12 px-6 pb-20 lg:grid-cols-[260px_1fr] lg:px-[100px]">
                 <aside className="hidden lg:block">
-                    <nav aria-label="Contents" className="sticky top-[112px] max-h-[calc(100vh-140px)] overflow-y-auto pr-2">
-                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">Contents</p>
+                    <nav aria-label={t('Contents')} className="sticky top-[112px] max-h-[calc(100vh-140px)] overflow-y-auto pr-2">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-neutral-500">{t('Contents')}</p>
                         <ol className="mt-3 space-y-1.5 text-sm">
                             {document.sections.map((section, index) => (
                                 <li key={section.title}>

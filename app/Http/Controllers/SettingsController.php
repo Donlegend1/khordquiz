@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\QuizAttempt;
+use App\Models\UserPreference;
+use App\Support\Locales;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +21,24 @@ class SettingsController extends Controller
             'dailyGoal' => $user->daily_goal,
             'goalOptions' => ProgressController::GOAL_OPTIONS,
             'defaultInstrument' => $user->default_instrument,
+            'language' => $user->language ?? Locales::DEFAULT_LABEL,
         ]);
+    }
+
+    // Switches the whole UI to the chosen language — SetLocale reads
+    // users.language on every request. Mirrored to user_preferences so the
+    // mobile app's settings screen shows the same pick.
+    public function updateLanguage(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'language' => ['required', 'string', 'in:' . implode(',', Locales::labels())],
+        ]);
+
+        $user = $request->user();
+        $user->update(['language' => $data['language']]);
+        UserPreference::forUser($user)->update(['language' => $data['language']]);
+
+        return back();
     }
 
     // The specific instrument (e.g. "EP") a member wants pre-selected on every
@@ -45,6 +64,6 @@ class SettingsController extends Controller
         QuizAttempt::query()->where('user_id', $user->id)->delete();
         $user->update(['current_streak' => 0, 'last_practiced_on' => null]);
 
-        return back()->with('success', 'Your progress has been reset.');
+        return back()->with('success', __('Your progress has been reset.'));
     }
 }

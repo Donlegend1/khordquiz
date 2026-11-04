@@ -76,7 +76,7 @@ class ProgressController extends Controller
                 ->filter(fn (QuizAttempt $attempt) => $attempt->last_played_at?->isSameDay($day))
                 ->sum(fn (QuizAttempt $attempt) => $this->answeredCount($attempt));
 
-            return ['label' => $day->format('D'), 'count' => $count];
+            return ['label' => $day->translatedFormat('D'), 'count' => $count];
         });
 
         return Inertia::render('Member/Progress', [

@@ -1,4 +1,5 @@
 import AppShell from '@/Layouts/AppShell';
+import { useLocale, useTrans } from '@/lib/i18n';
 import { PLAN_INFO, sampleSubscription } from '@/lib/subscription';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
@@ -31,6 +32,7 @@ function LogOutIcon(props) {
 }
 
 function SignOutModal({ open, onClose, user }) {
+    const t = useTrans();
     if (!open) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4" onClick={onClose}>
@@ -39,14 +41,14 @@ function SignOutModal({ open, onClose, user }) {
                     <span className="flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-brand">
                         <LogOutIcon className="h-7 w-7" />
                     </span>
-                    <p className="mt-3 text-xl font-extrabold text-neutral-900">Sign out?</p>
-                    <p className="mt-1 text-sm text-neutral-500">You&apos;ll need to sign in again to keep training. You can come back any time.</p>
+                    <p className="mt-3 text-xl font-extrabold text-neutral-900">{t('Sign out?')}</p>
+                    <p className="mt-1 text-sm text-neutral-500">{t("You'll need to sign in again to keep training. You can come back any time.")}</p>
                 </div>
 
                 <div className="mt-5 flex items-center gap-3 rounded-2xl bg-neutral-50 p-3.5">
                     <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-sm font-bold text-brand">{initials(user.name)}</span>
                     <div className="min-w-0 flex-1">
-                        <p className="text-xs font-semibold text-neutral-500">Signed in as</p>
+                        <p className="text-xs font-semibold text-neutral-500">{t('Signed in as')}</p>
                         <p className="truncate text-sm font-bold text-neutral-900">{user.name}</p>
                         <p className="truncate text-xs text-neutral-500">{user.email}</p>
                     </div>
@@ -55,10 +57,10 @@ function SignOutModal({ open, onClose, user }) {
                 <div className="mt-5 space-y-2">
                     <Link href={route('logout')} method="post" as="button" className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90">
                         <LogOutIcon className="h-4 w-4" />
-                        Sign Out
+                        {t('Sign Out')}
                     </Link>
                     <button type="button" onClick={onClose} className="w-full rounded-xl bg-neutral-100 py-3.5 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-200">
-                        Cancel
+                        {t('Cancel')}
                     </button>
                 </div>
             </div>
@@ -120,15 +122,16 @@ function Row({ icon, label, value, first, href, download }) {
 }
 
 export default function Account() {
+    const t = useTrans();
     const { auth } = usePage().props;
     const user = auth.user;
-    const sub = sampleSubscription();
+    const sub = sampleSubscription(useLocale());
     const plan = PLAN_INFO[sub.planId];
     const [signingOut, setSigningOut] = useState(false);
 
     return (
-        <AppShell eyebrow="Member" title="Account" intro="An overview of your profile and subscription.">
-            <Head title="Account" />
+        <AppShell eyebrow={t('Member')} title={t('Account')} intro={t('An overview of your profile and subscription.')}>
+            <Head title={t('Account')} />
 
             <div className="mx-auto max-w-2xl space-y-6">
                 <div className="flex flex-col items-center gap-3 py-2 text-center">
@@ -145,7 +148,7 @@ export default function Account() {
                         }`}
                     >
                         {plan.tier === 'Premium' ? <DiamondIcon className="h-3 w-3" /> : <StarIcon className="h-3 w-3" />}
-                        {plan.tier}
+                        {t(plan.tier)}
                     </span>
                 </div>
 
@@ -161,44 +164,44 @@ export default function Account() {
                                 <StarIcon className="h-[18px] w-[18px] text-slate-300" />
                             )}
                             <p className="text-[17px] font-extrabold">
-                                {plan.tier} · {plan.label}
+                                {t(plan.tier)} · {t(plan.label)}
                             </p>
                         </div>
                         <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 px-2 py-1 text-xs font-bold text-emerald-300">
                             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                            Active
+                            {t('Active')}
                         </span>
                     </div>
-                    <p className="mt-3 text-2xl font-extrabold tabular-nums">{plan.price}</p>
-                    <p className="mt-1 text-sm text-white/60">Renews on {sub.renews}.</p>
+                    <p className="mt-3 text-2xl font-extrabold tabular-nums">{t(plan.price)}</p>
+                    <p className="mt-1 text-sm text-white/60">{t('Renews on :date.', { date: sub.renews })}</p>
                     {sub.provider === 'App Store' || sub.provider === 'Google Play' ? (
-                        <p className="mt-4 text-xs text-white/50">This subscription is managed through the {sub.provider}.</p>
+                        <p className="mt-4 text-xs text-white/50">{t('This subscription is managed through the :provider.', { provider: sub.provider })}</p>
                     ) : (
                         <Link
                             href={route('subscription')}
                             className="mt-4 block rounded-xl bg-white py-3 text-center text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
                         >
-                            Manage Subscription
+                            {t('Manage Subscription')}
                         </Link>
                     )}
                 </div>
 
                 <div>
                     <SectionLabel
-                        title="Personal information"
+                        title={t('Personal information')}
                         action={
                             <Link
                                 href={route('profile.edit')}
                                 className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2.5 py-1 text-xs font-bold text-brand transition-colors duration-150 hover:bg-brand/15"
                             >
-                                Edit
+                                {t('Edit')}
                             </Link>
                         }
                     />
                     <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">
                         <Row
                             first
-                            label="Name"
+                            label={t('Name')}
                             value={user.name}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -208,7 +211,7 @@ export default function Account() {
                             }
                         />
                         <Row
-                            label="Email"
+                            label={t('Email')}
                             value={user.email}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -218,8 +221,8 @@ export default function Account() {
                             }
                         />
                         <Row
-                            label="Country"
-                            value={user.country || 'Not set'}
+                            label={t('Country')}
+                            value={user.country || t('Not set')}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                     <circle cx="12" cy="12" r="8.5" />
@@ -228,8 +231,8 @@ export default function Account() {
                             }
                         />
                         <Row
-                            label="Skill level"
-                            value={user.skill_level || 'Not set'}
+                            label={t('Skill level')}
+                            value={user.skill_level ? t(user.skill_level) : t('Not set')}
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
                                     <path d="M9 18V9M15 18V5" strokeLinecap="round" />
@@ -240,12 +243,12 @@ export default function Account() {
                 </div>
 
                 <div>
-                    <SectionLabel title="Security" />
+                    <SectionLabel title={t('Security')} />
                     <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">
                         <Row
                             first
                             href={route('account.password')}
-                            label="Change password"
+                            label={t('Change password')}
                             value=""
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -257,7 +260,7 @@ export default function Account() {
                         <Row
                             href={route('profile.export')}
                             download
-                            label="Download my data"
+                            label={t('Download my data')}
                             value=""
                             icon={
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
@@ -270,14 +273,14 @@ export default function Account() {
                 </div>
 
                 <div>
-                    <SectionLabel title="Account" />
+                    <SectionLabel title={t('Account')} />
                     <div className="overflow-hidden rounded-2xl border border-black/5 bg-white">
                         <button type="button" onClick={() => setSigningOut(true)} className="block w-full text-left transition-colors duration-150 hover:bg-rose-50">
                             <div className="flex items-center gap-3 px-4 py-3.5">
                                 <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-50 text-brand">
                                     <LogOutIcon className="h-4 w-4" />
                                 </span>
-                                <span className="text-sm font-semibold text-brand">Sign out</span>
+                                <span className="text-sm font-semibold text-brand">{t('Sign out')}</span>
                             </div>
                         </button>
                         <Link href={route('account.delete')} className="block w-full text-left transition-colors duration-150 hover:bg-rose-50">
@@ -287,13 +290,13 @@ export default function Account() {
                                         <path d="M5 7h14M9 7V5.5A1.5 1.5 0 0110.5 4h3A1.5 1.5 0 0115 5.5V7m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
                                     </svg>
                                 </span>
-                                <span className="text-sm font-semibold text-brand">Delete account</span>
+                                <span className="text-sm font-semibold text-brand">{t('Delete account')}</span>
                             </div>
                         </Link>
                     </div>
                 </div>
 
-                <p className="pb-2 text-center text-xs text-neutral-400">KhordQuiz web</p>
+                <p className="pb-2 text-center text-xs text-neutral-400">{t('KhordQuiz web')}</p>
             </div>
 
             <SignOutModal open={signingOut} onClose={() => setSigningOut(false)} user={user} />

@@ -1,42 +1,48 @@
+import { tk } from '@/lib/i18n';
+
 // Shared between Settings.jsx (where a member can change these later) and
 // Auth/ProfileSetup.jsx (the one-time onboarding step right after signup) —
 // single source so the two pickers never drift apart. Keep in sync by hand
 // with the mobile app's own copies (app/settings.tsx's LANGUAGES, and
 // src/lib/quiz-progress.ts's INSTRUMENT_GROUPS, trimmed there to the
 // instruments that app actually has).
-export const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
+//
+// Values are what's stored/sent to the server, so they stay English; every
+// display string is a tk() key — pickers render them with t(value). LANGUAGES
+// are native names and are never translated.
+export const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Nederlands', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 
 // Same families as the quiz-preview sound picker (resources/js/Pages/Member/QuizCategory.jsx's
 // SOUND_CATEGORIES) — kept as a separate constant since each picker's shell is its
 // own component, but the groupings themselves should stay identical.
 export const INSTRUMENT_GROUPS = [
-    { name: 'Piano', icon: '🎹', options: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', icon: '🎸', options: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
-    { name: 'Strings', icon: '🎻', options: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
-    { name: 'Brass', icon: '🎺', options: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', icon: '🎤', options: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
-    { name: 'Percussion', icon: '🥁', options: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
-    { name: 'Woodwinds', icon: '🪈', options: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
+    { name: tk('Piano'), icon: '🎹', options: [tk('Piano'), tk('EP'), tk('Upright Piano'), tk('Organ')] },
+    { name: tk('Guitar'), icon: '🎸', options: [tk('Guitar'), tk('Electric Guitar'), tk('Harpejji'), tk('Bass Guitar')] },
+    { name: tk('Strings'), icon: '🎻', options: [tk('Violin'), tk('Strings'), tk('Cello'), tk('Upright Bass')] },
+    { name: tk('Brass'), icon: '🎺', options: [tk('Saxophone'), tk('Trombone'), tk('Tuba'), tk('Trumpet')] },
+    { name: tk('Vocals'), icon: '🎤', options: [tk('Voice'), tk('Audience Choir'), tk('Ensemble Choir'), tk('Sustained Choir'), tk('Bulgarian Choir')] },
+    { name: tk('Percussion'), icon: '🥁', options: [tk('Marimba'), tk('Steel Drum'), tk('Celesta'), tk('Vibraphone')] },
+    { name: tk('Woodwinds'), icon: '🪈', options: [tk('Flute'), tk('Clarinet'), tk('Oboe'), tk('Bassoon')] },
 ];
 
 // Display-only — the underlying value stays "Piano"/"EP" everywhere else; this just
 // makes the two piano options clearly distinct from each other in any picker.
-export const INSTRUMENT_LABELS = { Piano: 'Grand Piano', EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
+export const INSTRUMENT_LABELS = { Piano: tk('Grand Piano'), EP: tk('Rhodes'), Guitar: tk('Acoustic Guitar'), Saxophone: tk('Tenor Saxophone') };
 
-export const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+export const SKILL_LEVELS = [tk('Beginner'), tk('Intermediate'), tk('Advanced')];
 
 // Same 10 options (ids, colors, emoji standing in for the mobile app's
 // MaterialCommunityIcons glyphs) as the mobile app's AVATAR_OPTIONS
 // (src/components/avatar.tsx) — kept in sync by hand.
 export const AVATAR_OPTIONS = [
-    { id: 'piano', label: 'Piano', emoji: '🎹', bg: '#FDEDEE', fg: '#C81E1E' },
-    { id: 'electric-guitar', label: 'Electric guitar', emoji: '🎸', bg: '#E8F0FE', fg: '#1A56DB' },
-    { id: 'note', label: 'Music note', emoji: '🎵', bg: '#F3EDFF', fg: '#6D4AFF' },
-    { id: 'headphones', label: 'Headphones', emoji: '🎧', bg: '#E6F6F8', fg: '#0E7490' },
-    { id: 'metronome', label: 'Metronome', emoji: '⏱️', bg: '#FFF4E5', fg: '#B45309' },
-    { id: 'saxophone', label: 'Saxophone', emoji: '🎷', bg: '#FEF7D9', fg: '#A16207' },
-    { id: 'trumpet', label: 'Trumpet', emoji: '🎺', bg: '#FDEEF6', fg: '#BE185D' },
-    { id: 'violin', label: 'Violin', emoji: '🎻', bg: '#F5EDE6', fg: '#9A4F1E' },
-    { id: 'acoustic-guitar', label: 'Acoustic guitar', emoji: '🎸', bg: '#EAF7EE', fg: '#1E8E3E' },
-    { id: 'microphone', label: 'Microphone', emoji: '🎤', bg: '#EEF0F3', fg: '#334155' },
+    { id: 'piano', label: tk('Piano'), emoji: '🎹', bg: '#FDEDEE', fg: '#C81E1E' },
+    { id: 'electric-guitar', label: tk('Electric guitar'), emoji: '🎸', bg: '#E8F0FE', fg: '#1A56DB' },
+    { id: 'note', label: tk('Music note'), emoji: '🎵', bg: '#F3EDFF', fg: '#6D4AFF' },
+    { id: 'headphones', label: tk('Headphones'), emoji: '🎧', bg: '#E6F6F8', fg: '#0E7490' },
+    { id: 'metronome', label: tk('Metronome'), emoji: '⏱️', bg: '#FFF4E5', fg: '#B45309' },
+    { id: 'saxophone', label: tk('Saxophone'), emoji: '🎷', bg: '#FEF7D9', fg: '#A16207' },
+    { id: 'trumpet', label: tk('Trumpet'), emoji: '🎺', bg: '#FDEEF6', fg: '#BE185D' },
+    { id: 'violin', label: tk('Violin'), emoji: '🎻', bg: '#F5EDE6', fg: '#9A4F1E' },
+    { id: 'acoustic-guitar', label: tk('Acoustic guitar'), emoji: '🎸', bg: '#EAF7EE', fg: '#1E8E3E' },
+    { id: 'microphone', label: tk('Microphone'), emoji: '🎤', bg: '#EEF0F3', fg: '#334155' },
 ];

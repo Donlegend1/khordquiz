@@ -1,16 +1,18 @@
 import BrandLogo from '@/Components/Site/BrandLogo';
+import { tk, useTrans } from '@/lib/i18n';
 import { useEffect, useState } from 'react';
 
 const navLinks = [
-    { label: 'Features', href: '/#features' },
-    { label: 'How it works', href: '/#how-it-works' },
-    { label: 'Categories', href: '/#categories' },
-    { label: 'Pricing', href: '/#pricing' },
-    { label: 'FAQs', href: '/#faqs' },
-    { label: 'Contact', href: '/#contact' },
+    { label: tk('Features'), href: '/#features' },
+    { label: tk('How it works'), href: '/#how-it-works' },
+    { label: tk('Categories'), href: '/#categories' },
+    { label: tk('Pricing'), href: '/#pricing' },
+    { label: tk('FAQs'), href: '/#faqs' },
+    { label: tk('Contact'), href: '/#contact' },
 ];
 
 export default function SiteHeader() {
+    const t = useTrans();
     const [menuOpen, setMenuOpen] = useState(false);
     const close = () => setMenuOpen(false);
 
@@ -35,7 +37,7 @@ export default function SiteHeader() {
     return (
         <header className="sticky top-0 z-50 border-b border-gray-100 bg-white">
             <div className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-6 lg:px-[100px]">
-                <a href="/" aria-label="KhordQuiz home">
+                <a href="/" aria-label={t('KhordQuiz home')}>
                     <BrandLogo />
                 </a>
 
@@ -46,7 +48,7 @@ export default function SiteHeader() {
                             href={link.href}
                             className="text-base text-gray-900 transition hover:text-brand"
                         >
-                            {link.label}
+                            {t(link.label)}
                         </a>
                     ))}
                 </nav>
@@ -56,13 +58,13 @@ export default function SiteHeader() {
                         href="/login"
                         className="rounded-lg border border-gray-900 bg-gray-900 px-4 py-2.5 text-base font-medium text-white transition hover:bg-black"
                     >
-                        Sign in
+                        {t('Sign in')}
                     </a>
                     <a
                         href="/#pricing"
                         className="rounded-lg border border-brand bg-brand px-4 py-2.5 text-base font-medium text-white transition hover:bg-brand-dark"
                     >
-                        Start Free
+                        {t('Start Free')}
                     </a>
                 </div>
 
@@ -71,7 +73,7 @@ export default function SiteHeader() {
                     type="button"
                     onClick={() => setMenuOpen((open) => !open)}
                     className="relative z-50 -mr-2.5 inline-flex h-11 w-11 items-center justify-center rounded-md text-gray-900 md:hidden"
-                    aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+                    aria-label={menuOpen ? t('Close menu') : t('Open menu')}
                     aria-expanded={menuOpen}
                     aria-controls="mobile-menu"
                 >
@@ -116,7 +118,7 @@ export default function SiteHeader() {
                                 menuOpen ? 'translate-x-0 opacity-100' : 'translate-x-4 opacity-0'
                             }`}
                         >
-                            {link.label}
+                            {t(link.label)}
                             <svg
                                 className="h-5 w-5 shrink-0 text-gray-300 transition group-hover:translate-x-1 group-hover:text-brand"
                                 viewBox="0 0 20 20"
@@ -143,7 +145,7 @@ export default function SiteHeader() {
                         tabIndex={menuOpen ? 0 : -1}
                         className="rounded-xl border border-gray-900 bg-gray-900 px-4 py-3.5 text-center text-base font-medium text-white transition hover:bg-black"
                     >
-                        Sign in
+                        {t('Sign in')}
                     </a>
                     <a
                         href="/#pricing"
@@ -151,7 +153,7 @@ export default function SiteHeader() {
                         tabIndex={menuOpen ? 0 : -1}
                         className="rounded-xl bg-brand px-4 py-3.5 text-center text-base font-medium text-white transition hover:bg-brand-dark"
                     >
-                        Start Free
+                        {t('Start Free')}
                     </a>
                 </div>
             </div>

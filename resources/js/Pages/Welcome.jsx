@@ -9,12 +9,15 @@ import HowItWorks from '@/Components/Site/HowItWorks';
 import Pricing from '@/Components/Site/Pricing';
 import StoreBadges from '@/Components/Site/StoreBadges';
 import SiteLayout from '@/Layouts/SiteLayout';
+import { useTrans } from '@/lib/i18n';
 import { Head } from '@inertiajs/react';
 
 export default function Welcome() {
+    const t = useTrans();
+
     return (
         <SiteLayout>
-            <Head title="Welcome" />
+            <Head title={t('Welcome')} />
             <Hero />
             <Features />
             <HowItWorks />

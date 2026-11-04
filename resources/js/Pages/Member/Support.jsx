@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link } from '@inertiajs/react';
+import { tk, useTrans } from '@/lib/i18n';
 
 function LifeBuoyIcon(props) {
     return (
@@ -29,14 +30,15 @@ function ChevronIcon(props) {
 }
 
 const OPTIONS = [
-    { icon: LifeBuoyIcon, title: 'Help Center', body: 'Browse frequently asked questions', route: 'help-center' },
-    { icon: MailIcon, title: 'Email Support', body: 'Message our team · replies within 24 hours', route: 'support-email' },
+    { icon: LifeBuoyIcon, title: tk('Help Center'), body: tk('Browse frequently asked questions'), route: 'help-center' },
+    { icon: MailIcon, title: tk('Email Support'), body: tk('Message our team · replies within 24 hours'), route: 'support-email' },
 ];
 
 export default function Support() {
+    const t = useTrans();
     return (
-        <AppShell eyebrow="Member" title="Help & Support" intro="Find answers or get in touch with our team.">
-            <Head title="Help & Support" />
+        <AppShell eyebrow={t('Member')} title={t('Help & Support')} intro={t('Find answers or get in touch with our team.')}>
+            <Head title={t('Help & Support')} />
 
             <div className="mx-auto max-w-2xl space-y-3">
                 {OPTIONS.map((option) => (
@@ -49,8 +51,8 @@ export default function Support() {
                             <option.icon className="h-5 w-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                            <p className="text-[15px] font-bold text-neutral-900">{option.title}</p>
-                            <p className="text-sm text-neutral-500">{option.body}</p>
+                            <p className="text-[15px] font-bold text-neutral-900">{t(option.title)}</p>
+                            <p className="text-sm text-neutral-500">{t(option.body)}</p>
                         </div>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
                     </Link>

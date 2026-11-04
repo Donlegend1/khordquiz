@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 function CheckIcon(props) {
     return (
@@ -46,6 +47,7 @@ function PauseIcon(props) {
 // Collapsible per-question breakdown for the quiz just finished — real answers recorded
 // server-side per question (QuizController::answer), not a fabricated summary.
 function AnswerReview({ records }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const [playing, setPlaying] = useState(null);
 
@@ -73,7 +75,7 @@ function AnswerReview({ records }) {
                 onClick={() => setOpen((current) => !current)}
                 className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors duration-150 hover:bg-neutral-50"
             >
-                <span className="text-sm font-extrabold text-neutral-900">Review your answers</span>
+                <span className="text-sm font-extrabold text-neutral-900">{t('Review your answers')}</span>
                 <ChevronIcon className={`h-4 w-4 text-neutral-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
             </button>
             {open && (
@@ -91,8 +93,8 @@ function AnswerReview({ records }) {
                                 </span>
                                 <span className="w-5 shrink-0 text-xs font-bold tabular-nums text-neutral-300">{record.position}</span>
                                 <span className="min-w-0 flex-1">
-                                    <p className={`truncate text-sm font-bold ${record.correct ? 'text-neutral-900' : 'text-brand'}`}>{record.picked || '—'}</p>
-                                    {!record.correct && <p className="truncate text-xs text-emerald-700">Correct: {record.answer}</p>}
+                                    <p className={`truncate text-sm font-bold ${record.correct ? 'text-neutral-900' : 'text-brand'}`}>{record.picked ? t(record.picked) : '—'}</p>
+                                    {!record.correct && <p className="truncate text-xs text-emerald-700">{t('Correct: :answer', { answer: t(record.answer) })}</p>}
                                 </span>
                                 {canPlayCorrect && (() => {
                                     const isPlaying = playing?.position === record.position;
@@ -101,7 +103,7 @@ function AnswerReview({ records }) {
                                             {isPlaying && <span className="absolute inset-0 animate-ping rounded-full bg-brand/30" />}
                                             <button
                                                 type="button"
-                                                aria-label={isPlaying ? 'Pause' : `Play the correct note, ${record.answer}`}
+                                                aria-label={isPlaying ? t('Pause') : t('Play the correct note, :answer', { answer: t(record.answer) })}
                                                 onClick={() => toggleNote(record.position, record.audio_url)}
                                                 className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150 ${
                                                     isPlaying ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
@@ -142,9 +144,10 @@ function SendIcon(props) {
 
 // Same bands and wording as the mobile app's quiz-results screen (app/quiz-results.tsx).
 const scoreColor = (value) => (value <= 30 ? '#E00000' : value <= 65 ? '#D9A400' : '#1E8E3E');
-const headline = (value) => (value >= 90 ? 'Outstanding!' : value >= 65 ? 'Nice work!' : value >= 30 ? 'Good effort' : 'Keep practising');
+const headline = (value) => (value >= 90 ? tk('Outstanding!') : value >= 65 ? tk('Nice work!') : value >= 30 ? tk('Good effort') : tk('Keep practising'));
 
 function ScoreRing({ correct, total, percent }) {
+    const t = useTrans();
     const size = 148;
     const stroke = 12;
     const radius = (size - stroke) / 2;
@@ -169,7 +172,7 @@ function ScoreRing({ correct, total, percent }) {
             </svg>
             <div className="absolute flex flex-col items-center">
                 <span className="text-4xl font-extrabold tracking-tight text-neutral-900">{percent}%</span>
-                <span className="text-sm font-semibold tabular-nums text-neutral-500">{correct} of {total}</span>
+                <span className="text-sm font-semibold tabular-nums text-neutral-500">{t(':done of :total', { done: correct, total })}</span>
             </div>
         </div>
     );
@@ -185,25 +188,26 @@ function Stat({ color, label, value }) {
 }
 
 export default function QuizResults({ quiz, result, review }) {
+    const t = useTrans();
     const { post, processing } = useForm();
 
     return (
-        <AppShell eyebrow={quiz.category} title={quiz.title} intro="Quiz results">
-            <Head title={`${quiz.title} — Results`} />
+        <AppShell eyebrow={t(quiz.category)} title={t(quiz.title)} intro={t('Quiz results')}>
+            <Head title={t(':title — Results', { title: t(quiz.title) })} />
 
             <div className="mx-auto max-w-xl">
                 <div className="flex flex-col items-center rounded-2xl border border-black/5 bg-white px-6 py-8 text-center">
                     <ScoreRing correct={result.correct} total={result.total} percent={result.percent} />
-                    <p className="mt-3.5 text-xl font-extrabold text-neutral-900">{headline(result.percent)}</p>
+                    <p className="mt-3.5 text-xl font-extrabold text-neutral-900">{t(headline(result.percent))}</p>
                     <p className="mt-1 text-sm text-neutral-500">
-                        {quiz.title} · {quiz.category}
+                        {t(quiz.title)} · {t(quiz.category)}
                     </p>
                 </div>
 
                 <div className="mt-4 flex gap-2.5">
-                    <Stat color="#1E8E3E" label="Correct" value={result.correct} />
-                    <Stat color="#E00000" label="Wrong" value={result.total - result.correct} />
-                    <Stat color="#171717" label="Questions" value={result.total} />
+                    <Stat color="#1E8E3E" label={t('Correct')} value={result.correct} />
+                    <Stat color="#E00000" label={t('Wrong')} value={result.total - result.correct} />
+                    <Stat color="#171717" label={t('Questions')} value={result.total} />
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-black/5 bg-white p-4">
@@ -212,20 +216,20 @@ export default function QuizResults({ quiz, result, review }) {
                             <PeopleIcon className="h-5 w-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                            <p className="text-sm font-extrabold text-neutral-900">Challenge a friend</p>
+                            <p className="text-sm font-extrabold text-neutral-900">{t('Challenge a friend')}</p>
                             <p className="text-xs text-neutral-500">
-                                Same questions, same order. Can they beat your {result.correct}/{result.total}?
+                                {t('Same questions, same order. Can they beat your :correct/:total?', { correct: result.correct, total: result.total })}
                             </p>
                         </div>
                     </div>
                     <button
                         type="button"
                         disabled
-                        title="Coming soon"
+                        title={t('Coming soon')}
                         className="mt-3.5 flex w-full cursor-default items-center justify-center gap-2 rounded-xl bg-brand/60 py-3 text-sm font-bold text-white"
                     >
                         <SendIcon className="h-3.5 w-3.5" />
-                        Send Challenge
+                        {t('Send Challenge')}
                     </button>
                 </div>
 
@@ -238,13 +242,13 @@ export default function QuizResults({ quiz, result, review }) {
                         onClick={() => post(route('quiz.start', quiz.slug))}
                         className="flex flex-1 items-center justify-center rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
                     >
-                        Try Again
+                        {t('Try Again')}
                     </button>
                     <Link
                         href={route('quiz.category', quiz.categorySlug)}
                         className="flex flex-1 items-center justify-center rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                     >
-                        Done
+                        {t('Done')}
                     </Link>
                 </div>
             </div>

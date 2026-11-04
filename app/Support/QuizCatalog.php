@@ -11,10 +11,9 @@ namespace App\Support;
  */
 class QuizCatalog
 {
-    // Same list as resources/js/Pages/Member/Settings.jsx's LANGUAGES — kept in
-    // sync by hand (that copy is what the picker UI renders; this one is what
-    // ProfileSetupController validates incoming language values against).
-    public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
+    // The language picker's options. Kept in sync by hand with
+    // resources/js/lib/profile-options.js's LANGUAGES.
+    public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Nederlands', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 
     /**
      * @return array<string, list<string>>

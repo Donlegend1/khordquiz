@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link } from '@inertiajs/react';
+import { useTrans } from '@/lib/i18n';
 
 function NoteIcon(props) {
     return (
@@ -88,13 +89,15 @@ function ChevronIcon(props) {
 }
 
 export default function Quiz({ categories }) {
+    const t = useTrans();
+
     return (
-        <AppShell eyebrow="Member" title="Start Quiz" intro="Choose a category to begin practising.">
-            <Head title="Start Quiz" />
+        <AppShell eyebrow={t('Member')} title={t('Start Quiz')} intro={t('Choose a category to begin practising.')}>
+            <Head title={t('Start Quiz')} />
 
             {categories.length === 0 ? (
                 <div className="flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white px-5 py-16 text-center">
-                    <p className="text-sm text-neutral-500">No quizzes are published yet. Check back soon.</p>
+                    <p className="text-sm text-neutral-500">{t('No quizzes are published yet. Check back soon.')}</p>
                 </div>
             ) : (
                 <>
@@ -112,7 +115,7 @@ export default function Quiz({ categories }) {
                                         <CategoryIcon className="h-5 w-5" />
                                     </span>
                                     <div className="min-w-0 flex-1">
-                                        <p className="truncate text-base font-bold text-neutral-900">{category.name}</p>
+                                        <p className="truncate text-base font-bold text-neutral-900">{t(category.name)}</p>
                                         {category.percent > 0 ? (
                                             <div className="mt-1.5 flex items-center gap-2">
                                                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-200/70">
@@ -121,7 +124,7 @@ export default function Quiz({ categories }) {
                                                 <span className="shrink-0 text-sm text-neutral-500">{category.percent}%</span>
                                             </div>
                                         ) : (
-                                            <p className="mt-0.5 text-sm text-neutral-400">Not attempted yet</p>
+                                            <p className="mt-0.5 text-sm text-neutral-400">{t('Not attempted yet')}</p>
                                         )}
                                     </div>
                                     <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
@@ -147,9 +150,9 @@ export default function Quiz({ categories }) {
                                     </div>
 
                                     <div className="min-w-0 flex-1">
-                                        <p className="truncate text-[15px] font-bold text-neutral-900">{category.name}</p>
+                                        <p className="truncate text-[15px] font-bold text-neutral-900">{t(category.name)}</p>
                                         <p className="mt-0.5 text-sm text-neutral-400">
-                                            {category.quizCount} {category.quizCount === 1 ? 'quiz' : 'quizzes'}
+                                            {category.quizCount === 1 ? t(':count quiz', { count: category.quizCount }) : t(':count quizzes', { count: category.quizCount })}
                                         </p>
                                     </div>
 
@@ -158,7 +161,7 @@ export default function Quiz({ categories }) {
                                             {category.percent > 0 && <div className="h-full rounded-full bg-brand" style={{ width: `${category.percent}%` }} />}
                                         </div>
                                         <div className="mt-1.5 flex items-center justify-between text-xs text-neutral-400">
-                                            <span>{category.done > 0 ? `${category.done}/${category.quizCount} done` : 'Not attempted yet'}</span>
+                                            <span>{category.done > 0 ? t(':done/:total done', { done: category.done, total: category.quizCount }) : t('Not attempted yet')}</span>
                                             <span>{category.percent}%</span>
                                         </div>
                                     </div>

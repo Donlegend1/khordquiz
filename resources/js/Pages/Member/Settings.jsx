@@ -2,6 +2,7 @@ import AppShell from '@/Layouts/AppShell';
 import { INSTRUMENT_GROUPS, INSTRUMENT_LABELS, LANGUAGES } from '@/lib/profile-options';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 // Most rows here mirror the mobile app's own Settings screen (see app/settings.tsx
 // there), where appearance, language, instrument, sound, haptics and notification
@@ -9,9 +10,10 @@ import { useEffect, useRef, useState } from 'react';
 // them in local React state here, reset on reload, is faithful to the app, not a
 // shortcut. Daily goal is the one row backed by a real column (users.daily_goal),
 // so it reuses the same endpoint as the Progress page's goal picker.
-const APPEARANCES = ['System', 'Light', 'Dark'];
-const NOTATIONS = ['Solfège', 'Numbers'];
-const NOTIFICATION_DELIVERIES = ['Push', 'Email', 'Off'];
+// Values stay English (they're compared/stored); only the display goes through t().
+const APPEARANCES = [tk('System'), tk('Light'), tk('Dark')];
+const NOTATIONS = [tk('Solfège'), tk('Numbers')];
+const NOTIFICATION_DELIVERIES = [tk('Push'), tk('Email'), tk('Off')];
 
 // Reminder time deliberately diverges from the app's fixed 5-slot picker —
 // the member asked for any time, not just the app's preset list. Built as a
@@ -237,6 +239,7 @@ function TimeColumn({ label, options, value, onChange }) {
 }
 
 function TimeRow({ icon: Icon, label, value, onChange, disabled }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const parsed = parseTime12(value);
@@ -263,9 +266,9 @@ function TimeRow({ icon: Icon, label, value, onChange, disabled }) {
 
             {open && (
                 <div className="absolute right-4 top-full z-20 mt-1.5 flex w-60 divide-x divide-black/5 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-xl">
-                    <TimeColumn label="Hour" options={TIME_HOURS} value={parsed.hour} onChange={(v) => update('hour', v)} />
-                    <TimeColumn label="Min" options={TIME_MINUTES} value={parsed.minute} onChange={(v) => update('minute', v)} />
-                    <TimeColumn label="AM/PM" options={TIME_PERIODS} value={parsed.period} onChange={(v) => update('period', v)} />
+                    <TimeColumn label={t('Hour')} options={TIME_HOURS} value={parsed.hour} onChange={(v) => update('hour', v)} />
+                    <TimeColumn label={t('Min')} options={TIME_MINUTES} value={parsed.minute} onChange={(v) => update('minute', v)} />
+                    <TimeColumn label={t('AM/PM')} options={TIME_PERIODS} value={parsed.period} onChange={(v) => update('period', v)} />
                 </div>
             )}
         </div>
@@ -276,6 +279,7 @@ function TimeRow({ icon: Icon, label, value, onChange, disabled }) {
 // labeled section per group instead of one flat list — `options` stays the plain
 // flat dropdown every other PickerRow (Appearance, Language, Notation) still uses.
 function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onChange, disabled, formatOption = (option) => option }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     // Two-step drill-down: the dropdown always opens on just the 6 category names
     // (no instruments shown yet) — tapping one drills into that category's
@@ -342,7 +346,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                     {groups.find((group) => group.name === activeGroup)?.icon && (
                                         <span className="text-sm leading-none">{groups.find((group) => group.name === activeGroup).icon}</span>
                                     )}
-                                    {activeGroup}
+                                    {t(activeGroup)}
                                 </button>
                                 {groups.find((group) => group.name === activeGroup).options.map((option) => (
                                     <OptionButton key={option} option={option} />
@@ -358,7 +362,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                 >
                                     <span className="flex min-w-0 items-center gap-2">
                                         {group.icon && <span className="shrink-0 text-base leading-none">{group.icon}</span>}
-                                        <span className="truncate">{group.name}</span>
+                                        <span className="truncate">{t(group.name)}</span>
                                     </span>
                                     <span className="flex shrink-0 items-center gap-1.5">
                                         {group.options.includes(value) && (
@@ -379,6 +383,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
 }
 
 function DailyGoalRow({ current, options }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const { data, setData, patch, processing } = useForm({ daily_goal: current });
@@ -399,8 +404,8 @@ function DailyGoalRow({ current, options }) {
 
     return (
         <div className="relative" ref={ref}>
-            <RowShell first icon={FlagIcon} label="Daily goal" onClick={() => setOpen((v) => !v)}>
-                <span className="shrink-0 text-sm text-neutral-500">{data.daily_goal} questions</span>
+            <RowShell first icon={FlagIcon} label={t('Daily goal')} onClick={() => setOpen((v) => !v)}>
+                <span className="shrink-0 text-sm text-neutral-500">{t(':count questions', { count: data.daily_goal })}</span>
                 <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
             </RowShell>
 
@@ -416,7 +421,7 @@ function DailyGoalRow({ current, options }) {
                                 value === data.daily_goal ? 'font-semibold text-brand' : 'text-neutral-700'
                             }`}
                         >
-                            {value} questions
+                            {t(':count questions', { count: value })}
                             {value === data.daily_goal && <span>✓</span>}
                         </button>
                     ))}
@@ -427,6 +432,7 @@ function DailyGoalRow({ current, options }) {
 }
 
 function ResetProgressSheet({ open, onClose }) {
+    const t = useTrans();
     const { delete: destroy, processing } = useForm();
 
     if (!open) return null;
@@ -442,22 +448,22 @@ function ResetProgressSheet({ open, onClose }) {
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-brand">
                         <RefreshIcon className="h-5 w-5" />
                     </span>
-                    <p className="mt-3 text-base font-bold text-neutral-900">Reset progress?</p>
-                    <p className="mt-1 text-sm text-neutral-500">This can&apos;t be undone.</p>
+                    <p className="mt-3 text-base font-bold text-neutral-900">{t('Reset progress?')}</p>
+                    <p className="mt-1 text-sm text-neutral-500">{t("This can't be undone.")}</p>
                 </div>
 
                 <ul className="mt-5 space-y-2.5 text-sm">
                     <li className="flex items-start gap-2 text-brand">
                         <span>✕</span>
-                        <span className="text-neutral-700">Completed quizzes, scores and streaks</span>
+                        <span className="text-neutral-700">{t('Completed quizzes, scores and streaks')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-brand">
                         <span>✕</span>
-                        <span className="text-neutral-700">Your list of mistakes to review</span>
+                        <span className="text-neutral-700">{t('Your list of mistakes to review')}</span>
                     </li>
                     <li className="flex items-start gap-2 text-emerald-600">
                         <span>✓</span>
-                        <span className="text-neutral-700">Your settings, account and plan stay the same</span>
+                        <span className="text-neutral-700">{t('Your settings, account and plan stay the same')}</span>
                     </li>
                 </ul>
 
@@ -468,10 +474,10 @@ function ResetProgressSheet({ open, onClose }) {
                         onClick={confirm}
                         className="w-full rounded-xl bg-brand py-3 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
                     >
-                        Reset Progress
+                        {t('Reset Progress')}
                     </button>
                     <button type="button" onClick={onClose} className="w-full rounded-xl py-3 text-sm font-semibold text-neutral-600 hover:bg-neutral-50">
-                        Cancel
+                        {t('Cancel')}
                     </button>
                 </div>
             </div>
@@ -479,9 +485,17 @@ function ResetProgressSheet({ open, onClose }) {
     );
 }
 
-export default function Settings({ dailyGoal, goalOptions, defaultInstrument }) {
+export default function Settings({ dailyGoal, goalOptions, defaultInstrument, language: savedLanguage }) {
+    const t = useTrans();
     const [appearance, setAppearance] = useState('System');
-    const [language, setLanguage] = useState('English');
+    const [language, setLanguage] = useState(savedLanguage ?? 'English');
+
+    // Saved to users.language — the server re-renders this page with the new
+    // locale's translations, so the whole UI switches immediately.
+    function chooseLanguage(option) {
+        setLanguage(option);
+        router.patch(route('settings.language'), { language: option }, { preserveScroll: true });
+    }
     const [instrument, setInstrument] = useState(defaultInstrument ?? 'Piano');
 
     // Persisted immediately on pick, same as the Daily goal row — this is what
@@ -501,55 +515,55 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument }) 
     const [resetOpen, setResetOpen] = useState(false);
 
     return (
-        <AppShell eyebrow="Member" title="Settings" intro="Preferences for how KhordQuiz looks and sounds.">
-            <Head title="Settings" />
+        <AppShell eyebrow={t('Member')} title={t('Settings')} intro={t('Preferences for how KhordQuiz looks and sounds.')}>
+            <Head title={t('Settings')} />
 
             <div className="mx-auto max-w-2xl">
-                <Section title="General">
-                    <PickerRow first icon={ContrastIcon} label="Appearance" hint="System follows your phone's setting" options={APPEARANCES} value={appearance} onChange={setAppearance} />
-                    <PickerRow icon={LanguageIcon} label="Language" options={LANGUAGES} value={language} onChange={setLanguage} />
+                <Section title={t('General')}>
+                    <PickerRow first icon={ContrastIcon} label={t('Appearance')} hint={t("System follows your phone's setting")} options={APPEARANCES} value={appearance} onChange={setAppearance} formatOption={(option) => t(option)} />
+                    <PickerRow icon={LanguageIcon} label={t('Language')} options={LANGUAGES} value={language} onChange={chooseLanguage} />
                 </Section>
 
-                <Section title="Practice">
+                <Section title={t('Practice')}>
                     <DailyGoalRow current={dailyGoal} options={goalOptions} />
                     <PickerRow
                         icon={NoteIcon}
-                        label="Default instrument"
-                        hint="Used for new quizzes"
+                        label={t('Default instrument')}
+                        hint={t('Used for new quizzes')}
                         groups={INSTRUMENT_GROUPS}
                         value={instrument}
                         onChange={chooseInstrument}
-                        formatOption={(option) => INSTRUMENT_LABELS[option] ?? option}
+                        formatOption={(option) => t(INSTRUMENT_LABELS[option] ?? option)}
                     />
-                    <PickerRow icon={NotationIcon} label="Notation" hint="For quizzes with solfège answers" options={NOTATIONS} value={notation} onChange={setNotation} />
-                    <RowShell icon={VolumeIcon} label="Sound effects">
+                    <PickerRow icon={NotationIcon} label={t('Notation')} hint={t('For quizzes with solfège answers')} options={NOTATIONS} value={notation} onChange={setNotation} formatOption={(option) => t(option)} />
+                    <RowShell icon={VolumeIcon} label={t('Sound effects')}>
                         <Toggle value={soundEffects} onChange={setSoundEffects} />
                     </RowShell>
-                    <RowShell icon={PhoneIcon} label="Haptic feedback">
+                    <RowShell icon={PhoneIcon} label={t('Haptic feedback')}>
                         <Toggle value={haptics} onChange={setHaptics} />
                     </RowShell>
                 </Section>
 
-                <Section title="Notifications">
-                    <RowShell first icon={BellIcon} label="Practice reminders" hint="A daily nudge to keep practising">
+                <Section title={t('Notifications')}>
+                    <RowShell first icon={BellIcon} label={t('Practice reminders')} hint={t('A daily nudge to keep practising')}>
                         <Toggle value={reminders} onChange={setReminders} />
                     </RowShell>
-                    <TimeRow icon={ClockIcon} label="Reminder time" value={reminderTime} onChange={setReminderTime} disabled={!reminders} />
-                    <RowShell icon={FlameIcon} label="Streak alerts" hint="Before your streak runs out">
+                    <TimeRow icon={ClockIcon} label={t('Reminder time')} value={reminderTime} onChange={setReminderTime} disabled={!reminders} />
+                    <RowShell icon={FlameIcon} label={t('Streak alerts')} hint={t('Before your streak runs out')}>
                         <Toggle value={streakAlerts} onChange={setStreakAlerts} />
                     </RowShell>
-                    <PickerRow icon={BellCircleIcon} label="Notify me by" hint="Perfect scores, challenges and updates" options={NOTIFICATION_DELIVERIES} value={notifyBy} onChange={setNotifyBy} />
+                    <PickerRow icon={BellCircleIcon} label={t('Notify me by')} hint={t('Perfect scores, challenges and updates')} options={NOTIFICATION_DELIVERIES} value={notifyBy} onChange={setNotifyBy} formatOption={(option) => t(option)} />
                 </Section>
 
-                <Section title="Data">
-                    <RowShell first destructive icon={RefreshIcon} label="Reset progress" onClick={() => setResetOpen(true)} />
+                <Section title={t('Data')}>
+                    <RowShell first destructive icon={RefreshIcon} label={t('Reset progress')} onClick={() => setResetOpen(true)} />
                 </Section>
 
-                <Section title="About">
-                    <RowShell first href={route('support')} icon={LifeBuoyIcon} label="Help & Support">
+                <Section title={t('About')}>
+                    <RowShell first href={route('support')} icon={LifeBuoyIcon} label={t('Help & Support')}>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
                     </RowShell>
-                    <RowShell icon={InfoIcon} label="Version">
+                    <RowShell icon={InfoIcon} label={t('Version')}>
                         <span className="text-sm text-neutral-500">1.0.0</span>
                     </RowShell>
                 </Section>
