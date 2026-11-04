@@ -1,6 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
-import { useLocale, useTrans } from '@/lib/i18n';
-import { PLAN_INFO, sampleSubscription } from '@/lib/subscription';
+import { useTrans } from '@/lib/i18n';
+import { PLAN_INFO, planStatus } from '@/lib/subscription';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -121,12 +121,13 @@ function Row({ icon, label, value, first, href, download }) {
     );
 }
 
-export default function Account() {
+export default function Account({ subscription: sub }) {
     const t = useTrans();
     const { auth } = usePage().props;
     const user = auth.user;
-    const sub = sampleSubscription(useLocale());
-    const plan = PLAN_INFO[sub.planId];
+    const hasPlan = sub.access !== 'none' && PLAN_INFO[sub.planId];
+    const plan = hasPlan ? PLAN_INFO[sub.planId] : null;
+    const status = planStatus(sub);
     const [signingOut, setSigningOut] = useState(false);
 
     return (
@@ -142,19 +143,30 @@ export default function Account() {
                         <p className="text-xl font-extrabold text-neutral-900">{user.name}</p>
                         <p className="text-sm text-neutral-500">{user.email}</p>
                     </div>
-                    <span
-                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
-                            plan.tier === 'Premium' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'
-                        }`}
-                    >
-                        {plan.tier === 'Premium' ? <DiamondIcon className="h-3 w-3" /> : <StarIcon className="h-3 w-3" />}
-                        {t(plan.tier)}
-                    </span>
+                    {plan && (
+                        <span
+                            className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ${
+                                plan.tier === 'Premium' ? 'bg-amber-50 text-amber-700' : 'bg-slate-100 text-slate-600'
+                            }`}
+                        >
+                            {plan.tier === 'Premium' ? <DiamondIcon className="h-3 w-3" /> : <StarIcon className="h-3 w-3" />}
+                            {t(plan.tier)}
+                        </span>
+                    )}
                 </div>
 
-                {/* There's no real billing system on the web (no Stripe/Paystack, no
-                    subscriptions table) — this is sample preview data, same idea as the
-                    mobile app's own preview subscription, not a real plan. */}
+                {!plan ? (
+                    <div className="rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
+                        <p className="text-[17px] font-extrabold">{sub.expired ? t('Your plan has ended') : t('No plan yet')}</p>
+                        <p className="mt-1 text-sm text-white/60">{t('Subscribe to unlock every quiz category and level.')}</p>
+                        <Link
+                            href={route('subscription')}
+                            className="mt-4 block rounded-xl bg-white py-3 text-center text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
+                        >
+                            {t('See plans')}
+                        </Link>
+                    </div>
+                ) : (
                 <div className="rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
@@ -167,13 +179,13 @@ export default function Account() {
                                 {t(plan.tier)} · {t(plan.label)}
                             </p>
                         </div>
-                        <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 px-2 py-1 text-xs font-bold text-emerald-300">
-                            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-                            {t('Active')}
+                        <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${status.badge}`}>
+                            <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                            {t(status.label)}
                         </span>
                     </div>
                     <p className="mt-3 text-2xl font-extrabold tabular-nums">{t(plan.price)}</p>
-                    <p className="mt-1 text-sm text-white/60">{t('Renews on :date.', { date: sub.renews })}</p>
+                    <p className="mt-1 text-sm text-white/60">{status.line(t, plan)}</p>
                     {sub.provider === 'App Store' || sub.provider === 'Google Play' ? (
                         <p className="mt-4 text-xs text-white/50">{t('This subscription is managed through the :provider.', { provider: sub.provider })}</p>
                     ) : (
@@ -185,6 +197,7 @@ export default function Account() {
                         </Link>
                     )}
                 </div>
+                )}
 
                 <div>
                     <SectionLabel

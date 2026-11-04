@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Services\KingsleyKhordPiano\MemberSync;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -45,6 +46,12 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+            // First visit by a Kingsleykhordpiano member: create their account
+            // and email them a link to choose a password.
+            if (app(MemberSync::class)->provisionByEmail($this->string('email')->toString())) {
+                throw ValidationException::withMessages(['email' => __('Your Kingsleykhordpiano membership includes KhordQuiz! We\'ve emailed you a link to set your password.')]);
+            }
+
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
@@ -59,6 +66,9 @@ class LoginRequest extends FormRequest
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        // Live check so a new or lapsed Kingsleykhordpiano membership applies now.
+        app(MemberSync::class)->refresh(Auth::user());
     }
 
     /**

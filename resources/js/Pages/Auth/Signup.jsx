@@ -76,11 +76,11 @@ function DiamondIcon(props) {
 
 const PLAN_ORDER = ['monthly', 'yearly', 'lifetime'];
 
-// Intent only — there's no Stripe/PayPal integration or subscriptions table
-// yet, so picking one here just records which method the member prefers.
+// Stripe takes the payment (Checkout opens right after the account is created).
+// PayPal is shown but not available yet.
 const PAYMENT_METHODS = [
     { id: 'stripe', label: 'Stripe', icon: StripeIcon },
-    { id: 'paypal', label: 'PayPal', icon: PayPalIcon },
+    { id: 'paypal', label: 'PayPal', icon: PayPalIcon, comingSoon: true },
 ];
 
 // Renders a translated sentence whose `:name` placeholders are JSX elements (links),
@@ -103,7 +103,7 @@ export default function Signup({ plan: initialPlan }) {
         password: '',
         terms: false,
         plan: initialPlan ?? 'yearly',
-        payment_method: null,
+        payment_method: 'stripe',
     });
 
     const plan = PLAN_INFO[data.plan];
@@ -299,13 +299,15 @@ export default function Signup({ plan: initialPlan }) {
                                         <button
                                             key={method.id}
                                             type="button"
+                                            disabled={method.comingSoon}
                                             onClick={() => setData('payment_method', method.id)}
-                                            className={`relative flex items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors duration-150 ${
+                                            className={`relative flex items-center gap-3 rounded-xl border px-3.5 py-3 text-left transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50 ${
                                                 selected ? 'border-brand/50 bg-rose-50' : 'border-gray-300 bg-white hover:bg-neutral-50'
                                             }`}
                                         >
                                             <Icon className="h-9 w-9 shrink-0 rounded-md" />
                                             <span className="text-sm font-semibold text-neutral-900">{method.label}</span>
+                                            {method.comingSoon && <span className="ml-auto text-xs font-semibold text-neutral-400">{t('Coming soon')}</span>}
                                             {selected && <CheckCircleIcon className="absolute right-2.5 top-2.5 h-5 w-5" />}
                                         </button>
                                     );

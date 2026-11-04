@@ -7,16 +7,19 @@ namespace App\Models;
 // member — including existing test accounts — out of the app with no way to
 // receive the verification link. Revisit once real mail delivery is set up.
 use App\Role;
+use App\Services\Billing\StripeGateway;
+use Illuminate\Support\Facades\Log;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-#[Fillable(['name', 'first_name', 'last_name', 'email', 'password', 'role', 'suspended_at', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'default_instrument', 'country', 'skill_level', 'avatar', 'language', 'terms_accepted_at', 'plan_choice', 'payment_method', 'plan_started_at', 'plan_expires_at'])]
+#[Fillable(['name', 'first_name', 'last_name', 'email', 'password', 'role', 'suspended_at', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'default_instrument', 'country', 'skill_level', 'avatar', 'language', 'terms_accepted_at', 'plan_choice', 'payment_method', 'plan_started_at', 'plan_expires_at', 'kkp_member_id', 'kkp_synced_at', 'kkp_invited_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -43,6 +46,8 @@ class User extends Authenticatable
             'suspended_at' => 'datetime',
             'plan_started_at' => 'datetime',
             'plan_expires_at' => 'datetime',
+            'kkp_synced_at' => 'datetime',
+            'kkp_invited_at' => 'datetime',
             'password' => 'hashed',
             'role' => Role::class,
             'current_streak' => 'integer',
@@ -68,6 +73,54 @@ class User extends Authenticatable
     public function hasPlanExpired(): bool
     {
         return $this->plan_choice !== null && $this->plan_expires_at !== null && $this->plan_expires_at->isPast();
+    }
+
+    // Whether this member can play quizzes on the web: a live subscription (Stripe,
+    // App Store / Google Play via the mobile app, or a Kingsleykhordpiano
+    // membership), or a plan an admin assigned by hand. Admins always can.
+    public function hasQuizAccess(): bool
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+
+        if ($this->hasGrantedPlan()) {
+            return true;
+        }
+
+        return Subscription::forUser($this)->unlocksQuizzes();
+    }
+
+    // A plan assigned by an admin (Admin → Users → plan). Signup also writes
+    // plan_choice, but only as the plan the member *picked* — admin grants are
+    // the ones with plan_started_at set.
+    public function hasGrantedPlan(): bool
+    {
+        return $this->plan_choice !== null && $this->plan_started_at !== null && ! $this->hasPlanExpired();
+    }
+
+    public function subscription(): HasOne
+    {
+        return $this->hasOne(Subscription::class);
+    }
+
+    protected static function booted(): void
+    {
+        // A deleted account must stop being billed on the web (Stripe). App
+        // Store / Google Play plans can only be cancelled in the store — the
+        // delete screens warn about those.
+        static::deleting(function (User $user) {
+            $subscription = Subscription::query()->where('user_id', $user->id)->first();
+            $stripe = app(StripeGateway::class);
+
+            if ($subscription?->provider === Subscription::PROVIDER_STRIPE && $subscription->stripe_subscription_id && $stripe->isConfigured()) {
+                try {
+                    $stripe->cancelSubscriptionNow($subscription->stripe_subscription_id);
+                } catch (\Throwable $e) {
+                    Log::error('Could not cancel Stripe billing for a deleted account.', ['user' => $user->id, 'error' => $e->getMessage()]);
+                }
+            }
+        });
     }
 
     public function attempts(): HasMany

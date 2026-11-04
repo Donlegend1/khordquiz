@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use App\Services\KingsleyKhordPiano\MemberSync;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
@@ -27,7 +28,7 @@ class PasswordResetLinkController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, MemberSync $memberSync): RedirectResponse
     {
         $request->validate([
             'email' => 'required|email',
@@ -36,6 +37,10 @@ class PasswordResetLinkController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
+        // A Kingsleykhordpiano member without an account yet gets one, so the
+        // reset link below doubles as their "set your password" email.
+        $memberSync->provisionByEmail($request->string('email')->toString(), invite: false);
+
         $status = Password::sendResetLink(
             $request->only('email')
         );

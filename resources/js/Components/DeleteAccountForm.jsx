@@ -7,7 +7,6 @@ import { tk, useTrans } from '@/lib/i18n';
 const CONFIRM_WORD = 'DELETE';
 const REMOVED = [tk('Your profile and account details'), tk('Quiz progress, streaks and stats'), tk('Saved quizzes and challenges')];
 
-const PAYMENT_PROVIDER_LABELS = { paypal: 'PayPal', stripe: 'Stripe' };
 
 function TrashIcon(props) {
     return (
@@ -64,15 +63,18 @@ export default function DeleteAccountForm({ sub, user }) {
     // member must type), so it's rendered between the translated halves.
     const [confirmBefore, confirmAfter = ''] = t('Type :word to confirm').split(':word');
 
-    const plan = PLAN_INFO[sub.planId];
-    const provider = PAYMENT_PROVIDER_LABELS[user.payment_method] ?? t('your payment provider');
+    // Stripe (web) billing is cancelled automatically when the account is
+    // deleted; App Store / Google Play subscriptions can only be cancelled in
+    // the store, so warn about those.
+    const plan = PLAN_INFO[sub?.planId];
+    const storeManaged = sub?.provider === 'App Store' || sub?.provider === 'Google Play';
     const warning =
-        sub.planId !== 'lifetime' && sub.status === 'active'
+        plan && storeManaged && sub.access !== 'none' && sub.planId !== 'lifetime' && sub.status === 'active'
             ? t('Your :tier · :plan plan renews on :date. Deleting your account won’t cancel it — cancel it in :provider first.', {
                   tier: t(plan.tier),
                   plan: t(plan.label),
                   date: sub.renews,
-                  provider,
+                  provider: sub.provider,
               })
             : null;
 

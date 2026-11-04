@@ -3,6 +3,8 @@
 use App\Http\Controllers\Admin\AudioQuizController;
 use App\Http\Controllers\Admin\QuizController as AdminQuizController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\BillingController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
@@ -10,7 +12,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SubscriptionPageController;
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -61,10 +65,13 @@ Route::patch('/settings/default-instrument', [SettingsController::class, 'update
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz', [QuizController::class, 'categories'])->name('quiz.categories');
     Route::get('/quiz/play/{quiz:slug}', [QuizController::class, 'preview'])->name('quiz.preview');
-    Route::post('/quiz/play/{quiz:slug}/start', [QuizController::class, 'start'])->name('quiz.start');
-    Route::get('/quiz/play/{quiz:slug}/question', [QuizController::class, 'play'])->name('quiz.play');
-    Route::post('/quiz/play/{quiz:slug}/answer', [QuizController::class, 'answer'])->name('quiz.answer');
-    Route::post('/quiz/play/{quiz:slug}/next', [QuizController::class, 'next'])->name('quiz.next');
+    // Playing needs a plan; browsing and previews don't.
+    Route::middleware('quiz-access')->group(function () {
+        Route::post('/quiz/play/{quiz:slug}/start', [QuizController::class, 'start'])->name('quiz.start');
+        Route::get('/quiz/play/{quiz:slug}/question', [QuizController::class, 'play'])->name('quiz.play');
+        Route::post('/quiz/play/{quiz:slug}/answer', [QuizController::class, 'answer'])->name('quiz.answer');
+        Route::post('/quiz/play/{quiz:slug}/next', [QuizController::class, 'next'])->name('quiz.next');
+    });
     Route::post('/quiz/play/{quiz:slug}/cancel', [QuizController::class, 'cancel'])->name('quiz.cancel');
     Route::get('/quiz/play/{quiz:slug}/results', [QuizController::class, 'results'])->name('quiz.results');
     Route::post('/quiz/play/{quiz:slug}/bookmark', [QuizController::class, 'toggleBookmark'])->name('quiz.bookmark');
@@ -80,8 +87,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/saved', [QuizController::class, 'saved'])->name('saved');
     Route::get('/challenges', fn () => Inertia::render('Member/Challenges'))->name('challenges');
     Route::get('/leaderboard', fn () => Inertia::render('Member/Leaderboard'))->name('leaderboard');
-    Route::get('/account', fn () => Inertia::render('Member/Account'))->name('account');
-    Route::get('/subscription', fn () => Inertia::render('Member/Subscription'))->name('subscription');
+    Route::get('/account', [SubscriptionPageController::class, 'account'])->name('account');
+    Route::get('/subscription', [SubscriptionPageController::class, 'show'])->name('subscription');
     Route::get('/suggestions', fn () => Inertia::render('Member/Suggestions'))->name('suggestions');
     Route::get('/notifications', fn () => Inertia::render('Member/Notifications'))->name('notifications');
     Route::get('/support', fn () => Inertia::render('Member/Support'))->name('support');
@@ -129,7 +136,22 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/account/password', fn () => Inertia::render('Member/ChangePassword'))->name('account.password');
-    Route::get('/account/delete', fn () => Inertia::render('Member/DeleteAccount'))->name('account.delete');
+    Route::get('/account/delete', [SubscriptionPageController::class, 'deleteAccount'])->name('account.delete');
 });
 
 require __DIR__.'/auth.php';
+
+// Web billing (Stripe).
+Route::middleware(['auth', 'verified'])->prefix('billing')->name('billing.')->group(function () {
+    Route::post('/checkout/{plan}', [BillingController::class, 'checkout'])->name('checkout');
+    Route::get('/success', [BillingController::class, 'success'])->name('success');
+    Route::post('/portal', [BillingController::class, 'portal'])->name('portal');
+    Route::post('/cancel', [BillingController::class, 'cancel'])->name('cancel');
+    Route::post('/resume', [BillingController::class, 'resume'])->name('resume');
+    Route::post('/switch', [BillingController::class, 'switch'])->name('switch');
+});
+
+// Stripe calls this directly — signature-checked instead of CSRF-protected.
+Route::post('/stripe/webhook', StripeWebhookController::class)
+    ->withoutMiddleware([ValidateCsrfToken::class])
+    ->name('stripe.webhook');

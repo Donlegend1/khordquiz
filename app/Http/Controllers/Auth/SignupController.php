@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Role;
+use App\Services\Billing\StripeGateway;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,17 +17,19 @@ use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 // Reached from the pricing section's plan buttons rather than a bare "/register"
-// link — same account creation as RegisteredUserController, plus capturing
-// which plan and payment method the member picked. There's no Stripe/PayPal
-// integration or subscriptions table yet, so this records intent only; no
-// charge is made and no subscription row exists after this submits.
+// link — same account creation as RegisteredUserController, then straight on to
+// Stripe Checkout for the picked plan (7-day free trial for Monthly/Yearly).
+// plan_choice records what they picked; access comes from the Subscription row
+// the checkout creates. PayPal isn't wired up yet.
+// Without Stripe configured (local dev), it skips payment and goes to onboarding.
 class SignupController extends Controller
 {
     private const PLANS = ['monthly', 'yearly', 'lifetime'];
 
-    private const PAYMENT_METHODS = ['stripe', 'paypal'];
+    private const PAYMENT_METHODS = ['stripe'];
 
     /**
      * Display the signup view, pre-selecting the plan from the pricing page.
@@ -44,7 +48,7 @@ class SignupController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, StripeGateway $stripe, BillingController $billing): SymfonyResponse
     {
         $data = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -71,6 +75,10 @@ class SignupController extends Controller
         event(new Registered($user));
 
         Auth::login($user);
+
+        if ($stripe->isConfigured()) {
+            return $billing->startCheckout($user, $data['plan']);
+        }
 
         // Same next step for a trial start and a lifetime purchase — both land
         // on the profile-setup screen (ProfileSetupController), matching the

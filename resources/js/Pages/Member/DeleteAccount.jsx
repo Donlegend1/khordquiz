@@ -1,14 +1,12 @@
 import DeleteAccountForm from '@/Components/DeleteAccountForm';
 import AppShell from '@/Layouts/AppShell';
-import { useLocale, useTrans } from '@/lib/i18n';
-import { sampleSubscription } from '@/lib/subscription';
+import { useTrans } from '@/lib/i18n';
 import { Head, usePage } from '@inertiajs/react';
 
-export default function DeleteAccount() {
+export default function DeleteAccount({ subscription: sub }) {
     const t = useTrans();
     const { auth } = usePage().props;
     const user = auth.user;
-    const sub = sampleSubscription(useLocale());
 
     return (
         <AppShell eyebrow={t('Account')} title={t('Delete Account')} intro={t('Permanently remove your account and its data.')}>

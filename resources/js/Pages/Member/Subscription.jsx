@@ -1,7 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
-import { INCLUDED, PLAN_INFO, PLAN_ORDER, sampleSubscription } from '@/lib/subscription';
-import { tk, useLocale, useTrans } from '@/lib/i18n';
-import { Head } from '@inertiajs/react';
+import { INCLUDED, PLAN_INFO, PLAN_ORDER, paymentPlanLabel, planStatus } from '@/lib/subscription';
+import { tk, useTrans } from '@/lib/i18n';
+import { Head, router, usePage } from '@inertiajs/react';
 import { Fragment, useState } from 'react';
 
 const UPGRADE_PERKS = [
@@ -134,7 +134,8 @@ function PlanCard({ label, planId, highlight }) {
 
 // Matches the app's own plan-switch flow: moving between Monthly and Yearly is
 // scheduled for the next renewal (nothing charged today), not applied
-// immediately — this mirrors src/components/plan-switch-sheet.tsx exactly.
+// immediately — BillingController::switch changes the Stripe price with no
+// proration, so the new price applies from the next invoice.
 function SwitchModal({ planId, currentId, renews, onClose, onConfirm }) {
     const t = useTrans();
     if (!planId) return null;
@@ -286,9 +287,8 @@ const CANCEL_REASONS = [
 
 // Two steps: first capture why the member is leaving (premade reasons, so we
 // can see patterns across cancellations), then the existing confirm step.
-// There's no feedback table on the web yet, so the reason stays local to this
-// session rather than being persisted — same honesty-about-scope approach as
-// the rest of this sample/preview page.
+// The reason is sent to Stripe as the subscription's cancellation feedback
+// (visible in the Stripe dashboard).
 function CancelModal({ open, renews, tier, onClose, onConfirm }) {
     const t = useTrans();
     const [step, setStep] = useState('reason');
@@ -303,7 +303,7 @@ function CancelModal({ open, renews, tier, onClose, onConfirm }) {
     };
 
     const confirm = () => {
-        onConfirm();
+        onConfirm(reason, otherText);
         setStep('reason');
         setReason(null);
         setOtherText('');
@@ -392,39 +392,116 @@ function CancelModal({ open, renews, tier, onClose, onConfirm }) {
     );
 }
 
-export default function Subscription() {
+// Plan picker for members with no plan (or whose plan ended): each option
+// opens Stripe Checkout. Monthly/Yearly start with the free trial if the
+// member hasn't had one yet.
+function ChoosePlan({ sub, locked, billingAvailable }) {
     const t = useTrans();
-    const sub = sampleSubscription(useLocale());
-    const [planId, setPlanId] = useState(sub.planId);
-    const [nextPlan, setNextPlan] = useState(null);
-    const [cancelling, setCancelling] = useState(false);
+    const [pending, setPending] = useState(null);
+
+    const choose = (id) => {
+        setPending(id);
+        router.post(route('billing.checkout', id), {}, { onFinish: () => setPending(null) });
+    };
+
+    return (
+        <>
+            {locked && (
+                <div className="mb-5 flex items-start gap-2.5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3">
+                    <LockIcon className="mt-0.5 h-4 w-4 shrink-0 text-amber-700" />
+                    <p className="text-sm text-amber-900">{t('Choose a plan to start playing quizzes.')}</p>
+                </div>
+            )}
+
+            <div className="mb-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
+                <p className="text-[17px] font-extrabold">{sub.expired ? t('Your plan has ended') : t('Unlock every quiz')}</p>
+                <p className="mt-1 text-sm text-white/60">
+                    {sub.trialAvailable
+                        ? t('Start with a :days-day free trial. Cancel any time before it ends and you won’t be charged.', { days: 7 })
+                        : t('Pick a plan to keep training your ear.')}
+                </p>
+            </div>
+
+            {!billingAvailable && (
+                <p className="mb-4 rounded-xl bg-neutral-100 px-4 py-3 text-sm text-neutral-600">{t('Payments aren\'t available right now. Please try again later.')}</p>
+            )}
+
+            <Section title={t('Plans')}>
+                {PLAN_ORDER.map((id, index) => {
+                    const info = PLAN_INFO[id];
+                    const trial = id !== 'lifetime' && sub.trialAvailable;
+                    return (
+                        <div key={id} className={`flex items-center gap-3 px-4 py-4 ${index ? 'border-t border-black/5' : ''}`}>
+                            <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                    <p className="text-sm font-bold text-neutral-900">
+                                        {t(info.tier)} · {t(info.label)}
+                                    </p>
+                                    {(id === 'lifetime' || info.discount) && (
+                                        <span className="rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-extrabold text-brand">
+                                            {id === 'lifetime' ? t('BEST VALUE') : t(info.discount)}
+                                        </span>
+                                    )}
+                                </div>
+                                <p className="text-xs text-neutral-400">
+                                    {info.originalPrice && <span className="line-through">{t(info.originalPrice)} </span>}
+                                    <span className="font-semibold text-neutral-700">{t(info.price)}</span> · {t(info.subtitle)}
+                                </p>
+                            </div>
+                            <button
+                                type="button"
+                                disabled={!billingAvailable || pending !== null}
+                                onClick={() => choose(id)}
+                                className={`shrink-0 rounded-full px-3.5 py-2 text-xs font-bold transition-opacity duration-150 hover:opacity-90 disabled:opacity-50 ${
+                                    id === 'yearly' ? 'bg-brand text-white' : 'bg-neutral-900 text-white'
+                                }`}
+                            >
+                                {pending === id ? t('Opening…') : trial ? t('Start free trial') : id === 'lifetime' ? t('Buy once') : t('Subscribe')}
+                            </button>
+                        </div>
+                    );
+                })}
+            </Section>
+        </>
+    );
+}
+
+export default function Subscription({ subscription: sub, locked, billingAvailable }) {
+    const t = useTrans();
+    const { errors } = usePage().props;
     const [switchingTo, setSwitchingTo] = useState(null);
     const [upgradeOpen, setUpgradeOpen] = useState(false);
     const [cancelOpen, setCancelOpen] = useState(false);
+    const [busy, setBusy] = useState(false);
 
-    const plan = PLAN_INFO[planId];
-    const isLifetime = planId === 'lifetime';
-    // Billed and controlled entirely by the store the member bought through —
-    // the website only mirrors status here, read-only. No in-app-style
-    // plan-switching, upgrading, or cancelling to offer; that only happens on
-    // the device, through the App Store or Google Play itself.
+    const plan = sub.access !== 'none' ? PLAN_INFO[sub.planId] : null;
+    const status = planStatus(sub);
+    const isLifetime = sub.planId === 'lifetime';
+    // Billed by the store the member bought through (mobile app), by their
+    // Kingsleykhordpiano membership, or granted by an admin: the website only
+    // mirrors status here, read-only.
     const storeManaged = sub.provider === 'App Store' || sub.provider === 'Google Play';
+    const kkp = sub.provider === 'KingsleyKhordPiano';
+    const manageable = sub.manageable;
+
+    const post = (name, data = {}) => {
+        setBusy(true);
+        router.post(route(name), data, { preserveScroll: true, onFinish: () => setBusy(false) });
+    };
 
     const confirmSwitch = () => {
-        setNextPlan(switchingTo === planId ? null : switchingTo);
-        setCancelling(false);
+        post('billing.switch', { plan: switchingTo });
         setSwitchingTo(null);
     };
 
     const confirmUpgrade = () => {
-        setPlanId('lifetime');
-        setNextPlan(null);
-        setCancelling(false);
         setUpgradeOpen(false);
+        setBusy(true);
+        router.post(route('billing.checkout', 'lifetime'), {}, { onFinish: () => setBusy(false) });
     };
 
-    const confirmCancel = () => {
-        setCancelling(true);
+    const confirmCancel = (reason, comment) => {
+        post('billing.cancel', { reason, comment: reason === 'Other' ? comment : null });
         setCancelOpen(false);
     };
 
@@ -433,117 +510,142 @@ export default function Subscription() {
             <Head title={t('Subscription')} />
 
             <div className="mx-auto max-w-2xl">
-                <div className="mb-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                            {plan.tier === 'Premium' ? (
-                                <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
-                            ) : (
-                                <StarIcon className="h-[18px] w-[18px] text-slate-300" />
-                            )}
-                            <p className="text-[17px] font-extrabold">
-                                {t(plan.tier)} · {t(plan.label)}
-                            </p>
-                        </div>
-                        <span
-                            className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${
-                                cancelling ? 'bg-amber-400/20 text-amber-300' : 'bg-emerald-400/20 text-emerald-300'
-                            }`}
-                        >
-                            <span className={`h-1.5 w-1.5 rounded-full ${cancelling ? 'bg-amber-400' : 'bg-emerald-400'}`} />
-                            {cancelling ? t('Cancelling') : t('Active')}
-                        </span>
-                    </div>
-                    <p className="mt-3 text-[26px] font-extrabold tabular-nums">{t(plan.price)}</p>
-                    <p className="mt-1 text-sm text-white/60">
-                        {isLifetime
-                            ? t('One-time payment. Premium never expires.')
-                            : cancelling
-                              ? t(":tier ends on :date. You won't be charged again.", { tier: t(plan.tier), date: sub.renews })
-                              : nextPlan
-                                ? t('Switches to :plan (:price) on :date.', { plan: t(PLAN_INFO[nextPlan].label), price: t(PLAN_INFO[nextPlan].price), date: sub.renews })
-                                : t('Renews on :date.', { date: sub.renews })}
-                    </p>
-                    {storeManaged ? (
-                        <p className="mt-4 text-xs text-white/50">{t('This subscription is managed through the :provider.', { provider: sub.provider })}</p>
-                    ) : (
-                        cancelling && (
-                            <button
-                                type="button"
-                                onClick={() => setCancelling(false)}
-                                className="mt-4 w-full rounded-xl bg-white py-3 text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90"
-                            >
-                                {t('Resume Subscription')}
-                            </button>
-                        )
-                    )}
-                </div>
+                {errors?.billing && <p className="mb-4 rounded-xl bg-rose-50 px-4 py-3 text-sm font-medium text-brand">{errors.billing}</p>}
 
-                {!isLifetime && !storeManaged && (
-                    <Section title={t('Change plan')}>
-                        {PLAN_ORDER.map((id, index) => {
-                            const info = PLAN_INFO[id];
-                            const current = id === planId;
-                            const scheduled = id === nextPlan;
-                            return (
-                                <div key={id} className={`flex items-center gap-3 px-4 py-3.5 ${index ? 'border-t border-black/5' : ''}`}>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex items-center gap-2">
-                                            <p className="text-sm font-bold text-neutral-900">{t(info.label)}</p>
-                                            {(id === 'lifetime' || info.discount) && (
-                                                <span className="rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-extrabold text-brand">
-                                                    {id === 'lifetime' ? t('BEST VALUE') : t(info.discount)}
-                                                </span>
+                {!plan ? (
+                    <ChoosePlan sub={sub} locked={locked} billingAvailable={billingAvailable} />
+                ) : (
+                    <>
+                        <div className="mb-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2">
+                                    {plan.tier === 'Premium' ? (
+                                        <DiamondIcon className="h-[18px] w-[18px] text-amber-300" />
+                                    ) : (
+                                        <StarIcon className="h-[18px] w-[18px] text-slate-300" />
+                                    )}
+                                    <p className="text-[17px] font-extrabold">
+                                        {t(plan.tier)} · {t(plan.label)}
+                                    </p>
+                                </div>
+                                <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-bold ${status.badge}`}>
+                                    <span className={`h-1.5 w-1.5 rounded-full ${status.dot}`} />
+                                    {t(status.label)}
+                                </span>
+                            </div>
+                            {!kkp && <p className="mt-3 text-[26px] font-extrabold tabular-nums">{t(plan.price)}</p>}
+                            <p className="mt-1 text-sm text-white/60">{status.line(t, plan)}</p>
+
+                            {storeManaged && <p className="mt-4 text-xs text-white/50">{t('This subscription is managed through the :provider.', { provider: sub.provider })}</p>}
+
+                            {manageable && status.cancelling && (
+                                <button
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => post('billing.resume')}
+                                    className="mt-4 w-full rounded-xl bg-white py-3 text-sm font-bold text-neutral-900 transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
+                                >
+                                    {status.trialing ? t('Keep my plan after the trial') : t('Resume Subscription')}
+                                </button>
+                            )}
+
+                            {sub.hasBillingPortal && !storeManaged && !kkp && (
+                                <button
+                                    type="button"
+                                    disabled={busy}
+                                    onClick={() => post('billing.portal')}
+                                    className={`mt-3 w-full rounded-xl py-2.5 text-sm font-semibold transition-colors duration-150 disabled:opacity-60 ${
+                                        sub.status === 'past_due' ? 'bg-white text-neutral-900' : 'bg-white/10 text-white hover:bg-white/15'
+                                    }`}
+                                >
+                                    {t('Payment method & invoices')}
+                                </button>
+                            )}
+                        </div>
+
+                        {manageable && !isLifetime && (
+                            <Section title={t('Change plan')}>
+                                {PLAN_ORDER.map((id, index) => {
+                                    const info = PLAN_INFO[id];
+                                    const current = id === sub.planId;
+                                    const scheduled = id === sub.nextPlan;
+                                    return (
+                                        <div key={id} className={`flex items-center gap-3 px-4 py-3.5 ${index ? 'border-t border-black/5' : ''}`}>
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex items-center gap-2">
+                                                    <p className="text-sm font-bold text-neutral-900">{t(info.label)}</p>
+                                                    {(id === 'lifetime' || info.discount) && (
+                                                        <span className="rounded-md bg-rose-50 px-1.5 py-0.5 text-[10px] font-extrabold text-brand">
+                                                            {id === 'lifetime' ? t('BEST VALUE') : t(info.discount)}
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <p className="text-xs text-neutral-400">
+                                                    {info.originalPrice && <span className="line-through">{t(info.originalPrice)} </span>}
+                                                    <span className={info.originalPrice ? 'font-semibold text-neutral-700' : ''}>{t(info.price)}</span>
+                                                    {!info.originalPrice && ` · ${t(info.subtitle)}`}
+                                                </p>
+                                            </div>
+                                            {current ? (
+                                                sub.nextPlan ? (
+                                                    <button
+                                                        type="button"
+                                                        disabled={busy}
+                                                        onClick={() => post('billing.switch', { plan: id })}
+                                                        className="shrink-0 rounded-full bg-neutral-100 px-3.5 py-1.5 text-xs font-bold text-neutral-700 transition-opacity duration-150 hover:opacity-90"
+                                                    >
+                                                        {t('Keep :plan', { plan: t(info.label) })}
+                                                    </button>
+                                                ) : (
+                                                    <span className="shrink-0 text-xs font-bold text-emerald-600">{t('Current')}</span>
+                                                )
+                                            ) : scheduled ? (
+                                                <span className="shrink-0 text-xs font-bold text-amber-600">{t('From :date', { date: sub.renews })}</span>
+                                            ) : (
+                                                <button
+                                                    type="button"
+                                                    disabled={busy}
+                                                    onClick={() => (id === 'lifetime' ? setUpgradeOpen(true) : setSwitchingTo(id))}
+                                                    className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-opacity duration-150 hover:opacity-90 ${
+                                                        id === 'lifetime' ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-700'
+                                                    }`}
+                                                >
+                                                    {id === 'lifetime' ? t('Upgrade') : t('Switch')}
+                                                </button>
                                             )}
                                         </div>
-                                        <p className="text-xs text-neutral-400">
-                                            {info.originalPrice && <span className="line-through">{t(info.originalPrice)} </span>}
-                                            <span className={info.originalPrice ? 'font-semibold text-neutral-700' : ''}>{t(info.price)}</span>
-                                            {!info.originalPrice && ` · ${t(info.subtitle)}`}
-                                        </p>
-                                    </div>
-                                    {current ? (
-                                        <span className="shrink-0 text-xs font-bold text-emerald-600">{t('Current')}</span>
-                                    ) : scheduled ? (
-                                        <span className="shrink-0 text-xs font-bold text-amber-600">{t('From :date', { date: sub.renews })}</span>
-                                    ) : (
-                                        <button
-                                            type="button"
-                                            onClick={() => (id === 'lifetime' ? setUpgradeOpen(true) : setSwitchingTo(id))}
-                                            className={`shrink-0 rounded-full px-3.5 py-1.5 text-xs font-bold transition-opacity duration-150 hover:opacity-90 ${
-                                                id === 'lifetime' ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-700'
-                                            }`}
-                                        >
-                                            {id === 'lifetime' ? t('Upgrade') : t('Switch')}
-                                        </button>
-                                    )}
-                                </div>
-                            );
-                        })}
-                    </Section>
-                )}
+                                    );
+                                })}
+                            </Section>
+                        )}
 
-                <Section
-                    title={t('Billing history')}
-                    action={
-                        <button type="button" disabled title={t('Coming soon')} className="cursor-default text-xs font-bold text-brand/60">
-                            {t('View all')}
-                        </button>
-                    }
-                >
-                    {sub.history.map((payment, index) => (
-                        <div key={`${payment.date}-${index}`} className={`flex items-center gap-3 px-4 py-3.5 ${index ? 'border-t border-black/5' : ''}`}>
-                            <div className="min-w-0 flex-1">
-                                <p className="text-sm font-semibold text-neutral-900">{t(payment.plan)}</p>
-                                <p className="text-xs text-neutral-400">{payment.date}</p>
-                            </div>
-                            <div className="shrink-0 text-right">
-                                <p className="text-sm font-bold tabular-nums text-neutral-900">{payment.amount}</p>
-                                <p className="text-xs font-semibold text-emerald-600">{t(payment.status)}</p>
-                            </div>
-                        </div>
-                    ))}
-                </Section>
+                        {sub.history.length > 0 && (
+                            <Section
+                                title={t('Billing history')}
+                                action={
+                                    sub.hasBillingPortal && (
+                                        <button type="button" onClick={() => post('billing.portal')} className="text-xs font-bold text-brand hover:underline">
+                                            {t('View all')}
+                                        </button>
+                                    )
+                                }
+                            >
+                                {sub.history.map((payment, index) => (
+                                    <div key={`${payment.date}-${index}`} className={`flex items-center gap-3 px-4 py-3.5 ${index ? 'border-t border-black/5' : ''}`}>
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-sm font-semibold text-neutral-900">{paymentPlanLabel(t, payment.plan)}</p>
+                                            <p className="text-xs text-neutral-400">{payment.date}</p>
+                                        </div>
+                                        <div className="shrink-0 text-right">
+                                            <p className="text-sm font-bold tabular-nums text-neutral-900">{payment.amount}</p>
+                                            <p className="text-xs font-semibold text-emerald-600">{t(payment.status)}</p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </Section>
+                        )}
+                    </>
+                )}
 
                 <Section title={t("What's included")}>
                     {INCLUDED.map((item, index) => (
@@ -554,22 +656,28 @@ export default function Subscription() {
                     ))}
                 </Section>
 
-                {!cancelling && !isLifetime && !storeManaged && (
+                {plan && manageable && !status.cancelling && !isLifetime && (
                     <button type="button" onClick={() => setCancelOpen(true)} className="block w-full py-2 text-center text-sm font-bold text-brand hover:underline">
-                        {t('Cancel Subscription')}
+                        {status.trialing ? t('Cancel free trial') : t('Cancel Subscription')}
                     </button>
                 )}
 
                 <p className="mt-6 text-center text-xs text-neutral-400">
                     {storeManaged
                         ? t('To change your plan or cancel, open the KhordQuiz app and manage it through the :provider.', { provider: sub.provider })
-                        : t('Questions about billing? Contact us from Support.')}
+                        : kkp
+                          ? t('Your access follows your Kingsleykhordpiano membership. Manage it on Kingsleykhordpiano.')
+                          : t('Questions about billing? Contact us from Support.')}
                 </p>
             </div>
 
-            <SwitchModal planId={switchingTo} currentId={planId} renews={sub.renews} onClose={() => setSwitchingTo(null)} onConfirm={confirmSwitch} />
-            <UpgradeModal open={upgradeOpen} currentId={planId} renews={sub.renews} onClose={() => setUpgradeOpen(false)} onConfirm={confirmUpgrade} />
-            <CancelModal open={cancelOpen} renews={sub.renews} tier={plan.tier} onClose={() => setCancelOpen(false)} onConfirm={confirmCancel} />
+            {plan && manageable && (
+                <>
+                    <SwitchModal planId={switchingTo} currentId={sub.planId} renews={sub.renews} onClose={() => setSwitchingTo(null)} onConfirm={confirmSwitch} />
+                    <UpgradeModal open={upgradeOpen} currentId={sub.planId} renews={sub.renews} onClose={() => setUpgradeOpen(false)} onConfirm={confirmUpgrade} />
+                    <CancelModal open={cancelOpen} renews={sub.renews} tier={plan.tier} onClose={() => setCancelOpen(false)} onConfirm={confirmCancel} />
+                </>
+            )}
         </AppShell>
     );
 }
