@@ -1,0 +1,862 @@
+{
+  "Ionian and Lydian": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose Ionian or Lydian. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Listen for the note that changes between the two choices. Select Ionian or Lydian."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. Ionian and Lydian differ at the fourth note. Over C, Ionian uses F and Lydian uses F♯. Listen for that change in the middle of the scale. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Lydian"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": "Ionian and Lydian differ at the fourth note. Over C, Ionian uses F and Lydian uses F♯. Listen for that change in the middle of the scale.",
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  },
+  "Dorian and Aeolian": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose Dorian or Aeolian. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Listen for the note that changes between the two choices. Select Dorian or Aeolian."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. Dorian and Aeolian differ at the sixth note. Over C, Dorian uses A and Aeolian uses A♭. Listen to the notes near the upper end of the scale. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Dorian",
+      "Aeolian"
+    ],
+    "example": "Dorian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E♭",
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": "Dorian and Aeolian differ at the sixth note. Over C, Dorian uses A and Aeolian uses A♭. Listen to the notes near the upper end of the scale.",
+    "exampleExplanation": "This visual example shows Dorian starting on C. The notes play one after another, then return down to C. Choose Dorian for this example."
+  },
+  "Phrygian and Locrian": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose Phrygian or Locrian. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Listen for the note that changes between the two choices. Select Phrygian or Locrian."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. Phrygian and Locrian differ at the fifth note. Over C, Phrygian uses G and Locrian uses G♭. Listen for that change in the middle of the scale. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Phrygian",
+      "Locrian"
+    ],
+    "example": "Phrygian",
+    "exampleNotes": [
+      "C",
+      "D♭",
+      "E♭",
+      "F",
+      "G",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": "Phrygian and Locrian differ at the fifth note. Over C, Phrygian uses G and Locrian uses G♭. Listen for that change in the middle of the scale.",
+    "exampleExplanation": "This visual example shows Phrygian starting on C. The notes play one after another, then return down to C. Choose Phrygian for this example."
+  },
+  "Major Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose which of the seven modes you hear. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Select the scale name that matches the pattern of notes you hear."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. This quiz compares the seven modes of the major scale: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian and Locrian. Their different note patterns give them different sounds. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Dorian",
+      "Phrygian",
+      "Lydian",
+      "Mixolydian",
+      "Aeolian",
+      "Locrian"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  },
+  "Major Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose which of the seven modes you hear. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Select the scale name that matches the pattern of notes you hear."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. This quiz compares the seven modes of the major scale: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian and Locrian. Their different note patterns give them different sounds. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Dorian",
+      "Phrygian",
+      "Lydian",
+      "Mixolydian",
+      "Aeolian",
+      "Locrian"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  },
+  "Tonal Modes #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose which of the five tonal scales you hear. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Select the scale name that matches the pattern of notes you hear."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on F. Compare Ionian, Harmonic Major, Harmonic Minor, Melodic Minor and Aeolian. In this quiz, Melodic Minor keeps the same set of notes when coming down as when going up. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Harmonic Major",
+      "Harmonic Minor",
+      "Melodic Minor",
+      "Aeolian"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C",
+      "D",
+      "E",
+      "F"
+    ],
+    "home": "F",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on F. The notes play one after another, then return down to F. Choose Ionian for this example."
+  },
+  "Tonal Modes #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose which of the five tonal scales you hear. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Select the scale name that matches the pattern of notes you hear."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. Compare Ionian, Harmonic Major, Harmonic Minor, Melodic Minor and Aeolian. In this quiz, Melodic Minor keeps the same set of notes when coming down as when going up. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Harmonic Major",
+      "Harmonic Minor",
+      "Melodic Minor",
+      "Aeolian"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  },
+  "Dorian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Dorian",
+      "Dorian ♭2",
+      "Dorian ♯4",
+      "Dorian ♭5",
+      "Dorian ♮7"
+    ],
+    "example": "Dorian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E♭",
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Dorian starting on C. The notes play one after another, then return down to C. Choose Dorian for this example."
+  },
+  "Dorian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Dorian",
+      "Dorian ♭2",
+      "Dorian ♯4",
+      "Dorian ♭5",
+      "Dorian ♮7"
+    ],
+    "example": "Dorian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E♭",
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Dorian starting on C. The notes play one after another, then return down to C. Choose Dorian for this example."
+  },
+  "Lydian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Lydian",
+      "Lydian ♯2",
+      "Lydian Augmented",
+      "Lydian Dominant",
+      "Lydian Diminished"
+    ],
+    "example": "Lydian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F♯",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Lydian starting on C. The notes play one after another, then return down to C. Choose Lydian for this example."
+  },
+  "Lydian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Lydian",
+      "Lydian ♯2",
+      "Lydian Augmented",
+      "Lydian Dominant",
+      "Lydian Diminished"
+    ],
+    "example": "Lydian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F♯",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Lydian starting on C. The notes play one after another, then return down to C. Choose Lydian for this example."
+  },
+  "Phrygian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Phrygian",
+      "Phrygian Dominant",
+      "Phrygian (♭4)",
+      "Phrygian ♮6",
+      "Phrygian ♮7"
+    ],
+    "example": "Phrygian",
+    "exampleNotes": [
+      "C",
+      "D♭",
+      "E♭",
+      "F",
+      "G",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Phrygian starting on C. The notes play one after another, then return down to C. Choose Phrygian for this example."
+  },
+  "Phrygian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Phrygian",
+      "Phrygian Dominant",
+      "Phrygian (♭4)",
+      "Phrygian ♮6",
+      "Phrygian ♮7"
+    ],
+    "example": "Phrygian",
+    "exampleNotes": [
+      "C",
+      "D♭",
+      "E♭",
+      "F",
+      "G",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Phrygian starting on C. The notes play one after another, then return down to C. Choose Phrygian for this example."
+  },
+  "Mixolydian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Mixolydian",
+      "Mixolydian ♭2",
+      "Mixolydian ♭6",
+      "Mixolydian ♭2 ♭6",
+      "Mixolydian ♯4"
+    ],
+    "example": "Mixolydian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Mixolydian starting on C. The notes play one after another, then return down to C. Choose Mixolydian for this example."
+  },
+  "Mixolydian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Mixolydian",
+      "Mixolydian ♭2",
+      "Mixolydian ♭6",
+      "Mixolydian ♭2 ♭6",
+      "Mixolydian ♯4"
+    ],
+    "example": "Mixolydian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Mixolydian starting on C. The notes play one after another, then return down to C. Choose Mixolydian for this example."
+  },
+  "Aeolian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Aeolian",
+      "Aeolian ♭2",
+      "Aeolian ♮6",
+      "Aeolian ♮7",
+      "Aeolian Dominant",
+      "Aeolian ♭5"
+    ],
+    "example": "Aeolian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E♭",
+      "F",
+      "G",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Aeolian starting on C. The notes play one after another, then return down to C. Choose Aeolian for this example."
+  },
+  "Aeolian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Aeolian",
+      "Aeolian ♭2",
+      "Aeolian ♮6",
+      "Aeolian ♮7",
+      "Aeolian Dominant",
+      "Aeolian ♭5"
+    ],
+    "example": "Aeolian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E♭",
+      "F",
+      "G",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Aeolian starting on C. The notes play one after another, then return down to C. Choose Aeolian for this example."
+  },
+  "Locrian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Locrian",
+      "Locrian ♮2",
+      "Locrian ♮6",
+      "Locrian Dominant",
+      "Super Locrian"
+    ],
+    "example": "Locrian",
+    "exampleNotes": [
+      "C",
+      "D♭",
+      "E♭",
+      "F",
+      "F♯",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Locrian starting on C. The notes play one after another, then return down to C. Choose Locrian for this example."
+  },
+  "Locrian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Locrian",
+      "Locrian ♮2",
+      "Locrian ♮6",
+      "Locrian Dominant",
+      "Super Locrian"
+    ],
+    "example": "Locrian",
+    "exampleNotes": [
+      "C",
+      "D♭",
+      "E♭",
+      "F",
+      "F♯",
+      "A♭",
+      "B♭",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Locrian starting on C. The notes play one after another, then return down to C. Choose Locrian for this example."
+  },
+  "Ionian Scales #1": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. Every example starts and ends on C. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Ionian ♭2",
+      "Ionian ♯2",
+      "Ionian Augmented",
+      "Ionian ♭6",
+      "Ionian ♭2 ♭6"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": false,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  },
+  "Ionian Scales #2": {
+    "heading": "Hear the scale. Choose its name.",
+    "intro": "Listen and choose the exact scale name from this mode family. The notes go up, then come back down.",
+    "steps": [
+      {
+        "title": "Listen up and down",
+        "description": "Press Play and follow the notes as they rise, then return to the starting note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching scale",
+        "description": "Choose the full scale name from the answer buttons. Pay attention to any ♭, ♯ or ♮ in the name; it identifies a different version of the scale."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A scale is a set of notes played in order. Each example rises to a higher version of its starting note, then returns to that starting note. This lesson uses all twelve starting notes. The answers are variants of the same mode family. A few changed notes can change the sound, so listen to the full scale. In the names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. Choose the scale name. You do not need to enter the notes one by one.",
+    "choices": [
+      "Ionian",
+      "Ionian ♭2",
+      "Ionian ♯2",
+      "Ionian Augmented",
+      "Ionian ♭6",
+      "Ionian ♭2 ♭6"
+    ],
+    "example": "Ionian",
+    "exampleNotes": [
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "A",
+      "B",
+      "C"
+    ],
+    "home": "C",
+    "allKeys": true,
+    "comparison": null,
+    "exampleExplanation": "This visual example shows Ionian starting on C. The notes play one after another, then return down to C. Choose Ionian for this example."
+  }
+}

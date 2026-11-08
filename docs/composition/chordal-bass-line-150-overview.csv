@@ -1,0 +1,151 @@
+ID,Events,Chords,Bass notes,Bass answer,Bass MIDI
+CBL-001,5,Fmaj7 -> FdimMaj7 -> C -> G7 -> Cmaj7,F2 -> F2 -> G2 -> B2 -> C3,Fa Fa So Ti Do,41 41 43 47 48
+CBL-002,5,Dm7 -> Dbmaj7b5 -> Cmaj7 -> Fmaj7 -> Cmaj7,F2 -> G2 -> G2 -> A2 -> C3,Fa So So La Do,41 43 43 45 48
+CBL-003,5,C -> Fdim7 -> C -> Fmaj7 -> Cmaj7,G2 -> Ab2 -> G2 -> A2 -> C3,So Si So La Do,43 44 43 45 48
+CBL-004,5,Dm7 -> Bb7 -> Cmaj7 -> Dm7 -> Cmaj7,F2 -> F2 -> G2 -> A2 -> C3,Fa Fa So La Do,41 41 43 45 48
+CBL-005,5,F -> Fm7 -> C -> G7 -> Cmaj7,A2 -> Ab2 -> G2 -> B2 -> C3,La Si So Ti Do,45 44 43 47 48
+CBL-006,5,F -> Em7b5 -> Fmaj7 -> G7 -> Cmaj7,A2 -> G2 -> A2 -> B2 -> C3,La So La Ti Do,45 43 45 47 48
+CBL-007,5,C -> Dm -> C -> AbmMaj7 -> Cmaj7,E2 -> F2 -> G2 -> Ab2 -> C3,Mi Fa So Si Do,40 41 43 44 48
+CBL-008,5,C -> D -> F -> G7 -> Cmaj7,E2 -> F#2 -> A2 -> B2 -> C3,Mi Fi La Ti Do,40 42 45 47 48
+CBL-009,5,F -> Ebmaj7 -> Dm -> G7 -> Cmaj7,A2 -> Bb2 -> A2 -> B2 -> C3,La Li La Ti Do,45 46 45 47 48
+CBL-010,5,F -> Fm -> C -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> G2 -> A2 -> C3,La Si So La Do,45 44 43 45 48
+CBL-011,5,C -> Bb7 -> Fmaj7 -> Dm7 -> Cmaj7,G2 -> Ab2 -> A2 -> A2 -> C3,So Si La La Do,43 44 45 45 48
+CBL-012,5,C -> Ebmaj7b5 -> Dm7 -> G7 -> Cmaj7,G2 -> A2 -> C3 -> B2 -> C3,So La Do Ti Do,43 45 48 47 48
+CBL-013,5,Cmaj7 -> Fmaj7 -> C -> Bdim7 -> Cmaj7,G2 -> A2 -> G2 -> Ab2 -> C3,So La So Si Do,43 45 43 44 48
+CBL-014,5,Cmaj7 -> Em7 -> EbdimMaj7 -> Dm7 -> Cmaj7,B2 -> B2 -> A2 -> C3 -> C3,Ti Ti La Do Do,47 47 45 48 48
+CBL-015,5,Fmaj7 -> FmMaj7 -> Em7 -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> B2 -> C3 -> C3,La Si Ti Do Do,45 44 47 48 48
+CBL-016,5,C -> Gm7 -> F#m7b5 -> Fmaj7 -> Cmaj7,E2 -> F2 -> F#2 -> A2 -> C3,Mi Fa Fi La Do,40 41 42 45 48
+CBL-017,5,Cmaj7 -> Fmaj7 -> F#m7b5 -> Fmaj7 -> Cmaj7,G2 -> F2 -> F#2 -> A2 -> C3,So Fa Fi La Do,43 41 42 45 48
+CBL-018,5,F -> Bb -> F -> G7 -> Cmaj7,A2 -> F2 -> A2 -> B2 -> C3,La Fa La Ti Do,45 41 45 47 48
+CBL-019,5,C -> Bbmaj7 -> F -> G7 -> Cmaj7,G2 -> A2 -> A2 -> B2 -> C3,So La La Ti Do,43 45 45 47 48
+CBL-020,5,F -> Gm -> F -> Dm7 -> Cmaj7,A2 -> Bb2 -> A2 -> A2 -> C3,La Li La La Do,45 46 45 45 48
+CBL-021,5,C -> Fmaj7b5 -> Cmaj7 -> Dm7 -> Cmaj7,G2 -> F2 -> G2 -> A2 -> C3,So Fa So La Do,43 41 43 45 48
+CBL-022,5,Cmaj7 -> Cdim7 -> C -> G7 -> Cmaj7,G2 -> F#2 -> G2 -> B2 -> C3,So Fi So Ti Do,43 42 43 47 48
+CBL-023,5,F -> F7 -> C -> Dm7 -> Cmaj7,A2 -> A2 -> G2 -> A2 -> C3,La La So La Do,45 45 43 45 48
+CBL-024,5,C -> Dm7 -> C -> FmMaj7 -> Cmaj7,G2 -> F2 -> G2 -> Ab2 -> C3,So Fa So Si Do,43 41 43 44 48
+CBL-025,5,Cmaj7 -> Fmaj7 -> BbdimMaj7 -> Fmaj7 -> Cmaj7,B2 -> C3 -> Bb2 -> C3 -> C3,Ti Do Li Do Do,47 48 46 48 48
+CBL-026,5,Em7 -> Em7b5 -> Am -> G7 -> Cmaj7,B2 -> Bb2 -> C3 -> B2 -> C3,Ti Li Do Ti Do,47 46 48 47 48
+CBL-027,5,C -> Ebm7 -> Dm7 -> G7 -> Cmaj7,G2 -> F#2 -> A2 -> B2 -> C3,So Fi La Ti Do,43 42 45 47 48
+CBL-028,5,F -> A -> Dm -> G7 -> Cmaj7,A2 -> E2 -> F2 -> G2 -> C3,La Mi Fa So Do,45 40 41 43 48
+CBL-029,5,C -> Fm -> C -> G7 -> Cmaj7,G2 -> Ab2 -> G2 -> B2 -> C3,So Si So Ti Do,43 44 43 47 48
+CBL-030,5,F -> Bbmaj7 -> F -> G7 -> Cmaj7,C3 -> Bb2 -> C3 -> B2 -> C3,Do Li Do Ti Do,48 46 48 47 48
+CBL-031,5,C -> Edim7 -> Dm7 -> Fmaj7 -> Cmaj7,G2 -> G2 -> A2 -> A2 -> C3,So So La La Do,43 43 45 45 48
+CBL-032,5,C -> B7 -> F -> G7 -> Cmaj7,G2 -> B2 -> C3 -> B2 -> C3,So Ti Do Ti Do,43 47 48 47 48
+CBL-033,5,Fmaj7 -> Bbmaj7b5 -> Fmaj7 -> Dm7 -> Cmaj7,F2 -> E2 -> F2 -> A2 -> C3,Fa Mi Fa La Do,41 40 41 45 48
+CBL-034,5,Fmaj7 -> FmMaj7 -> Am7 -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> A2 -> A2 -> C3,La Si La La Do,45 44 45 45 48
+CBL-035,5,Em7 -> Em7b5 -> F -> G7 -> Cmaj7,G2 -> G2 -> A2 -> B2 -> C3,So So La Ti Do,43 43 45 47 48
+CBL-036,5,Cmaj7 -> CdimMaj7 -> Cdim7 -> Fmaj7 -> Cmaj7,G2 -> F#2 -> F#2 -> A2 -> C3,So Fi Fi La Do,43 42 42 45 48
+CBL-037,5,Dm7 -> Gm7 -> C7 -> Fmaj7 -> Cmaj7,A2 -> Bb2 -> Bb2 -> C3 -> C3,La Li Li Do Do,45 46 46 48 48
+CBL-038,5,F -> D -> F -> G7 -> Cmaj7,A2 -> A2 -> C3 -> B2 -> C3,La La Do Ti Do,45 45 48 47 48
+CBL-039,5,C -> Gm -> F -> G7 -> Cmaj7,G2 -> Bb2 -> C3 -> B2 -> C3,So Li Do Ti Do,43 46 48 47 48
+CBL-040,5,C -> Ebmaj7 -> Dm -> G7 -> Cmaj7,G2 -> Bb2 -> A2 -> B2 -> C3,So Li La Ti Do,43 46 45 47 48
+CBL-041,5,Dm7 -> Bb7 -> Am7 -> G7 -> Cmaj7,A2 -> Ab2 -> A2 -> B2 -> C3,La Si La Ti Do,45 44 45 47 48
+CBL-042,5,Cmaj7 -> Cdim7 -> Am7 -> Fmaj7 -> Cmaj7,G2 -> F#2 -> G2 -> A2 -> C3,So Fi So La Do,43 42 43 45 48
+CBL-043,5,Cmaj7 -> Cmaj7b5 -> Dm7 -> Fmaj7 -> Cmaj7,G2 -> F#2 -> A2 -> A2 -> C3,So Fi La La Do,43 42 45 45 48
+CBL-044,5,C -> F#m7b5 -> F -> Dm7 -> Cmaj7,G2 -> F#2 -> A2 -> C3 -> C3,So Fi La Do Do,43 42 45 48 48
+CBL-045,5,Am7 -> AbmMaj7 -> C -> G7 -> Cmaj7,E2 -> Eb2 -> E2 -> G2 -> C3,Mi Ri Mi So Do,40 39 40 43 48
+CBL-046,5,C -> BbdimMaj7 -> Am7 -> Dm7 -> Cmaj7,E2 -> E2 -> G2 -> A2 -> C3,Mi Mi So La Do,40 40 43 45 48
+CBL-047,5,C -> Gm7 -> F#m7b5 -> G7 -> Cmaj7,E2 -> F2 -> F#2 -> G2 -> C3,Mi Fa Fi So Do,40 41 42 43 48
+CBL-048,5,C -> Bb -> F -> Dm7 -> Cmaj7,G2 -> F2 -> A2 -> A2 -> C3,So Fa La La Do,43 41 45 45 48
+CBL-049,5,C -> Bb7 -> C -> G7 -> Cmaj7,E2 -> F2 -> G2 -> B2 -> C3,Mi Fa So Ti Do,40 41 43 47 48
+CBL-050,5,F -> Fdim7 -> F#m7b5 -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> A2 -> C3 -> C3,La Si La Do Do,45 44 45 48 48
+CBL-051,5,Dm7 -> Dbmaj7b5 -> C -> Dm7 -> Cmaj7,A2 -> G2 -> G2 -> A2 -> C3,La So So La Do,45 43 43 45 48
+CBL-052,5,C -> FmMaj7 -> C -> Dm7 -> Cmaj7,E2 -> F2 -> G2 -> A2 -> C3,Mi Fa So La Do,40 41 43 45 48
+CBL-053,5,Am7 -> C#m7b5 -> Dm7 -> Fmaj7 -> Cmaj7,E2 -> E2 -> F2 -> A2 -> C3,Mi Mi Fa La Do,40 40 41 45 48
+CBL-054,5,C -> FdimMaj7 -> Em7 -> Fmaj7 -> Cmaj7,G2 -> Ab2 -> B2 -> C3 -> C3,So Si Ti Do Do,43 44 47 48 48
+CBL-055,5,Cmaj7 -> Em7 -> Ebm7 -> Dm7 -> Cmaj7,E2 -> E2 -> F#2 -> A2 -> C3,Mi Mi Fi La Do,40 40 42 45 48
+CBL-056,5,C -> D -> F -> Dm7 -> Cmaj7,G2 -> A2 -> A2 -> C3 -> C3,So La La Do Do,43 45 45 48 48
+CBL-057,5,Cmaj7 -> C7 -> F -> Dm7 -> Cmaj7,G2 -> G2 -> A2 -> C3 -> C3,So So La Do Do,43 43 45 48 48
+CBL-058,5,Cmaj7 -> Cdim7 -> Dm7 -> G7 -> Cmaj7,B2 -> A2 -> A2 -> B2 -> C3,Ti La La Ti Do,47 45 45 47 48
+CBL-059,5,C -> Fmaj7b5 -> C -> Dm7 -> Cmaj7,G2 -> A2 -> G2 -> A2 -> C3,So La So La Do,43 45 43 45 48
+CBL-060,5,F -> Dm7b5 -> Em7b5 -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> Bb2 -> C3 -> C3,La Si Li Do Do,45 44 46 48 48
+CBL-061,5,Cmaj7 -> Em7 -> Fmaj7 -> FmMaj7 -> Cmaj7,E2 -> E2 -> F2 -> Ab2 -> C3,Mi Mi Fa Si Do,40 40 41 44 48
+CBL-062,5,C -> Em7 -> EbdimMaj7 -> Dm7 -> Cmaj7,G2 -> G2 -> F#2 -> A2 -> C3,So So Fi La Do,43 43 42 45 48
+CBL-063,5,C -> Gm7 -> C7 -> Fmaj7 -> Cmaj7,G2 -> G2 -> Bb2 -> A2 -> C3,So So Li La Do,43 43 46 45 48
+CBL-064,5,C -> Bb -> F -> G7 -> Cmaj7,G2 -> F2 -> A2 -> B2 -> C3,So Fa La Ti Do,43 41 45 47 48
+CBL-065,5,C -> E7 -> Fmaj7 -> G7 -> Cmaj7,G2 -> Ab2 -> A2 -> B2 -> C3,So Si La Ti Do,43 44 45 47 48
+CBL-066,5,Fmaj7 -> Bbmaj7b5 -> F -> G7 -> Cmaj7,A2 -> Bb2 -> C3 -> B2 -> C3,La Li Do Ti Do,45 46 48 47 48
+CBL-067,5,C -> Ebdim7 -> C7 -> Fmaj7 -> Cmaj7,G2 -> A2 -> Bb2 -> C3 -> C3,So La Li Do Do,43 45 46 48 48
+CBL-068,5,F -> Em7b5 -> Fmaj7 -> Dm7 -> Cmaj7,A2 -> G2 -> A2 -> A2 -> C3,La So La La Do,45 43 45 45 48
+CBL-069,5,C -> Dm7 -> C -> AbmMaj7 -> Cmaj7,G2 -> A2 -> G2 -> B2 -> C3,So La So Ti Do,43 45 43 47 48
+CBL-070,5,Fmaj7 -> BbdimMaj7 -> Am7 -> Fmaj7 -> Cmaj7,F2 -> E2 -> G2 -> A2 -> C3,Fa Mi So La Do,41 40 43 45 48
+CBL-071,5,F -> Gm7 -> F#m7b5 -> G7 -> Cmaj7,C3 -> Bb2 -> A2 -> B2 -> C3,Do Li La Ti Do,48 46 45 47 48
+CBL-072,5,C -> A7 -> Dm -> G7 -> Cmaj7,E2 -> E2 -> F2 -> G2 -> C3,Mi Mi Fa So Do,40 40 41 43 48
+CBL-073,5,Fmaj7 -> Fmaj7b5 -> Em -> Fmaj7 -> Cmaj7,A2 -> A2 -> B2 -> C3 -> C3,La La Ti Do Do,45 45 47 48 48
+CBL-074,5,Cmaj7 -> Cdim7 -> Fmaj7 -> Dm7 -> Cmaj7,B2 -> A2 -> A2 -> C3 -> C3,Ti La La Do Do,47 45 45 48 48
+CBL-075,5,Fmaj7 -> F#m7b5 -> F -> Dm7 -> Cmaj7,F2 -> F#2 -> A2 -> A2 -> C3,Fa Fi La La Do,41 42 45 45 48
+CBL-076,6,F -> Abmaj7 -> G -> Am -> G7 -> Cmaj7,A2 -> Ab2 -> B2 -> C3 -> B2 -> C3,La Si Ti Do Ti Do,45 44 47 48 47 48
+CBL-077,6,C -> Gm -> Fm -> C -> G7 -> Cmaj7,G2 -> Bb2 -> Ab2 -> G2 -> B2 -> C3,So Li Si So Ti Do,43 46 44 43 47 48
+CBL-078,6,C -> Abmaj7 -> G7 -> Cmaj7 -> Fmaj7 -> Cmaj7,G2 -> Ab2 -> G2 -> B2 -> C3 -> C3,So Si So Ti Do Do,43 44 43 47 48 48
+CBL-079,6,C -> Gm -> Fm -> C -> Dm7 -> Cmaj7,G2 -> Bb2 -> Ab2 -> G2 -> A2 -> C3,So Li Si So La Do,43 46 44 43 45 48
+CBL-080,6,C -> Abmaj7 -> G7 -> C -> Dm7 -> Cmaj7,G2 -> Ab2 -> G2 -> G2 -> A2 -> C3,So Si So So La Do,43 44 43 43 45 48
+CBL-081,6,F -> Gm -> F -> Dm -> G7 -> Cmaj7,A2 -> Bb2 -> A2 -> A2 -> B2 -> C3,La Li La La Ti Do,45 46 45 45 47 48
+CBL-082,6,C -> Em -> E -> Am -> G7 -> Cmaj7,G2 -> G2 -> Ab2 -> C3 -> B2 -> C3,So So Si Do Ti Do,43 43 44 48 47 48
+CBL-083,6,C -> Abmaj7 -> G -> C -> G7 -> Cmaj7,G2 -> Ab2 -> B2 -> G2 -> B2 -> C3,So Si Ti So Ti Do,43 44 47 43 47 48
+CBL-084,6,F -> Fm -> C -> Dm -> G7 -> Cmaj7,A2 -> Ab2 -> G2 -> A2 -> B2 -> C3,La Si So La Ti Do,45 44 43 45 47 48
+CBL-085,6,C -> D -> G -> Am7 -> G7 -> Cmaj7,G2 -> A2 -> B2 -> A2 -> B2 -> C3,So La Ti La Ti Do,43 45 47 45 47 48
+CBL-086,6,Am7 -> AbmMaj7 -> Fm7b5 -> Em -> Fmaj7 -> Cmaj7,E2 -> Eb2 -> F2 -> G2 -> A2 -> C3,Mi Ri Fa So La Do,40 39 41 43 45 48
+CBL-087,6,Fmaj7 -> FdimMaj7 -> Fdim7 -> C -> G7 -> Cmaj7,A2 -> Ab2 -> Ab2 -> G2 -> B2 -> C3,La Si Si So Ti Do,45 44 44 43 47 48
+CBL-088,6,Fmaj7 -> Fm7 -> C -> Em -> Fmaj7 -> Cmaj7,A2 -> Ab2 -> G2 -> G2 -> A2 -> C3,La Si So So La Do,45 44 43 43 45 48
+CBL-089,6,C -> Ebmaj7 -> Dm -> C -> Fmaj7 -> Cmaj7,G2 -> Bb2 -> A2 -> G2 -> A2 -> C3,So Li La So La Do,43 46 45 43 45 48
+CBL-090,6,F -> Gm -> Fm -> C -> G7 -> Cmaj7,A2 -> Bb2 -> Ab2 -> G2 -> B2 -> C3,La Li Si So Ti Do,45 46 44 43 47 48
+CBL-091,6,C -> Em -> B7 -> Fmaj7 -> Dm7 -> Cmaj7,G2 -> G2 -> F#2 -> F2 -> A2 -> C3,So So Fi Fa La Do,43 43 42 41 45 48
+CBL-092,6,C -> Em7 -> Fmaj7 -> F#m7b5 -> G7 -> Cmaj7,G2 -> G2 -> A2 -> A2 -> B2 -> C3,So So La La Ti Do,43 43 45 45 47 48
+CBL-093,6,C -> G7 -> Bdim7 -> C -> G7 -> Cmaj7,G2 -> G2 -> Ab2 -> G2 -> B2 -> C3,So So Si So Ti Do,43 43 44 43 47 48
+CBL-094,6,Em7 -> Ebmaj7b5 -> Dm -> F -> G7 -> Cmaj7,B2 -> A2 -> A2 -> C3 -> B2 -> C3,Ti La La Do Ti Do,47 45 45 48 47 48
+CBL-095,6,Fmaj7 -> FmMaj7 -> FdimMaj7 -> C -> Dm7 -> Cmaj7,A2 -> Ab2 -> Ab2 -> G2 -> A2 -> C3,La Si Si So La Do,45 44 44 43 45 48
+CBL-096,6,C -> FdimMaj7 -> C -> Am7 -> Fmaj7 -> Cmaj7,E2 -> F2 -> G2 -> G2 -> A2 -> C3,Mi Fa So So La Do,40 41 43 43 45 48
+CBL-097,6,C -> A -> Dm -> C -> Dm7 -> Cmaj7,E2 -> E2 -> F2 -> G2 -> A2 -> C3,Mi Mi Fa So La Do,40 40 41 43 45 48
+CBL-098,6,C -> G7 -> C -> Ebm7 -> Dm7 -> Cmaj7,E2 -> F2 -> E2 -> F#2 -> A2 -> C3,Mi Fa Mi Fi La Do,40 41 40 42 45 48
+CBL-099,6,F -> Bbmaj7 -> F -> Dm7 -> G7 -> Cmaj7,C3 -> Bb2 -> C3 -> C3 -> B2 -> C3,Do Li Do Do Ti Do,48 46 48 48 47 48
+CBL-100,6,C -> F -> Fm -> C -> Fmaj7 -> Cmaj7,G2 -> A2 -> Ab2 -> G2 -> A2 -> C3,So La Si So La Do,43 45 44 43 45 48
+CBL-101,6,Cmaj7 -> Dm7 -> Cmaj7 -> C7 -> Fmaj7 -> Cmaj7,G2 -> A2 -> B2 -> Bb2 -> C3 -> C3,So La Ti Li Do Do,43 45 47 46 48 48
+CBL-102,6,Dm7 -> Dm7b5 -> C -> F -> Dm7 -> Cmaj7,F2 -> F2 -> G2 -> A2 -> A2 -> C3,Fa Fa So La La Do,41 41 43 45 45 48
+CBL-103,6,C -> C#dim7 -> Dm7b5 -> C -> Dm7 -> Cmaj7,G2 -> G2 -> Ab2 -> G2 -> A2 -> C3,So So Si So La Do,43 43 44 43 45 48
+CBL-104,6,Am7 -> Abmaj7b5 -> Dm7b5 -> C -> Dm7 -> Cmaj7,E2 -> D2 -> F2 -> G2 -> A2 -> C3,Mi Re Fa So La Do,40 38 41 43 45 48
+CBL-105,6,Cmaj7 -> Fmaj7 -> FmMaj7 -> C -> G7 -> Cmaj7,B2 -> A2 -> Ab2 -> G2 -> B2 -> C3,Ti La Si So Ti Do,47 45 44 43 47 48
+CBL-106,6,C -> F -> C -> BbdimMaj7 -> Fmaj7 -> Cmaj7,G2 -> A2 -> G2 -> A2 -> A2 -> C3,So La So La La Do,43 45 43 45 45 48
+CBL-107,6,C -> E -> Am -> Dm -> G7 -> Cmaj7,G2 -> B2 -> C3 -> A2 -> B2 -> C3,So Ti Do La Ti Do,43 47 48 45 47 48
+CBL-108,6,F -> Fm7 -> C -> Am -> G7 -> Cmaj7,A2 -> Ab2 -> G2 -> C3 -> B2 -> C3,La Si So Do Ti Do,45 44 43 48 47 48
+CBL-109,6,F -> Abmaj7 -> G7 -> Cmaj7 -> Dm7 -> Cmaj7,A2 -> Ab2 -> B2 -> B2 -> C3 -> C3,La Si Ti Ti Do Do,45 44 47 47 48 48
+CBL-110,6,C -> Gm -> F -> Dm -> G7 -> Cmaj7,G2 -> Bb2 -> A2 -> A2 -> B2 -> C3,So Li La La Ti Do,43 46 45 45 47 48
+CBL-111,6,C -> Dm7 -> Bb7 -> F -> Dm7 -> Cmaj7,G2 -> A2 -> Ab2 -> A2 -> A2 -> C3,So La Si La La Do,43 45 44 45 45 48
+CBL-112,6,Fmaj7 -> F#m7b5 -> Dm7b5 -> C -> Fmaj7 -> Cmaj7,F2 -> F#2 -> F2 -> G2 -> A2 -> C3,Fa Fi Fa So La Do,41 42 41 43 45 48
+CBL-113,6,Cmaj7 -> Fmaj7 -> C -> C#dim7 -> Dm7 -> Cmaj7,G2 -> A2 -> G2 -> Bb2 -> C3 -> C3,So La So Li Do Do,43 45 43 46 48 48
+CBL-114,6,C -> Cmaj7b5 -> Bbmaj7 -> F -> G7 -> Cmaj7,G2 -> F#2 -> A2 -> A2 -> B2 -> C3,So Fi La La Ti Do,43 42 45 45 47 48
+CBL-115,6,C -> CdimMaj7 -> Cdim7 -> C -> Fmaj7 -> Cmaj7,G2 -> F#2 -> F#2 -> G2 -> A2 -> C3,So Fi Fi So La Do,43 42 42 43 45 48
+CBL-116,6,Am7 -> AbmMaj7 -> C -> Am7 -> Dm7 -> Cmaj7,A2 -> Ab2 -> G2 -> A2 -> C3 -> C3,La Si So La Do Do,45 44 43 45 48 48
+CBL-117,6,F -> D -> G -> Am7 -> G7 -> Cmaj7,A2 -> A2 -> B2 -> A2 -> B2 -> C3,La La Ti La Ti Do,45 45 47 45 47 48
+CBL-118,6,Dm7 -> Gm7 -> C7 -> Fmaj7 -> G7 -> Cmaj7,A2 -> Bb2 -> Bb2 -> A2 -> B2 -> C3,La Li Li La Ti Do,45 46 46 45 47 48
+CBL-119,6,C -> Abmaj7 -> G -> Am7 -> Dm7 -> Cmaj7,G2 -> Ab2 -> B2 -> A2 -> C3 -> C3,So Si Ti La Do Do,43 44 47 45 48 48
+CBL-120,6,F -> Gm -> Fm -> C -> Fmaj7 -> Cmaj7,A2 -> Bb2 -> Ab2 -> G2 -> A2 -> C3,La Li Si So La Do,45 46 44 43 45 48
+CBL-121,6,C -> G -> E7 -> Am -> Dm7 -> Cmaj7,E2 -> D2 -> E2 -> E2 -> A2 -> C3,Mi Re Mi Mi La Do,40 38 40 40 45 48
+CBL-122,6,Am7 -> Am7b5 -> Dm7b5 -> C -> Fmaj7 -> Cmaj7,A2 -> A2 -> Ab2 -> G2 -> A2 -> C3,La La Si So La Do,45 45 44 43 45 48
+CBL-123,6,C -> C#dim7 -> Dm -> C -> Dm7 -> Cmaj7,G2 -> G2 -> F2 -> G2 -> A2 -> C3,So So Fa So La Do,43 43 41 43 45 48
+CBL-124,6,C -> Dbmaj7b5 -> C -> Am -> G7 -> Cmaj7,E2 -> F2 -> E2 -> E2 -> G2 -> C3,Mi Fa Mi Mi So Do,40 41 40 40 43 48
+CBL-125,6,Cmaj7 -> Fmaj7 -> FmMaj7 -> Am7 -> Dm7 -> Cmaj7,B2 -> A2 -> Ab2 -> A2 -> C3 -> C3,Ti La Si La Do Do,47 45 44 45 48 48
+CBL-126,6,Fmaj7 -> FdimMaj7 -> Em7 -> Am7 -> G7 -> Cmaj7,F2 -> F2 -> G2 -> A2 -> B2 -> C3,Fa Fa So La Ti Do,41 41 43 45 47 48
+CBL-127,6,F -> A -> Dm -> F -> G7 -> Cmaj7,A2 -> E2 -> F2 -> A2 -> B2 -> C3,La Mi Fa La Ti Do,45 40 41 45 47 48
+CBL-128,6,Dm7 -> Gm7 -> F#m7b5 -> F -> Dm7 -> Cmaj7,F2 -> F2 -> F#2 -> A2 -> A2 -> C3,Fa Fa Fi La La Do,41 41 42 45 45 48
+CBL-129,6,F -> Ebmaj7 -> Dm -> F -> Dm7 -> Cmaj7,A2 -> Bb2 -> A2 -> A2 -> C3 -> C3,La Li La La Do Do,45 46 45 45 48 48
+CBL-130,6,Fmaj7 -> Fm7b5 -> Em -> Am7 -> Fmaj7 -> Cmaj7,F2 -> F2 -> G2 -> G2 -> A2 -> C3,Fa Fa So So La Do,41 41 43 43 45 48
+CBL-131,6,C -> E7 -> Am7 -> Dm7 -> Fmaj7 -> Cmaj7,G2 -> Ab2 -> G2 -> A2 -> A2 -> C3,So Si So La La Do,43 44 43 45 45 48
+CBL-132,6,C -> Em -> Ebdim7 -> C -> Fmaj7 -> Cmaj7,G2 -> G2 -> F#2 -> G2 -> A2 -> C3,So So Fi So La Do,43 43 42 43 45 48
+CBL-133,6,C -> Ebmaj7b5 -> Dm7 -> Fmaj7 -> Dm7 -> Cmaj7,E2 -> Eb2 -> F2 -> F2 -> A2 -> C3,Mi Ri Fa Fa La Do,40 39 41 41 45 48
+CBL-134,6,Fmaj7 -> FmMaj7 -> Em7 -> Am7 -> Dm7 -> Cmaj7,A2 -> Ab2 -> B2 -> A2 -> C3 -> C3,La Si Ti La Do Do,45 44 47 45 48 48
+CBL-135,6,C -> FdimMaj7 -> Fdim7 -> C -> Dm7 -> Cmaj7,E2 -> F2 -> F2 -> G2 -> A2 -> C3,Mi Fa Fa So La Do,40 41 41 43 45 48
+CBL-136,6,C -> E -> Am -> Dm7 -> Fmaj7 -> Cmaj7,G2 -> Ab2 -> E2 -> F2 -> A2 -> C3,So Si Mi Fa La Do,43 44 40 41 45 48
+CBL-137,6,C -> Em7 -> Ebm7 -> Dm7 -> G7 -> Cmaj7,G2 -> G2 -> F#2 -> A2 -> B2 -> C3,So So Fi La Ti Do,43 43 42 45 47 48
+CBL-138,6,C -> Dm7 -> C -> Abmaj7 -> G7 -> Cmaj7,G2 -> F2 -> G2 -> Ab2 -> B2 -> C3,So Fa So Si Ti Do,43 41 43 44 47 48
+CBL-139,6,C -> Em7b5 -> A -> Dm -> G7 -> Cmaj7,G2 -> G2 -> E2 -> A2 -> B2 -> C3,So So Mi La Ti Do,43 43 40 45 47 48
+CBL-140,6,C -> E7 -> A7 -> Dm -> G7 -> Cmaj7,G2 -> Ab2 -> G2 -> A2 -> B2 -> C3,So Si So La Ti Do,43 44 43 45 47 48
+CBL-141,6,C -> Edim7 -> Dm7b5 -> C -> G7 -> Cmaj7,E2 -> E2 -> F2 -> G2 -> B2 -> C3,Mi Mi Fa So Ti Do,40 40 41 43 47 48
+CBL-142,6,Fmaj7 -> Fmaj7b5 -> C -> Em7 -> Fmaj7 -> Cmaj7,A2 -> A2 -> G2 -> G2 -> A2 -> C3,La La So So La Do,45 45 43 43 45 48
+CBL-143,6,C -> FmMaj7 -> FdimMaj7 -> C -> Dm7 -> Cmaj7,G2 -> Ab2 -> Ab2 -> G2 -> A2 -> C3,So Si Si So La Do,43 44 44 43 45 48
+CBL-144,6,Fmaj7 -> FdimMaj7 -> C -> Am7 -> Fmaj7 -> Cmaj7,F2 -> F2 -> G2 -> A2 -> C3 -> C3,Fa Fa So La Do Do,41 41 43 45 48 48
+CBL-145,6,F -> D -> G -> C -> Dm7 -> Cmaj7,A2 -> A2 -> B2 -> G2 -> A2 -> C3,La La Ti So La Do,45 45 47 43 45 48
+CBL-146,6,C -> Fm7 -> C -> F -> Dm7 -> Cmaj7,G2 -> Ab2 -> G2 -> A2 -> C3 -> C3,So Si So La Do Do,43 44 43 45 48 48
+CBL-147,6,C -> Abmaj7 -> G -> C -> Fmaj7 -> Cmaj7,E2 -> Eb2 -> D2 -> G2 -> A2 -> C3,Mi Ri Re So La Do,40 39 38 43 45 48
+CBL-148,6,C -> B7 -> G -> Am7 -> Dm7 -> Cmaj7,G2 -> A2 -> B2 -> A2 -> C3 -> C3,So La Ti La Do Do,43 45 47 45 48 48
+CBL-149,6,Em7 -> Em7b5 -> Dm7b5 -> C -> Fmaj7 -> Cmaj7,B2 -> Bb2 -> Ab2 -> G2 -> A2 -> C3,Ti Li Si So La Do,47 46 44 43 45 48
+CBL-150,6,C -> Cdim7 -> C -> Dm7 -> Fmaj7 -> Cmaj7,G2 -> F#2 -> G2 -> A2 -> A2 -> C3,So Fi So La La Do,43 42 43 45 45 48

@@ -25,7 +25,10 @@ function loadBuffer(url) {
         bufferCache.set(
             url,
             fetch(url)
-                .then((response) => response.arrayBuffer())
+                .then((response) => {
+                    if (!response.ok) throw new Error('Unable to load audio.');
+                    return response.arrayBuffer();
+                })
                 .then((data) => getContext().decodeAudioData(data))
                 .catch((error) => {
                     bufferCache.delete(url); // let a later call retry instead of caching a failure
@@ -36,91 +39,135 @@ function loadBuffer(url) {
     return bufferCache.get(url);
 }
 
-// notes: [{ url, offset }], offset in seconds from playback start.
-// Returns { stop } — call stop() to cut playback short (e.g. a new question
-// arriving before this one finished). onEnded fires once, after the last
-// scheduled note's own buffer has finished playing.
-export async function playNotes(notes, { onEnded } = {}) {
+// A seekable live mix. Positions are seconds into the complete question, not
+// seconds into a particular sample. Seeking into a chord resumes every voice
+// from that point; voices from earlier chords stop at the next chord's onset.
+export async function createNotePlayer(notes, { onEnded } = {}) {
+    if (!notes.length) throw new Error('No audio notes available.');
     const ctx = getContext();
-    if (ctx.state === 'suspended') {
-        await ctx.resume();
+    const buffers = await Promise.all(notes.map((note) => loadBuffer(note.url)));
+    const offsets = [...new Set(notes.map((note) => note.offset))].sort((a, b) => a - b);
+    const segments = notes.map((note, index) => {
+        const next = offsets.find((offset) => offset > note.offset) ?? Infinity;
+        return {
+            buffer: buffers[index],
+            start: note.offset,
+            end: Math.min(note.offset + buffers[index].duration, next),
+            scale: 1 / Math.sqrt(notes.filter((other) => other.offset === note.offset).length),
+            fades: Number.isFinite(next) && next <= note.offset + buffers[index].duration,
+        };
+    });
+    const duration = Math.max(...segments.map((segment) => segment.end));
+    let position = 0;
+    let startedAt = 0;
+    let playing = false;
+    let destroyed = false;
+    let revision = 0;
+    let timer;
+    let sources = [];
+
+    function currentTime() {
+        return Math.min(duration, position + (playing ? Math.max(0, ctx.currentTime - startedAt) : 0));
     }
 
-    const buffers = await Promise.all(notes.map((note) => loadBuffer(note.url)));
+    function clearSources() {
+        clearTimeout(timer);
+        sources.forEach(({ source, gain }) => {
+            source.onended = null;
+            try { source.stop(); } catch { /* Already stopped. */ }
+            source.disconnect();
+            gain.disconnect();
+        });
+        sources = [];
+    }
 
-    // A note's own raw sample often rings far longer than the gap to the next
-    // note in a melodic sequence (a sustained instrument like Piano/EP/Organ
-    // can still be clearly audible a full second later) — left unchecked, the
-    // next note starts on top of it, audibly blending the two together
-    // instead of a clean "first note stops, second starts" transition (the
-    // same issue found and fixed in the pre-rendered interval files; this is
-    // its live-mixing-engine equivalent, since every note here plays its full
-    // natural buffer length with nothing ever cutting it short). Only applies
-    // between notes at different offsets — simultaneous notes (a chord/
-    // harmonic interval, same offset) are meant to ring together and are left
-    // untouched.
-    // Matches the pre-rendered Guitar interval audio exactly: the first note
-    // stops the instant the second one starts, in the same split second, not
-    // a moment before. FADE_SECONDS was 0.15 — long enough to be audible on
-    // its own as the first note visibly dying away, which itself reads as a
-    // gap even though it was timed to reach silence exactly on the next
-    // note's onset. Cut way down to just long enough to avoid a hard click,
-    // short enough to not be heard as a fade at all.
-    const FADE_SECONDS = 0.015;
-    const GAP_SECONDS = 0;
+    function pause() {
+        position = currentTime();
+        playing = false;
+        revision++;
+        clearSources();
+    }
 
-    // Small lead-in so every source's start() call lands in the future relative
-    // to ctx.currentTime by the time the loop below finishes scheduling them —
-    // starting at currentTime itself risks a source silently missing its start.
-    const startAt = ctx.currentTime + 0.05;
-    const sources = buffers.map((buffer, index) => {
-        const offset = notes[index].offset;
-        const nextOffset = Math.min(
-            ...notes.filter((note) => note.offset > offset).map((note) => note.offset),
-            Infinity
-        );
+    async function play() {
+        if (destroyed) return;
+        pause();
+        if (position >= duration) position = 0;
+        const run = ++revision;
+        if (ctx.state === 'suspended') await ctx.resume();
+        if (destroyed || revision !== run) return;
+        startedAt = ctx.currentTime + 0.05;
+        playing = true;
+        sources = segments.filter((segment) => segment.end > position).map((segment) => {
+            const source = ctx.createBufferSource();
+            const gain = ctx.createGain();
+            source.buffer = segment.buffer;
+            source.connect(gain);
+            gain.connect(ctx.destination);
+            const begins = Math.max(position, segment.start);
+            const when = startedAt + begins - position;
+            const end = startedAt + segment.end - position;
+            let level = segment.scale;
+            if (segment.fades) {
+                const fadeAt = segment.end - 0.015;
+                if (begins > fadeAt) level *= (segment.end - begins) / 0.015;
+                gain.gain.setValueAtTime(level, when);
+                gain.gain.setValueAtTime(level, Math.max(when, startedAt + fadeAt - position));
+                gain.gain.linearRampToValueAtTime(0, end);
+            } else {
+                gain.gain.setValueAtTime(level, when);
+            }
+            source.start(when, begins - segment.start);
+            source.stop(end);
+            return { source, gain };
+        });
+        timer = setTimeout(() => {
+            if (revision !== run || destroyed) return;
+            position = duration;
+            playing = false;
+            clearSources();
+            onEnded?.();
+        }, (duration - position + 0.05) * 1000);
+    }
 
-        const source = ctx.createBufferSource();
-        source.buffer = buffer;
-
-        const gain = ctx.createGain();
-        source.connect(gain);
-        gain.connect(ctx.destination);
-
-        const startTime = startAt + offset;
-        source.start(startTime);
-
-        if (Number.isFinite(nextOffset)) {
-            const cutoffTime = startAt + Math.max(offset, nextOffset - GAP_SECONDS);
-            const fadeStart = Math.max(startTime, cutoffTime - FADE_SECONDS);
-            gain.gain.setValueAtTime(1, fadeStart);
-            gain.gain.linearRampToValueAtTime(0, cutoffTime);
-            source.stop(cutoffTime);
-        }
-
-        return source;
-    });
-
-    const effectiveEnd = (note, index) => {
-        const nextOffset = Math.min(
-            ...notes.filter((other) => other.offset > note.offset).map((other) => other.offset),
-            Infinity
-        );
-        return Number.isFinite(nextOffset) ? Math.max(note.offset, nextOffset - GAP_SECONDS) : note.offset + buffers[index].duration;
-    };
-    const longestEnd = Math.max(...notes.map((note, index) => effectiveEnd(note, index)));
-    const timeoutId = setTimeout(() => onEnded?.(), longestEnd * 1000 + 50);
+    async function seek(seconds) {
+        const resume = playing;
+        pause();
+        position = Math.max(0, Math.min(duration, Number.isFinite(seconds) ? seconds : 0));
+        if (resume && position < duration) await play();
+        else if (resume && position === duration) onEnded?.();
+    }
 
     return {
-        stop: () => {
-            clearTimeout(timeoutId);
-            sources.forEach((source) => {
-                try {
-                    source.stop();
-                } catch {
-                    // Already finished/stopped — nothing to do.
-                }
-            });
+        duration,
+        get currentTime() { return currentTime(); },
+        get paused() { return !playing; },
+        play,
+        pause,
+        seek,
+        async replay() {
+            pause();
+            position = 0;
+            await play();
+        },
+        stop() {
+            pause();
+            position = 0;
+        },
+        destroy() {
+            pause();
+            destroyed = true;
         },
     };
+}
+
+// Existing preview/review callers still get their one-shot playback API.
+export async function playNotes(notes, options = {}) {
+    const player = await createNotePlayer(notes, options);
+    try {
+        await player.play();
+        return player;
+    } catch (error) {
+        player.destroy();
+        throw error;
+    }
 }

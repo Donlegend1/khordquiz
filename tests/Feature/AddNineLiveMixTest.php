@@ -22,6 +22,7 @@ class AddNineLiveMixTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Cache::flush();
+        (new \ReflectionProperty(NoteSample::class, 'instrumentFilesMemo'))->setValue(null, []);
     }
 
     private function recordPiano(): void
@@ -35,13 +36,13 @@ class AddNineLiveMixTest extends TestCase
     public static function voicings(): array
     {
         return [
-            ['add9/piano/major.wav', [48, 50, 52, 55]],
+            ['add9/piano/major.wav', [53, 55, 57, 60]],
             ['add9/level2/piano/db-minor.wav', [49, 51, 52, 56]],
-            ['add9/level3/piano/minor-3rd.wav', [55, 60, 62, 63]],
+            ['add9/level3/piano/minor-3rd.wav', [60, 65, 67, 68]],
             ['add9/level4/piano/eb-augmented-2nd.wav', [55, 59, 63, 65]],
-            ['add9/level5/piano/major.wav', [52, 60, 62, 67]],
+            ['add9/level5/piano/major.wav', [57, 65, 67, 72]],
             ['add9/level6/piano/b-diminished.wav', [62, 71, 73, 77]],
-            ['add9/level7/piano/minor-1st.wav', [55, 62, 63, 72]],
+            ['add9/level7/piano/minor-1st.wav', [60, 67, 68, 77]],
             ['add9/level8/piano/gb-augmented-3rd.wav', [68, 74, 78, 82]],
         ];
     }
@@ -71,20 +72,20 @@ class AddNineLiveMixTest extends TestCase
 
     public function test_range_fitting_moves_the_complete_chord_by_an_octave(): void
     {
-        foreach (['Do', 'Re', 'Mi', 'So'] as $degree) {
-            Storage::disk('public')->put(NoteSample::path('piano', $degree, 4), 'sample');
+        foreach (['Fa', 'So', 'La', 'Do'] as $degree) {
+            Storage::disk('public')->put(NoteSample::path('piano', $degree, $degree === 'Do' ? 5 : 4), 'sample');
         }
         $notes = NoteSample::resolve('add9/piano/major.wav');
         $this->assertCount(4, $notes);
-        $this->assertSame([4, 4, 4, 4], array_column($notes, 'octave'));
+        $this->assertSame([4, 4, 4, 5], array_column($notes, 'octave'));
     }
 
     public function test_range_fitting_never_moves_individual_chord_tones(): void
     {
-        foreach (['Do', 'Mi', 'So'] as $degree) {
+        foreach (['Fa', 'La', 'Do'] as $degree) {
             Storage::disk('public')->put(NoteSample::path('piano', $degree, 3), 'sample');
         }
-        Storage::disk('public')->put(NoteSample::path('piano', 'Re', 4), 'sample');
+        Storage::disk('public')->put(NoteSample::path('piano', 'So', 4), 'sample');
         $this->assertNull(NoteSample::resolve('add9/piano/major.wav'));
     }
 
@@ -98,7 +99,7 @@ class AddNineLiveMixTest extends TestCase
             ->get(route('admin.audio-quiz.lesson', ['add-9', 'add-9-level-3']))->assertOk()->viewData('page')['props'];
         $preview = collect($props['quiz']['questions'][0]['missing_instrument_previews'])->firstWhere('sound', 'Piano');
         $this->assertNotNull($preview);
-        $this->assertStringContainsString('/so.wav', $preview['notes'][0]['url']);
+        $this->assertStringContainsString('/do-c4.wav', $preview['notes'][0]['url']);
         $this->actingAs(User::factory()->create())->post(route('quiz.start', $quiz), ['sound' => 'Piano'])->assertRedirect();
         $notes = $this->get(route('quiz.play', $quiz))->assertOk()->viewData('page')['props']['question']['notes'];
         $this->assertSame($preview['notes'], $notes);

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\QuestionReport;
 use App\Models\QuizAttempt;
 use App\Models\QuizMark;
 use App\Models\User;
 use App\Role;
+use App\Support\QuizHistory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -72,14 +75,21 @@ class UserController extends Controller
         ]);
     }
 
-    public function show(User $user): Response
+    public function show(Request $request, User $user): Response
     {
-        $completedAttempts = QuizAttempt::query()
-            ->where('user_id', $user->id)
-            ->where('status', QuizAttempt::STATUS_COMPLETED)
-            ->with('quiz')
-            ->latest('completed_at')
-            ->get();
+        $completedAttempts = QuizHistory::completed($user);
+        $historyPage = min(max(1, (int) ceil($completedAttempts->count() / 20)), max(1, $request->integer('history_page', 1)));
+        $history = new LengthAwarePaginator($completedAttempts->forPage($historyPage, 20)->map(fn (QuizAttempt $attempt) => [
+            'id' => $attempt->history_session_id ? 'session-'.$attempt->history_session_id : 'attempt-'.$attempt->id,
+            'quiz_title' => $attempt->quiz->title, 'category' => $attempt->quiz->category,
+            'score' => (int) round($attempt->correct_answers / max(1, $attempt->quiz->question_count) * 100),
+            'correct' => $attempt->correct_answers, 'total' => $attempt->quiz->question_count,
+            'sound' => $attempt->sound,
+            'completed_at' => ($attempt->completed_at ?? $attempt->last_played_at)->toIso8601String(),
+        ])->values(), $completedAttempts->count(), 20, $historyPage, [
+            'path' => route('admin.users.show', $user), 'pageName' => 'history_page', 'query' => ['tab' => 'Activity'],
+        ]);
+        $reports = QuestionReport::where('user_id', $user->id);
 
         $accuracy = null;
         if ($completedAttempts->isNotEmpty()) {
@@ -94,14 +104,20 @@ class UserController extends Controller
                 'attempts as quizzes_completed_count' => fn ($query) => $query->where('status', QuizAttempt::STATUS_COMPLETED),
             ])) + [
                 'accuracy' => $accuracy,
+                'language' => $user->language,
+                'default_instrument' => $user->default_instrument,
+                'avatar' => $user->avatar,
+                'completed_runs' => $completedAttempts->count(),
+                'completed_quizzes' => $completedAttempts->pluck('quiz_id')->unique()->count(),
                 'saved_count' => QuizMark::query()->where('user_id', $user->id)->where('bookmarked', true)->count(),
             ],
-            'recentAttempts' => $completedAttempts->take(10)->map(fn (QuizAttempt $attempt) => [
-                'id' => $attempt->id,
-                'quiz_title' => $attempt->quiz->title,
-                'score' => (int) round($attempt->correct_answers / max(1, $attempt->quiz->question_count) * 100),
-                'completed_at' => $attempt->completed_at?->diffForHumans(),
-            ])->values(),
+            'history' => $history,
+            'activeTab' => in_array($request->query('tab'), ['Account', 'Activity', 'Subscription', 'Support'], true) ? $request->query('tab') : 'Account',
+            'reports' => [
+                'total' => (clone $reports)->count(),
+                'open' => (clone $reports)->where('status', 'open')->count(),
+                'recent' => (clone $reports)->latest('id')->limit(5)->get(['id', 'quiz_title', 'reason', 'status', 'created_at']),
+            ],
             'awards' => $user->awards()->latest('earned_at')->get(['title', 'description', 'earned_at'])->map(fn ($award) => [
                 'title' => $award->title,
                 'description' => $award->description,
@@ -134,7 +150,7 @@ class UserController extends Controller
 
         $user->update(['role' => Role::from($data['role'])]);
 
-        return back()->with('success', "{$user->name} is now " . ($data['role'] === 'admin' ? 'an admin.' : 'a member.'));
+        return back()->with('success', "{$user->name} is now ".($data['role'] === 'admin' ? 'an admin.' : 'a member.'));
     }
 
     // Sets (or replaces) a member's plan, payment method and expiry — an admin override

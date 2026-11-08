@@ -1,3 +1,4 @@
+import AvatarBadge from '@/Components/AvatarBadge';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
@@ -42,15 +43,6 @@ function LogOutModal({ open, onClose }) {
     );
 }
 
-function initials(name) {
-    return name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('');
-}
-
 // Member sidebar, one list. Items without a `route` entry don't have a page yet —
 // they render as a disabled row with a "Soon" tag instead of a 404 link. Settings and
 // Support (marked `pinned`) sit apart from the rest — pushed down to sit just above
@@ -76,10 +68,11 @@ const adminNav = [
         route: 'admin.audio-quiz.index',
         alsoCurrent: ['admin.audio-quiz.show', 'admin.audio-quiz.lesson', 'admin.quizzes.index', 'admin.quizzes.edit', 'admin.quizzes.create'],
     },
+    { label: 'Question reports', icon: 'support', route: 'admin.question-reports.index' },
     { label: 'Users', icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
 ];
 
-export default function AppShell({ title, eyebrow, intro, action, children }) {
+export default function AppShell({ title, eyebrow, intro, action, children, headerClassName = 'flex', breadcrumbTitle }) {
     const { auth, flash } = usePage().props;
     const user = auth.user;
     const isAdmin = user.role === 'admin';
@@ -169,9 +162,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                     className="group shrink-0 border-t border-black/5 p-3"
                 >
                     <div className="flex items-center gap-3 rounded-xl p-1.5 transition-colors duration-200 group-hover:bg-neutral-50">
-                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand ring-2 ring-white transition-transform duration-200 group-hover:scale-105">
-                            {initials(user.name)}
-                        </span>
+                        <AvatarBadge id={user.avatar} name={user.name} size={40} />
                         <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-semibold text-neutral-900">{user.name}</p>
                             <p className="truncate text-xs text-neutral-500">{user.email}</p>
@@ -208,7 +199,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                     </button>
                 </header>
 
-                <Breadcrumbs items={items} title={title} />
+                <Breadcrumbs items={items} title={breadcrumbTitle ?? title} />
 
                 <main className="px-4 py-6 sm:px-8 sm:py-8">
                     {flash?.success && (
@@ -217,7 +208,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                         </div>
                     )}
 
-                    <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+                    <div className={`mb-6 flex-wrap items-end justify-between gap-4 ${headerClassName}`}>
                         <div>
                             {eyebrow && (
                                 <p
@@ -232,7 +223,7 @@ export default function AppShell({ title, eyebrow, intro, action, children }) {
                             {intro && (
                                 <p
                                     className={`mt-1 max-w-2xl text-[15px] text-neutral-600 ${
-                                        route().current('dashboard') ? '' : 'hidden sm:block'
+                                        route().current('dashboard') || route().current('quiz.categories') || route().current('quiz.category') ? '' : 'hidden sm:block'
                                     }`}
                                 >
                                     {intro}

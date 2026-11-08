@@ -1,234 +1,48 @@
-import QuizTable from '@/Components/Admin/QuizTable';
 import AppShell from '@/Layouts/AppShell';
+import { AudiencePreview, Bars, Metric, Panel, PreviewTable, SignupChart } from '@/Components/Admin/AnalyticsPreview';
 import { Head, Link } from '@inertiajs/react';
+import { useState } from 'react';
 
-function PeopleIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="9" cy="8" r="3" />
-            <path d="M3 20c.9-3 3-4.8 6-4.8s5.1 1.8 6 4.8" />
-            <path d="M15.5 8.5a2.5 2.5 0 110-5" />
-            <path d="M17 15.3c2 .5 3.3 1.9 4 4.7" />
-        </svg>
-    );
-}
+const tabs = ['Overview', 'Audience', 'Marketing', 'SEO'];
+const ranges = { '7': { signups: 84, active: 216, first: 52 }, '30': { signups: 320, active: 864, first: 198 }, '90': { signups: 1288, active: 2310, first: 799 }, custom: { signups: 320, active: 864, first: 198 } };
+const mutedButton = 'inline-flex min-h-11 items-center justify-center rounded-xl border border-neutral-300 bg-white px-4 text-sm font-semibold text-neutral-700 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700';
 
-function NoteIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M9 18V9l9-2v9M9 18a2.5 2.5 0 11-2.5-2.5A2.5 2.5 0 019 18zM18 16a2.5 2.5 0 11-2.5-2.5A2.5 2.5 0 0118 16z" />
-        </svg>
-    );
-}
-
-function PlayIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="12" cy="12" r="9" />
-            <path d="M10 9l5 3-5 3z" fill="currentColor" stroke="none" />
-        </svg>
-    );
-}
-
-function FlameIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M12 2.5c1 3 .5 4.5-.8 6.2C9.8 10.6 8 12 8 15a4 4 0 008 0c0-1.3-.4-2-1-2.8.6 2-.2 3.3-1.5 3.3-1.6 0-2-1.3-1.5-2.7.8-2.3-.5-3.8-1-4.8-.4 1.4-1.3 2-2 3.2-.5.9-.8 1.8-.8 2.8" />
-        </svg>
-    );
-}
-
-function GlobeIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="12" cy="12" r="9" />
-            <path d="M3 12h18M12 3c2.5 2.5 3.8 5.7 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.7-3.8-9S9.5 5.5 12 3z" />
-        </svg>
-    );
-}
-
-const STAT_TINTS = {
-    blue: { bg: 'bg-blue-50', icon: 'bg-white text-blue-600' },
-    brand: { bg: 'bg-rose-50', icon: 'bg-white text-brand' },
-    green: { bg: 'bg-emerald-50', icon: 'bg-white text-emerald-600' },
-    amber: { bg: 'bg-amber-50', icon: 'bg-white text-amber-600' },
-};
-
-function Stat({ label, value, detail, icon: Icon, tint }) {
-    const colors = STAT_TINTS[tint];
-    return (
-        <div className={`rounded-2xl ${colors.bg} px-5 py-4`}>
-            <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-neutral-600">{label}</p>
-                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-sm ${colors.icon}`}>
-                    <Icon className="h-4.5 w-4.5" />
-                </span>
-            </div>
-            <p className="mt-3 text-3xl font-bold tracking-tight text-neutral-900">{value}</p>
-            {detail && <p className="mt-1 text-sm text-neutral-500">{detail}</p>}
+export default function Dashboard({ stats }) {
+    const [tab, setTab] = useState('Overview');
+    const [range, setRange] = useState('30');
+    const [dates, setDates] = useState({ start: '', end: '' });
+    const values = ranges[range];
+    return <AppShell eyebrow="Admin" title="Overview" intro="Understand your audience, growth and learning activity." action={<Link className={mutedButton} href={route('admin.users.index')}>Manage users</Link>}>
+        <Head title="Admin overview" />
+        <div className="mb-6 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3 text-sm leading-relaxed text-sky-900"><strong>Design preview.</strong> Analytics and audience figures below are illustrative sample data. No visitor tracking, email sending, exports or analytics services are connected.</div>
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div aria-label="Admin analytics sections" className="flex max-w-full flex-wrap gap-1 rounded-xl border border-neutral-200 bg-white p-1">{tabs.map(item => <button key={item} aria-pressed={tab === item} onClick={() => setTab(item)} className={`min-h-11 rounded-lg px-4 text-sm font-semibold focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-700 ${tab === item ? 'bg-neutral-900 text-white' : 'text-neutral-600 hover:bg-neutral-50'}`}>{item}</button>)}</div>
+            {tab !== 'Audience' && <label className="flex items-center gap-3 text-sm font-medium text-neutral-600">Period<select value={range} onChange={event => setRange(event.target.value)} className="min-h-11 rounded-xl border-neutral-300 bg-white text-sm"><option value="7">Last 7 days</option><option value="30">Last 30 days</option><option value="90">Last 90 days</option><option value="custom">Custom range</option></select></label>}
         </div>
-    );
-}
+        {range === 'custom' && tab !== 'Audience' && <div className="mb-6 flex flex-wrap items-end gap-4 rounded-xl bg-white p-4">{['start', 'end'].map(key => <label key={key} className="text-xs font-semibold text-neutral-600">{key === 'start' ? 'Start date' : 'End date'}<input type="date" value={dates[key]} min={key === 'end' ? dates.start : undefined} max={key === 'start' ? dates.end || undefined : undefined} onChange={event => setDates({ ...dates, [key]: event.target.value })} className="mt-2 block min-h-11 rounded-lg border-neutral-300 text-sm" /></label>)}<p className="text-xs text-neutral-500">Custom dates are a visual preview; figures use the 30-day sample.</p></div>}
 
-// Horizontal bars ranked by member count, highest first — real country data, no map library.
-function TopCountries({ countries }) {
-    if (countries.length === 0) {
-        return <p className="text-sm text-neutral-500">No members have set a country yet.</p>;
-    }
+        {tab === 'Overview' && <div className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label="New signups" value={values.signups.toLocaleString()} detail="↑ 18% compared with previous period · sample" tone="blue" /><Metric label="Active learners" value={values.active.toLocaleString()} detail="Unique members who answered a question · sample" tone="green" /><Metric label="First-quiz completion" value="62%" detail={`${values.first} of ${values.signups} new members · sample`} /><Metric label="Returned within 7 days" value="37%" detail="New members with a full 7-day follow-up window · sample" tone="amber" /></div>
+            <div className="grid gap-6 xl:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]"><Panel title="New signups" detail="Example growth over the selected period."><SignupChart range={range} /></Panel><Panel title="From signup to practice" detail="Sample onboarding funnel for new members."><Bars rows={[{ label: 'Created an account', value: values.signups }, { label: 'Answered their first question', value: Math.round(values.signups * .81) }, { label: 'Completed their first quiz', value: values.first }]} /></Panel></div>
+            <div className="grid gap-6 lg:grid-cols-2"><Panel title="Member countries" detail="Self-reported profile country, not visitor location. Sample member counts."><Bars rows={[{ label: 'Nigeria', value: 148 }, { label: 'United States', value: 102 }, { label: 'United Kingdom', value: 76 }, { label: 'Germany', value: 54 }]} /><p className="mt-5 rounded-lg bg-neutral-50 p-3 text-xs text-neutral-500">Country not provided: 42 members · sample</p></Panel><Panel title="Preferred languages" detail="Sample profile language preferences for content and translation planning."><Bars rows={[{ label: 'English', value: 296 }, { label: 'Portuguese', value: 84 }, { label: 'German', value: 54 }, { label: 'Dutch', value: 31 }]} /></Panel></div>
+            <Panel title="Popular quiz categories" detail="Distinct learners and completed runs, including retries. Sample counts."><PreviewTable headings={['Category', 'Learners', 'Completed attempts']} rows={[[ 'Relative Pitch', '248', '612' ], [ 'Basic Triads', '192', '438' ], [ 'Melodic Dictation', '154', '306' ], [ 'Intervals', '126', '284' ]]} /></Panel>
+        </div>}
 
-    const max = Math.max(...countries.map((row) => row.count));
+        {tab === 'Audience' && <AudiencePreview />}
 
-    return (
-        <div className="space-y-3">
-            {countries.map((row) => (
-                <div key={row.country} className="flex items-center gap-3">
-                    <span className="w-28 shrink-0 truncate text-sm font-medium text-neutral-700">{row.country}</span>
-                    <div className="h-2 flex-1 overflow-hidden rounded-full bg-neutral-100">
-                        <div className="h-full rounded-full bg-brand" style={{ width: `${(row.count / max) * 100}%` }} />
-                    </div>
-                    <span className="w-6 shrink-0 text-right text-sm font-semibold tabular-nums text-neutral-900">{row.count}</span>
-                </div>
-            ))}
-        </div>
-    );
-}
+        {tab === 'Marketing' && <div className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-3"><Metric label="Visitors" value="4,820" detail="Sample traffic estimate" tone="blue" /><Metric label="Visitor → signup" value="6.6%" detail="320 attributed signups / 4,820 visitors · sample" /><Metric label="Email subscribers" value="246" detail="Members opted into marketing emails · sample" tone="green" /></div>
+            <Panel title="Traffic sources" detail="Where visitors discover the site. Source attribution is not connected."><PreviewTable headings={['Source', 'Visitors', 'Attributed signups', 'Signup rate']} rows={[[ 'Google search', '1,800', '126', '7.0%' ], [ 'YouTube', '1,100', '88', '8.0%' ], [ 'Instagram', '850', '34', '4.0%' ], [ 'Email', '420', '42', '10.0%' ], [ 'Direct / other', '650', '30', '4.6%' ]]} /></Panel>
+            <Panel title="Campaign performance" detail="Sample results for tagged campaign links. Actual attribution requires tracking integration."><PreviewTable headings={['Campaign', 'Source / medium', 'Visits', 'Signups']} rows={[[ 'Ear training introduction', 'youtube / video', '620', '49' ], [ 'Weekly practice reminder', 'newsletter / email', '240', '24' ], [ 'Beginner listening challenge', 'instagram / social', '380', '15' ]]} /></Panel>
+            <Panel title="Email audience" detail="Preview segments for future campaigns."><div className="grid gap-4 sm:grid-cols-3"><Metric label="Subscribed" value="246" detail="Eligible sample marketing audience" /><Metric label="Inactive 14+ days" value="72" detail="Sample re-engagement segment" /><Metric label="New beginners" value="58" detail="Sample welcome segment" /></div><button onClick={() => setTab('Audience')} className={`${mutedButton} mt-5`}>Explore audience</button></Panel>
+        </div>}
 
-function initials(name) {
-    return name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('');
-}
+        {tab === 'SEO' && <div className="space-y-6">
+            <Panel title="Google Search performance" detail="Search Console is not connected. All search figures shown here are examples." action={<span className="rounded-full bg-neutral-100 px-3 py-1 text-xs font-semibold text-neutral-500">Not connected</span>}><div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4"><Metric label="Search clicks" value="1,260" detail="Sample" tone="blue" /><Metric label="Search impressions" value="28,000" detail="Sample" /><Metric label="Click-through rate" value="4.5%" detail="Clicks divided by impressions · sample" /><Metric label="Average position" value="12.4" detail="Search Console average · sample" /></div></Panel>
+            <Panel title="Top search queries" detail="Example searches that could lead visitors to KhordQuiz."><PreviewTable headings={['Search query', 'Clicks', 'Impressions', 'CTR']} rows={[[ 'ear training quiz', '420', '8,400', '5.0%' ], [ 'chord recognition practice', '280', '7,000', '4.0%' ], [ 'learn musical intervals', '180', '4,500', '4.0%' ]]} /></Panel>
+            <Panel title="Top landing pages" detail="Sample Google Search entry pages; public page tracking is not connected."><PreviewTable headings={['Page', 'Search clicks', 'Impressions', 'CTR']} rows={[[ '/', '940', '20,000', '4.7%' ], [ '/pricing', '200', '5,000', '4.0%' ], [ 'Other public pages', '120', '3,000', '4.0%' ]]} /></Panel>
+        </div>}
 
-export default function Dashboard({ stats, recentStreaks, recentSignups, quizzes, topCountries }) {
-    return (
-        <AppShell
-            eyebrow="Admin"
-            title="Overview"
-            intro="Member totals, quiz catalog, and who is on a streak."
-            action={
-                <div className="flex items-center gap-2.5">
-                    <Link
-                        href={route('admin.users.index')}
-                        className="inline-flex items-center rounded-md border border-black/10 bg-white px-4 py-2.5 text-sm font-medium text-neutral-900 hover:bg-neutral-50"
-                    >
-                        Manage users
-                    </Link>
-                    <Link
-                        href={route('admin.quizzes.create')}
-                        className="inline-flex items-center rounded-md bg-brand px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-dark"
-                    >
-                        Add quiz
-                    </Link>
-                </div>
-            }
-        >
-            <Head title="Overview" />
-
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <Stat label="Members" value={stats.members} detail={`+${stats.newSignups} this week`} icon={PeopleIcon} tint="blue" />
-                <Stat label="Quizzes" value={stats.quizzes} detail={`${stats.publishedQuizzes} published`} icon={NoteIcon} tint="brand" />
-                <Stat label="Attempts" value={stats.attempts} detail={`${stats.completedAttempts} completed`} icon={PlayIcon} tint="green" />
-                <Stat label="Active streaks" value={stats.activeStreaks} detail="Members practicing" icon={FlameIcon} tint="amber" />
-            </div>
-
-            <section className="mt-8 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <div className="flex items-center gap-2 text-neutral-500">
-                    <GlobeIcon className="h-4 w-4" />
-                    <h2 className="text-sm font-semibold uppercase tracking-wide">Top countries</h2>
-                </div>
-                <div className="mt-4">
-                    <TopCountries countries={topCountries} />
-                </div>
-            </section>
-
-            <div className="mt-8 grid gap-6 lg:grid-cols-2">
-                <section>
-                    <h2 className="text-lg font-semibold">Recent streaks</h2>
-                    <p className="mt-1 text-sm text-neutral-500">Members ordered by their latest practice day.</p>
-
-                    <div className="mt-4 overflow-hidden rounded-2xl border border-black/5 bg-white">
-                        {recentStreaks.length === 0 ? (
-                            <p className="px-5 py-8 text-sm text-neutral-500">No members yet.</p>
-                        ) : (
-                            <ul className="divide-y divide-black/5">
-                                {recentStreaks.map((member) => (
-                                    <li key={member.id} className="flex items-center justify-between gap-4 px-5 py-4">
-                                        <div className="flex min-w-0 items-center gap-3">
-                                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand">
-                                                {initials(member.name)}
-                                            </span>
-                                            <div className="min-w-0">
-                                                <p className="truncate font-medium">{member.name}</p>
-                                                <p className="text-sm text-neutral-500">Last practice {member.last_practiced_on}</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <p className="text-lg font-semibold text-brand">
-                                                {member.current_streak}
-                                                <span className="ms-1 text-sm font-medium text-neutral-500">
-                                                    {member.current_streak === 1 ? 'day' : 'days'}
-                                                </span>
-                                            </p>
-                                            <p className="text-xs text-neutral-500">Best {member.longest_streak}</p>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                </section>
-
-                <section>
-                    <div className="mb-1 flex items-end justify-between gap-3">
-                        <h2 className="text-lg font-semibold">New signups</h2>
-                        <Link href={route('admin.users.index')} className="text-sm font-medium text-brand hover:underline">
-                            View all users
-                        </Link>
-                    </div>
-                    <p className="text-sm text-neutral-500">The most recently joined members.</p>
-
-                    <div className="mt-4 overflow-hidden rounded-2xl border border-black/5 bg-white">
-                        {recentSignups.length === 0 ? (
-                            <p className="px-5 py-8 text-sm text-neutral-500">No members yet.</p>
-                        ) : (
-                            <ul className="divide-y divide-black/5">
-                                {recentSignups.map((member) => (
-                                    <li key={member.id}>
-                                        <Link href={route('admin.users.show', member.id)} className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-neutral-50">
-                                            <div className="flex min-w-0 items-center gap-3">
-                                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand">
-                                                    {initials(member.name)}
-                                                </span>
-                                                <div className="min-w-0">
-                                                    <p className="truncate font-medium">{member.name}</p>
-                                                    <p className="truncate text-sm text-neutral-500">{member.email}</p>
-                                                </div>
-                                            </div>
-                                            <p className="shrink-0 text-sm text-neutral-500">{member.joined_ago}</p>
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </div>
-                </section>
-            </div>
-
-            <section className="mt-8">
-                <div className="mb-4 flex items-end justify-between gap-3">
-                    <div>
-                        <h2 className="text-lg font-semibold">Quiz list</h2>
-                        <p className="mt-1 text-sm text-neutral-500">Everything in the catalog.</p>
-                    </div>
-                    <Link href={route('admin.quizzes.index')} className="text-sm font-medium text-brand hover:underline">
-                        Manage quizzes
-                    </Link>
-                </div>
-                <QuizTable quizzes={quizzes} />
-            </section>
-        </AppShell>
-    );
+        <section className="mt-8 rounded-2xl border border-neutral-200 bg-white p-5 sm:p-6"><div className="flex flex-wrap items-center justify-between gap-4"><div><h2 className="font-semibold">Catalog management</h2><p className="mt-1 text-sm text-neutral-500">{stats?.publishedQuizzes ?? '—'} published quizzes · existing live catalog</p></div><div className="flex flex-wrap gap-3"><Link href={route('admin.quizzes.index')} className={mutedButton}>Manage quizzes</Link><Link href={route('admin.quizzes.create')} className="inline-flex min-h-11 items-center rounded-xl bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark">Add quiz</Link></div></div></section>
+    </AppShell>;
 }

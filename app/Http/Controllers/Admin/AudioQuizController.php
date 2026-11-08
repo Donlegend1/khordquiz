@@ -8,10 +8,27 @@ use App\Models\Quiz;
 use App\Models\QuizQuestion;
 use App\Models\QuizQuestionAudio;
 use App\Support\AddNineSamples;
+use App\Support\BasicChordNamingSamples;
 use App\Support\BasicTriadSamples;
+use App\Support\CadenceSamples;
+use App\Support\ChordToneRecognitionSamples;
+use App\Support\DiatonicProgressionSamples;
+use App\Support\DiatonicSeventhProgressionSamples;
+use App\Support\DominantChordExtensionSamples;
+use App\Support\EleventhDegreeChordSamples;
 use App\Support\IntervalSamples;
+use App\Support\MajorChordExtensionSamples;
+use App\Support\MinorChordExtensionSamples;
+use App\Support\NinthDegreeChordSamples;
 use App\Support\NoteSample;
+use App\Support\ProgressionBuildSamples;
 use App\Support\QuizCatalog;
+use App\Support\SecondaryEleventhChordSamples;
+use App\Support\SecondaryNinthChordSamples;
+use App\Support\SecondarySeventhChordSamples;
+use App\Support\SeventhDegreeChordSamples;
+use App\Support\SeventhProgressionBuildSamples;
+use App\Support\ThirteenthDegreeChordSamples;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -42,6 +59,46 @@ class AudioQuizController extends Controller
     private const CHORD_TONE_QUALITIES = [
         'Diminished 7th', 'Dominant 7th', 'Minor 7(♭5)', 'Major 7th', 'Minor 7th',
         'Augmented 7th', 'Minor-Major 7th', 'Diminished-Major 7th', 'Dominant 7(♭5)', 'Major 7(♯5)', 'Major 7(♭5)',
+    ];
+
+    // #1/#2 are the 5 7th Degree Chord qualities (root position / all
+    // inversions); #3/#4 are the 6 Secondary 7th Chord qualities; #5/#6
+    // are both combined (11 qualities), same root/inverted split (see
+    // scripts/audio/build_chord_tone_recognition{1..6}.php).
+    private const CHORD_TONE_QUIZ_TITLES = [
+        'Chord Tone Recognition #1', 'Chord Tone Recognition #2',
+        'Chord Tone Recognition #3', 'Chord Tone Recognition #4',
+        'Chord Tone Recognition #5', 'Chord Tone Recognition #6',
+    ];
+
+    private const MAJOR_CHORD_EXTENSION_QUIZ_TITLES = [
+        'Major Chord Extentions · Level 1', 'Major Chord Extentions · Level 2', 'Major Chord Extentions · Level 3',
+        'Major Chord Extentions · Level 4', 'Major Chord Extentions · Level 5', 'Major Chord Extentions · Level 6',
+        'Major Chord Extentions · Level 7',
+        'Major Chord Extentions · Level 8',
+        'Major Chord Extentions · Level 9',
+        'Major Chord Extentions · Level 10',
+        'Major Chord Extentions · Level 11',
+        'Major Chord Extentions · Level 12',
+        'Major Chord Extentions · Level 13',
+    ];
+
+    private const MINOR_CHORD_EXTENSION_QUIZ_TITLES = [
+        'Minor Chord Extentions · Level 1', 'Minor Chord Extentions · Level 2', 'Minor Chord Extentions · Level 3',
+        'Minor Chord Extentions · Level 4', 'Minor Chord Extentions · Level 5', 'Minor Chord Extentions · Level 6',
+        'Minor Chord Extentions · Level 7',
+        'Minor Chord Extentions · Level 8',
+        'Minor Chord Extentions · Level 9',
+        'Minor Chord Extentions · Level 10',
+        'Minor Chord Extentions · Level 11',
+        'Minor Chord Extentions · Level 12',
+        'Minor Chord Extentions · Level 13',
+    ];
+
+    private const DOMINANT_CHORD_EXTENSION_QUIZ_TITLES = [
+        'Dominant Chord Extentions · Level 1', 'Dominant Chord Extentions · Level 2',
+        'Dominant Chord Extentions · Level 3', 'Dominant Chord Extentions · Level 4',
+        'Dominant Chord Extentions · Level 5', 'Dominant Chord Extentions · Level 6', 'Dominant Chord Extentions · Level 7', 'Dominant Chord Extentions · Level 8',
     ];
 
     public function index(): Response
@@ -112,7 +169,7 @@ class AudioQuizController extends Controller
             'difficulties' => Quiz::DIFFICULTIES,
             'lessons' => $lessons->values(),
             'selectedSlug' => $lesson,
-            'quiz' => $selectedQuiz ? $this->quizPayload($selectedQuiz) : null,
+            'quiz' => $selectedQuiz ? $this->quizPayload($selectedQuiz, max(1, $request->integer('page', 1))) : null,
         ]);
     }
 
@@ -187,7 +244,7 @@ class AudioQuizController extends Controller
 
     public function storeQuestion(Request $request, Quiz $quiz): RedirectResponse
     {
-        $isChordTone = in_array($quiz->title, ['Chord Tone Recognition #1', 'Chord Tone Recognition #2'], true);
+        $isChordTone = in_array($quiz->title, self::CHORD_TONE_QUIZ_TITLES, true);
 
         // Melodic Dictation questions are a single tapped-out sequence rather than
         // a flat list of options, so they submit a 1-element "choices" array.
@@ -314,7 +371,29 @@ class AudioQuizController extends Controller
             '7th Degree Chords · Level 5', '7th Degree Chords · Level 6', '7th Degree Chords · Level 7', '7th Degree Chords · Level 8',
             'Secondary 7th Chords · Level 5', 'Secondary 7th Chords · Level 6', 'Secondary 7th Chords · Level 7', 'Secondary 7th Chords · Level 8',
         ];
-        $multiExtensionLevels = ['Major Chord Extentions', 'Minor Chord Extentions', 'Dominant Chord Extentions'];
+        $multiExtensionLevels = [
+            'Major Chord Extentions', 'Major Chord Extentions · Level 1', 'Major Chord Extentions · Level 2', 'Major Chord Extentions · Level 3',
+            'Major Chord Extentions · Level 4', 'Major Chord Extentions · Level 5', 'Major Chord Extentions · Level 6',
+            'Major Chord Extentions · Level 7',
+            'Major Chord Extentions · Level 8',
+            'Major Chord Extentions · Level 9',
+            'Major Chord Extentions · Level 10',
+            'Major Chord Extentions · Level 11',
+            'Major Chord Extentions · Level 12',
+            'Major Chord Extentions · Level 13',
+            'Minor Chord Extentions', 'Minor Chord Extentions · Level 1', 'Minor Chord Extentions · Level 2', 'Minor Chord Extentions · Level 3',
+            'Minor Chord Extentions · Level 4', 'Minor Chord Extentions · Level 5', 'Minor Chord Extentions · Level 6',
+            'Minor Chord Extentions · Level 7',
+            'Minor Chord Extentions · Level 8',
+            'Minor Chord Extentions · Level 9',
+            'Minor Chord Extentions · Level 10',
+            'Minor Chord Extentions · Level 11',
+            'Minor Chord Extentions · Level 12',
+            'Minor Chord Extentions · Level 13',
+            'Dominant Chord Extentions', 'Dominant Chord Extentions · Level 1', 'Dominant Chord Extentions · Level 2', 'Dominant Chord Extentions · Level 3',
+            'Dominant Chord Extentions · Level 4',
+            'Dominant Chord Extentions · Level 5', 'Dominant Chord Extentions · Level 6', 'Dominant Chord Extentions · Level 7', 'Dominant Chord Extentions · Level 8',
+        ];
 
         return match (true) {
             $quiz->title === 'Find the Pitch' => 'Listen to the note and tap it on the keyboard.',
@@ -322,11 +401,11 @@ class AudioQuizController extends Controller
             in_array($quiz->title, $compoundTriadLevels, true) => 'Listen to the triad and identify its quality and inversion.',
             in_array($quiz->title, $compoundChordLevels, true) => 'Listen to the chord and identify its quality and inversion.',
             in_array($quiz->title, $multiExtensionLevels, true) => 'Listen to the chord and select the extension(s) you hear.',
-            $quiz->title === 'Chord naming' => 'Listen to the chord and build its full name.',
-            $quiz->title === 'Diatonic Progression' => 'Listen to the progression and choose the number of each chord.',
+            in_array($quiz->title, ['Chord naming', BasicChordNamingSamples::TITLE, BasicChordNamingSamples::LEVEL_TWO_TITLE, BasicChordNamingSamples::LEVEL_THREE_TITLE, BasicChordNamingSamples::LEVEL_FOUR_TITLE, BasicChordNamingSamples::LEVEL_FIVE_TITLE, BasicChordNamingSamples::LEVEL_SIX_TITLE], true) => 'Listen to the chord and build its full name.',
+            in_array($quiz->title, ['Diatonic Progression #1', 'Diatonic Progression #2', 'Progression Build #1', 'Progression Build #2'], true) => 'First hear the key’s major triad and tonic note. Then identify the four progression chords.',
             $quiz->title === 'Progression Build #1' => 'Listen to the progression and choose the number and quality of each chord.',
             $quiz->title === 'Progression Build #2' => 'Listen to the progression and choose the number and 7th chord quality of each chord.',
-            $quiz->title === 'Progression recognition' => 'Listen to the progression and select the chord quality for each chord.',
+            in_array($quiz->title, ['Progression Recognition #1', 'Progression Recognition #2', 'Progression Recognition #3', 'Progression Recognition #4'], true) => 'Listen to the progression and select the chord quality for each chord.',
             $quiz->title === '2-5-1 chord degree' => 'Listen to the progression and select the chord quality and every degree for each chord.',
             $quiz->title === 'Find the Key #1' => 'Listen to the song and identify which key it is in.',
             $quiz->title === 'Find the Key #2' => 'Listen to the song and use the reference note to identify which key it is in.',
@@ -392,9 +471,13 @@ class AudioQuizController extends Controller
     /**
      * @return array<string, mixed>
      */
-    private function quizPayload(Quiz $quiz): array
+    private function quizPayload(Quiz $quiz, int $page = 1): array
     {
-        $quiz->loadMissing('questions.audioVariants');
+        $questions = $quiz->questions()->with('audioVariants')->orderBy('id')->paginate(25, ['*'], 'page', $page)->withQueryString();
+        if ($questions->currentPage() > $questions->lastPage()) {
+            $questions = $quiz->questions()->with('audioVariants')->orderBy('id')->paginate(25, ['*'], 'page', $questions->lastPage())->withQueryString();
+        }
+        $sounds = QuizQuestionAudio::whereIn('quiz_question_id', $quiz->questions()->select('id'))->distinct()->pluck('sound')->values();
 
         return [
             'id' => $quiz->id,
@@ -410,7 +493,14 @@ class AudioQuizController extends Controller
                 ->map(fn ($track) => ['id' => $track['id'], 'label' => $track['label'], 'url' => $this->mediaUrl($track['path'])])
                 ->values(),
             'is_published' => $quiz->is_published,
-            'questions' => $quiz->questions->map(fn (QuizQuestion $question) => [
+            'questions_total' => $questions->total(),
+            'audio_sounds' => $sounds,
+            'pagination' => [
+                'current_page' => $questions->currentPage(), 'last_page' => $questions->lastPage(),
+                'from' => $questions->firstItem(), 'to' => $questions->lastItem(), 'total' => $questions->total(),
+                'previous_url' => $questions->previousPageUrl(), 'next_url' => $questions->nextPageUrl(),
+            ],
+            'questions' => $questions->getCollection()->map(fn (QuizQuestion $question) => [
                 'id' => $question->id,
                 'prompt' => $question->prompt,
                 'choices' => $question->choices,
@@ -486,16 +576,52 @@ class AudioQuizController extends Controller
             return [];
         }
 
+        // Bass Guitar, Upright Bass, and Tuba are excluded from Basic Triads,
+        // Add 9, 7th Degree Chords, Secondary 7th Chords, 9th Degree
+        // Chords, Secondary 9th Chords, 11th Degree Chords, Secondary
+        // 11th Chords, 13th Degree Chords, and the two Chord Tone
+        // Recognition quizzes entirely by explicit request — not just
+        // unattached, but never offered as a "missing instrument" Live
+        // Mix suggestion either.
+        $liveMixCategories = [
+            'Basic Triads', 'Add 9', '7th Degree Chords', 'Secondary 7th Chords',
+            '9th Degree Chords', 'Secondary 9th Chords', '11th Degree Chords', 'Secondary 11th Chords',
+            '13th Degree Chords', 'Chord Naming',
+        ];
+        $liveMixTitles = ['Cadences', 'Diatonic Progression #1', 'Diatonic Progression #2', 'Progression Build #1', 'Progression Build #2', ...self::CHORD_TONE_QUIZ_TITLES, ...self::MAJOR_CHORD_EXTENSION_QUIZ_TITLES, ...self::MINOR_CHORD_EXTENSION_QUIZ_TITLES, ...self::DOMINANT_CHORD_EXTENSION_QUIZ_TITLES];
+        $isLiveMixQuiz = in_array($quiz->category, $liveMixCategories, true) || in_array($quiz->title, $liveMixTitles, true);
+        $excludedFromCategory = $isLiveMixQuiz ? ['Bass Guitar', 'Upright Bass', 'Tuba'] : [];
+
         $previews = [];
         foreach (QuizCatalog::SOUND_SLUGS as $sound => $slug) {
-            if (in_array($sound, $have, true)) {
+            if (in_array($sound, $have, true) || in_array($sound, $excludedFromCategory, true)) {
                 continue;
             }
 
-            if (in_array($quiz->category, ['Basic Triads', 'Add 9'], true)) {
-                $resolved = $quiz->category === 'Add 9'
-                    ? AddNineSamples::forQuestion($question, $slug)
-                    : BasicTriadSamples::forQuestion($question, $slug);
+            if ($isLiveMixQuiz) {
+                $resolved = match (true) {
+                    $quiz->title === 'Cadences' => CadenceSamples::forQuestion($question, $slug),
+                    $quiz->title === 'Diatonic Progression #1' => DiatonicProgressionSamples::forQuestion($question, $slug),
+                    $quiz->title === 'Diatonic Progression #2' => DiatonicSeventhProgressionSamples::forQuestion($question, $slug),
+                    $quiz->title === 'Progression Build #1' => ProgressionBuildSamples::forQuestion($question, $slug),
+                    $quiz->title === 'Progression Build #2' => SeventhProgressionBuildSamples::forQuestion($question, $slug),
+                    in_array($quiz->title, self::CHORD_TONE_QUIZ_TITLES, true) => ChordToneRecognitionSamples::forQuestion($question, $slug),
+                    in_array($quiz->title, self::MAJOR_CHORD_EXTENSION_QUIZ_TITLES, true) => MajorChordExtensionSamples::forQuestion($question, $slug),
+                    in_array($quiz->title, self::MINOR_CHORD_EXTENSION_QUIZ_TITLES, true) => MinorChordExtensionSamples::forQuestion($question, $slug),
+                    in_array($quiz->title, self::DOMINANT_CHORD_EXTENSION_QUIZ_TITLES, true) => DominantChordExtensionSamples::forQuestion($question, $slug),
+                    default => match ($quiz->category) {
+                        'Chord Naming' => BasicChordNamingSamples::forQuestion($question, $slug),
+                        'Add 9' => AddNineSamples::forQuestion($question, $slug),
+                        'Basic Triads' => BasicTriadSamples::forQuestion($question, $slug),
+                        '7th Degree Chords' => SeventhDegreeChordSamples::forQuestion($question, $slug),
+                        'Secondary 7th Chords' => SecondarySeventhChordSamples::forQuestion($question, $slug),
+                        '9th Degree Chords' => NinthDegreeChordSamples::forQuestion($question, $slug),
+                        'Secondary 9th Chords' => SecondaryNinthChordSamples::forQuestion($question, $slug),
+                        '11th Degree Chords' => EleventhDegreeChordSamples::forQuestion($question, $slug),
+                        'Secondary 11th Chords' => SecondaryEleventhChordSamples::forQuestion($question, $slug),
+                        '13th Degree Chords' => ThirteenthDegreeChordSamples::forQuestion($question, $slug),
+                    },
+                };
                 $notes = $resolved === null ? null : array_map(fn (array $note) => [
                     'url' => $this->mediaUrl(NoteSample::path($slug, $note['degree'], $note['octave'])),
                     'offset' => $note['offset'],

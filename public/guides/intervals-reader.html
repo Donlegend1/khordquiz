@@ -1,0 +1,76 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=4"><title>Intervals guide</title><style>
+*{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{display:flex;flex-direction:column;margin:0;background:#eae8e5;font-family:Arial,sans-serif;color:#222}header{flex-shrink:0;position:sticky;top:0;z-index:2;background:#fff;border-bottom:1px solid #ddd;padding:8px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}.group{display:flex;align-items:center;gap:6px}button{min-width:44px;min-height:44px;border:1px solid #ddd;border-radius:9px;background:#fff;color:#222;font-size:13px;font-weight:600;padding:8px}button:disabled{opacity:.35}button:focus-visible{outline:2px solid #c32720;outline-offset:2px}#count{font-size:12px;min-width:64px;text-align:center}#viewport{position:relative;flex:1;min-height:0;overflow-y:scroll;overflow-x:hidden;padding:10px;overscroll-behavior-x:none}#pages{display:flex;flex-direction:column;gap:14px;min-height:100%}.pdf-page{flex-shrink:0;margin:0 auto}canvas{max-width:none}canvas{display:block;background:#fff;box-shadow:0 2px 8px #0002}#status{padding:12px;text-align:center;font-size:13px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style></head><body><header aria-label="PDF controls"><div class="group"><button id="previous" aria-label="Previous page" disabled>‹</button><span id="count" aria-live="polite">Loading…</span><button id="next" aria-label="Next page" disabled>›</button></div><div class="group"><button id="minus" aria-label="Zoom out">−</button><button id="fit" aria-label="Fit page width">Fit</button><button id="plus" aria-label="Zoom in">+</button></div></header><p id="status" role="status">Opening guide…</p><main id="viewport" aria-label="PDF pages, scroll vertically"><div id="pages" aria-label="Page text and illustrations"></div></main><script type="module">
+const send = (data) => window.parent.postMessage(data, window.location.origin);
+window.addEventListener('keydown', (event) => { if (event.key === 'Escape') send({type:'guide-close'}); });
+let documentPdf, pageNumber=1, zoom=1, drawing=false, pending=false, rendered=0;
+const status=document.getElementById('status'), viewport=document.getElementById('viewport'), pages=document.getElementById('pages');
+function state(){return {page:pageNumber,pages:documentPdf?.numPages??0,zoom,rendered};}
+window.__guideState=state;
+function updateControls(){
+ document.getElementById('count').textContent=`${pageNumber} of ${documentPdf.numPages}`;
+ document.getElementById('previous').disabled=pageNumber<=1;
+ document.getElementById('next').disabled=pageNumber>=documentPdf.numPages;
+ document.getElementById('minus').disabled=zoom<=1;
+ document.getElementById('plus').disabled=zoom>=3;
+}
+function visiblePage(){
+ const threshold=viewport.scrollTop+Math.min(120,viewport.clientHeight*.3);
+ let number=1;
+ for(const element of pages.children){if(element.offsetTop<=threshold)number=Number(element.dataset.page);}
+ pageNumber=viewport.scrollHeight-viewport.scrollTop-viewport.clientHeight<2 ? documentPdf.numPages : number;updateControls();
+}
+viewport.addEventListener('scroll',()=>{if(!drawing&&documentPdf)visiblePage();},{passive:true});
+async function render(){
+ if(!documentPdf)return;
+ if(drawing){pending=true;return;}
+ drawing=true;rendered=0;
+ const restorePage=pageNumber;
+ try{
+  status.hidden=false;status.textContent='Loading guide…';
+  viewport.style.overflowX=zoom>1?'auto':'hidden';
+  const available=Math.max(1,viewport.clientWidth-20);
+  for(let number=1;number<=documentPdf.numPages;number++){
+   const page=await documentPdf.getPage(number);
+   let element=pages.children[number-1];
+   if(!element){
+    element=document.createElement('section');element.className='pdf-page';element.dataset.page=String(number);element.setAttribute('aria-label',`Page ${number}`);
+    const canvas=document.createElement('canvas');canvas.setAttribute('aria-hidden','true');element.append(canvas);
+    const text=document.createElement('article');text.className='sr-only';text.setAttribute('aria-label',`Page ${number} text`);element.append(text);pages.append(element);
+   }
+   const canvas=element.querySelector('canvas');
+   const original=page.getViewport({scale:1});
+   const size=page.getViewport({scale:(Math.floor(available*zoom)/original.width)});
+   const pixelRatio=Math.min(window.devicePixelRatio||1,2);
+   element.style.width=`${Math.floor(size.width)}px`;
+   canvas.width=Math.ceil(size.width*pixelRatio);canvas.height=Math.ceil(size.height*pixelRatio);
+   canvas.style.width=`${Math.floor(size.width)}px`;canvas.style.height=`${Math.floor(size.height)}px`;
+   await page.render({canvas,canvasContext:canvas.getContext('2d'),viewport:size,transform:[pixelRatio,0,0,pixelRatio,0,0]}).promise;
+   const content=await page.getTextContent();element.querySelector('article').textContent=content.items.map(item=>item.str??'').join(' ');
+   rendered=number;
+  }
+  pageNumber=restorePage;updateControls();status.hidden=true;
+  viewport.scrollTo({left:0,top:Math.max(0,pages.children[restorePage-1].offsetTop-10)});
+  send({type:'ready',...state()});
+ }catch(error){status.hidden=false;status.textContent='Unable to open the guide. Close it and try again.';send({type:'error',message:String(error)});}
+ finally{drawing=false;if(pending){pending=false;render();}}
+}
+function navigate(step){
+ if(!documentPdf||drawing)return;
+ pageNumber=Math.max(1,Math.min(documentPdf.numPages,pageNumber+step));updateControls();
+ viewport.scrollTo({left:0,top:Math.max(0,pages.children[pageNumber-1].offsetTop-10),behavior:'smooth'});
+}
+document.getElementById('previous').onclick=()=>navigate(-1);
+document.getElementById('next').onclick=()=>navigate(1);
+document.getElementById('minus').onclick=()=>{zoom=Math.max(1,zoom-.5);render();};
+document.getElementById('plus').onclick=()=>{zoom=Math.min(3,zoom+.5);render();};
+document.getElementById('fit').onclick=()=>{zoom=1;render();};
+window.addEventListener('resize',()=>render());
+
+try{
+ const pdfjs=await import('./pdfjs/pdf.min.mjs');
+ pdfjs.GlobalWorkerOptions.workerSrc=new URL('./pdfjs/pdf.worker.min.mjs',window.location.href).href;
+ documentPdf=await pdfjs.getDocument({url:'./intervals.pdf',isEvalSupported:false,useWasm:false}).promise;
+ await render();
+}catch(error){status.hidden=false;status.textContent='Unable to open the guide. Close it and try again.';send({type:'error',message:String(error)});}
+</script></body></html>

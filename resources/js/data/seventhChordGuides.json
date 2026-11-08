@@ -1,0 +1,316 @@
+{
+  "7th Degree Chords · Level 1": {
+    "heading": "Hear a seventh chord. Choose its type.",
+    "intro": "You will hear four notes played together. Choose the seventh-chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Diminished 7th, Dominant 7th, Minor 7(♭5), Major 7th, Minor 7th. These names describe the different sounds the four notes can make together."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses chords built on F. The notes use a close layout, without spreading individual notes into a different high or low range. Choose the chord type only; there is no separate inversion answer. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E"
+    ],
+    "layoutCaption": "F major seventh with F at the bottom.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th. During the quiz, choose the type of chord you hear."
+  },
+  "7th Degree Chords · Level 2": {
+    "heading": "Hear a seventh chord. Choose its type.",
+    "intro": "You will hear four notes played together. Choose the seventh-chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Diminished 7th, Dominant 7th, Minor 7(♭5), Major 7th, Minor 7th. These names describe the different sounds the four notes can make together."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses all twelve keys. The notes use a close layout, without spreading individual notes into a different high or low range. Choose the chord type only; there is no separate inversion answer. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E"
+    ],
+    "layoutCaption": "F major seventh with F at the bottom.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th. During the quiz, choose the type of chord you hear."
+  },
+  "7th Degree Chords · Level 3": {
+    "heading": "Hear a seventh chord. Choose its type.",
+    "intro": "You will hear four notes played together. Choose the seventh-chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Diminished 7th, Dominant 7th, Minor 7(♭5), Major 7th, Minor 7th. These names describe the different sounds the four notes can make together."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses chords built on F. The notes are spread out in a drop-2 layout: the second note from the top of a close chord is moved down to its next lower version. Choose the chord type only; there is no separate inversion answer. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "C (low)",
+      "F",
+      "A",
+      "E"
+    ],
+    "layoutCaption": "F–A–C–E before C is moved down to give C–F–A–E.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th. During the quiz, choose the type of chord you hear."
+  },
+  "7th Degree Chords · Level 4": {
+    "heading": "Hear a seventh chord. Choose its type.",
+    "intro": "You will hear four notes played together. Choose the seventh-chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Diminished 7th, Dominant 7th, Minor 7(♭5), Major 7th, Minor 7th. These names describe the different sounds the four notes can make together."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses all twelve keys. The notes are spread out in a drop-2 layout: the second note from the top of a close chord is moved down to its next lower version. Choose the chord type only; there is no separate inversion answer. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "C (low)",
+      "F",
+      "A",
+      "E"
+    ],
+    "layoutCaption": "F–A–C–E before C is moved down to give C–F–A–E.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th. During the quiz, choose the type of chord you hear."
+  },
+  "7th Degree Chords · Level 5": {
+    "heading": "Name the seventh chord and its position.",
+    "intro": "You will hear four notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First choose the chord type. Then select Root Position, 1st Inversion, 2nd Inversion or 3rd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses chords built on F. The notes use a close layout, without spreading individual notes into a different high or low range. In a close chord, Root Position has the root at the bottom, 1st Inversion has the third, 2nd Inversion has the fifth, and 3rd Inversion has the seventh. The root is the note the chord is named after; the third, fifth and seventh are its other notes. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion",
+      "3rd Inversion"
+    ],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "A",
+      "C",
+      "E",
+      "F"
+    ],
+    "layoutCaption": "F major seventh with A at the bottom.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th and 1st Inversion. A is the third of F major seventh, and it is the lowest note."
+  },
+  "7th Degree Chords · Level 6": {
+    "heading": "Name the seventh chord and its position.",
+    "intro": "You will hear four notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First choose the chord type. Then select Root Position, 1st Inversion, 2nd Inversion or 3rd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses all twelve keys. The notes use a close layout, without spreading individual notes into a different high or low range. In a close chord, Root Position has the root at the bottom, 1st Inversion has the third, 2nd Inversion has the fifth, and 3rd Inversion has the seventh. The root is the note the chord is named after; the third, fifth and seventh are its other notes. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished. This lesson uses four chord types: Dominant 7th, Minor 7(♭5), Major 7th and Minor 7th.",
+    "qualities": [
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion",
+      "3rd Inversion"
+    ],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "A",
+      "C",
+      "E",
+      "F"
+    ],
+    "layoutCaption": "F major seventh with A at the bottom.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th and 1st Inversion. A is the third of F major seventh, and it is the lowest note."
+  },
+  "7th Degree Chords · Level 7": {
+    "heading": "Name the seventh chord and its position.",
+    "intro": "You will hear four notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First choose the chord type. Then select Root Position, 1st Inversion, 2nd Inversion or 3rd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses chords built on F. The notes are spread out in a drop-2 layout: the second note from the top of a close chord is moved down to its next lower version. In a close chord, Root Position has the root at the bottom, 1st Inversion has the third, 2nd Inversion has the fifth, and 3rd Inversion has the seventh. The root is the note the chord is named after; the third, fifth and seventh are its other notes. For these drop-2 chords, the position name describes the close chord before the second note from the top is moved down. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished.",
+    "qualities": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion",
+      "3rd Inversion"
+    ],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "E (low)",
+      "A",
+      "C",
+      "F"
+    ],
+    "layoutCaption": "A–C–E–F before E is moved down to give E–A–C–F.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th and 1st Inversion. The inversion refers to the A–C–E–F shape before it is spread out."
+  },
+  "7th Degree Chords · Level 8": {
+    "heading": "Name the seventh chord and its position.",
+    "intro": "You will hear four notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all four notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First choose the chord type. Then select Root Position, 1st Inversion, 2nd Inversion or 3rd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A seventh chord has four notes: a three-note chord with a seventh added. For example, F major uses F, A and C; adding E makes F major seventh. “Chord quality” means the chord type. This lesson uses all twelve keys. The notes are spread out in a drop-2 layout: the second note from the top of a close chord is moved down to its next lower version. In a close chord, Root Position has the root at the bottom, 1st Inversion has the third, 2nd Inversion has the fifth, and 3rd Inversion has the seventh. The root is the note the chord is named after; the third, fifth and seventh are its other notes. For these drop-2 chords, the position name describes the close chord before the second note from the top is moved down. Minor 7(♭5) means minor seventh with a lowered fifth, also called half-diminished. This lesson uses four chord types: Dominant 7th, Minor 7(♭5), Major 7th and Minor 7th.",
+    "qualities": [
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion",
+      "3rd Inversion"
+    ],
+    "exampleQuality": "Major 7th",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "E (low)",
+      "A",
+      "C",
+      "F"
+    ],
+    "layoutCaption": "A–C–E–F before E is moved down to give E–A–C–F.",
+    "exampleExplanation": "This visual example is F major seventh. Choose Major 7th and 1st Inversion. The inversion refers to the A–C–E–F shape before it is spread out."
+  }
+}

@@ -1,0 +1,302 @@
+{
+  "Basic Triads · Level 1": {
+    "heading": "Hear a chord. Choose its type.",
+    "intro": "You will hear three notes played together. Choose the chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Major, Minor, Diminished, Augmented, Suspended. These names describe the different sounds a chord can have."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords in this lesson are built on F. The notes are played in a close layout, with the three chord notes next to each other. Your answer is the chord type. You do not need to choose a note name or a chord position. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A",
+      "C"
+    ],
+    "layoutCaption": "F major with F at the bottom.",
+    "exampleExplanation": "This visual example is F major. Choose Major. During the quiz, choose the type of chord you hear."
+  },
+  "Basic Triads · Level 2": {
+    "heading": "Hear a chord. Choose its type.",
+    "intro": "You will hear three notes played together. Choose the chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Major, Minor, Diminished, Augmented, Suspended. These names describe the different sounds a chord can have."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords use all twelve keys, so the same chord type can begin on different notes. The notes are played in a close layout, with the three chord notes next to each other. Your answer is the chord type. You do not need to choose a note name or a chord position. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A",
+      "C"
+    ],
+    "layoutCaption": "F major with F at the bottom.",
+    "exampleExplanation": "This visual example is F major. Choose Major. During the quiz, choose the type of chord you hear."
+  },
+  "Basic Triads · Level 3": {
+    "heading": "Hear a chord. Choose its type.",
+    "intro": "You will hear three notes played together. Choose the chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Major, Minor, Diminished, Augmented, Suspended. These names describe the different sounds a chord can have."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords in this lesson are built on F. The notes are spread out in a drop-2 layout. This means the middle note of a close three-note chord is moved down to the next lower version of that note. Your answer is the chord type. You do not need to choose a note name or a chord position. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A (low)",
+      "F",
+      "C"
+    ],
+    "layoutCaption": "F–A–C before the middle note is moved down to give A–F–C.",
+    "exampleExplanation": "This visual example is F major. Choose Major. During the quiz, choose the type of chord you hear."
+  },
+  "Basic Triads · Level 4": {
+    "heading": "Hear a chord. Choose its type.",
+    "intro": "You will hear three notes played together. Choose the chord type that matches the sound.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose Major, Minor, Diminished, Augmented, Suspended. These names describe the different sounds a chord can have."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords use all twelve keys, so the same chord type can begin on different notes. The notes are spread out in a drop-2 layout. This means the middle note of a close three-note chord is moved down to the next lower version of that note. Your answer is the chord type. You do not need to choose a note name or a chord position. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [],
+    "exampleQuality": "Major",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A (low)",
+      "F",
+      "C"
+    ],
+    "layoutCaption": "F–A–C before the middle note is moved down to give A–F–C.",
+    "exampleExplanation": "This visual example is F major. Choose Major. During the quiz, choose the type of chord you hear."
+  },
+  "Basic Triads · Level 5": {
+    "heading": "Name the chord type and its position.",
+    "intro": "You will hear three notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First select Major, Minor, Diminished, Augmented, Suspended. Then select Root Position, 1st Inversion or 2nd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords in this lesson are built on F. The notes are played in a close layout, with the three chord notes next to each other. For close chords, root position puts the root at the bottom, first inversion puts the third at the bottom, and second inversion puts the fifth at the bottom. The root is the note the chord is named after; the third and fifth are its other two notes. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion"
+    ],
+    "exampleQuality": "Major",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "A",
+      "C",
+      "F"
+    ],
+    "layoutCaption": "F major with A at the bottom.",
+    "exampleExplanation": "This visual example is F major. Choose Major and 1st Inversion. A is the third of F major, and it is the lowest note."
+  },
+  "Basic Triads · Level 6": {
+    "heading": "Name the chord type and its position.",
+    "intro": "You will hear three notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First select Major, Minor, Diminished. Then select Root Position, 1st Inversion or 2nd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords use all twelve keys, so the same chord type can begin on different notes. The notes are played in a close layout, with the three chord notes next to each other. For close chords, root position puts the root at the bottom, first inversion puts the third at the bottom, and second inversion puts the fifth at the bottom. The root is the note the chord is named after; the third and fifth are its other two notes. This lesson offers Major, Minor and Diminished.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion"
+    ],
+    "exampleQuality": "Major",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "A",
+      "C",
+      "F"
+    ],
+    "layoutCaption": "F major with A at the bottom.",
+    "exampleExplanation": "This visual example is F major. Choose Major and 1st Inversion. A is the third of F major, and it is the lowest note."
+  },
+  "Basic Triads · Level 7": {
+    "heading": "Name the chord type and its position.",
+    "intro": "You will hear three notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First select Major, Minor, Diminished, Augmented, Suspended. Then select Root Position, 1st Inversion or 2nd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords in this lesson are built on F. The notes are spread out in a drop-2 layout. This means the middle note of a close three-note chord is moved down to the next lower version of that note. For close chords, root position puts the root at the bottom, first inversion puts the third at the bottom, and second inversion puts the fifth at the bottom. The root is the note the chord is named after; the third and fifth are its other two notes. In this drop-2 lesson, the position names describe the close chord shape before the middle note is moved down. Both suspended shapes, sus2 and sus4, use the answer Suspended.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished",
+      "Augmented",
+      "Suspended"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion"
+    ],
+    "exampleQuality": "Major",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "C (low)",
+      "A",
+      "F"
+    ],
+    "layoutCaption": "A–C–F before the middle note is moved down to give C–A–F.",
+    "exampleExplanation": "This visual example is F major. Choose Major and 1st Inversion. The inversion refers to the A–C–F shape before it is spread out."
+  },
+  "Basic Triads · Level 8": {
+    "heading": "Name the chord type and its position.",
+    "intro": "You will hear three notes played together. Choose the chord type and the inversion, which describes how its notes are arranged.",
+    "steps": [
+      {
+        "title": "Listen to the chord",
+        "description": "Press Play to hear all three notes together. Listen to the sound they make as a group. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the type and position",
+        "description": "First select Major, Minor, Diminished. Then select Root Position, 1st Inversion or 2nd Inversion."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "Check that you have chosen both a chord type and an inversion. When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. “Chord quality” means its type, such as major or minor. The chords use all twelve keys, so the same chord type can begin on different notes. The notes are spread out in a drop-2 layout. This means the middle note of a close three-note chord is moved down to the next lower version of that note. For close chords, root position puts the root at the bottom, first inversion puts the third at the bottom, and second inversion puts the fifth at the bottom. The root is the note the chord is named after; the third and fifth are its other two notes. In this drop-2 lesson, the position names describe the close chord shape before the middle note is moved down. This lesson offers Major, Minor and Diminished.",
+    "qualities": [
+      "Major",
+      "Minor",
+      "Diminished"
+    ],
+    "inversions": [
+      "Root Position",
+      "1st Inversion",
+      "2nd Inversion"
+    ],
+    "exampleQuality": "Major",
+    "exampleInversion": "1st Inversion",
+    "exampleNotes": [
+      "C (low)",
+      "A",
+      "F"
+    ],
+    "layoutCaption": "A–C–F before the middle note is moved down to give C–A–F.",
+    "exampleExplanation": "This visual example is F major. Choose Major and 1st Inversion. The inversion refers to the A–C–F shape before it is spread out."
+  }
+}

@@ -86,10 +86,10 @@ const SECTIONS = [
     title: '9. Payments',
     blocks: [
       p('Payments may be processed through third-party payment providers or platforms, including:'),
-      list('Stripe;', 'PayPal;', 'Apple In-App Purchase; and', 'Google Play Billing.'),
+      list('third-party payment processors;', 'Apple In-App Purchase; and', 'Google Play Billing.'),
       p('When you make a purchase, you authorize the applicable payment provider or platform to process the transaction using the payment method you select.'),
       p('The Company’s handling of payment-related information is described in the KhordQuiz Privacy Policy.'),
-      p('Your use of Stripe, PayPal, Apple In-App Purchase, or Google Play Billing may also be subject to the applicable terms and policies of those providers or platforms.'),
+      p('Your use of a payment processor, Apple In-App Purchase, or Google Play Billing may also be subject to the applicable terms and policies of those providers or platforms.'),
       p('For purchases made through Apple In-App Purchase or Google Play Billing, Apple or Google, as applicable, may process the payment, billing, subscription, and related transaction information. The purchase may also be subject to that platform’s applicable payment and subscription terms.'),
     ],
   },
@@ -127,9 +127,12 @@ const SECTIONS = [
     blocks: [
       p('KhordQuiz and all content and materials made available through the App are owned by or licensed to KingsleyKhordpiano, LLC.'),
       p('This includes, without limitation:'),
-      list('software and source code;', 'ear-training exercises;', 'musical exercises;', 'instructional materials;', 'audio;', 'text;', 'graphics;', 'user interfaces;', 'designs;', 'logos;', 'trademarks;', 'branding;', 'databases; and', 'other materials contained in or associated with KhordQuiz.'),
+      list('software and source code;', 'ear-training exercises;', 'musical exercises;', 'instructional materials, including downloadable and in-app PDF guides, written explanations, diagrams, and illustrations;', 'audio;', 'text;', 'graphics;', 'user interfaces;', 'designs;', 'logos;', 'trademarks;', 'branding;', 'databases; and', 'other materials contained in or associated with KhordQuiz.'),
       p('Except as expressly permitted by these Terms or applicable law, you may not reproduce, copy, distribute, modify, publish, sell, license, publicly perform, publicly display, commercially exploit, or create derivative works from KhordQuiz or its content without the Company’s prior written permission.'),
       p('Your purchase of a subscription or lifetime plan gives you a limited, non-exclusive, non-transferable right to access and use KhordQuiz for its intended purposes. It does not transfer ownership of any Company intellectual property to you.'),
+      p('You may read and use the guides made available to you for your own personal study. Where KhordQuiz provides a download or print option, you may save or print a copy for that purpose. This permission does not grant access to materials outside your plan or other authorized access.'),
+      p('Except as permitted by applicable law or with the Company’s prior written permission, you may not share or redistribute the guides or their content, upload them to another website or service, republish or resell them, or remove or obscure copyright notices, credits, or branding.'),
+      p('These restrictions apply to protected content, including original explanations and illustrations. They do not claim ownership of musical facts, ideas, scales, chord structures, or other material that is not protected by intellectual property law, and do not limit uses that applicable law permits.'),
     ],
   },
   {
@@ -153,7 +156,7 @@ const SECTIONS = [
     title: '16. Third-Party Services',
     blocks: [
       p('KhordQuiz uses third-party services, which may include:'),
-      list('Google for authentication and, where applicable, payment processing;', 'Apple for authentication and, where applicable, payment processing;', 'Supabase for authentication and data storage;', 'RevenueCat for subscription and payment management;', 'Stripe for payment processing; and', 'PayPal for payment processing.'),
+      list('Google for authentication and, where applicable, payment processing;', 'Apple for authentication and, where applicable, payment processing;', 'a backend infrastructure provider for authentication and data storage;', 'a subscription management service provider for subscription and payment management; and', 'third-party payment processors for payment processing.'),
       p('Third-party services may operate under their own terms, privacy policies, and other conditions.'),
       p('The Company is not responsible for the independent operation, availability, security, or policies of third-party services, except to the extent liability cannot legally be excluded.'),
     ],
@@ -229,4 +232,4 @@ const SECTIONS = [
   },
 ];
 
-export const TERMS_OF_SERVICE = { effectiveDate: 'October 2, 2026', intro: INTRO, sections: SECTIONS, title: 'Terms of Service' };
+export const TERMS_OF_SERVICE = { effectiveDate: 'November 4, 2026', intro: INTRO, sections: SECTIONS, title: 'Terms of Service' };

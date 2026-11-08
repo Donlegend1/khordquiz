@@ -14,7 +14,7 @@ class QuizCatalog
     // Same list as resources/js/Pages/Member/Settings.jsx's LANGUAGES — kept in
     // sync by hand (that copy is what the picker UI renders; this one is what
     // ProfileSetupController validates incoming language values against).
-    public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
+    public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Nederlands', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 
     // Every instrument's storage folder slug (storage/app/public/notes/{slug}/…) —
     // mirrors QuizCategory.jsx's SOUND_CATEGORIES / Settings.jsx's INSTRUMENT_GROUPS
@@ -98,21 +98,52 @@ class QuizCatalog
                 '13th Degree Chords · Level 3', '13th Degree Chords · Level 4',
                 '13th Degree Chords · Level 5', '13th Degree Chords · Level 6',
             ],
-            'Extensions' => [
-                'Chord Tone Recognition #1', 'Chord Tone Recognition #2', 'Major Chord Extentions',
-                'Minor Chord Extentions', 'Dominant Chord Extentions', 'Chord naming',
+            'Chord Tone Recognition' => [
+                'Chord Tone Recognition #1', 'Chord Tone Recognition #2',
+                'Chord Tone Recognition #3', 'Chord Tone Recognition #4',
+                'Chord Tone Recognition #5', 'Chord Tone Recognition #6',
             ],
+            'Major Chord Extensions' => [
+                'Major Chord Extentions · Level 1', 'Major Chord Extentions · Level 2', 'Major Chord Extentions · Level 3',
+                'Major Chord Extentions · Level 4', 'Major Chord Extentions · Level 5', 'Major Chord Extentions · Level 6',
+                'Major Chord Extentions · Level 7',
+                'Major Chord Extentions · Level 8',
+                'Major Chord Extentions · Level 9',
+                'Major Chord Extentions · Level 10',
+                'Major Chord Extentions · Level 11',
+                'Major Chord Extentions · Level 12',
+                'Major Chord Extentions · Level 13',
+            ],
+            'Minor Chord Extensions' => [
+                'Minor Chord Extentions · Level 1', 'Minor Chord Extentions · Level 2', 'Minor Chord Extentions · Level 3',
+                'Minor Chord Extentions · Level 4', 'Minor Chord Extentions · Level 5', 'Minor Chord Extentions · Level 6',
+                'Minor Chord Extentions · Level 7',
+                'Minor Chord Extentions · Level 8',
+                'Minor Chord Extentions · Level 9',
+                'Minor Chord Extentions · Level 10',
+                'Minor Chord Extentions · Level 11',
+                'Minor Chord Extentions · Level 12',
+                'Minor Chord Extentions · Level 13',
+            ],
+            'Dominant Chord Extensions' => [
+                'Dominant Chord Extentions · Level 1',
+                'Dominant Chord Extentions · Level 2',
+                'Dominant Chord Extentions · Level 3',
+                'Dominant Chord Extentions · Level 4',
+                'Dominant Chord Extentions · Level 5',
+                'Dominant Chord Extentions · Level 6',
+                'Dominant Chord Extentions · Level 7',
+                'Dominant Chord Extentions · Level 8',
+            ],
+            'Chord Naming' => ['Chord Naming · Level 1', 'Chord Naming · Level 2', 'Chord Naming · Level 3', 'Chord Naming · Level 4', 'Chord Naming · Level 5', 'Chord Naming · Level 6'],
             'Chord Progressions' => [
-                'Cadences', 'Diatonic Progression', 'Chordal Progressions', 'Progression Build #1', 'Progression Build #2',
-                'Passing Progression', 'Progression recognition', '2-5-1 chord degree', 'Dom resolution',
+                'Cadences', 'Diatonic Progression #1', 'Diatonic Progression #2', 'Progression Build #1', 'Progression Build #2',
+                'Progression Recognition #1', 'Progression Recognition #2', 'Progression Recognition #3', 'Progression Recognition #4', '2-5-1 chord degree', 'Chordal Progressions',
             ],
-            'Modal Voicings' => [
-                'Modal Voicings · Level 1', 'Modal Voicings · Level 2',
-                'Modal Voicings · Level 3', 'Modal Voicings · Level 4',
-            ],
+            'Modal Harmony' => ModalHarmonySamples::titles(),
+            'Modal Voicings' => ModalVoicingLessons::titles(),
             'Scales' => [
-                'Tonal Modes', 'Major mode', 'Dorian Mode', 'Lydian Mode',
-                'Locrian Mode', 'Phrygian Mode', 'Mixolydian Mode',
+                IonianLydianScaleSamples::TITLE, DorianAeolianScaleSamples::TITLE, PhrygianLocrianScaleSamples::TITLE, MajorScaleSamples::TITLE, MajorScaleAllKeysSamples::TITLE, TonalModeScaleSamples::TITLE, TonalModeAllKeysSamples::TITLE, DorianScaleSamples::TITLE, DorianScaleAllKeysSamples::TITLE, LydianScaleSamples::TITLE, LydianScaleAllKeysSamples::TITLE, PhrygianScaleSamples::TITLE, PhrygianScaleAllKeysSamples::TITLE, MixolydianScaleSamples::TITLE, MixolydianScaleAllKeysSamples::TITLE, AeolianScaleSamples::TITLE, AeolianScaleAllKeysSamples::TITLE, LocrianScaleSamples::TITLE, LocrianScaleAllKeysSamples::TITLE, IonianScaleSamples::TITLE, IonianScaleAllKeysSamples::TITLE,
             ],
         ];
     }
@@ -135,6 +166,25 @@ class QuizCatalog
      */
     public static function soundsFor(string $category, string $title): array
     {
+        if ($category === TonalModeScaleSamples::CATEGORY && in_array($title, [TonalModeScaleSamples::TITLE, TonalModeAllKeysSamples::TITLE, DorianScaleSamples::TITLE, DorianScaleAllKeysSamples::TITLE, LydianScaleSamples::TITLE, LydianScaleAllKeysSamples::TITLE, PhrygianScaleSamples::TITLE, PhrygianScaleAllKeysSamples::TITLE, MixolydianScaleSamples::TITLE, MixolydianScaleAllKeysSamples::TITLE, AeolianScaleSamples::TITLE, AeolianScaleAllKeysSamples::TITLE, LocrianScaleSamples::TITLE, LocrianScaleAllKeysSamples::TITLE, IonianScaleSamples::TITLE, IonianScaleAllKeysSamples::TITLE, IonianLydianScaleSamples::TITLE, DorianAeolianScaleSamples::TITLE, PhrygianLocrianScaleSamples::TITLE, MajorScaleSamples::TITLE, MajorScaleAllKeysSamples::TITLE], true)) {
+            return TonalModeScaleSamples::sounds();
+        }
+
+        if ($category === ModalHarmonySamples::CATEGORY) {
+            $index = array_search($title, ModalHarmonySamples::titles(), true);
+            if ($index !== false) {
+                return ModalHarmonySamples::sounds($index + 1);
+            }
+        }
+
+        if ($category === ModalVoicingSamples::CATEGORY && in_array($title, ModalVoicingLessons::titles(), true)) {
+            return ModalVoicingLessons::sounds($title);
+        }
+
+        if ($category === ModalVoicingSamples::CATEGORY && in_array($title, [ModalVoicingSamples::TITLE, MixolydianVoicingSamples::TITLE, PhrygianVoicingSamples::TITLE, LocrianVoicingSamples::TITLE, DorianVoicingSamples::TITLE, AeolianVoicingSamples::TITLE, IonianVoicingSamples::TITLE, MajorModeVoicingSamples::TITLE, MinorModeVoicingSamples::TITLE], true)) {
+            return array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba']));
+        }
+
         $defaultInstruments = ['Piano', 'Violin', 'Saxophone', 'Guitar'];
         $singleLineInstruments = ['Piano', 'Violin', 'Saxophone', 'Marimba', 'Guitar', 'Voice'];
         $intervalInstruments = ['Piano', 'Violin', 'Strings', 'Guitar', 'Marimba', 'Voice', 'Saxophone'];
@@ -165,6 +215,17 @@ class QuizCatalog
         $keyFindingSounds = ['Monophonic', 'Vocal Stems', 'Instruments', 'Ensemble', 'Full Song', 'All'];
 
         $soundsByQuiz = [
+            'Diatonic Progression #1' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Diatonic Progression #2' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Build #1' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Build #2' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Chordal Progressions' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Recognition #1' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Recognition #2' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Recognition #3' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Progression Recognition #4' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            '2-5-1 chord degree' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
+            'Cadences' => array_values(array_diff(self::allInstruments(), ['Bass Guitar', 'Upright Bass', 'Tuba'])),
             'Find the Key #1' => $keyFindingSounds,
             'Find the Key #2' => $keyFindingSounds,
             'Find the Note' => $relativePitchMelodic,
@@ -209,9 +270,13 @@ class QuizCatalog
             '11th Degree Chords' => $fullBrassPercussionInstruments,
             'Secondary 11th Chords' => $fullBrassPercussionInstruments,
             '13th Degree Chords' => $fullBrassPercussionInstruments,
-            'Extensions' => $chordInstruments,
+            'Chord Tone Recognition' => $chordInstruments,
+            'Major Chord Extensions' => $chordInstruments,
+            'Minor Chord Extensions' => $chordInstruments,
+            'Dominant Chord Extensions' => $chordInstruments,
+            'Chord Naming' => $chordInstruments,
             'Chord Progressions' => $chordInstruments,
-            'Modal Voicings' => $chordInstruments,
+            'Modal Harmony', 'Modal Voicings' => $chordInstruments,
             'Intervals' => self::allInstruments(),
             'Melodic Dictation' => $singleLineInstruments,
             'Relative Pitch' => $singleLineInstruments,

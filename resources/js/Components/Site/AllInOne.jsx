@@ -23,25 +23,24 @@ export default function AllInOne() {
                 </h2>
 
                 <p className="mx-auto mt-4 max-w-[440px] text-base leading-relaxed text-neutral-700">
-                    Quizzes picked for your level, a second go at every question you missed, and a leaderboard to see
-                    how you stack up — all in one app.
+                    Practise at your level, see how you’re improving and know what to try next — all in one app.
                 </p>
 
                 {/* Phones are cropped at the section's bottom edge. */}
                 <div className="mt-10 flex h-[300px] items-start justify-center sm:h-[320px]">
                     <PhoneFrame
-                        src="/images/app-leaderboard-all-time.png"
-                        alt="All-time leaderboard showing your rank and the top players"
+                        src="/images/app-progress-overview-current.png"
+                        alt="Progress screen showing today’s goal, a quiz to continue and areas to practise"
                         className="z-0 -mr-3 mt-[108px] hidden w-[232px] shrink-0 sm:block"
                     />
                     <PhoneFrame
-                        src="/images/app-review.png"
-                        alt="Reviewing a mistake: name the interval you hear"
+                        src="/images/app-chord-naming-current.png"
+                        alt="Chord Naming quiz with the audio player, chord quality, degrees and exclusion choices"
                         className="z-10 w-[280px] shrink-0 sm:w-[296px]"
                     />
                     <PhoneFrame
-                        src="/images/app-for-you-advanced.png"
-                        alt="For You screen with the next quiz on your path and quizzes to practise again"
+                        src="/images/app-for-you-current.png"
+                        alt="For You screen with the next Beginner quiz and lessons coming up"
                         className="z-0 -ml-3 mt-[108px] hidden w-[232px] shrink-0 sm:block"
                     />
                 </div>

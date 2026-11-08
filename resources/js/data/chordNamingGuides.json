@@ -1,0 +1,210 @@
+{
+  "Chord Naming · Level 1": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 1 chords from Major, Minor and Dominant Chord Extensions. The chords are built on C. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted.",
+    "example": {
+      "quality": "Major",
+      "degrees": [
+        "7"
+      ],
+      "exclude": "No 5",
+      "notes": [
+        "C",
+        "E",
+        "B"
+      ]
+    },
+    "group": 1,
+    "exampleExplanation": "C, E and B form a major seventh chord with G, its fifth, left out. Choose Major, 7 and No 5."
+  },
+  "Chord Naming · Level 2": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 1 chords from Major, Minor and Dominant Chord Extensions. The chords use all twelve keys. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted.",
+    "example": {
+      "quality": "Major",
+      "degrees": [
+        "7"
+      ],
+      "exclude": "No 5",
+      "notes": [
+        "F",
+        "A",
+        "E"
+      ]
+    },
+    "group": 1,
+    "exampleExplanation": "F, A and E form a major seventh chord with C, its fifth, left out. Choose Major, 7 and No 5."
+  },
+  "Chord Naming · Level 3": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 2 chords from Major, Minor and Dominant Chord Extensions. The chords are built on C. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted.",
+    "example": {
+      "quality": "Major",
+      "degrees": [
+        "6",
+        "9"
+      ],
+      "exclude": "None",
+      "notes": [
+        "C",
+        "E",
+        "G",
+        "A",
+        "D"
+      ]
+    },
+    "group": 2,
+    "exampleExplanation": "C, E and G make the major chord. A adds 6 and D adds 9. Choose Major, select both 6 and 9, and leave Exclude set to None."
+  },
+  "Chord Naming · Level 4": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 2 chords from Major, Minor and Dominant Chord Extensions. The chords use all twelve keys. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted.",
+    "example": {
+      "quality": "Major",
+      "degrees": [
+        "6",
+        "9"
+      ],
+      "exclude": "None",
+      "notes": [
+        "F",
+        "A",
+        "C",
+        "D",
+        "G"
+      ]
+    },
+    "group": 2,
+    "exampleExplanation": "F, A and C make the major chord. D adds 6 and G adds 9. Choose Major, select both 6 and 9, and leave Exclude set to None."
+  },
+  "Chord Naming · Level 5": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 3 chords from Major and Minor Chord Extensions, plus the thirty-three extra seventh-chord combinations. The chords are built on C. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted. For Minor, ♭7 makes a minor seventh chord; 7 makes a minor-major seventh chord. For Diminished, 7 means diminished seventh, while maj7 means diminished-major seventh.",
+    "example": {
+      "quality": "Minor",
+      "degrees": [
+        "7",
+        "9"
+      ],
+      "exclude": "No 5",
+      "notes": [
+        "C",
+        "E♭",
+        "B",
+        "D"
+      ]
+    },
+    "group": 3,
+    "exampleExplanation": "C and E♭ give the minor sound, B is its major seventh, and D is its ninth. G, the fifth, is missing. Choose Minor, select 7 and 9, and choose No 5."
+  },
+  "Chord Naming · Level 6": {
+    "heading": "Hear the chord. Build its name.",
+    "intro": "Listen to the chord, then use the three answer sections to describe what you hear.",
+    "steps": [
+      {
+        "title": "Choose the chord quality",
+        "description": "Start with the chord type, such as Major or Minor. For a dominant chord, choose Major; you will add ♭7 in the next section."
+      },
+      {
+        "title": "Select all the chord degrees",
+        "description": "Choose every degree that is present, including a seventh when you hear one. For a dominant chord, Major with ♭7 makes the name read Dominant. Tap a selected degree again to remove it."
+      },
+      {
+        "title": "Check for a missing note and submit",
+        "description": "Choose No 3 or No 5 when a seventh chord has that note left out. Otherwise choose None. Check the chord name above your choices, then press Submit Answer."
+      }
+    ],
+    "about": "This level uses Group 3 chords from Major and Minor Chord Extensions, plus the thirty-three extra seventh-chord combinations. The chords use all twelve keys. The notes use their basic arrangement, with no doubled or shifted notes. The chord is named from its lowest note. You choose its type and added degrees rather than its key. Every answer needs a chord quality and at least one degree. No 3 and No 5 are offered only when you select a seventh. If removing the third leaves more than one name for the same notes, matching names are accepted. For Minor, ♭7 makes a minor seventh chord; 7 makes a minor-major seventh chord. For Diminished, 7 means diminished seventh, while maj7 means diminished-major seventh.",
+    "example": {
+      "quality": "Minor",
+      "degrees": [
+        "7",
+        "9"
+      ],
+      "exclude": "No 5",
+      "notes": [
+        "F",
+        "A♭",
+        "E",
+        "G"
+      ]
+    },
+    "group": 3,
+    "exampleExplanation": "F and A♭ give the minor sound, E is its major seventh, and G is its ninth. C, the fifth, is missing. Choose Minor, select 7 and 9, and choose No 5."
+  }
+}

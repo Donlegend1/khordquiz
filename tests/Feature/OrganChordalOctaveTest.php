@@ -60,16 +60,15 @@ class OrganChordalOctaveTest extends TestCase
         $original = NoteSample::resolve($path.'.wav');
         $raised = NoteSample::resolve($path.'-up12.wav');
         $this->assertNotNull($raised);
-        $this->assertTrue(collect($raised)->contains(fn ($note) => $note['degree'] === 'F#/Gb' && $note['octave'] === 3));
-        $this->assertFalse(collect($raised)->contains(fn ($note) => $note['degree'] === 'F#/Gb' && $note['octave'] === 4));
+        $this->assertTrue(collect($raised)->contains(fn ($note) => $note['degree'] === 'F#/Gb' && $note['octave'] === 4));
         foreach ($original as $index => $note) {
-            $expected = [...$note, 'octave' => $note['octave'] + (str_contains($note['degree'], '#') ? 0 : 1)];
+            $expected = [...$note, 'octave' => $note['octave'] + 1];
             $this->assertSame($expected, $raised[$index]);
         }
         $this->assertSame($original, NoteSample::resolve($path.'.wav'));
     }
 
-    public function test_raising_drop_two_voicings_resolves_the_missing_low_g(): void
+    public function test_automatic_register_placement_keeps_both_variants_playable_when_low_g_is_unrecorded(): void
     {
         $this->recordOrganOctaves(3, 7);
         $index = collect(chordalLiteralProgressions())->search(function (array $steps): bool {
@@ -77,7 +76,15 @@ class OrganChordalOctaveTest extends TestCase
         });
         $this->assertNotFalse($index);
         $path = "melodic-dictation/chordal-melodies/organ/p{$index}-drop2";
-        $this->assertNull(NoteSample::resolve($path.'.wav'));
-        $this->assertNotNull(NoteSample::resolve($path.'-up12.wav'));
+        $original = NoteSample::resolve($path.'.wav');
+        $this->assertNotNull($original);
+        $raised = NoteSample::resolve($path.'-up12.wav');
+        $this->assertNotNull($raised);
+        foreach ($original as $position => $note) {
+            $this->assertSame([...$note, 'octave' => $note['octave'] + 1], $raised[$position]);
+        }
+        foreach ($original as $note) {
+            $this->assertTrue(NoteSample::sampleExists(NoteSample::path($note['slug'], $note['degree'], $note['octave'])));
+        }
     }
 }

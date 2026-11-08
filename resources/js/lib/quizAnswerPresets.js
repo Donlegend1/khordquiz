@@ -1,3 +1,4 @@
+import { TWO_FIVE_ONE_CONFIG } from './twoFiveOneExtensions.js';
 // Fixed answer options, ported 1:1 from the real app (app/practice.tsx), shared
 // by the Audio Quiz admin editor (which uses these to pick the correct answer
 // when authoring a question) and the member-facing quiz-play screen (which
@@ -139,10 +140,48 @@ export const DOMINANT_EXTENSION_CHOICES = ['♭9', '9', '♯9', '11', '♯11', '
 // Quizzes where the student picks several extensions at once rather than one
 // single answer (multi: true in app/practice.tsx).
 export const MULTI_ANSWER_PRESETS = {
-    Extensions: {
+    'Major Chord Extensions': {
         'Major Chord Extentions': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 1': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 2': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 3': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 4': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 5': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 6': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 7': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 8': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 9': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 10': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 11': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 12': EXTENSION_CHOICES,
+        'Major Chord Extentions · Level 13': EXTENSION_CHOICES,
+    },
+    'Minor Chord Extensions': {
         'Minor Chord Extentions': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 1': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 2': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 3': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 4': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 5': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 6': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 7': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 8': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 9': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 10': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 11': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 12': EXTENSION_CHOICES,
+        'Minor Chord Extentions · Level 13': EXTENSION_CHOICES,
+    },
+    'Dominant Chord Extensions': {
         'Dominant Chord Extentions': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 1': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 2': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 3': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 4': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 5': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 6': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 7': DOMINANT_EXTENSION_CHOICES,
+        'Dominant Chord Extentions · Level 8': DOMINANT_EXTENSION_CHOICES,
     },
 };
 
@@ -152,7 +191,7 @@ export function multiFor(category, title) {
 
 export const PROGRESSION_DEGREES = ['1', '2', '3', '4', '5', '6', '7'];
 export const PROGRESSION_QUALITIES = ['Major', 'Minor', 'Diminished', 'Augmented', 'Sus 2', 'Sus 4'];
-export const PROGRESSION_SEVENTH_QUALITIES = ['Major 7th', 'Minor 7th', 'Dominant 7th', 'Minor 7(♭5)'];
+export const PROGRESSION_SEVENTH_QUALITIES = ['Major 7th', 'Minor 7th', 'Dominant 7th', 'Minor 7(♭5)', '7 Sus4'];
 export const DIATONIC_TRIADS = { 1: 'Major', 2: 'Minor', 3: 'Minor', 4: 'Major', 5: 'Major', 6: 'Minor', 7: 'Diminished' };
 export const DEGREE_EXTENSIONS = ['♭9', '9', '♯9', '11', '♯11', '♭13', '13', 'Sus 4', 'Sus 2', '♭5'];
 export const RECOGNITION_QUALITIES = ['Major 7th', 'Minor 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Minor 6', 'Major 6'];
@@ -165,18 +204,22 @@ export const RECOGNITION_QUALITIES = ['Major 7th', 'Minor 7th', 'Minor 7(♭5)',
 // root/degree — this tests chord-quality recognition only), via
 // `qualityOnly: true`, reusing TRIAD_CHOICES/SEVENTH_CHOICES' exact labels so
 // the vocabulary stays consistent with the rest of this category. Its chord
-// count varies 5-6 per question (same progressions as Chordal melodies /
-// Chordal Bass Lines in Melodic Dictation, whose audio this quiz reuses).
-export const CHORDAL_PROGRESSION_QUALITIES = ['Major', 'Minor', 'Diminished', 'Major 7th', 'Minor 7th', 'Dominant 7th', 'Minor 7(♭5)', 'Diminished 7th'];
+// count is five per question, using only the five-chord sources from
+// Chordal Melodies / Chordal Bass Lines.
+export const CHORDAL_PROGRESSION_QUALITIES = ['Major', 'Minor', 'Diminished', 'Augmented', ...SEVENTH_CHOICES, ...SECONDARY_SEVENTH_CHOICES];
 
 export const PROGRESSION_ANSWER_PRESETS = {
     'Chord Progressions': {
-        'Diatonic Progression': { length: 4, degreeOptions: PROGRESSION_DEGREES, fixedQualities: DIATONIC_TRIADS },
-        'Chordal Progressions': { length: [5, 6], qualityOnly: true, qualityOptions: CHORDAL_PROGRESSION_QUALITIES },
-        'Progression Build #1': { length: 4, degreeOptions: PROGRESSION_DEGREES, qualityOptions: PROGRESSION_QUALITIES },
-        'Progression Build #2': { length: 5, degreeOptions: PROGRESSION_DEGREES, qualityOptions: PROGRESSION_SEVENTH_QUALITIES },
-        'Progression recognition': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES },
-        '2-5-1 chord degree': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES, extensionOptions: DEGREE_EXTENSIONS },
+        'Diatonic Progression #1': { length: 4, degreeOptions: PROGRESSION_DEGREES, fixedQualities: DIATONIC_TRIADS },
+        'Diatonic Progression #2': { length: 4, degreeOptions: PROGRESSION_DEGREES, fixedQualities: { 1: 'Major 7th', 2: 'Minor 7th', 3: 'Minor 7th', 4: 'Major 7th', 5: 'Dominant 7th', 6: 'Minor 7th', 7: 'Minor 7(♭5)' } },
+        'Chordal Progressions': { length: 5, qualityOnly: true, qualityOptions: CHORDAL_PROGRESSION_QUALITIES },
+        'Progression Build #1': { length: 4, degreeOptions: [...PROGRESSION_DEGREES, '♭7'], qualityOptions: ['Major', 'Minor', 'Diminished', 'Sus4'], suspendedEquivalents: true },
+        'Progression Build #2': { length: 4, degreeOptions: PROGRESSION_DEGREES, qualityOptions: PROGRESSION_SEVENTH_QUALITIES },
+        'Progression Recognition #1': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES, qualityOptionsByDegree: { 2: ['Minor 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Minor 6'], 5: ['Dominant 7th', 'Minor 7th', 'Minor 7(♭5)'], 1: ['Dominant 7th', 'Minor 7th', 'Major 7th', 'Major 6', 'Minor 6'] } },
+        'Progression Recognition #2': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES, qualityOptionsByDegree: { 2: ['Minor 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Minor 6'], 5: ['Dominant 7th', 'Minor 7th', 'Minor 7(♭5)'], 1: ['Dominant 7th', 'Minor 7th', 'Major 7th', 'Major 6', 'Minor 6'] } },
+        'Progression Recognition #3': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES, qualityOptionsByDegree: { 2: ['Minor 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Minor 6'], 5: ['Dominant 7th', 'Minor 7th', 'Minor 7(♭5)'], 1: ['Dominant 7th', 'Minor 7th', 'Major 7th', 'Major 6', 'Minor 6'] } },
+        'Progression Recognition #4': { length: 3, fixedDegrees: ['2', '5', '1'], qualityOptions: RECOGNITION_QUALITIES, qualityOptionsByDegree: { 2: ['Minor 7th', 'Minor 7(♭5)', 'Dominant 7th', 'Minor 6'], 5: ['Dominant 7th', 'Minor 7th', 'Minor 7(♭5)'], 1: ['Dominant 7th', 'Minor 7th', 'Major 7th', 'Major 6', 'Minor 6'] } },
+        '2-5-1 chord degree': TWO_FIVE_ONE_CONFIG,
     },
 };
 
@@ -199,61 +242,17 @@ export function composeProgression(config, slots) {
         const quality = config.fixedQualities ? (degree ? config.fixedQualities[degree] : null) : slot.quality;
         if (!degree || !quality) return null;
         const extensions = slot.extensions ?? [];
+        if (config.requireExtensions && extensions.length === 0) return null;
         return `${degree} ${quality}${extensions.length ? `(${extensions.join(', ')})` : ''}`;
     });
     return parts.every(Boolean) ? parts.join(' - ') : '';
 }
 
-// "Chord naming" (Extensions category) has no fixed answer at all in the app —
-// the student builds the chord name from three steps (naming: { qualities,
-// degrees, excludes } in app/practice.tsx) that get composed into a name via
-// buildNamedChord().
-export const NAMING_QUALITIES = ['Major', 'Minor', 'Augmented', 'Dominant', 'Diminished'];
-// Expands the app's base degree pool with the flat/sharp variants of 9, 11 and
-// 13 it lets the player cycle through, so each is its own pickable chip here.
-export const NAMING_DEGREES = ['♭5', '6', '7', '9', '♭9', '♯9', '11', '♭11', '♯11', '13', '♭13', '♯13', 'Sus 2', 'Sus 4'];
-export const NAMING_EXCLUDES = ['No 3', 'No 5', 'None'];
-
-// web's real content for "Chord naming" (unlike the app's on-the-fly version)
-// needs an exact-string-match answer (QuizController::answer() compares
-// $data['choice'] === $question->answer) — the quality/degrees/exclude must
-// be recoverable afterwards too, for per-chip correct/incorrect feedback, so
-// a plain built name (lossy — can't always tell which degrees produced it)
-// isn't enough. This pipe-delimited encoding is both: degrees are always
-// sorted into NAMING_DEGREES order first, so the same picks always encode
-// the same way regardless of click order, matching scripts/audio's PHP port
-// of this exact function used to generate the real answer key.
-export function encodeNamingAnswer(quality, degrees, exclude) {
-    const sorted = NAMING_DEGREES.filter((degree) => degrees.includes(degree));
-    return `${quality}|${sorted.join(',')}|${exclude ?? 'None'}`;
-}
-
-export function decodeNamingAnswer(value) {
-    const [quality, degreesPart, exclude] = (value ?? '').split('|');
-    return { quality: quality ?? '', degrees: degreesPart ? degreesPart.split(',') : [], exclude: exclude ?? 'None' };
-}
-
-export function buildNamedChord(quality, degrees, exclude) {
-    const has = (degree) => degrees.includes(degree);
-    const seventh = has('7') || quality === 'Dominant';
-    const naturals = ['9', '11', '13'].filter(has);
-    const altered = ['♭5', '♭9', '♯9', '♭11', '♯11', '♭13', '♯13'].filter(has);
-    const core = seventh ? (naturals.length ? naturals[naturals.length - 1] : '7') : has('6') ? (has('9') ? '6/9' : '6') : '';
-    const bracketed = seventh ? altered : altered.filter((degree) => degree === '♭5');
-    const adds = [
-        ...(seventh ? (has('6') ? ['6'] : []) : naturals.filter((degree) => !(has('6') && degree === '9'))),
-        ...(seventh ? [] : altered.filter((degree) => degree !== '♭5')),
-    ];
-    return [
-        quality,
-        core ? ` ${core}` : '',
-        bracketed.length ? `(${bracketed.join(', ')})` : '',
-        adds.length ? ` add ${adds.join(', ')}` : '',
-        has('Sus 2') ? ' Sus 2' : '',
-        has('Sus 4') ? ' Sus 4' : '',
-        exclude && exclude !== 'None' ? ` (${exclude})` : '',
-    ].join('');
-}
+export {
+    NAMING_QUALITIES, NAMING_DEGREES, NAMING_EXCLUDES,
+    namingDegreeOptions, namingExcludeOptions, namingDisplayQuality, toggleNamingDegree, validNamingSelection,
+    encodeNamingAnswer, decodeNamingAnswer, buildNamedChord,
+} from './chordNaming.js';
 
 // Chord Tone Recognition asks which scale degree (1/3/5/7) is highlighted, but
 // that's only meaningful with a reference chord quality — the admin picks one
@@ -365,32 +364,89 @@ export const CATEGORY_ANSWER_PRESETS = {
         '13th Degree Chords · Level 3': THIRTEENTH_CHOICES,
         '13th Degree Chords · Level 4': THIRTEENTH_CHOICES,
     },
-    Extensions: {
+    'Chord Tone Recognition': {
         'Chord Tone Recognition #1': ['1', '3', '5', '7'],
         'Chord Tone Recognition #2': ['1', '3', '5', '7'],
     },
     'Chord Progressions': {
-        Cadences: ['Authentic', 'Plagal', 'Minor Plagal', 'Sub-Plagal', 'Deceptive'],
-        'Passing Progression': ['2-5-1', '3-6-2', '♭5-7-3', '5-1-4', '6-2-5', '7-3-6'],
-        'Dom resolution': ['Authentic', 'Tri-tone', 'Back-door', 'Double Back-door', 'Double Plagal', 'Screen door', 'Double Predominant'],
+        Cadences: ['Authentic', 'Plagal', 'Minor Plagal', 'Sub-Plagal'],
+    },
+    'Modal Harmony': {
+        'Modal Harmony #1': ['Phrygian · ♭II Major', 'Lydian Dominant · II Major', 'Aeolian · ♭III Major', 'Lydian Augmented · III Major', 'Ionian · V Major'],
+        'Modal Harmony #2': ['Phrygian · ♭II Major', 'Lydian Dominant · II Major', 'Aeolian · ♭III Major', 'Lydian Augmented · III Major', 'Ionian · V Major'],
+        'Modal Harmony #3': ['Ionian · IV Major', 'Altered Dominant · ♭V Major', 'Dominant Diminished · VI Major', 'Mixolydian · ♭VII Major', 'Lydian Diminished · VII Major'],
+        'Modal Harmony #4': ['Ionian · IV Major', 'Altered Dominant · ♭V Major', 'Dominant Diminished · VI Major', 'Mixolydian · ♭VII Major', 'Lydian Diminished · VII Major'],
+        'Modal Harmony #5': ['Phrygian Dominant · ♭II Minor', 'Dorian · II Minor', 'Locrian · ♭III Minor', 'Ionian · III Minor', 'Aeolian · IV Minor'],
+        'Modal Harmony #6': ['Phrygian Dominant · ♭II Minor', 'Dorian · II Minor', 'Locrian · ♭III Minor', 'Ionian · III Minor', 'Aeolian · IV Minor'],
+        'Modal Harmony #7': ['Locrian ♮6 · ♭V Minor', 'Mixolydian · V Minor', 'Harmonic Minor · ♭VI Minor', 'Ionian · VI Minor', 'Phrygian · ♭VII Minor', 'Lydian · VII Minor'],
+        'Modal Harmony #8': ['Locrian ♮6 · ♭V Minor', 'Mixolydian · V Minor', 'Harmonic Minor · ♭VI Minor', 'Ionian · VI Minor', 'Phrygian · ♭VII Minor', 'Lydian · VII Minor'],
     },
     'Modal Voicings': {
-        'Modal Voicings · Level 1': ['Aeolian', 'Lydian Augmented', 'Altered Dominant', 'Mixolydian', 'Lydian Diminished'],
-        'Modal Voicings · Level 2': ['Gypsy major', 'Lydian Mode', 'Harmonic Major', 'Ionian mode'],
-        'Modal Voicings · Level 3': ['Phrygian Dominant', 'Lydian Dominant', 'Hungarian Major', 'Romanian Major', 'Super Phrygian', 'Dominant Diminished'],
-        'Modal Voicings · Level 4': ['Phrygian', 'Romanian Minor', 'Dorian', 'Altered Minor', 'Phrygian Blues'],
+        'Lydian Mode': ['Lydian', 'Lydian ♯2', 'Lydian Augmented', 'Lydian Dominant', 'Lydian Diminished'],
+        'Lydian Mode #1': ['Lydian', 'Lydian ♯2', 'Lydian Augmented', 'Lydian Dominant', 'Lydian Diminished'],
+        'Lydian Mode #2': ['Lydian', 'Lydian ♯2', 'Lydian Augmented', 'Lydian Dominant', 'Lydian Diminished'],
+        'Mixolydian Mode': ['Mixolydian', 'Mixolydian ♭2', 'Mixolydian ♭6', 'Mixolydian ♭2 ♭6', 'Mixolydian ♯4'],
+        'Mixolydian Mode #1': ['Mixolydian', 'Mixolydian ♭2', 'Mixolydian ♭6', 'Mixolydian ♭2 ♭6', 'Mixolydian ♯4'],
+        'Mixolydian Mode #2': ['Mixolydian', 'Mixolydian ♭2', 'Mixolydian ♭6', 'Mixolydian ♭2 ♭6', 'Mixolydian ♯4'],
+        'Phrygian Mode': ['Phrygian', 'Phrygian Dominant', 'Phrygian (♭4)', 'Phrygian ♮6', 'Phrygian ♮7'],
+        'Phrygian Mode #1': ['Phrygian', 'Phrygian Dominant', 'Phrygian (♭4)', 'Phrygian ♮6', 'Phrygian ♮7'],
+        'Phrygian Mode #2': ['Phrygian', 'Phrygian Dominant', 'Phrygian (♭4)', 'Phrygian ♮6', 'Phrygian ♮7'],
+        'Locrian Mode': ['Locrian', 'Locrian ♮2', 'Locrian ♮6', 'Locrian Dominant', 'Super Locrian'],
+        'Locrian Mode #1': ['Locrian', 'Locrian ♮2', 'Locrian ♮6', 'Locrian Dominant', 'Super Locrian'],
+        'Locrian Mode #2': ['Locrian', 'Locrian ♮2', 'Locrian ♮6', 'Locrian Dominant', 'Super Locrian'],
+        'Dorian Mode': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♭5', 'Dorian ♮7'],
+        'Dorian Mode #1': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♭5', 'Dorian ♮7'],
+        'Dorian Mode #2': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♭5', 'Dorian ♮7'],
+        'Aeolian Mode': ['Aeolian', 'Aeolian ♭2', 'Aeolian ♮6', 'Aeolian ♮7', 'Aeolian Dominant', 'Aeolian ♭5'],
+        'Aeolian Mode #1': ['Aeolian', 'Aeolian ♭2', 'Aeolian ♮6', 'Aeolian ♮7', 'Aeolian Dominant', 'Aeolian ♭5'],
+        'Aeolian Mode #2': ['Aeolian', 'Aeolian ♭2', 'Aeolian ♮6', 'Aeolian ♮7', 'Aeolian Dominant', 'Aeolian ♭5'],
+        'Ionian Mode': ['Ionian', 'Ionian ♭2', 'Ionian ♯2', 'Ionian Augmented', 'Ionian ♭6', 'Ionian ♭2 ♭6'],
+        'Ionian Mode #1': ['Ionian', 'Ionian ♭2', 'Ionian ♯2', 'Ionian Augmented', 'Ionian ♭6', 'Ionian ♭2 ♭6'],
+        'Ionian Mode #2': ['Ionian', 'Ionian ♭2', 'Ionian ♯2', 'Ionian Augmented', 'Ionian ♭6', 'Ionian ♭2 ♭6'],
+        'Major Modes': ['Romanian Major', 'Hungarian Major', 'Byzantine Major', 'Harmonic Major', 'Melodic Major', 'Major Augmented'],
+        'Major Modes #1': ['Romanian Major', 'Hungarian Major', 'Byzantine Major', 'Harmonic Major', 'Melodic Major', 'Major Augmented'],
+        'Major Modes #2': ['Romanian Major', 'Hungarian Major', 'Byzantine Major', 'Harmonic Major', 'Melodic Major', 'Major Augmented'],
+        'Minor Modes': ['Natural Minor', 'Harmonic Minor', 'Melodic Minor', 'Hungarian Minor', 'Romanian Minor', 'Neapolitan Minor'],
+        'Minor Modes #1': ['Natural Minor', 'Harmonic Minor', 'Melodic Minor', 'Hungarian Minor', 'Romanian Minor', 'Neapolitan Minor'],
+        'Minor Modes #2': ['Natural Minor', 'Harmonic Minor', 'Melodic Minor', 'Hungarian Minor', 'Romanian Minor', 'Neapolitan Minor'],
     },
     Scales: {
-        'Tonal Modes': ['Ionian', 'Harmonic Major', 'Harmonic Minor', 'Melodic Minor', 'Aeolian'],
-        'Major mode': ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'],
-        'Dorian Mode': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♯5'],
-        'Lydian Mode': ['Lydian', 'Lydian Augmented', 'Lydian Dominant', 'Lydian ♯2', 'Lydian Diminished'],
-        'Locrian Mode': ['Locrian', 'Locrian ♮2', 'Super Locrian', 'Locrian ♮6', 'Ultralocrian', 'Locrian 𝄫7'],
-        'Phrygian Mode': ['Phrygian', 'Phrygian Dominant', 'Phrygian ♯6', 'Phrygian ♭4', 'Melodic Phrygian'],
-        'Mixolydian Mode': ['Mixolydian', 'Mixolydian ♭9', 'Mixolydian ♯11', 'Mixolydian Altered', 'Mixolydian ♭13'],
+        'Ionian and Lydian': ['Ionian', 'Lydian'],
+        'Dorian and Aeolian': ['Dorian', 'Aeolian'],
+        'Phrygian and Locrian': ['Phrygian', 'Locrian'],
+        'Tonal Modes #1': ['Ionian', 'Harmonic Major', 'Harmonic Minor', 'Melodic Minor', 'Aeolian'],
+        'Tonal Modes #2': ['Ionian', 'Harmonic Major', 'Harmonic Minor', 'Melodic Minor', 'Aeolian'],
+        'Major Scales #1': ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'],
+        'Major Scales #2': ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'],
+        'Dorian Scales #1': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♭5', 'Dorian ♮7'],
+        'Dorian Scales #2': ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♭5', 'Dorian ♮7'],
+        'Lydian Scales #1': ['Lydian', 'Lydian ♯2', 'Lydian Augmented', 'Lydian Dominant', 'Lydian Diminished'],
+        'Lydian Scales #2': ['Lydian', 'Lydian ♯2', 'Lydian Augmented', 'Lydian Dominant', 'Lydian Diminished'],
+        'Locrian Scales #1': ['Locrian', 'Locrian ♮2', 'Locrian ♮6', 'Locrian Dominant', 'Super Locrian'],
+        'Locrian Scales #2': ['Locrian', 'Locrian ♮2', 'Locrian ♮6', 'Locrian Dominant', 'Super Locrian'],
+        'Ionian Scales #1': ['Ionian', 'Ionian ♭2', 'Ionian ♯2', 'Ionian Augmented', 'Ionian ♭6', 'Ionian ♭2 ♭6'],
+        'Ionian Scales #2': ['Ionian', 'Ionian ♭2', 'Ionian ♯2', 'Ionian Augmented', 'Ionian ♭6', 'Ionian ♭2 ♭6'],
+        'Phrygian Scales #1': ['Phrygian', 'Phrygian Dominant', 'Phrygian (♭4)', 'Phrygian ♮6', 'Phrygian ♮7'],
+        'Phrygian Scales #2': ['Phrygian', 'Phrygian Dominant', 'Phrygian (♭4)', 'Phrygian ♮6', 'Phrygian ♮7'],
+        'Mixolydian Scales #1': ['Mixolydian', 'Mixolydian ♭2', 'Mixolydian ♭6', 'Mixolydian ♭2 ♭6', 'Mixolydian ♯4'],
+        'Mixolydian Scales #2': ['Mixolydian', 'Mixolydian ♭2', 'Mixolydian ♭6', 'Mixolydian ♭2 ♭6', 'Mixolydian ♯4'],
+        'Aeolian Scales #1': ['Aeolian', 'Aeolian ♭2', 'Aeolian ♮6', 'Aeolian ♮7', 'Aeolian Dominant', 'Aeolian ♭5'],
+        'Aeolian Scales #2': ['Aeolian', 'Aeolian ♭2', 'Aeolian ♮6', 'Aeolian ♮7', 'Aeolian Dominant', 'Aeolian ♭5'],
     },
 };
 
 export function presetFor(category, title) {
     return CATEGORY_ANSWER_PRESETS[category]?.[title] ?? SOLFEGE_PRESET;
+}
+
+export function suspendedChordMatches(submitted, correct) {
+    if (submitted === correct) return true;
+    const pitches = (chord) => {
+        const match = /^(♭7|[1-7]) Sus ?([24])$/.exec(chord ?? '');
+        if (!match) return null;
+        const root = { 1: 0, 2: 2, 3: 4, 4: 5, 5: 7, 6: 9, 7: 11, '♭7': 10 }[match[1]];
+        return [root, (root + (match[2] === '2' ? 2 : 5)) % 12, (root + 7) % 12].sort((a, b) => a - b).join(',');
+    };
+    const expected = pitches(correct);
+    return expected !== null && expected === pitches(submitted);
 }

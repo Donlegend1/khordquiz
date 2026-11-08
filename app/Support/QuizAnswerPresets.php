@@ -20,6 +20,28 @@ namespace App\Support;
  */
 class QuizAnswerPresets
 {
+    private const SOLFEGE_PAIRS = [
+        'Second' => ['Do - Re', 'Re - Mi', 'Mi - Fa', 'Fa - So', 'So - La', 'La - Ti', 'Ti - Do'],
+        'Third' => ['Do - Mi', 'Re - Fa', 'Mi - So', 'Fa - La', 'So - Ti', 'La - Do', 'Ti - Re'],
+        'Fourth' => ['Do - Fa', 'Re - So', 'Mi - La', 'Fa - Ti', "So - Do'", "La - Re'", "Ti - Mi'"],
+        'Fifth' => ['Do - So', 'Re - La', 'Mi - Ti', "Fa - Do'", "So - Re'", "La - Mi'", "Ti - Fa'"],
+        'Sixth' => ['Do - La', 'Re - Ti', "Mi - Do'", "Fa - Re'", "So - Mi'", "La - Fa'", "Ti - So'"],
+        'Seventh' => ['Do - Ti', "Re - Do'", "Mi - Re'", "Fa - Mi'", "So - Fa'", "La - So'", "Ti - La'"],
+    ];
+
+    /**
+     * The seven scale-degree answer pairs for a given interval size (e.g.
+     * "Second".."Seventh"), shared with ReferenceAudioTracks so the
+     * Melodic/Harmonic Second-Seventh reference audio plays this quiz's own
+     * answer options instead of an unrelated recording.
+     *
+     * @return list<string>|null
+     */
+    public static function solfegePairs(string $name): ?array
+    {
+        return self::SOLFEGE_PAIRS[$name] ?? null;
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -28,14 +50,7 @@ class QuizAnswerPresets
         $soflegeNotes = ['Do', 'Re', 'Mi', 'Fa', 'So', 'La', 'Ti'];
         $keyChoices = ['C', 'C#/Db', 'D', 'D#/Eb', 'E', 'F', 'F#/Gb', 'G', 'G#/Ab', 'A', 'A#/Bb', 'B'];
 
-        $solfegePairs = [
-            'Second' => ['Do - Re', 'Re - Mi', 'Mi - Fa', 'Fa - So', 'So - La', 'La - Ti', 'Ti - Do'],
-            'Third' => ['Do - Mi', 'Re - Fa', 'Mi - So', 'Fa - La', 'So - Ti', 'La - Do', 'Ti - Re'],
-            'Fourth' => ["Do - Fa", "Re - So", "Mi - La", "Fa - Ti", "So - Do'", "La - Re'", "Ti - Mi'"],
-            'Fifth' => ["Do - So", "Re - La", "Mi - Ti", "Fa - Do'", "So - Re'", "La - Mi'", "Ti - Fa'"],
-            'Sixth' => ["Do - La", "Re - Ti", "Mi - Do'", "Fa - Re'", "So - Mi'", "La - Fa'", "Ti - So'"],
-            'Seventh' => ["Do - Ti", "Re - Do'", "Mi - Re'", "Fa - Mi'", "So - Fa'", "La - So'", "Ti - La'"],
-        ];
+        $solfegePairs = self::SOLFEGE_PAIRS;
 
         $triad = ['Major', 'Minor', 'Diminished', 'Augmented', 'Suspended'];
         $seventh = ['Diminished 7th', 'Dominant 7th', 'Minor 7(♭5)', 'Major 7th', 'Minor 7th'];
@@ -138,29 +153,48 @@ class QuizAnswerPresets
                 '13th Degree Chords · Level 3' => $thirteenth,
                 '13th Degree Chords · Level 4' => $thirteenth,
             ],
-            'Extensions' => [
+            'Chord Tone Recognition' => [
                 'Chord Tone Recognition #1' => ['1', '3', '5', '7'],
                 'Chord Tone Recognition #2' => ['1', '3', '5', '7'],
             ],
             'Chord Progressions' => [
-                'Cadences' => ['Authentic', 'Plagal', 'Minor Plagal', 'Sub-Plagal', 'Deceptive'],
-                'Passing Progression' => ['2-5-1', '3-6-2', '♭5-7-3', '5-1-4', '6-2-5', '7-3-6'],
-                'Dom resolution' => ['Authentic', 'Tri-tone', 'Back-door', 'Double Back-door', 'Double Plagal', 'Screen door', 'Double Predominant'],
+                'Cadences' => ['Authentic', 'Plagal', 'Minor Plagal', 'Sub-Plagal'],
             ],
+            'Modal Harmony' => ModalHarmonySamples::presets(),
             'Modal Voicings' => [
-                'Modal Voicings · Level 1' => ['Aeolian', 'Lydian Augmented', 'Altered Dominant', 'Mixolydian', 'Lydian Diminished'],
-                'Modal Voicings · Level 2' => ['Gypsy major', 'Lydian Mode', 'Harmonic Major', 'Ionian mode'],
-                'Modal Voicings · Level 3' => ['Phrygian Dominant', 'Lydian Dominant', 'Hungarian Major', 'Romanian Major', 'Super Phrygian', 'Dominant Diminished'],
-                'Modal Voicings · Level 4' => ['Phrygian', 'Romanian Minor', 'Dorian', 'Altered Minor', 'Phrygian Blues'],
+                ModalVoicingSamples::TITLE => ModalVoicingSamples::choices(),
+                MixolydianVoicingSamples::TITLE => MixolydianVoicingSamples::choices(),
+                PhrygianVoicingSamples::TITLE => PhrygianVoicingSamples::choices(),
+                LocrianVoicingSamples::TITLE => LocrianVoicingSamples::choices(),
+                DorianVoicingSamples::TITLE => DorianVoicingSamples::choices(),
+                AeolianVoicingSamples::TITLE => AeolianVoicingSamples::choices(),
+                IonianVoicingSamples::TITLE => IonianVoicingSamples::choices(),
+                MajorModeVoicingSamples::TITLE => MajorModeVoicingSamples::choices(),
+                MinorModeVoicingSamples::TITLE => MinorModeVoicingSamples::choices(),
+                ...ModalVoicingLessons::presets(),
             ],
             'Scales' => [
-                'Tonal Modes' => ['Ionian', 'Harmonic Major', 'Harmonic Minor', 'Melodic Minor', 'Aeolian'],
-                'Major mode' => ['Ionian', 'Dorian', 'Phrygian', 'Lydian', 'Mixolydian', 'Aeolian', 'Locrian'],
-                'Dorian Mode' => ['Dorian', 'Dorian ♭2', 'Dorian ♯4', 'Dorian ♯5'],
-                'Lydian Mode' => ['Lydian', 'Lydian Augmented', 'Lydian Dominant', 'Lydian ♯2', 'Lydian Diminished'],
-                'Locrian Mode' => ['Locrian', 'Locrian ♮2', 'Super Locrian', 'Locrian ♮6', 'Ultralocrian', 'Locrian 𝄫7'],
-                'Phrygian Mode' => ['Phrygian', 'Phrygian Dominant', 'Phrygian ♯6', 'Phrygian ♭4', 'Melodic Phrygian'],
-                'Mixolydian Mode' => ['Mixolydian', 'Mixolydian ♭9', 'Mixolydian ♯11', 'Mixolydian Altered', 'Mixolydian ♭13'],
+                IonianLydianScaleSamples::TITLE => IonianLydianScaleSamples::choices(),
+                DorianAeolianScaleSamples::TITLE => DorianAeolianScaleSamples::choices(),
+                PhrygianLocrianScaleSamples::TITLE => PhrygianLocrianScaleSamples::choices(),
+                TonalModeScaleSamples::TITLE => TonalModeScaleSamples::choices(),
+                TonalModeAllKeysSamples::TITLE => TonalModeAllKeysSamples::choices(),
+                MajorScaleSamples::TITLE => MajorScaleSamples::choices(),
+                MajorScaleAllKeysSamples::TITLE => MajorScaleAllKeysSamples::choices(),
+                DorianScaleSamples::TITLE => DorianScaleSamples::choices(),
+                DorianScaleAllKeysSamples::TITLE => DorianScaleAllKeysSamples::choices(),
+                LydianScaleSamples::TITLE => LydianScaleSamples::choices(),
+                LydianScaleAllKeysSamples::TITLE => LydianScaleAllKeysSamples::choices(),
+                LocrianScaleSamples::TITLE => LocrianScaleSamples::choices(),
+                LocrianScaleAllKeysSamples::TITLE => LocrianScaleAllKeysSamples::choices(),
+                IonianScaleSamples::TITLE => IonianScaleSamples::choices(),
+                IonianScaleAllKeysSamples::TITLE => IonianScaleAllKeysSamples::choices(),
+                PhrygianScaleSamples::TITLE => PhrygianScaleSamples::choices(),
+                PhrygianScaleAllKeysSamples::TITLE => PhrygianScaleAllKeysSamples::choices(),
+                MixolydianScaleSamples::TITLE => MixolydianScaleSamples::choices(),
+                MixolydianScaleAllKeysSamples::TITLE => MixolydianScaleAllKeysSamples::choices(),
+                AeolianScaleSamples::TITLE => AeolianScaleSamples::choices(),
+                AeolianScaleAllKeysSamples::TITLE => AeolianScaleAllKeysSamples::choices(),
             ],
         ];
     }

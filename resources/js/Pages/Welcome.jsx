@@ -1,3 +1,4 @@
+import AudioLibrary from '@/Components/Site/AudioLibrary';
 import Contact from '@/Components/Site/Contact';
 import AllInOne from '@/Components/Site/AllInOne';
 import Categories from '@/Components/Site/Categories';
@@ -11,14 +12,15 @@ import StoreBadges from '@/Components/Site/StoreBadges';
 import SiteLayout from '@/Layouts/SiteLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Welcome() {
+export default function Welcome({ catalog }) {
     return (
         <SiteLayout>
             <Head title="Welcome" />
             <Hero />
             <Features />
+            <AudioLibrary />
             <HowItWorks />
-            <Categories />
+            <Categories catalog={catalog} />
             <AllInOne />
             <StoreBadges />
             <Pricing />

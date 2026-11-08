@@ -50,6 +50,37 @@ class IntervalSamples
         return null;
     }
 
+    /**
+     * Every one of the 12 keys (pitch classes) this instrument's recorded
+     * range can play this interval in — one representative root per pitch
+     * class (whichever octave lands closest to the instrument's preferred
+     * register), not just the single closest-to-center root pairFor() picks.
+     * A narrow-range instrument (e.g. Tuba) legitimately comes back with
+     * fewer than 12 — that's expected, not an error; a wide-range instrument
+     * (e.g. Piano) comes back with all 12.
+     *
+     * @return array<int, int> pitch class (0-11, 0 = C) => chosen MIDI root
+     */
+    public static function rootsForSemitones(int $semitones, string $slug): array
+    {
+        $preferred = self::PREFERRED_ROOTS[$slug] ?? 60;
+        $byPitchClass = [];
+        foreach (range(24, 95) as $root) {
+            if (NoteSample::fromRecordedMidiPitch($root, $slug) === null
+                || NoteSample::fromRecordedMidiPitch($root + $semitones, $slug) === null) {
+                continue;
+            }
+            $pitchClass = $root % 12;
+            $current = $byPitchClass[$pitchClass] ?? null;
+            if ($current === null || abs($root - $preferred) < abs($current - $preferred)) {
+                $byPitchClass[$pitchClass] = $root;
+            }
+        }
+        ksort($byPitchClass);
+
+        return $byPitchClass;
+    }
+
     /** @return list<array{degree: string, octave: int, offset: float}>|null */
     public static function notesForPair(int $first, int $second, string $timing, string $slug): ?array
     {

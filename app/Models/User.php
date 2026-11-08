@@ -28,7 +28,7 @@ class User extends Authenticatable
 
     // Same 10 options as the mobile app's AVATAR_OPTIONS (src/components/avatar.tsx)
     // — kept in sync by hand, same as the instrument/language lists elsewhere.
-    public const AVATARS = ['piano', 'electric-guitar', 'note', 'headphones', 'metronome', 'saxophone', 'trumpet', 'violin', 'acoustic-guitar', 'microphone'];
+    public const AVATARS = ['drum-kit', 'piano', 'electric-guitar', 'note', 'headphones', 'metronome', 'saxophone', 'trumpet', 'violin', 'acoustic-guitar', 'microphone'];
 
     /**
      * Get the attributes that should be cast.

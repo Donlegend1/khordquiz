@@ -1,3 +1,4 @@
+import InstrumentIcon, { FAMILY_INSTRUMENTS } from '@/Components/Quiz/InstrumentIcon';
 import AppShell from '@/Layouts/AppShell';
 import { INSTRUMENT_GROUPS, INSTRUMENT_LABELS, LANGUAGES } from '@/lib/profile-options';
 import { Head, Link, router, useForm } from '@inertiajs/react';
@@ -315,7 +316,10 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                     option === value ? 'font-semibold text-brand' : 'text-neutral-700'
                 }`}
             >
-                {formatOption(option)}
+                <span className="flex items-center gap-2.5">
+                    {groups && <InstrumentIcon sound={option} size={26} />}
+                    {formatOption(option)}
+                </span>
                 {option === value && <span>✓</span>}
             </button>
         );
@@ -323,7 +327,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
 
     return (
         <div className="relative" ref={ref}>
-            <RowShell first={first} icon={Icon} label={label} hint={hint} disabled={disabled} onClick={toggleOpen}>
+            <RowShell first={first} icon={groups ? () => <InstrumentIcon sound={value} size={24} /> : Icon} label={label} hint={hint} disabled={disabled} onClick={toggleOpen}>
                 <span className="shrink-0 text-sm text-neutral-500">{formatOption(value)}</span>
                 <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
             </RowShell>
@@ -339,9 +343,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                     className="flex w-full items-center gap-1 border-b border-black/5 px-3.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <ChevronIcon className="h-3 w-3 shrink-0 rotate-180 text-neutral-400" />
-                                    {groups.find((group) => group.name === activeGroup)?.icon && (
-                                        <span className="text-sm leading-none">{groups.find((group) => group.name === activeGroup).icon}</span>
-                                    )}
+                                    <InstrumentIcon sound={FAMILY_INSTRUMENTS[activeGroup]} size={24} />
                                     {activeGroup}
                                 </button>
                                 {groups.find((group) => group.name === activeGroup).options.map((option) => (
@@ -357,7 +359,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                     className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm text-neutral-700 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <span className="flex min-w-0 items-center gap-2">
-                                        {group.icon && <span className="shrink-0 text-base leading-none">{group.icon}</span>}
+                                        <InstrumentIcon sound={FAMILY_INSTRUMENTS[group.name]} size={26} />
                                         <span className="truncate">{group.name}</span>
                                     </span>
                                     <span className="flex shrink-0 items-center gap-1.5">
@@ -479,9 +481,15 @@ function ResetProgressSheet({ open, onClose }) {
     );
 }
 
-export default function Settings({ dailyGoal, goalOptions, defaultInstrument }) {
+export default function Settings({ dailyGoal, goalOptions, defaultInstrument, language: savedLanguage }) {
     const [appearance, setAppearance] = useState('System');
-    const [language, setLanguage] = useState('English');
+    const [language, setLanguage] = useState(savedLanguage ?? 'English');
+
+    function chooseLanguage(option) {
+        const previous = language;
+        setLanguage(option);
+        router.patch(route('settings.language'), { language: option }, { preserveScroll: true, preserveState: true, onError: () => setLanguage(previous) });
+    }
     const [instrument, setInstrument] = useState(defaultInstrument ?? 'Piano');
 
     // Persisted immediately on pick, same as the Daily goal row — this is what
@@ -507,7 +515,7 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument }) 
             <div className="mx-auto max-w-2xl">
                 <Section title="General">
                     <PickerRow first icon={ContrastIcon} label="Appearance" hint="System follows your phone's setting" options={APPEARANCES} value={appearance} onChange={setAppearance} />
-                    <PickerRow icon={LanguageIcon} label="Language" options={LANGUAGES} value={language} onChange={setLanguage} />
+                    <PickerRow icon={LanguageIcon} label="Language" options={LANGUAGES} value={language} onChange={chooseLanguage} />
                 </Section>
 
                 <Section title="Practice">

@@ -1,14 +1,23 @@
+import { reviewSelection } from '@/lib/reviewAnswers';
+import { progressionPartMatches } from '@/lib/twoFiveOneExtensions';
 import { Fragment, useEffect, useState } from 'react';
 import PitchKeyboardChoices from './PitchKeyboardChoices';
+import { namingAnswersMatch } from '@/lib/chordNaming';
 import {
+    SEVENTH_CHOICES,
+    SECONDARY_SEVENTH_CHOICES,
     NOTE_WHITE_KEYS,
     NOTE_BLACK_KEYS,
     KEYBOARD_BLACK_KEYS,
     KEYBOARD_WHITE_KEYS,
     MELODIC_DICTATION_LENGTHS,
-    NAMING_DEGREES,
-    NAMING_EXCLUDES,
     NAMING_QUALITIES,
+    NAMING_EXCLUDES,
+    namingDegreeOptions,
+    namingDisplayQuality,
+    namingExcludeOptions,
+    toggleNamingDegree,
+    validNamingSelection,
     blackKeyLeft,
     blackKeyWidth,
     buildNamedChord,
@@ -18,6 +27,7 @@ import {
     encodeNamingAnswer,
     multiFor,
     progressionFor,
+    suspendedChordMatches,
 } from '@/lib/quizAnswerPresets';
 
 function UndoIcon(props) {
@@ -48,7 +58,7 @@ export function answerTypeFor(category, title) {
     if (MELODIC_DICTATION_LENGTHS[title]) return 'sequence';
     if (compoundFor(category, title)) return 'compound';
     if (multiFor(category, title)) return 'multi';
-    if (title === 'Chord naming') return 'naming';
+    if (title === 'Chord naming' || ['Chord Naming · Level 1', 'Chord Naming · Level 2', 'Chord Naming · Level 3', 'Chord Naming · Level 4', 'Chord Naming · Level 5', 'Chord Naming · Level 6'].includes(title)) return 'naming';
     if (progressionFor(category, title)) return 'progression';
     if (title === 'Find the Pitch') return 'pitch-keyboard';
     if (title === 'Find the Note' || title === 'Find the Key #1' || title === 'Find the Key #2') return 'keyboard';
@@ -423,7 +433,7 @@ function MultiChoices({ answered, options, selected, onToggle }) {
 // correct/incorrect coloring once answered (every correct option turns
 // green even if the member never picked it — "here's what you missed" — and
 // any wrongly-picked one turns red).
-function NamingPanel({ answered, correct, hint, isActive, note, onToggle, options, step, title }) {
+function NamingPanel({ answered, correct, hint, isActive, isDisabled = () => false, note, onToggle, options, step, title }) {
     return (
         <div className="rounded-2xl border border-black/5 bg-neutral-50 p-4">
             <div className="flex items-center gap-2.5">
@@ -436,6 +446,7 @@ function NamingPanel({ answered, correct, hint, isActive, note, onToggle, option
             <div className="mt-3 flex flex-wrap gap-2">
                 {options.map((option) => {
                     const active = isActive(option);
+                    const unavailable = isDisabled(option);
                     const isRevealedCorrect = answered && correct.includes(option);
                     const isWrongSelected = answered && active && !correct.includes(option);
                     const borderClass = isRevealedCorrect ? 'border-emerald-600' : isWrongSelected ? 'border-brand' : active ? 'border-neutral-900' : 'border-black/10';
@@ -446,9 +457,9 @@ function NamingPanel({ answered, correct, hint, isActive, note, onToggle, option
                         <button
                             key={option}
                             type="button"
-                            disabled={answered}
+                            disabled={answered || isDisabled(option)}
                             onClick={() => onToggle(option)}
-                            className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-150 disabled:pointer-events-none ${borderClass} ${bgClass} ${textClass}`}
+                            className={`flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-colors duration-150 disabled:cursor-default disabled:pointer-events-none ${borderClass} ${bgClass} ${textClass} ${unavailable ? 'opacity-40' : ''}`} 
                         >
                             {isRevealedCorrect && <CheckIcon className="h-3.5 w-3.5" />}
                             {isWrongSelected && <CloseIconSmall className="h-3.5 w-3.5" />}
@@ -483,14 +494,18 @@ function CheckIcon(props) {
 // preview pill included (the part the chosen degrees/exclude add shows in
 // red, same as the app).
 function NamingChoices({ answered, correctAnswer, quality, degrees, exclude, onQuality, onToggleDegree, onExclude, preview }) {
-    const correct = correctAnswer ? decodeNamingAnswer(correctAnswer) : null;
+    const submitted = quality ? encodeNamingAnswer(quality, degrees, exclude) : '';
+    const correct = correctAnswer
+        ? (namingAnswersMatch(submitted, correctAnswer) ? { quality, degrees, exclude } : decodeNamingAnswer(correctAnswer))
+        : null;
+    const displayQuality = namingDisplayQuality(quality, degrees);
     return (
         <div className="space-y-4">
             <div className="rounded-xl border border-black/5 bg-white px-5 py-3.5 text-center shadow-sm">
                 {quality ? (
                     <p className="text-xl font-extrabold text-neutral-900">
-                        {quality}
-                        <span className="text-brand">{preview.slice(quality.length)}</span>
+                        {displayQuality}
+                        <span className="text-brand">{preview.slice(displayQuality.length)}</span>
                     </p>
                 ) : (
                     <p className="text-xl font-extrabold text-neutral-300">?</p>
@@ -513,18 +528,21 @@ function NamingChoices({ answered, correctAnswer, quality, degrees, exclude, onQ
                 isActive={(option) => degrees.includes(option)}
                 note="Select all that apply"
                 onToggle={onToggleDegree}
-                options={NAMING_DEGREES}
+                options={namingDegreeOptions(quality)}
                 step={2}
                 title="Chord Degree"
             />
             <NamingPanel
                 answered={answered}
                 correct={correct ? [correct.exclude] : []}
-                hint='Select "None" if no notes are excluded.'
+                hint={namingExcludeOptions(degrees).length === 1
+                    ? 'Choose a seventh degree to use No 3 or No 5. Otherwise, select None.'
+                    : 'Choose No 3 or No 5 if that note is left out of the chord. Otherwise, select None.'}
                 isActive={(option) => exclude === option}
                 note="Pick one"
                 onToggle={onExclude}
                 options={NAMING_EXCLUDES}
+                isDisabled={(option) => !namingExcludeOptions(degrees).includes(option)}
                 step={3}
                 title="Exclude (if any)"
             />
@@ -551,7 +569,7 @@ const SHORT_QUALITY = { Major: 'Maj', Minor: 'Min', Diminished: 'Dim' };
 // isn't fixed/derived for this quiz. Auto-advances to the next chord once
 // both degree and quality land, unless the quiz also has an extensions step
 // (then advancing is manual via "Next Chord").
-function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSlot, onClear, resetToken }) {
+function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSlot, onClear, resetToken, review = false }) {
     const [activeIndex, setActiveIndex] = useState(0);
     useEffect(() => setActiveIndex(0), [resetToken]);
 
@@ -570,12 +588,19 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
         return base ? `${base}${extensions.length ? `(${extensions.join(', ')})` : ''}` : null;
     };
 
+    const qualityGroups = config.qualityOnly ? [
+        { label: 'Basic Triads', options: ['Major', 'Minor', 'Diminished', 'Augmented'] },
+        { label: 'Seventh Chords', options: SEVENTH_CHOICES },
+        { label: 'Secondary Seventh Chords', options: SECONDARY_SEVENTH_CHOICES },
+    ].map((group) => ({ ...group, options: group.options.filter((option) => config.qualityOptions.includes(option)) })) : null;
     const hasAny = slots.some((slot) => slot.degree || slot.quality || slot.extensions?.length);
     const correctParts = correctAnswer ? correctAnswer.split(' - ') : [];
 
     const current = slots[activeIndex];
     const currentDegree = degreeFor(activeIndex);
     const currentQuality = qualityFor(activeIndex);
+    const currentQualityOptions = config.qualityOptionsByDegree?.[currentDegree] ?? config.qualityOptions;
+    const currentExtensionOptions = config.extensionOptionsByQuality ? config.extensionOptionsByQuality[currentQuality] ?? [] : config.extensionOptions;
 
     const advanceIfJustCompleted = (wasComplete, nowComplete) => {
         if (!config.extensionOptions && !wasComplete && nowComplete && activeIndex < config.length - 1) {
@@ -597,6 +622,10 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
     const chooseQuality = (option) => {
         const wasComplete = config.qualityOnly ? Boolean(currentQuality) : Boolean(currentDegree && currentQuality);
         onChangeSlot(activeIndex, 'quality', option);
+        if (config.extensionOptionsByQuality) {
+            const allowed = config.extensionOptionsByQuality[option] ?? [];
+            onChangeSlot(activeIndex, 'extensions', (current.extensions ?? []).filter((value) => allowed.includes(value)));
+        }
         advanceIfJustCompleted(wasComplete, config.qualityOnly ? Boolean(option) : Boolean(currentDegree && option));
     };
 
@@ -608,7 +637,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
     return (
         <div>
             <div className="flex items-center justify-between">
-                <p className="text-[13px] font-semibold text-neutral-400">Your Progression</p>
+                <p className="text-[13px] font-semibold text-neutral-400">{review ? 'Correct progression' : 'Your Progression'}</p>
                 {!answered && (
                     <button
                         type="button"
@@ -625,13 +654,13 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                 )}
             </div>
 
-            <div className="mt-2.5 flex items-center gap-1">
+            <div className={`mt-2.5 flex ${config.qualityOnly ? 'items-stretch gap-1.5 sm:gap-2' : 'items-center gap-1'}`}>
                 {indices.map((index) => {
                     const degree = degreeFor(index);
                     const quality = qualityFor(index);
                     const extensions = slots[index].extensions ?? [];
                     const isActive = !answered && index === activeIndex;
-                    const right = answered && composedFor(index) === correctParts[index];
+                    const right = answered && (config.suspendedEquivalents ? suspendedChordMatches(composedFor(index), correctParts[index]) : config.extensionOrderIndependent ? progressionPartMatches(composedFor(index), correctParts[index]) : composedFor(index) === correctParts[index]);
 
                     let classes;
                     if (answered) {
@@ -648,23 +677,33 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                 type="button"
                                 disabled={answered}
                                 onClick={() => setActiveIndex(index)}
-                                aria-label={`Chord ${index + 1}`}
-                                className={`flex min-h-[58px] flex-1 flex-col items-center justify-center gap-0.5 rounded-xl border-[1.5px] px-0.5 py-1.5 transition-colors duration-150 ${classes}`}
+                                aria-label={`Chord ${index + 1}${quality ? `: ${quality}` : ': choose a quality'}`}
+                                aria-current={isActive ? 'step' : undefined}
+                                className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl border-[1.5px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${config.qualityOnly ? 'min-h-[72px] px-1 py-2 sm:px-2' : 'min-h-[58px] px-0.5 py-1.5'} ${classes}`}
                             >
-                                {!config.qualityOnly && <span className="text-xl font-extrabold">{degree ?? '?'}</span>}
-                                <span className={`truncate text-[11px] font-semibold ${quality ? '' : 'opacity-50'}`}>{quality ?? 'Quality'}</span>
+                                {config.qualityOnly ? (
+                                    <>
+                                        <span className={`text-[10px] font-medium sm:text-[11px] ${isActive ? 'text-white/80' : 'opacity-70'}`}>Chord {index + 1}</span>
+                                        <span className="w-full break-words text-center text-[10px] font-semibold leading-tight sm:text-xs">{quality ?? 'Choose'}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="text-xl font-extrabold">{degree ?? '?'}</span>
+                                        <span className={`truncate text-[11px] font-semibold ${quality ? '' : 'opacity-50'}`}>{quality ?? 'Quality'}</span>
+                                    </>
+                                )}
                                 {extensions.length > 0 && <span className="truncate text-[10px] font-medium opacity-80">{extensions.join(', ')}</span>}
                             </button>
-                            {index < indices.length - 1 && <ChevronRightIcon className="h-3 w-3 shrink-0 text-neutral-300" />}
+                            {index < indices.length - 1 && !config.qualityOnly && <ChevronRightIcon className="h-3 w-3 shrink-0 text-neutral-300" />}
                         </Fragment>
                     );
                 })}
             </div>
 
             {!answered && (
-                <div className="mt-2.5 rounded-2xl border border-black/10 p-3.5">
+                <div className={`mt-3 rounded-2xl border border-black/10 ${config.qualityOnly ? 'p-3 sm:p-4' : 'p-3.5'}`}>
                     <div className="flex items-center justify-between">
-                        <p className="text-[15px] font-extrabold text-neutral-900">Chord {activeIndex + 1}</p>
+                        <p aria-live="polite" className="text-[15px] font-extrabold text-neutral-900">{config.qualityOnly ? `Choose chord ${activeIndex + 1}` : `Chord ${activeIndex + 1}`}</p>
                         {config.extensionOptions && activeIndex < config.length - 1 && (
                             <button
                                 type="button"
@@ -713,16 +752,38 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                         </div>
                     )}
 
-                    {!config.fixedQualities && (
+                    {qualityGroups ? (
+                        <div className="mt-3 space-y-3">
+                            {qualityGroups.filter((group) => group.options.length).map((group) => (
+                                <fieldset key={group.label}>
+                                    <legend className="mb-1.5 text-xs font-semibold text-neutral-600">{group.label}</legend>
+                                    <div className={`grid grid-cols-2 gap-1.5 ${group.label === 'Basic Triads' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
+                                        {group.options.map((option) => (
+                                            <button
+                                                key={option}
+                                                type="button"
+                                                aria-pressed={currentQuality === option}
+                                                onClick={() => chooseQuality(option)}
+                                                className={`flex min-h-[44px] items-center justify-center rounded-lg px-2 py-2 text-center text-[13px] leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${currentQuality === option ? 'bg-neutral-900 font-semibold text-white' : 'bg-neutral-100 font-medium text-neutral-700 hover:bg-neutral-200'}`}
+                                            >
+                                                {option}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </fieldset>
+                            ))}
+                            <p className="text-xs leading-relaxed text-neutral-500">Selections advance automatically. Tap any chord above to edit it.</p>
+                        </div>
+                    ) : !config.fixedQualities && (
                         <div className={config.qualityOnly && config.fixedDegrees ? '' : 'mt-3.5'}>
                             <p className="mb-2 text-xs font-semibold text-neutral-400">Quality</p>
                             <div className="flex flex-wrap gap-1.5">
-                                {config.qualityOptions.map((option) => (
+                                {currentQualityOptions.map((option) => (
                                     <button
                                         key={option}
                                         type="button"
                                         onClick={() => chooseQuality(option)}
-                                        style={{ width: config.qualityOptions.length === 4 ? '48%' : '31%' }}
+                                        style={{ width: currentQualityOptions.length === 4 ? '48%' : '31%' }}
                                         className={`flex min-h-[40px] flex-grow items-center justify-center rounded-lg text-sm transition-colors duration-150 ${
                                             currentQuality === option
                                                 ? 'bg-neutral-900 font-bold text-white'
@@ -739,10 +800,11 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                     {config.extensionOptions && (
                         <div className="mt-3.5">
                             <p className="mb-2 text-xs font-semibold text-neutral-400">
-                                Degrees <span className="font-medium text-neutral-300">(optional)</span>
+                                {config.requireExtensions ? 'Extensions' : <>Degrees <span className="font-medium text-neutral-300">(optional)</span></>}
                             </p>
+                            {config.extensionOptionsByQuality && !currentQuality && <p className="mb-2 text-xs text-neutral-500">Choose a quality to see its extensions.</p>}
                             <div className="flex flex-wrap gap-1.5">
-                                {config.extensionOptions.map((option) => {
+                                {currentExtensionOptions.map((option) => {
                                     const on = (current.extensions ?? []).includes(option);
                                     return (
                                         <button
@@ -789,42 +851,51 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
 
     return (
         <div>
-            <div className="flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2">
-                    {slots.map((note, index) => (
-                        <span
-                            key={index}
-                            className={`flex h-11 w-16 items-center justify-center rounded-lg border text-sm font-bold ${slotClasses(note, index)}`}
+            <section aria-label="Your Sequence" className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-sm font-bold text-neutral-900">Your Sequence</h3>
+                    <div className="flex shrink-0 gap-4">
+                        <button
+                            type="button"
+                            disabled={answered || sequence.length === 0}
+                            onClick={onUndo}
+                            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-semibold text-neutral-600 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:pointer-events-none disabled:opacity-40"
                         >
-                            {note ?? index + 1}
-                        </span>
-                    ))}
+                            <UndoIcon aria-hidden="true" className="h-4 w-4" />
+                            Undo
+                        </button>
+                        <button
+                            type="button"
+                            disabled={answered || sequence.length === 0}
+                            onClick={onClear}
+                            className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-semibold text-red-600 hover:text-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:pointer-events-none disabled:opacity-40"
+                        >
+                            <TrashIcon aria-hidden="true" className="h-4 w-4" />
+                            Clear
+                        </button>
+                    </div>
                 </div>
-                <div className="flex shrink-0 gap-2">
-                    <button
-                        type="button"
-                        disabled={answered || sequence.length === 0}
-                        onClick={onUndo}
-                        title="Undo"
-                        aria-label="Undo"
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors duration-150 hover:bg-neutral-200 hover:text-neutral-900 disabled:pointer-events-none disabled:opacity-30"
-                    >
-                        <UndoIcon className="h-4 w-4" />
-                    </button>
-                    <button
-                        type="button"
-                        disabled={answered || sequence.length === 0}
-                        onClick={onClear}
-                        title="Clear"
-                        aria-label="Clear"
-                        className="flex h-9 w-9 items-center justify-center rounded-full bg-neutral-100 text-neutral-600 transition-colors duration-150 hover:bg-rose-100 hover:text-rose-700 disabled:pointer-events-none disabled:opacity-30"
-                    >
-                        <TrashIcon className="h-4 w-4" />
-                    </button>
-                </div>
-            </div>
+                <ol className="mt-3 flex flex-wrap gap-2.5">
+                    {slots.map((note, index) => {
+                        const incorrect = answered && note !== correctNotes[index];
+                        return (
+                            <li key={index} className="flex w-16 flex-col items-center gap-1.5">
+                                <span className="text-xs text-neutral-400">{index + 1}</span>
+                                <span className={`flex h-11 w-full items-center justify-center rounded-lg border text-sm font-bold ${slotClasses(note, index)}`}>
+                                    {note ?? '–'}
+                                </span>
+                                {incorrect && correctNotes[index] && (
+                                    <span className="text-sm font-bold text-emerald-700">
+                                        <span className="sr-only">Correct note: </span>{correctNotes[index]}
+                                    </span>
+                                )}
+                            </li>
+                        );
+                    })}
+                </ol>
+            </section>
 
-            <div className="relative mt-3 flex h-28 overflow-hidden rounded-2xl border border-black/10 bg-white">
+            <div className="relative mt-3 flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
                 {KEYBOARD_WHITE_KEYS.map((note, index) => (
                     <button
                         key={index}
@@ -868,7 +939,7 @@ const emptySlots = (config) => Array.from({ length: config?.length ?? 0 }, () =>
  * sequence board) and reports the composed answer string up to the parent,
  * or null while the member's answer is still incomplete.
  */
-export default function AnswerBuilder({ answered, answerLength, choices, chosen, correctAnswer, keyboardAudio, onChange, quiz, referenceNote, resetToken }) {
+export default function AnswerBuilder({ answered, answerLength, choices, chosen, correctAnswer, keyboardAudio, onChange, quiz, referenceNote, resetToken, review = false }) {
     const type = answerTypeFor(quiz.category, quiz.title);
 
     // Fixed-length quizzes (3-Note Stepwise, Skips, 5-Note Melodies) always
@@ -895,7 +966,7 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
     // encoding (see encodeNamingAnswer), not the human-readable namedChord
     // above (which is lossy and can't always be reconstructed back into
     // separate quality/degrees/exclude for per-chip feedback afterwards).
-    const namingAnswer = namingQuality && namingExclude ? encodeNamingAnswer(namingQuality, namingDegrees, namingExclude) : null;
+    const namingAnswer = validNamingSelection(namingQuality, namingDegrees, namingExclude) ? encodeNamingAnswer(namingQuality, namingDegrees, namingExclude) : null;
 
     // Most progression quizzes have a fixed chord count; Chordal Progressions
     // varies 5-6 chords per question (same patterns as Chordal melodies), so
@@ -927,6 +998,7 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
     }, [resetToken]);
 
     useEffect(() => {
+        if (review) return;
         if (type === 'sequence') {
             onChange(sequence.length === sequenceLength ? sequence.join(' ') : null);
         } else if (type === 'compound') {
@@ -943,13 +1015,15 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type, sequence, sequenceLength, quality, inversion, selected, namingAnswer, progressionPreview, flatChoice]);
 
+    const reviewed = review ? reviewSelection(correctAnswer, progressionConfig) : null;
+
     if (type === 'sequence') {
         return (
             <div>
                 <SequenceChoices
                     answered={answered}
                     length={sequenceLength}
-                    sequence={sequence}
+                    sequence={reviewed?.sequence ?? sequence}
                     correctAnswer={correctAnswer}
                     quizTitle={quiz.title}
                     onTap={(note) => setSequence((prev) => (prev.length < sequenceLength ? [...prev, note] : prev))}
@@ -961,13 +1035,14 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
     }
 
     if (type === 'compound') {
+        const picked = review ? reviewSelection(chosen ?? correctAnswer, progressionConfig) : null;
         return (
             <CompoundChoices
                 answered={answered}
                 compound={compound}
                 correctAnswer={correctAnswer}
-                quality={quality}
-                inversion={inversion}
+                quality={picked?.quality ?? quality}
+                inversion={picked?.inversion ?? inversion}
                 onQuality={setQuality}
                 onInversion={setInversion}
             />
@@ -979,7 +1054,7 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
             <ExtensionCheckboxGrid
                 answered={answered}
                 options={multiOptions}
-                selected={selected}
+                selected={reviewed?.selected ?? selected}
                 correctPicks={correctAnswer ? correctAnswer.split(', ') : []}
                 onToggle={(option) => setSelected((prev) => (prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]))}
             />
@@ -991,13 +1066,20 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
             <NamingChoices
                 answered={answered}
                 correctAnswer={correctAnswer}
-                quality={namingQuality}
-                degrees={namingDegrees}
-                exclude={namingExclude}
-                onQuality={setNamingQuality}
-                onToggleDegree={(option) => setNamingDegrees((prev) => (prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]))}
+                quality={reviewed?.naming?.quality ?? namingQuality}
+                degrees={reviewed?.naming?.degrees ?? namingDegrees}
+                exclude={reviewed?.naming?.exclude ?? namingExclude}
+                onQuality={(option) => {
+                    setNamingQuality(option);
+                    setNamingDegrees((prev) => prev.filter((degree) => namingDegreeOptions(option).includes(degree)));
+                }}
+                onToggleDegree={(option) => {
+                    const next = toggleNamingDegree(namingDegrees, option);
+                    setNamingDegrees(next);
+                    if (!namingExcludeOptions(next).includes(namingExclude)) setNamingExclude('None');
+                }}
                 onExclude={setNamingExclude}
-                preview={namedChord}
+                preview={reviewed?.naming ? buildNamedChord(reviewed.naming.quality, reviewed.naming.degrees, reviewed.naming.exclude) : namedChord}
             />
         );
     }
@@ -1005,10 +1087,11 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
     if (type === 'progression') {
         return (
             <ProgressionChoices
+                review={review}
                 answered={answered}
                 config={progressionConfig}
                 correctAnswer={correctAnswer}
-                slots={slots}
+                slots={reviewed?.slots ?? slots}
                 onChangeSlot={(index, field, value) => setSlots((prev) => prev.map((slot, i) => (i === index ? { ...slot, [field]: value } : slot)))}
                 onClear={() => setSlots(emptySlots(progressionConfig))}
                 resetToken={resetToken}
@@ -1021,9 +1104,10 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
             <PitchKeyboardChoices
                 answered={answered}
                 correctAnswer={correctAnswer}
-                value={flatChoice}
+                value={review ? (chosen ?? correctAnswer) : flatChoice}
                 onChange={setFlatChoice}
                 keyboardAudio={keyboardAudio}
+                initialPitch={review ? correctAnswer : null}
             />
         );
     }
@@ -1033,7 +1117,7 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
             <NoteKeyboardChoices
                 answered={answered}
                 correctAnswer={correctAnswer}
-                value={flatChoice}
+                value={review ? (chosen ?? correctAnswer) : flatChoice}
                 onChange={setFlatChoice}
                 keyboardAudio={keyboardAudio}
                 referenceNote={referenceNote}
@@ -1041,5 +1125,5 @@ export default function AnswerBuilder({ answered, answerLength, choices, chosen,
         );
     }
 
-    return <FlatChoices answered={answered} choices={choices} correctAnswer={correctAnswer} value={flatChoice} onChange={setFlatChoice} />;
+    return <FlatChoices answered={answered} choices={choices} correctAnswer={correctAnswer} value={review ? (chosen ?? correctAnswer) : flatChoice} onChange={setFlatChoice} />;
 }

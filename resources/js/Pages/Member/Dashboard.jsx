@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { scoreTone } from '@/lib/scoreColor';
 
 const iconProps = {
     viewBox: '0 0 24 24',
@@ -172,12 +173,6 @@ function QuizNoteIcon(props) {
             <path d="M10 9.3l5.5 2.7-5.5 2.7z" fill="currentColor" stroke="none" />
         </svg>
     );
-}
-
-function scoreTone(score) {
-    if (score < 40) return 'bg-rose-50 text-brand';
-    if (score < 65) return 'bg-amber-50 text-amber-700';
-    return 'bg-emerald-50 text-emerald-700';
 }
 
 const ACHIEVEMENT_ICONS = {
@@ -393,7 +388,7 @@ function NotificationsBell() {
     );
 }
 
-export default function Dashboard({ streak, stats, resume, continuePracticing, recentQuizzes, achievements, savedCount }) {
+export default function Dashboard({ streak, stats, resume, continuePracticing, recentQuizzes, achievements, savedCount, goal }) {
     const { auth } = usePage().props;
     const firstName = auth.user.name.split(' ')[0];
 
@@ -433,13 +428,34 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                 </div>
             </div>
 
-            <section className="mt-8">
+            <section className="mt-8 grid gap-4 md:grid-cols-2">
+                <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-neutral-800 p-4 text-white xl:p-6">
+                    <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                        <h2 id="daily-goal-heading" className="text-sm font-semibold">Today's goal</h2>
+                        <p className="text-xs tabular-nums text-white/80 sm:text-sm">
+                            {goal.done}/{goal.target} questions
+                        </p>
+                    </div>
+                    <div
+                        role="progressbar"
+                        aria-labelledby="daily-goal-heading"
+                        aria-valuemin={0}
+                        aria-valuemax={goal.target}
+                        aria-valuenow={goal.done}
+                        className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/20"
+                    >
+                        <div
+                            className={`h-full rounded-full ${goal.done >= goal.target ? 'bg-emerald-400' : 'bg-white'}`}
+                            style={{ width: `${Math.min(100, (goal.done / Math.max(1, goal.target)) * 100)}%` }}
+                        />
+                    </div>
+                </div>
                 {resume ? (
                     <Link
-                        href={route('quiz.preview', resume.quiz.slug)}
-                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
+                        href={route('quiz.category', { category: resume.quiz.categorySlug, quiz: resume.quiz.slug })}
+                        className="flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-3 sm:p-4 xl:gap-4 xl:p-6"
                     >
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-9 sm:w-9 xl:h-12 xl:w-12">
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
@@ -453,7 +469,7 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
                                 Continue · {resume.quiz.category}
                             </p>
-                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">
                                 {resume.quiz.title}
                             </h3>
                             <div className="mt-4 flex items-center gap-3">
@@ -465,14 +481,14 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                                 </span>
                             </div>
                         </div>
-                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
+                        <ChevronIcon className="hidden h-4 w-4 shrink-0 text-white/60 sm:block xl:h-5 xl:w-5" />
                     </Link>
                 ) : continuePracticing ? (
                     <Link
-                        href={route('quiz.preview', continuePracticing.quiz.slug)}
-                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
+                        href={route('quiz.category', { category: continuePracticing.quiz.categorySlug, quiz: continuePracticing.quiz.slug })}
+                        className="flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-3 sm:p-4 xl:gap-4 xl:p-6"
                     >
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-9 sm:w-9 xl:h-12 xl:w-12">
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
@@ -486,21 +502,21 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
                                 Continue practicing · {continuePracticing.quiz.category}
                             </p>
-                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">
                                 {continuePracticing.quiz.title}
                             </h3>
                             <p className="mt-1.5 text-sm text-white/80">
                                 Last played {continuePracticing.last_played_at}
                             </p>
                         </div>
-                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
+                        <ChevronIcon className="hidden h-4 w-4 shrink-0 text-white/60 sm:block xl:h-5 xl:w-5" />
                     </Link>
                 ) : (
                     <Link
                         href={route('quiz.categories')}
-                        className="mt-4 flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-4 sm:p-6"
+                        className="flex items-center gap-3 rounded-2xl bg-brand p-3.5 text-white transition hover:bg-brand-dark sm:items-start sm:gap-3 sm:p-4 xl:gap-4 xl:p-6"
                     >
-                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-12 sm:w-12">
+                        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/15 sm:h-9 sm:w-9 xl:h-12 xl:w-12">
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
@@ -517,7 +533,7 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Start here</h3>
                             <p className="mt-1.5 text-sm text-white/80">Pick a category and take your first quiz.</p>
                         </div>
-                        <ChevronIcon className="hidden h-5 w-5 shrink-0 text-white/60 sm:block" />
+                        <ChevronIcon className="hidden h-4 w-4 shrink-0 text-white/60 sm:block xl:h-5 xl:w-5" />
                     </Link>
                 )}
             </section>

@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\QuestionReport;
+use App\Models\Quiz;
+use App\Models\QuizSession;
 use App\Models\User;
 use App\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -135,6 +138,38 @@ class AdminUserManagementTest extends TestCase
                 ->component('Admin/Users/Show')
                 ->where('member.id', $member->id)
                 ->where('member.email', $member->email));
+    }
+
+    public function test_detail_page_keeps_archived_history_and_reports_scoped_to_the_selected_member(): void
+    {
+        $admin = User::factory()->admin()->create();
+        $member = User::factory()->create(['language' => 'German', 'default_instrument' => 'Violin']);
+        $other = User::factory()->create();
+        $quiz = Quiz::factory()->create();
+        foreach (range(1, 21) as $index) {
+            QuizSession::create(['user_id' => $member->id, 'slug' => $quiz->slug, 'correct' => 20,
+                'total' => 25, 'played_at' => now()->subMinutes($index), 'sound' => 'Violin']);
+        }
+        QuizSession::create(['user_id' => $other->id, 'slug' => $quiz->slug, 'correct' => 0,
+            'total' => 25, 'played_at' => now()]);
+        foreach ([$member, $other] as $reporter) {
+            QuestionReport::create(['user_id' => $reporter->id, 'quiz_id' => $quiz->id, 'question_id' => 1,
+                'quiz_title' => $quiz->title, 'question_prompt' => 'Question', 'reason' => 'Audio does not play']);
+        }
+        $props = $this->actingAs($admin)->get(route('admin.users.show', ['user' => $member, 'tab' => 'Activity']))->assertOk()->viewData('page')['props'];
+        $this->assertSame(21, $props['member']['completed_runs']);
+        $this->assertSame(1, $props['member']['completed_quizzes']);
+        $this->assertSame(80, $props['member']['accuracy']);
+        $this->assertSame('German', $props['member']['language']);
+        $this->assertSame('Violin', $props['member']['default_instrument']);
+        $this->assertSame(1, $props['reports']['total']);
+        $this->assertCount(1, $props['reports']['recent']);
+        $this->assertCount(20, $props['history']['data']);
+        $this->assertStringContainsString('tab=Activity', $props['history']['next_page_url']);
+        $second = $this->get($props['history']['next_page_url'])->assertOk()->viewData('page')['props'];
+        $this->assertSame('Activity', $second['activeTab']);
+        $this->assertCount(1, $second['history']['data']);
+        $this->actingAs($other)->get(route('admin.users.show', $member))->assertForbidden();
     }
 
     public function test_admin_can_assign_a_plan_to_a_member(): void

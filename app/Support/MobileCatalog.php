@@ -14,7 +14,7 @@ class MobileCatalog
     public const PATHS = [
         'Beginner' => ['Relative Pitch', 'Intervals', 'Basic Triads', 'Melodic Dictation'],
         'Intermediate' => ['Add 9 & b9', '7th Degree Chords', 'Secondary 7th Chords', 'Chord Progressions', 'Scales'],
-        'Advanced' => ['9th Degree Chords', 'Secondary 9th Chords', '11th Degree Chords', 'Secondary 11th Chords', '13th Degree Chords', 'Extentions recognition', 'Modal Voicings'],
+        'Advanced' => ['9th Degree Chords', 'Secondary 9th Chords', '11th Degree Chords', 'Secondary 11th Chords', '13th Degree Chords', 'Extentions recognition', 'Chord Naming', 'Modal Harmony', 'Modal Voicings'],
     ];
 
     /**
@@ -36,7 +36,9 @@ class MobileCatalog
             'Secondary 11th Chords',
             '13th Degree Chords',
             'Extentions recognition',
+            'Chord Naming',
             'Chord Progressions',
+            'Modal Harmony',
             'Modal Voicings',
             'Scales',
         ];
@@ -58,10 +60,12 @@ class MobileCatalog
             '9th Degree Chords' => ['9th Degree Chords · Level 1', '9th Degree Chords · Level 2', '9th Degree Chords · Level 3', '9th Degree Chords · Level 4'],
             '11th Degree Chords' => ['11th Degree Chords · Level 1', '11th Degree Chords · Level 2', '11th Degree Chords · Level 3', '11th Degree Chords · Level 4'],
             '13th Degree Chords' => ['13th Degree Chords · Level 1', '13th Degree Chords · Level 2', '13th Degree Chords · Level 3', '13th Degree Chords · Level 4'],
-            'Extentions recognition' => ['Extentions recognition · Level 1', 'Extentions recognition · Level 2', 'Extentions recognition · Level 3', 'Extentions recognition · Level 4'],
-            'Chord Progressions' => ['Chord Progressions · Level 1', 'Diatonic Progression', 'Build the Progression', 'Build the 7th Progression', 'Chord Progressions · Level 4', 'Chord Progressions · Level 5', 'Chord Progressions · Level 6', 'Chord Progressions · Level 7'],
-            'Modal Voicings' => ['Modal Voicings · Level 1', 'Modal Voicings · Level 2', 'Modal Voicings · Level 3', 'Modal Voicings · Level 4'],
-            'Scales' => ['Scales · Level 1', 'Scales · Level 3', 'Scales · Level 4', 'Scales · Level 5', 'Scales · Level 6', 'Scales · Level 7', 'Scales · Level 8'],
+            'Extentions recognition' => ['Extentions recognition · Level 1', 'Extentions recognition · Level 2', 'Extentions recognition · Level 3'],
+            'Chord Naming' => ['Extentions recognition · Level 4', 'Chord Naming · Level 2', 'Chord Naming · Level 3', 'Chord Naming · Level 4', 'Chord Naming · Level 5', 'Chord Naming · Level 6'],
+            'Chord Progressions' => ['Chord Progressions · Level 1', 'Diatonic Progression', 'Diatonic Progression #2', 'Build the Progression', 'Build the 7th Progression', 'Chord Progressions · Level 5', 'Progression Recognition · Part 2', 'Progression Recognition · Part 3', 'Progression Recognition · Part 4', 'Chord Progressions · Level 6', 'Chordal Progressions'],
+            'Modal Harmony' => ModalHarmonySamples::titles(),
+            'Modal Voicings' => ModalVoicingLessons::titles(),
+            'Scales' => [IonianLydianScaleSamples::MOBILE_TITLE, DorianAeolianScaleSamples::MOBILE_TITLE, PhrygianLocrianScaleSamples::MOBILE_TITLE, 'Scales · Level 3', MajorScaleAllKeysSamples::MOBILE_TITLE, 'Scales · Level 1', TonalModeAllKeysSamples::MOBILE_TITLE, 'Scales · Level 4', DorianScaleAllKeysSamples::MOBILE_TITLE, 'Scales · Level 5', LydianScaleAllKeysSamples::MOBILE_TITLE, 'Scales · Level 7', PhrygianScaleAllKeysSamples::MOBILE_TITLE, 'Scales · Level 8', MixolydianScaleAllKeysSamples::MOBILE_TITLE, AeolianScaleSamples::MOBILE_TITLE, AeolianScaleAllKeysSamples::MOBILE_TITLE, 'Scales · Level 6', LocrianScaleAllKeysSamples::MOBILE_TITLE, IonianScaleSamples::MOBILE_TITLE, IonianScaleAllKeysSamples::MOBILE_TITLE],
         ];
     }
 
@@ -71,6 +75,10 @@ class MobileCatalog
     public static function labels(): array
     {
         return [
+            ModalVoicingSamples::LEGACY_TITLE => ModalVoicingSamples::TITLE,
+            MixolydianVoicingSamples::LEGACY_TITLE => MixolydianVoicingSamples::TITLE,
+            PhrygianVoicingSamples::LEGACY_TITLE => PhrygianVoicingSamples::TITLE,
+            LocrianVoicingSamples::LEGACY_TITLE => LocrianVoicingSamples::TITLE,
             'Diatonic Intervals' => 'Melodic Diatonic Intervals',
             'Non-diatonic Intervals' => 'Melodic Non-diatonic Intervals',
             'Intervals - General' => 'Melodic Intervals: General',
@@ -96,19 +104,21 @@ class MobileCatalog
             'Extentions recognition · Level 1' => 'Major Chord Extentions',
             'Extentions recognition · Level 2' => 'Minor Chord Extentions',
             'Extentions recognition · Level 3' => 'Dominant Chord Extentions',
-            'Extentions recognition · Level 4' => 'Chord naming',
+            'Extentions recognition · Level 4' => 'Chord Naming · Level 1',
+            'Diatonic Progression' => 'Diatonic Progression #1',
             'Chord Progressions · Level 1' => 'Cadences',
-            'Chord Progressions · Level 4' => 'Passing Progression',
-            'Chord Progressions · Level 5' => 'Progression recognition',
+            'Chord Progressions · Level 5' => 'Progression Recognition #1',
+            'Progression Recognition · Part 2' => 'Progression Recognition #2',
+            'Progression Recognition · Part 3' => 'Progression Recognition #3',
+            'Progression Recognition · Part 4' => 'Progression Recognition #4',
             'Chord Progressions · Level 6' => '2-5-1 chord degree',
-            'Chord Progressions · Level 7' => 'Dom resolution',
-            'Scales · Level 1' => 'Tonal Modes',
-            'Scales · Level 3' => 'Major mode',
-            'Scales · Level 4' => 'Dorian Mode',
-            'Scales · Level 5' => 'Lydian Mode',
-            'Scales · Level 6' => 'Locrian Mode',
-            'Scales · Level 7' => 'Phrygian Mode',
-            'Scales · Level 8' => 'Mixolydian Mode',
+            'Scales · Level 1' => TonalModeScaleSamples::TITLE,
+            'Scales · Level 3' => MajorScaleSamples::TITLE,
+            'Scales · Level 4' => DorianScaleSamples::TITLE,
+            'Scales · Level 5' => LydianScaleSamples::TITLE,
+            'Scales · Level 6' => LocrianScaleSamples::TITLE,
+            'Scales · Level 7' => PhrygianScaleSamples::TITLE,
+            'Scales · Level 8' => MixolydianScaleSamples::TITLE,
             'Build the Progression' => 'Progression Build #1',
             'Build the 7th Progression' => 'Progression Build #2',
         ];
@@ -199,6 +209,61 @@ class MobileCatalog
      */
     public static function sounds(string $slug, ?string $category = null): array
     {
+        if (($category === null || $category === TonalModeScaleSamples::CATEGORY) && in_array($slug, [self::slug(TonalModeScaleSamples::MOBILE_TITLE), self::slug(TonalModeAllKeysSamples::MOBILE_TITLE), self::slug(DorianScaleSamples::MOBILE_TITLE), self::slug(DorianScaleAllKeysSamples::MOBILE_TITLE), self::slug(LydianScaleSamples::MOBILE_TITLE), self::slug(LydianScaleAllKeysSamples::MOBILE_TITLE), self::slug(PhrygianScaleSamples::MOBILE_TITLE), self::slug(PhrygianScaleAllKeysSamples::MOBILE_TITLE), self::slug(MixolydianScaleSamples::MOBILE_TITLE), self::slug(MixolydianScaleAllKeysSamples::MOBILE_TITLE), self::slug(AeolianScaleSamples::MOBILE_TITLE), self::slug(AeolianScaleAllKeysSamples::MOBILE_TITLE), self::slug(LocrianScaleSamples::MOBILE_TITLE), self::slug(LocrianScaleAllKeysSamples::MOBILE_TITLE), self::slug(IonianScaleSamples::MOBILE_TITLE), self::slug(IonianScaleAllKeysSamples::MOBILE_TITLE), self::slug(IonianLydianScaleSamples::MOBILE_TITLE), self::slug(DorianAeolianScaleSamples::MOBILE_TITLE), self::slug(PhrygianLocrianScaleSamples::MOBILE_TITLE), self::slug(MajorScaleSamples::MOBILE_TITLE), self::slug(MajorScaleAllKeysSamples::MOBILE_TITLE)], true)) {
+            return TonalModeScaleSamples::sounds();
+        }
+
+        if ($category === null || $category === ModalHarmonySamples::CATEGORY) {
+            foreach (ModalHarmonySamples::titles() as $index => $title) {
+                if ($slug === self::slug($title)) {
+                    return ModalHarmonySamples::sounds($index + 1);
+                }
+            }
+        }
+
+        if ($category === null || $category === ModalVoicingSamples::CATEGORY) {
+            foreach (ModalVoicingLessons::titles() as $title) {
+                if ($slug === self::slug($title)) {
+                    return QuizCatalog::soundsFor(ModalVoicingSamples::CATEGORY, $title);
+                }
+            }
+        }
+
+        if ($slug === self::slug(MajorModeVoicingSamples::TITLE)) {
+            return QuizCatalog::soundsFor(MajorModeVoicingSamples::CATEGORY, MajorModeVoicingSamples::TITLE);
+        }
+        if ($slug === self::slug(MinorModeVoicingSamples::TITLE)) {
+            return QuizCatalog::soundsFor(MinorModeVoicingSamples::CATEGORY, MinorModeVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(IonianVoicingSamples::TITLE)) {
+            return QuizCatalog::soundsFor(IonianVoicingSamples::CATEGORY, IonianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(AeolianVoicingSamples::TITLE)) {
+            return QuizCatalog::soundsFor(AeolianVoicingSamples::CATEGORY, AeolianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(DorianVoicingSamples::TITLE)) {
+            return QuizCatalog::soundsFor(DorianVoicingSamples::CATEGORY, DorianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(LocrianVoicingSamples::LEGACY_TITLE)) {
+            return QuizCatalog::soundsFor(LocrianVoicingSamples::CATEGORY, LocrianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(PhrygianVoicingSamples::LEGACY_TITLE)) {
+            return QuizCatalog::soundsFor(PhrygianVoicingSamples::CATEGORY, PhrygianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(MixolydianVoicingSamples::LEGACY_TITLE)) {
+            return QuizCatalog::soundsFor(MixolydianVoicingSamples::CATEGORY, MixolydianVoicingSamples::TITLE);
+        }
+
+        if ($slug === self::slug(ModalVoicingSamples::LEGACY_TITLE)) {
+            return QuizCatalog::soundsFor(ModalVoicingSamples::CATEGORY, ModalVoicingSamples::TITLE);
+        }
+
         $keyFinding = ['Monophonic', 'Vocal Stems', 'Instruments', 'Ensemble', 'Full Song', 'All'];
         if (in_array($slug, [self::slug('Find the Key #1'), self::slug('Find the Key #2')], true)) {
             return $keyFinding;
@@ -214,7 +279,7 @@ class MobileCatalog
         $single = ['Piano', 'Violin', 'Saxophone', 'Xylophone', 'Guitar', 'Voice'];
 
         return match ($category) {
-            'Basic Triads', 'Add 9 & b9', '7th Degree Chords', 'Secondary 7th Chords', '9th Degree Chords', 'Secondary 9th Chords', '11th Degree Chords', 'Secondary 11th Chords', '13th Degree Chords', 'Extentions recognition', 'Chord Progressions', 'Modal Voicings' => $chords,
+            'Basic Triads', 'Add 9 & b9', '7th Degree Chords', 'Secondary 7th Chords', '9th Degree Chords', 'Secondary 9th Chords', '11th Degree Chords', 'Secondary 11th Chords', '13th Degree Chords', 'Extentions recognition', 'Chord Progressions', 'Modal Harmony', 'Modal Voicings' => $chords,
             'Intervals' => ['Piano', 'Violin', 'Strings', 'Guitar', 'Xylophone', 'Choir'],
             'Melodic Dictation', 'Relative Pitch', 'Scales' => $single,
             default => ['Piano', 'Violin', 'Saxophone', 'Guitar', 'Synth'],

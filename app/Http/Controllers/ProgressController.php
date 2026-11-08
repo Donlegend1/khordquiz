@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
+use App\Support\QuizCatalog;
+use App\Support\QuizHistory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,20 +22,84 @@ class ProgressController extends Controller
     // Exactly on the line counts as neither.
     public const RANKING_THRESHOLD = 65;
 
+    public function history(Request $request): Response
+    {
+        $history = QuizHistory::paginateCompleted($request->user(), max(1, $request->integer('page', 1)))
+            ->withPath($request->url());
+
+        return Inertia::render('Member/AttemptHistory', ['history' => $history]);
+    }
+
+    public function forYou(Request $request): Response
+    {
+        // One merged, deduplicated view of completed attempts + archived
+        // sessions (QuizHistory::completed()), reused for every completion
+        // check below instead of re-querying quiz_attempts and quiz_sessions
+        // separately.
+        $completed = QuizHistory::completed($request->user());
+        $completedIds = $completed->pluck('quiz_id')->unique();
+        $completedSlugs = $completed->pluck('quiz.slug')->unique();
+        $quizzes = Quiz::query()->where('is_published', true)->where('question_count', '>', 0)
+            ->get(['id', 'title', 'slug', 'category', 'difficulty'])
+            ->sortBy(function (Quiz $quiz): array {
+                $category = array_search($quiz->category, Quiz::CATEGORIES, true);
+                $lesson = array_search($quiz->title, QuizCatalog::subcategories($quiz->category), true);
+
+                return [$category === false ? PHP_INT_MAX : $category, $lesson === false ? PHP_INT_MAX : $lesson, $quiz->title, $quiz->id];
+            });
+        $completedResults = $completed->filter(fn (QuizAttempt $attempt) => $quizzes->contains('id', $attempt->quiz_id));
+        $paths = [];
+
+        foreach (Quiz::DIFFICULTIES as $level) {
+            $lessons = $quizzes->where('difficulty', $level)->values();
+            $remaining = $lessons->map(fn (Quiz $quiz, int $index) => [
+                'id' => $quiz->id,
+                'slug' => $quiz->slug,
+                'title' => $quiz->title,
+                'category' => $quiz->category,
+                'categorySlug' => Str::slug($quiz->category),
+                'position' => $index + 1,
+            ])->reject(fn (array $quiz) => $completedIds->contains($quiz['id']) || $completedSlugs->contains($quiz['slug']))->values();
+
+            $latestResult = $completedResults->first(fn (QuizAttempt $attempt) => $attempt->quiz->difficulty === $level);
+            $paths[$level] = [
+                'upNext' => $remaining->first(),
+                'done' => $lessons->count() - $remaining->count(),
+                'total' => $lessons->count(),
+                'comingUp' => $remaining->slice(1, 9)->values(),
+                'practiceAgain' => $latestResult && $latestResult->correct_answers * 100 < 40 * $latestResult->quiz->question_count
+                    ? $this->practiceAgainPayload($latestResult) : null,
+            ];
+        }
+
+        return Inertia::render('Member/ForYou', ['paths' => $paths]);
+    }
+
+    private function practiceAgainPayload(QuizAttempt $attempt): array
+    {
+        $quiz = $attempt->quiz;
+
+        return [
+            'title' => $quiz->title, 'slug' => $quiz->slug, 'category' => $quiz->category,
+            'categorySlug' => Str::slug($quiz->category),
+            'score' => (int) round($attempt->correct_answers / max(1, $quiz->question_count) * 100),
+            'mistakesCount' => $quiz->question_count - $attempt->correct_answers,
+            'reviewUrl' => $attempt->history_session_id
+                ? route('quiz.history-review', $attempt->history_session_id)
+                : route('quiz.results', ['quiz' => $quiz->slug, 'review' => 1]),
+        ];
+    }
+
     public function __invoke(Request $request): Response
     {
         $user = $request->user();
-        $attempts = QuizAttempt::query()->where('user_id', $user->id)->with('quiz')->get();
+        $attempts = QuizAttempt::query()->where('user_id', $user->id)->with('quiz')->withCount('answers')->get();
 
-        $totalAnswered = 0;
-        $totalCorrect = 0;
-        foreach ($attempts as $attempt) {
-            $totalAnswered += $this->answeredCount($attempt);
-            $totalCorrect += $attempt->correct_answers;
-        }
-
-        $completedAttempts = $attempts->where('status', QuizAttempt::STATUS_COMPLETED);
-        $completedCount = $completedAttempts->count();
+        $completedAttempts = QuizHistory::completed($user, $attempts);
+        $allRuns = $completedAttempts->concat($attempts->where('status', QuizAttempt::STATUS_IN_PROGRESS));
+        $totalAnswered = $allRuns->sum(fn (QuizAttempt $attempt) => QuizHistory::answeredCount($attempt));
+        $totalCorrect = $allRuns->sum('correct_answers');
+        $completedCount = $completedAttempts->pluck('quiz_id')->unique()->count();
         $totalQuizzes = Quiz::query()->where('is_published', true)->count();
 
         $quizzesByCategory = Quiz::query()->where('is_published', true)->get(['id', 'category'])->groupBy('category');
@@ -41,16 +108,7 @@ class ProgressController extends Controller
             ->filter(fn ($quizzes) => $quizzes->pluck('id')->diff($completedQuizIds)->isEmpty())
             ->count();
 
-        // Best-effort only: an attempt only records its latest session, not a log of
-        // every day it was played, so a quiz finished today after starting it
-        // yesterday counts its earlier answers as "today" too — same for the week chart.
-        $today = now()->startOfDay();
-        $answeredToday = 0;
-        foreach ($attempts as $attempt) {
-            if ($attempt->last_played_at?->greaterThanOrEqualTo($today)) {
-                $answeredToday += $this->answeredCount($attempt);
-            }
-        }
+        $answeredToday = QuizHistory::answeredOn($user, now());
 
         $resume = $attempts
             ->where('status', QuizAttempt::STATUS_IN_PROGRESS)
@@ -59,7 +117,7 @@ class ProgressController extends Controller
 
         // Below the threshold = Needs work, above it = Strongest. A quiz can only
         // land in one list, since the two ranges never overlap.
-        $ranked = $completedAttempts
+        $ranked = $completedAttempts->unique('quiz_id')
             ->map(fn (QuizAttempt $attempt) => [
                 'attempt' => $attempt,
                 'accuracy' => (int) round(($attempt->correct_answers / max(1, $attempt->quiz->question_count)) * 100),
@@ -67,16 +125,10 @@ class ProgressController extends Controller
         $needsWork = $ranked->filter(fn ($entry) => $entry['accuracy'] < self::RANKING_THRESHOLD)->sortBy('accuracy')->values();
         $strongest = $ranked->filter(fn ($entry) => $entry['accuracy'] > self::RANKING_THRESHOLD)->sortByDesc('accuracy')->values();
 
-        // Last 7 days, questions answered per day. There's no per-question mistake
-        // tracking on the web yet (only an attempt's final tally), so "Most confused"
-        // has nothing to draw from — it's left empty, same as the dedicated Mistakes page.
-        $week = collect(range(6, 0))->map(function (int $daysAgo) use ($attempts) {
-            $day = now()->subDays($daysAgo)->startOfDay();
-            $count = $attempts
-                ->filter(fn (QuizAttempt $attempt) => $attempt->last_played_at?->isSameDay($day))
-                ->sum(fn (QuizAttempt $attempt) => $this->answeredCount($attempt));
+        $week = collect(range(6, 0))->map(function (int $daysAgo) use ($user) {
+            $day = now()->subDays($daysAgo);
 
-            return ['label' => $day->format('D'), 'count' => $count];
+            return ['label' => $day->format('D'), 'count' => QuizHistory::answeredOn($user, $day)];
         });
 
         return Inertia::render('Member/Progress', [
@@ -117,9 +169,7 @@ class ProgressController extends Controller
 
     private function answeredCount(QuizAttempt $attempt): int
     {
-        return $attempt->status === QuizAttempt::STATUS_COMPLETED
-            ? $attempt->quiz->question_count
-            : $attempt->stopped_at_question;
+        return QuizHistory::answeredCount($attempt);
     }
 
     /**
@@ -154,6 +204,8 @@ class ProgressController extends Controller
             'quiz' => [
                 'title' => $quiz->title,
                 'category' => $quiz->category,
+                'categorySlug' => Str::slug($quiz->category),
+                'slug' => $quiz->slug,
                 'question_count' => $quiz->question_count,
             ],
         ];

@@ -4,24 +4,18 @@ use App\Http\Controllers\Admin\AudioQuizController;
 use App\Http\Controllers\Admin\QuizController as AdminQuizController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\ContactController;
-use App\Http\Controllers\SupportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
+use App\Http\Controllers\QuestionReportController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SettingsController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\WelcomeController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', WelcomeController::class);
 
 Route::get('/privacy-policy', fn () => Inertia::render('Legal', ['page' => 'privacy']))->name('privacy');
 Route::get('/terms', fn () => Inertia::render('Legal', ['page' => 'terms']))->name('terms');
@@ -50,12 +44,19 @@ Route::delete('/settings/progress', [SettingsController::class, 'resetProgress']
     ->middleware(['auth', 'verified'])
     ->name('settings.reset-progress');
 
+Route::patch('/settings/language', [SettingsController::class, 'updateLanguage'])
+    ->middleware(['auth', 'verified'])
+    ->name('settings.language');
+
 Route::patch('/settings/default-instrument', [SettingsController::class, 'updateDefaultInstrument'])
     ->middleware(['auth', 'verified'])
     ->name('settings.default-instrument');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz', [QuizController::class, 'categories'])->name('quiz.categories');
+    Route::get('/attempt-history', [ProgressController::class, 'history'])->name('quiz.history');
+    Route::post('/quiz/play/{quiz:slug}/report', [QuestionReportController::class, 'store'])->middleware('throttle:10,1')->name('quiz.report');
+    Route::get('/quiz/history/{quizSession}/review', [QuizController::class, 'historyReview'])->name('quiz.history-review');
     Route::get('/quiz/play/{quiz:slug}', [QuizController::class, 'preview'])->name('quiz.preview');
     Route::post('/quiz/play/{quiz:slug}/start', [QuizController::class, 'start'])->name('quiz.start');
     Route::get('/quiz/play/{quiz:slug}/question', [QuizController::class, 'play'])->name('quiz.play');
@@ -65,13 +66,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz/play/{quiz:slug}/results', [QuizController::class, 'results'])->name('quiz.results');
     Route::post('/quiz/play/{quiz:slug}/bookmark', [QuizController::class, 'toggleBookmark'])->name('quiz.bookmark');
     Route::post('/quiz/play/{quiz:slug}/mark-completed', [QuizController::class, 'toggleCompleted'])->name('quiz.mark-completed');
+    Route::get('/quiz/play/{quiz:slug}/reference-audio/{group}', [QuizController::class, 'referenceAudioClip'])->name('quiz.reference-audio-clip');
     // Registered after /quiz/play/... so "play" is never swallowed as a category slug.
     Route::get('/quiz/{category}/{quiz?}', [QuizController::class, 'category'])->name('quiz.category');
 });
 
 // Previews built with sample data — the real features aren't built yet.
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/for-you', fn () => Inertia::render('Member/ForYou'))->name('for-you');
+    Route::get('/for-you', [ProgressController::class, 'forYou'])->name('for-you');
     Route::get('/mistakes', fn () => Inertia::render('Member/Mistakes'))->name('mistakes');
     Route::get('/saved', [QuizController::class, 'saved'])->name('saved');
     Route::get('/challenges', fn () => Inertia::render('Member/Challenges'))->name('challenges');
@@ -90,6 +92,8 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/question-reports', [QuestionReportController::class, 'index'])->name('question-reports.index');
+        Route::patch('/question-reports/{questionReport}', [QuestionReportController::class, 'update'])->name('question-reports.update');
         Route::get('/audio-quiz', [AudioQuizController::class, 'index'])->name('audio-quiz.index');
         Route::get('/audio-quiz/{category}', [AudioQuizController::class, 'show'])->name('audio-quiz.show');
         Route::get('/audio-quiz/{category}/{lesson}', [AudioQuizController::class, 'show'])->name('audio-quiz.lesson');

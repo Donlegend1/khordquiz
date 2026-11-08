@@ -38,6 +38,9 @@ class ProfileController extends Controller
         // flow), so first/last are combined before saving rather than
         // adding new columns just for this form.
         $data = $request->validated();
+        if (array_key_exists('avatar', $data)) {
+            $request->user()->avatar = $data['avatar'];
+        }
         $name = trim($data['first_name'].' '.$data['last_name']);
 
         $request->user()->fill([

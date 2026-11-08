@@ -160,14 +160,14 @@ class NoteSample
     private const CHORDAL_TRANSPOSE_SEMITONES = [
         'guitar' => ['orig' => 0, 'drop2' => 0],
         'electric-guitar' => ['orig' => 0, 'drop2' => 0],
-        'harpejji' => ['orig' => 0, 'drop2' => 0],
+        'harpejji' => ['orig' => 12, 'drop2' => 12],
         'violin' => ['orig' => 0, 'drop2' => 12],
         'strings' => ['orig' => 0, 'drop2' => 0],
         'cello' => ['orig' => -12, 'drop2' => 0],
         'saxophone' => ['orig' => 0, 'drop2' => 12],
         'trombone' => ['orig' => 0, 'drop2' => 0],
         'trumpet' => ['orig' => 0, 'drop2' => 12],
-        'voice' => ['orig' => -12, 'drop2' => -12],
+        'voice' => ['orig' => 0, 'drop2' => 0],
         'tropar-choir' => ['orig' => 0, 'drop2' => 0],
         'ensemble-choir' => ['orig' => 0, 'drop2' => 0],
         'sustained-choir' => ['orig' => 0, 'drop2' => 12],
@@ -179,6 +179,7 @@ class NoteSample
         'clarinet' => ['orig' => 0, 'drop2' => 12],
         'oboe' => ['orig' => 0, 'drop2' => 12],
         'bassoon' => ['orig' => -12, 'drop2' => 0],
+        'organ' => ['orig' => 0, 'drop2' => 12],
     ];
 
     // Find the Note and Relative Tone Pitch #1 only (the two single-degree
@@ -208,12 +209,214 @@ class NoteSample
      */
     public static function resolve(string $path): ?array
     {
+        if (preg_match('#^notes/([a-z-]+)/midi-(\d{1,3})\.wav$#', $path, $match)) {
+            $note = self::fromRecordedMidiPitch((int) $match[2], $match[1]);
+
+            return $note !== null && self::usesMidiBank($match[1]) ? [['slug' => $match[1], ...$note]] : null;
+        }
+
+        if (str_starts_with($path, IonianLydianScaleSamples::PREFIX.'/')) {
+            return IonianLydianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, DorianAeolianScaleSamples::PREFIX.'/')) {
+            return DorianAeolianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, PhrygianLocrianScaleSamples::PREFIX.'/')) {
+            return PhrygianLocrianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, MajorScaleSamples::PREFIX.'/')) {
+            return MajorScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, MajorScaleAllKeysSamples::PREFIX.'/')) {
+            return MajorScaleAllKeysSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, TonalModeScaleSamples::PREFIX.'/')) {
+            return TonalModeScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, TonalModeAllKeysSamples::PREFIX.'/')) {
+            return TonalModeAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, DorianScaleSamples::PREFIX.'/')) {
+            return DorianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, DorianScaleAllKeysSamples::PREFIX.'/')) {
+            return DorianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, LydianScaleSamples::PREFIX.'/')) {
+            return LydianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, LydianScaleAllKeysSamples::PREFIX.'/')) {
+            return LydianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, PhrygianScaleSamples::PREFIX.'/')) {
+            return PhrygianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, PhrygianScaleAllKeysSamples::PREFIX.'/')) {
+            return PhrygianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, MixolydianScaleSamples::PREFIX.'/')) {
+            return MixolydianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, MixolydianScaleAllKeysSamples::PREFIX.'/')) {
+            return MixolydianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, AeolianScaleSamples::PREFIX.'/')) {
+            return AeolianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, AeolianScaleAllKeysSamples::PREFIX.'/')) {
+            return AeolianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, LocrianScaleSamples::PREFIX.'/')) {
+            return LocrianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, LocrianScaleAllKeysSamples::PREFIX.'/')) {
+            return LocrianScaleAllKeysSamples::resolve($path);
+        }
+        if (str_starts_with($path, IonianScaleSamples::PREFIX.'/')) {
+            return IonianScaleSamples::resolve($path);
+        }
+        if (str_starts_with($path, IonianScaleAllKeysSamples::PREFIX.'/')) {
+            return IonianScaleAllKeysSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ModalHarmonySamples::PREFIX.'/') || str_starts_with($path, ModalHarmonySamples::MINOR_PREFIX.'/')) {
+            return ModalHarmonySamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ModalVoicingLessons::PREFIX.'/')) {
+            return ModalVoicingLessons::resolve($path);
+        }
+
+        if (str_starts_with($path, MajorModeVoicingSamples::PREFIX.'/')) {
+            return MajorModeVoicingSamples::resolve($path);
+        }
+        if (str_starts_with($path, MinorModeVoicingSamples::PREFIX.'/')) {
+            return MinorModeVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, IonianVoicingSamples::PREFIX.'/')) {
+            return IonianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, AeolianVoicingSamples::PREFIX.'/')) {
+            return AeolianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, DorianVoicingSamples::PREFIX.'/')) {
+            return DorianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, LocrianVoicingSamples::PREFIX.'/')) {
+            return LocrianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, PhrygianVoicingSamples::PREFIX.'/')) {
+            return PhrygianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, MixolydianVoicingSamples::PREFIX.'/')) {
+            return MixolydianVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ModalVoicingSamples::PREFIX.'/')) {
+            return ModalVoicingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, TwoFiveOneExtensionSamples::PREFIX.'/')) {
+            return TwoFiveOneExtensionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ProgressionRecognitionInversionSamples::PREFIX.'/') || str_starts_with($path, ProgressionRecognitionInversionSamples::PART_FOUR_PREFIX.'/')) {
+            return ProgressionRecognitionInversionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ProgressionRecognitionSamples::PREFIX.'/') || str_starts_with($path, ProgressionRecognitionSamples::PART_TWO_PREFIX.'/')) {
+            return ProgressionRecognitionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, ChordalProgressionSamples::PREFIX.'/')) {
+            return ChordalProgressionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'progression-build-two/')) {
+            return SeventhProgressionBuildSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'progression-build-one/')) {
+            return ProgressionBuildSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'diatonic-seventh-progressions/')) {
+            return DiatonicSeventhProgressionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'diatonic-progressions/')) {
+            return DiatonicProgressionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'cadences/')) {
+            return CadenceSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'plain-chord-extensions/')) {
+            return PlainChordExtensionSamples::resolve($path);
+        }
+
         if (str_starts_with($path, 'add9/')) {
             return AddNineSamples::resolve($path);
         }
 
         if (str_starts_with($path, 'basic-triads/')) {
             return BasicTriadSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'seventh-degree-chords/')) {
+            return SeventhDegreeChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'secondary-seventh-chords/')) {
+            return SecondarySeventhChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'ninth-degree-chords/')) {
+            return NinthDegreeChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'secondary-ninth-chords/')) {
+            return SecondaryNinthChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'eleventh-degree-chords/')) {
+            return EleventhDegreeChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'secondary-eleventh-chords/')) {
+            return SecondaryEleventhChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'thirteenth-degree-chords/')) {
+            return ThirteenthDegreeChordSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'chord-tone-recognition-')) {
+            return ChordToneRecognitionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'chord-naming/basic-v1/') || str_starts_with($path, 'chord-naming/basic-group2-v1/') || str_starts_with($path, 'chord-naming/basic-group3-v1/')) {
+            return BasicChordNamingSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'dominant-chord-extensions/')) {
+            return DominantChordExtensionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'minor-chord-extensions/')) {
+            return MinorChordExtensionSamples::resolve($path);
+        }
+
+        if (str_starts_with($path, 'major-chord-extensions/')) {
+            return MajorChordExtensionSamples::resolve($path);
         }
 
         if (preg_match('#^notes/([^/]+)/([a-z]+)(?:-c(\d))?\.wav$#', $path, $m)) {
@@ -426,7 +629,7 @@ class NoteSample
                 // $trueOctave. Instruments in FULL_CHROMATIC_BANK_SLUGS have
                 // real recordings at every octave instead, with no such
                 // offset — their bare file genuinely is octave 3.
-                $octaveShift = in_array($slug, self::FULL_CHROMATIC_BANK_SLUGS, true) ? 0 : 1;
+                $octaveShift = self::usesMidiBank($slug) || in_array($slug, self::FULL_CHROMATIC_BANK_SLUGS, true) ? 0 : 1;
                 $notes[] = [
                     'slug' => $slug,
                     'degree' => $chromaticNames[$remainder],
@@ -470,46 +673,63 @@ class NoteSample
             }
 
             $transpose = (self::CHORDAL_TRANSPOSE_SEMITONES[$slug][$variant] ?? 0) + (int) ($m[4] ?? 0);
-            $chromaticNames = [1 => 'C#/Db', 3 => 'D#/Eb', 6 => 'F#/Gb', 8 => 'G#/Ab', 10 => 'A#/Bb'];
-
-            $notes = [];
-            foreach ($voicings as $step => $chord) {
-                foreach ($chord as $midi) {
-                    $midi += $transpose;
-                    $octave = intdiv($midi, 12) - 1;
-                    $remainder = $midi - ($octave + 1) * 12;
-                    $noteOctave = $octave;
-
-                    if (isset($chromaticNames[$remainder])) {
-                        // Chordal banks normally use literal octave filenames.
-                        // Solo Choir's raised variants handle their older sharp
-                        // naming convention separately below.
-                        $degree = $chromaticNames[$remainder];
-                        // Solo Choir's sharp recordings use the legacy filename
-                        // register (fsharp.wav is F#4). Raised variants must use
-                        // that storage offset to preserve the intended pitch.
-                        if ($slug === 'voice' && isset($m[4])) {
-                            $noteOctave--;
+            foreach ([0, 12, -12, 24, -24] as $shift) {
+                $notes = [];
+                foreach ($voicings as $step => $chord) {
+                    foreach ($chord as $midi) {
+                        $note = self::fromRecordedMidiPitch($midi + $transpose + $shift, $slug);
+                        if ($note === null) {
+                            continue 3;
                         }
-                    } else {
-                        $degreeIndex = array_search($remainder, self::DEGREE_SEMITONES, true);
-                        $degree = self::DEGREE_ORDER[$degreeIndex];
+                        $notes[] = ['slug' => $slug, ...$note, 'offset' => $step * self::MELODIC_NOTE_SPACING_SECONDS];
                     }
-
-                    if (! self::sampleExists(self::path($slug, $degree, $noteOctave))) {
-                        return null;
-                    }
-
-                    $notes[] = [
-                        'slug' => $slug,
-                        'degree' => $degree,
-                        'octave' => $noteOctave,
-                        'offset' => $step * self::MELODIC_NOTE_SPACING_SECONDS,
-                    ];
                 }
+
+                return $notes;
             }
 
-            return $notes;
+            return null;
+        }
+
+        // melodic-dictation/chordal-bass-lines/{slug}/cbl{n}.wav — independent
+        // bass-first content (scripts/audio/chordal_bass_lines_pool.php), NOT
+        // derived from and not shared with the chordal-melodies pool above.
+        // $n is 1-based, indexing chordalBassLineLiteralProgressions() at
+        // $n-1. Every CBL sequence IS its own final sounding (already-drop2)
+        // voicing — there is no separate "orig" variant for this quiz. Each
+        // "note" here is a simultaneous CHORD, like the branch above.
+        if (preg_match('#^melodic-dictation/chordal-bass-lines/([^/]+)/cbl(\d+)\.wav$#', $path, $m)) {
+            [, $slug, $n] = $m;
+
+            static $chordalBassLines = null;
+            if ($chordalBassLines === null) {
+                require_once base_path('scripts/audio/chordal_bass_lines_pool.php');
+                $chordalBassLines = chordalBassLineLiteralProgressions();
+            }
+
+            $steps = $chordalBassLines[(int) $n - 1] ?? null;
+            if ($steps === null) {
+                return null;
+            }
+
+            $voicings = chordalDrop2Voicings(chordalBuildVoicings($steps));
+
+            foreach ([0, 12, -12, 24, -24] as $shift) {
+                $notes = [];
+                foreach ($voicings as $step => $chord) {
+                    foreach ($chord as $midi) {
+                        $note = self::fromRecordedMidiPitch($midi + $shift, $slug);
+                        if ($note === null) {
+                            continue 3;
+                        }
+                        $notes[] = ['slug' => $slug, ...$note, 'offset' => $step * self::MELODIC_NOTE_SPACING_SECONDS];
+                    }
+                }
+
+                return $notes;
+            }
+
+            return null;
         }
 
         return null;
@@ -538,6 +758,14 @@ class NoteSample
      */
     public static function path(string $slug, string $degree, int $octave): string
     {
+        if (self::usesMidiBank($slug)) {
+            $index = array_search($degree, self::DEGREE_ORDER, true);
+            $semitone = $index === false ? array_search($degree, array_keys(self::CHROMATIC_SLUGS), true) : self::DEGREE_SEMITONES[$index];
+            $midi = ($octave + 1) * 12 + $semitone;
+
+            return "notes/{$slug}/midi-{$midi}.wav";
+        }
+
         $suffix = $octave === self::BASE_OCTAVE ? '' : "-c{$octave}";
         $degreeSlug = self::DEGREE_SLUGS[$degree] ?? self::CHROMATIC_SLUGS[$degree];
 
@@ -756,6 +984,12 @@ class NoteSample
             return null;
         }
 
+        if ($slug !== null && (self::usesMidiBank($slug) || in_array($slug, ['celesta', 'vibraphone'], true))) {
+            $note = self::fromRecordedMidiPitch($pitch, $slug);
+
+            return $note === null ? null : [$note];
+        }
+
         // Legacy sharp files sound one octave above their filename's register
         // (the same storage offset resolve() handles for dual-tonic melodies).
         // This is a deterministic filename conversion, never a pitch fallback.
@@ -785,11 +1019,26 @@ class NoteSample
         }
         $label = array_keys(self::CHROMATIC_SLUGS)[$midi % 12];
         $degree = self::equivalentDegree($label) ?? $label;
+        if (self::usesMidiBank($slug)) {
+            $octave = intdiv($midi, 12) - 1;
+
+            return self::sampleExists(self::path($slug, $degree, $octave)) ? ['degree' => $degree, 'octave' => $octave, 'offset' => 0.0] : null;
+        }
         // Measured register offsets in these current recorded banks. This
         // mapping is isolated to Intervals; existing quiz registers are unchanged.
         $registerOffset = ['organ' => 1, 'harpejji' => 1, 'upright-bass' => 2][$slug] ?? 0;
         $octave = intdiv($midi, 12) - 1 + $registerOffset;
-        if (str_contains($degree, '#') && ! in_array($slug, [...self::FULL_CHROMATIC_BANK_SLUGS, 'celesta', 'vibraphone'], true)) {
+        if (str_contains($degree, '#') && ! in_array($slug, self::FULL_CHROMATIC_BANK_SLUGS, true)) {
+            // These two banks have octave-3 bare sharps, while every suffixed
+            // sharp sounds one octave above its suffix (verified from the audio).
+            if (in_array($slug, ['celesta', 'vibraphone'], true)) {
+                if ($octave === 4) {
+                    return null;
+                }
+                if ($octave === 3 && self::sampleExists(self::path($slug, $degree, 3))) {
+                    return ['degree' => $degree, 'octave' => 3, 'offset' => 0.0];
+                }
+            }
             $octave--;
         }
         if (! self::sampleExists(self::path($slug, $degree, $octave))) {
@@ -802,6 +1051,28 @@ class NoteSample
     private static function degreeIndex(string $degree): int
     {
         return array_search($degree, self::DEGREE_ORDER, true);
+    }
+
+    /**
+     * The fixed diatonic semitone distance a solfège-pair answer spans (e.g.
+     * "Do - Re" => 2, "Mi - Fa" => 1, "So - Do'" => 5) — independent of any
+     * particular key/register, same math fromAnswer()'s two-degree branch
+     * already uses to decide whether the pair wraps into the next octave.
+     * Lets IntervalSamples::rootsForSemitones() place these same solfège-pair
+     * quizzes (Melodic/Harmonic Second-Seventh) in any of the 12 keys a given
+     * instrument's range allows, the same way it already does for named
+     * intervals (Major 2nd, Perfect 5th, …).
+     */
+    public static function semitonesForDegreePair(string $answer): ?int
+    {
+        $parts = array_map(fn ($part) => rtrim(trim($part), "'"), explode(' - ', $answer));
+        if (count($parts) !== 2 || ! isset(self::DEGREE_SLUGS[$parts[0]]) || ! isset(self::DEGREE_SLUGS[$parts[1]])) {
+            return null;
+        }
+        [$degree1, $degree2] = $parts;
+        $wraps = self::degreeIndex($degree2) < self::degreeIndex($degree1);
+
+        return self::DEGREE_SEMITONES[self::degreeIndex($degree2)] + ($wraps ? 12 : 0) - self::DEGREE_SEMITONES[self::degreeIndex($degree1)];
     }
 
     // Whether a sample file exists for $path (storage/app/public/-relative,
@@ -868,9 +1139,29 @@ class NoteSample
     // shared by sampleExists() and url() so a sample bank rebuild only
     // costs one fresh directory listing (next cache miss), not a stat()
     // call per note per quiz per request.
+    //
+    // Cache::remember() still round-trips to the cache STORE (here, the
+    // `cache` DB table — see the `khordquiz-cache-note-sample-files:*`
+    // query spam that caused a 30s timeout on Chord Tone Recognition #2's
+    // admin page) on every call, hit or miss; it only skips the expensive
+    // closure. The newer chord-category Samples classes (7-note chords,
+    // up to 7 octave-shift attempts per instrument per question) call this
+    // far more times per request than the simpler content types this was
+    // originally measured against, so a per-request in-memory memo on top
+    // — not just the cross-request store — is needed to keep a page with
+    // hundreds/thousands of questions off the cache table entirely after
+    // its first note-check per instrument.
+    private static array $instrumentFilesMemo = [];
+
+    private static function usesMidiBank(string $slug): bool
+    {
+        return in_array($slug, ['celesta', 'vibraphone', 'saxophone', 'voice'], true)
+            && Storage::disk('public')->exists("notes/{$slug}/gm-bank.json");
+    }
+
     private static function instrumentFiles(string $slug): array
     {
-        return Cache::remember("note-sample-files:{$slug}", 3600, function () use ($slug) {
+        return self::$instrumentFilesMemo[$slug] ??= Cache::remember("note-sample-files:{$slug}", 3600, function () use ($slug) {
             $disk = Storage::disk('public');
 
             return collect($disk->files("notes/{$slug}"))

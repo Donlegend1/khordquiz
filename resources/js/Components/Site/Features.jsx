@@ -15,18 +15,44 @@ const features = [
         alt: 'Quiz screen asking to recognise a chord progression and pick each chord quality',
     },
     {
-        tag: 'Instrument Sounds',
-        title: 'Train on the sound you actually play.',
+        tag: 'Quick Guides',
+        title: 'Know what to do before you press play.',
         description:
-            'Choose the instrument each quiz is played in, so your ear learns the sounds you hear in real music.',
+            'Each quiz has a short guide with clear steps and an illustrated example. See what to listen for and how to choose your answer before you begin.',
         points: [
-            'Piano, violin, saxophone, guitar, xylophone and voice',
-            'Strings, choir and organ on chord quizzes',
-            'Pick a new sound before every quiz',
+            'Simple instructions for each quiz',
+            'Illustrations that show how an answer is chosen',
+            'Read at your own pace, then start when you are ready',
         ],
-        image: '/images/app-sounds.png',
-        alt: 'Quiz preview screen with a choice of piano, violin, saxophone, xylophone, guitar and voice',
+        visual: <QuickGuidePreview />,
+    },
+    {
+        tag: 'Instrument Sounds',
+        title: 'Choose the sound you want to practise with.',
+        description:
+            'Explore familiar instruments and discover new ones. Choose a sound before you start a quiz, or save your favourite in Settings.',
+        points: [
+            '28 instrument sounds across seven families',
+            'Grand piano, Rhodes, Harpejji, violin, choir and more',
+            'Choose from the sounds available for each quiz',
+        ],
+        image: '/images/app-sounds-current.png',
+        alt: 'Updated sound picker with seven instrument families, colored instrument icons and Harpejji selected',
         callout: <SoundCallout />,
+    },
+    {
+        tag: 'Review Your Answers',
+        title: 'Hear it again. See what you missed.',
+        description:
+            'After a quiz, go through your answers one at a time. Replay the sound, compare a missed answer with the correct one, and move back and forth whenever you need to.',
+        points: [
+            'See your answer alongside the correct answer',
+            'Replay the question while you review',
+            'Use Previous, Next or jump to a question',
+        ],
+        image: '/images/app-major-extension-review.png',
+        alt: 'Major Chord Extensions answer review with replay controls and the correct extension choices highlighted',
+        callout: <ReviewCallout />,
     },
     {
         tag: 'Mistake Review',
@@ -40,16 +66,17 @@ const features = [
     },
     {
         tag: 'Progress',
-        title: 'See exactly where your ear is weakest.',
+        title: 'See your progress and what needs practice.',
         description:
-            'Your accuracy, streak and daily goal at a glance, with a weekly chart of your practice to show how far you have come.',
+            'Keep track of your practice, work towards a daily goal, and see which quizzes need more attention. Your strongest results show how far you have come.',
         points: [
-            'Overall accuracy and quizzes completed',
-            'A daily goal you can change any time',
-            'A Needs Work list of your lowest-scoring quizzes',
+            'Set a daily goal and see how many questions remain',
+            'Continue a quiz from where you left off',
+            'Compare Needs work with your Strongest results',
         ],
-        image: '/images/app-progress.png',
-        alt: 'Your progress screen showing overall accuracy, streak and today’s goal',
+        image: '/images/app-progress-current.png',
+        alt: 'Updated Progress page showing accuracy, practice totals, Continue and Today’s goal',
+        callout: <ProgressCallout />,
     },
     {
         tag: 'Leaderboard',
@@ -108,7 +135,7 @@ export default function Features() {
     );
 }
 
-function FeatureRow({ tag, title, description, points, image, alt, callout, reversed }) {
+function FeatureRow({ tag, title, description, points, image, alt, callout, visual, reversed }) {
     return (
         <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
             <div className={reversed ? 'lg:order-2' : ''}>
@@ -131,8 +158,8 @@ function FeatureRow({ tag, title, description, points, image, alt, callout, reve
             </div>
 
             {/* Phone is cropped at the panel's bottom edge. */}
-            <div
-                className={`relative h-[340px] overflow-hidden rounded-2xl bg-gradient-to-b from-[#F2F5FB] to-[#FCEFE6] sm:h-[380px] ${reversed ? 'lg:order-1' : ''}`}
+            {visual ? <div className={reversed ? 'lg:order-1' : ''}>{visual}</div> : <div
+                className={`relative overflow-hidden rounded-2xl bg-gradient-to-b from-[#F2F5FB] to-[#FCEFE6] ${tag === 'Review Your Answers' ? 'h-[480px] sm:h-[520px]' : 'h-[340px] sm:h-[380px]'} ${reversed ? 'lg:order-1' : ''}`}
             >
                 <PhoneFrame
                     src={image}
@@ -140,8 +167,52 @@ function FeatureRow({ tag, title, description, points, image, alt, callout, reve
                     className={`mx-auto mt-10 w-[220px] sm:w-[240px] ${callout ? 'opacity-60' : ''}`}
                 />
                 {callout}
-            </div>
+            </div>}
         </article>
+    );
+}
+
+function QuickGuidePreview() {
+    const steps = [
+        ['Listen', 'Play the sound. Listen again whenever you need to.'],
+        ['Choose', 'Select the answer that matches what you hear.'],
+        ['Submit', 'Check your choice, then submit your answer.'],
+    ];
+
+    return (
+        <figure aria-label="Example Quick Guide with three simple steps and a highlighted piano key" className="relative isolate flex min-h-[420px] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-stone-50 to-rose-50 px-5 py-8 sm:px-8 sm:py-10">
+            <div aria-hidden="true" className="absolute -right-10 top-8 h-44 w-44 rounded-full bg-rose-100/60 blur-2xl" />
+            <PhoneFrame className="relative w-full max-w-[340px]">
+            <div className="bg-white p-5 sm:p-6">
+                <div aria-hidden="true" className="mx-auto mb-5 h-1 w-8 rounded-full bg-neutral-200" />
+                <div className="flex items-center gap-2.5">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand/5 text-brand">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15" /></svg>
+                    </span>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">Your quick guide</p>
+                </div>
+                <h4 className="mt-4 text-xl font-bold tracking-tight text-neutral-900">Three simple steps.</h4>
+                <ol className="mt-5 space-y-4">
+                    {steps.map(([label, description], index) => (
+                        <li key={label} className="flex items-start gap-3">
+                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-[11px] font-semibold text-neutral-600">{index + 1}</span>
+                            <div>
+                                <p className="text-sm font-semibold text-neutral-900">{label}</p>
+                                <p className="mt-0.5 text-xs leading-relaxed text-neutral-500">{description}</p>
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+                <div className="mt-5 rounded-xl border border-neutral-100 bg-neutral-50 p-3">
+                    <p className="mb-2 text-[10px] font-medium text-neutral-500">An example shows you how</p>
+                    <div aria-hidden="true" className="relative flex h-16 overflow-hidden rounded-lg border border-neutral-200 bg-white">
+                        {['C', 'D', 'E', 'F', 'G', 'A', 'B'].map((note) => <span key={note} className="flex flex-1 items-end justify-center border-r border-neutral-200 pb-1.5 text-[9px] font-semibold text-neutral-400 last:border-0">{note}</span>)}
+                        {[1, 2, 4, 5, 6].map((after) => <span key={after} style={{ left: `${after * 100 / 7 - 4}%`, width: '8%' }} className={`absolute top-0 flex h-10 items-end justify-center rounded-b pb-1 text-[8px] font-bold ${after === 4 ? 'bg-emerald-600 text-white' : 'bg-neutral-900'}`}>{after === 4 ? 'F♯' : ''}</span>)}
+                    </div>
+                </div>
+            </div>
+            </PhoneFrame>
+        </figure>
     );
 }
 
@@ -156,23 +227,30 @@ function CheckIcon() {
 const calloutClass =
     'absolute left-1/2 -translate-x-1/2 rounded-xl bg-white ring-2 ring-brand/70 shadow-[0_18px_40px_-10px_rgba(193,39,31,0.35)]';
 
-// The instrument grid, cut straight from the screenshot and enlarged.
+// The current instrument list, captured from the updated sound picker.
 function SoundCallout() {
-    const crop = { x: 24, y: 524, w: 544, h: 278 }; // in the 589×1280 screenshot
-    const width = 300;
-    const scale = width / crop.w;
-
     return (
         <div className={`${calloutClass} top-[120px] p-2.5 sm:top-[130px]`} aria-hidden="true">
-            <div
-                style={{
-                    width,
-                    height: crop.h * scale,
-                    backgroundImage: 'url(/images/app-sounds.png)',
-                    backgroundSize: `${589 * scale}px auto`,
-                    backgroundPosition: `-${crop.x * scale}px -${crop.y * scale}px`,
-                }}
-            />
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Choose your instrument</p>
+            <img src="/images/app-sound-options-current.png" alt="" width="700" height="384" className="h-auto w-[260px] rounded-xl sm:w-[300px]" loading="lazy" />
+        </div>
+    );
+}
+
+function ReviewCallout() {
+    return (
+        <div className={`${calloutClass} top-9 w-[280px] p-2.5 sm:w-[300px]`} aria-hidden="true">
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Compare your answers</p>
+            <img src="/images/app-major-extension-comparison.png" alt="" className="h-auto w-full rounded-xl" loading="lazy" />
+        </div>
+    );
+}
+
+function ProgressCallout() {
+    return (
+        <div className={`${calloutClass} top-[150px] w-[280px] p-2.5 sm:w-[340px]`} aria-hidden="true">
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Your practice at a glance</p>
+            <img src="/images/app-progress-summary-current.png" alt="" className="h-auto w-full rounded-xl" loading="lazy" />
         </div>
     );
 }

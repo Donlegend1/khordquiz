@@ -19,7 +19,7 @@ function OctaveArrow({ direction, disabled, onClick, controls }) {
     );
 }
 
-export default function PitchKeyboardChoices({ answered, correctAnswer, value, onChange, keyboardAudio = {} }) {
+export default function PitchKeyboardChoices({ answered, correctAnswer, value, onChange, keyboardAudio = {}, initialPitch = null }) {
     const keyboardId = useId();
     const scrollRef = useRef(null);
     const audioRef = useRef(null);
@@ -27,7 +27,8 @@ export default function PitchKeyboardChoices({ answered, correctAnswer, value, o
     const pageRef = useRef(0);
     const availableKeys = JSON.stringify(Object.keys(keyboardAudio).filter((pitch) => keyboardAudio[pitch]).sort());
     const octaves = useMemo(() => playablePitchOctaves(Object.fromEntries(JSON.parse(availableKeys).map((pitch) => [pitch, true]))), [availableKeys]);
-    const initialPage = defaultPitchPage(octaves);
+    const targetPage = initialPitch ? octaves.indexOf(Number(initialPitch.match(/(\d+)$/)?.[1])) : -1;
+    const initialPage = targetPage >= 0 ? targetPage : defaultPitchPage(octaves);
     const [activePage, setActivePage] = useState(initialPage);
     const currentPage = clampPitchPage(activePage, octaves.length);
     const currentOctave = octaves[currentPage];

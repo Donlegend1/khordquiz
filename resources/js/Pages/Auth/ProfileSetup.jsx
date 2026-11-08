@@ -1,3 +1,5 @@
+import InstrumentIcon, { FAMILY_INSTRUMENTS } from '@/Components/Quiz/InstrumentIcon';
+import AvatarBadge from '@/Components/AvatarBadge';
 import InputError from '@/Components/InputError';
 import { AVATAR_OPTIONS, INSTRUMENT_GROUPS, INSTRUMENT_LABELS, LANGUAGES, SKILL_LEVELS } from '@/lib/profile-options';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -48,8 +50,15 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
         const onPointerDown = (event) => {
             if (ref.current && !ref.current.contains(event.target)) setOpen(false);
         };
+        const onKeyDown = (event) => {
+            if (event.key === 'Escape') { setOpen(false); ref.current?.querySelector('button')?.focus(); }
+        };
         document.addEventListener('mousedown', onPointerDown);
-        return () => document.removeEventListener('mousedown', onPointerDown);
+        document.addEventListener('keydown', onKeyDown);
+        return () => {
+            document.removeEventListener('mousedown', onPointerDown);
+            document.removeEventListener('keydown', onKeyDown);
+        };
     }, [open]);
 
     const toggleOpen = () =>
@@ -69,24 +78,24 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
     return (
         <div className="relative" ref={ref}>
             <label className="mb-1.5 block text-sm font-medium text-neutral-800">{label}</label>
-            <button type="button" onClick={toggleOpen} className={triggerClass(error)}>
-                <span>{format(value)}</span>
+            <button type="button" aria-label={label} aria-expanded={open} onClick={toggleOpen} className={triggerClass(error)}>
+                <span className="flex items-center gap-2.5">{groups && <InstrumentIcon sound={value} size={24} />}{format(value)}</span>
                 <ChevronDownIcon className="h-4 w-4 shrink-0 text-neutral-400" />
             </button>
             <InputError message={error} className="mt-1.5" />
 
             {open && (
-                <div className="absolute bottom-full left-0 z-20 mb-1 max-h-72 w-full min-w-[220px] overflow-y-auto rounded-xl border border-black/5 bg-white py-1 shadow-lg">
+                <div className="absolute bottom-full left-0 z-20 mb-2 max-h-[360px] w-full overflow-y-auto rounded-2xl border border-neutral-200 bg-white p-1.5 shadow-xl">
                     {groups ? (
                         group ? (
                             <>
                                 <button
                                     type="button"
                                     onClick={() => setActiveGroup(null)}
-                                    className="flex w-full items-center gap-1 border-b border-black/5 px-3.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
+                                    className="flex w-full items-center min-h-11 gap-2 border-b border-black/5 px-2.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <ChevronBackIcon className="h-3 w-3" />
-                                    {group.icon && <span className="text-sm leading-none">{group.icon}</span>}
+                                    <InstrumentIcon sound={FAMILY_INSTRUMENTS[group.name]} size={24} />
                                     {group.name}
                                 </button>
                                 {group.options.map((option) => (
@@ -94,11 +103,12 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
                                         key={option}
                                         type="button"
                                         onClick={() => choose(option)}
-                                        className={`flex w-full items-center justify-between px-3.5 py-2 text-sm transition-colors duration-150 hover:bg-neutral-50 ${
-                                            option === value ? 'font-semibold text-brand' : 'text-neutral-700'
+                                        aria-pressed={option === value}
+                                        className={`flex min-h-12 w-full items-center justify-between rounded-xl px-2.5 py-2 text-sm transition-colors duration-150 hover:bg-neutral-50 ${
+                                            option === value ? 'bg-brand/5 font-semibold text-brand' : 'text-neutral-700'
                                         }`}
                                     >
-                                        {format(option)}
+                                        <span className="flex items-center gap-3"><InstrumentIcon sound={option} size={28} />{format(option)}</span>
                                         {option === value && <CheckIcon className="h-3.5 w-3.5" />}
                                     </button>
                                 ))}
@@ -109,13 +119,13 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
                                     key={item.name}
                                     type="button"
                                     onClick={() => setActiveGroup(item.name)}
-                                    className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm font-semibold text-neutral-700 transition-colors duration-150 hover:bg-neutral-50"
+                                    className="flex min-h-12 w-full items-center justify-between gap-2 rounded-xl px-2.5 py-2 text-left text-sm font-semibold text-neutral-700 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <span className="flex items-center gap-2">
-                                        {item.icon && <span className="text-base leading-none">{item.icon}</span>}
+                                        <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-50"><InstrumentIcon sound={FAMILY_INSTRUMENTS[item.name]} size={26} /></span>
                                         {item.name}
                                     </span>
-                                    <ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-neutral-300" />
+                                    <span className="flex items-center gap-2">{item.options.includes(value) && <CheckIcon className="h-3.5 w-3.5 text-brand" />}<ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-neutral-400" /></span>
                                 </button>
                             ))
                         )
@@ -194,7 +204,7 @@ export default function ProfileSetup({ user }) {
                                             }`}
                                             style={{ backgroundColor: option.bg, height: '52px', width: '52px' }}
                                         >
-                                            <span>{option.emoji}</span>
+                                            <AvatarBadge id={option.id} size={44} />
                                             {active && (
                                                 <span className="absolute -bottom-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full border-2 border-white bg-brand">
                                                     <CheckIcon className="h-2.5 w-2.5 text-white" />

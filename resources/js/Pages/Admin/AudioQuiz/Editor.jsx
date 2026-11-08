@@ -7,9 +7,12 @@ import {
     KEYBOARD_BLACK_KEYS,
     KEYBOARD_WHITE_KEYS,
     MELODIC_DICTATION_LENGTHS,
-    NAMING_DEGREES,
-    NAMING_EXCLUDES,
     NAMING_QUALITIES,
+    namingDegreeOptions,
+    namingExcludeOptions,
+    toggleNamingDegree as toggleNamingDegreeSelection,
+    validNamingSelection,
+    encodeNamingAnswer,
     blackKeyLeft,
     blackKeyWidth,
     buildNamedChord,
@@ -534,12 +537,12 @@ function NamingPicker({ quality, degrees, exclude, onQuality, onToggleDegree, on
             </div>
             <div>
                 <p className="mb-1.5 text-xs font-semibold text-neutral-500">Degrees</p>
-                <MultiPicker options={NAMING_DEGREES} selected={degrees} onToggle={onToggleDegree} />
+                <MultiPicker options={namingDegreeOptions(quality)} selected={degrees} onToggle={onToggleDegree} />
             </div>
             <div>
                 <p className="mb-1.5 text-xs font-semibold text-neutral-500">Exclude</p>
                 <div className="flex flex-wrap gap-2">
-                    {NAMING_EXCLUDES.map((option) => (
+                    {namingExcludeOptions(degrees).map((option) => (
                         <button
                             key={option}
                             type="button"
@@ -687,6 +690,21 @@ const SOUND_CATEGORIES = [
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
 
+function QuestionPagination({ pagination }) {
+    if (!pagination || pagination.last_page <= 1) return null;
+    const linkClass = 'inline-flex min-h-10 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900';
+    return (
+        <nav aria-label="Question pages" className="my-4 flex flex-wrap items-center justify-between gap-3 border-y border-neutral-100 py-3">
+            <p aria-live="polite" className="text-xs text-neutral-500">Showing {pagination.from}–{pagination.to} of {pagination.total} questions</p>
+            <div className="flex items-center gap-2">
+                {pagination.previous_url ? <Link href={pagination.previous_url} preserveState preserveScroll className={linkClass}>Previous</Link> : <span aria-disabled="true" className="px-3 py-2 text-xs text-neutral-400">Previous</span>}
+                <span className="text-xs font-medium text-neutral-600">{pagination.current_page} / {pagination.last_page}</span>
+                {pagination.next_url ? <Link href={pagination.next_url} preserveState preserveScroll className={linkClass}>Next</Link> : <span aria-disabled="true" className="px-3 py-2 text-xs text-neutral-400">Next</span>}
+            </div>
+        </nav>
+    );
+}
+
 function QuestionsPanel({ quiz }) {
     const [activeSound, setActiveSound] = useState('Piano');
     const [activeCategory, setActiveCategory] = useState(
@@ -695,7 +713,7 @@ function QuestionsPanel({ quiz }) {
     // Once the question pool has generated audio attached (the rendering pipeline's
     // job), manually uploading one file per question is no longer how content gets
     // added here — hide that form rather than leaving it sitting there unused.
-    const hasGeneratedAudio = quiz.questions.some((question) => question.audio_variants.length > 0);
+    const hasGeneratedAudio = (quiz.audio_sounds?.length ?? 0) > 0;
     // Derived from this quiz's actual attached audio, not a hand-maintained list —
     // a hardcoded SOUNDS array here kept going stale every time a new instrument
     // was generated (Bass Guitar and Strings both sat grayed-out after being
@@ -706,12 +724,13 @@ function QuestionsPanel({ quiz }) {
     // quiz_question_audio rows pre-attached at all: the live-mixing engine is
     // the actual source of truth going forward, not just the old pre-rendered
     // pipeline, so an instrument it can already play shouldn't read as unbuilt.
-    const builtSounds = new Set(
-        quiz.questions.flatMap((question) => [
+    const builtSounds = new Set([
+        ...(quiz.audio_sounds ?? []),
+        ...quiz.questions.flatMap((question) => [
             ...question.audio_variants.map((variant) => variant.sound),
             ...question.missing_instrument_previews.map((preview) => preview.sound),
-        ])
-    );
+        ]),
+    ]);
     const preset = presetFor(quiz.category, quiz.title);
     const isBulkKey = quiz.title === 'Find the Key #1' || quiz.title === 'Find the Key #2';
     const lengthConfig = MELODIC_DICTATION_LENGTHS[quiz.title];
@@ -729,7 +748,7 @@ function QuestionsPanel({ quiz }) {
     const isMulti = Boolean(multiOptions);
     const [selectedExtensions, setSelectedExtensions] = useState([]);
 
-    const isNaming = quiz.title === 'Chord naming';
+    const isNaming = quiz.title === 'Chord naming' || ['Chord Naming · Level 1', 'Chord Naming · Level 2', 'Chord Naming · Level 3', 'Chord Naming · Level 4', 'Chord Naming · Level 5', 'Chord Naming · Level 6'].includes(quiz.title);
     const [namingQuality, setNamingQuality] = useState(null);
     const [namingDegrees, setNamingDegrees] = useState([]);
     const [namingExclude, setNamingExclude] = useState(null);
@@ -782,9 +801,9 @@ function QuestionsPanel({ quiz }) {
 
     useEffect(() => {
         if (!isNaming) return;
-        setData('choices', namedChord ? [namedChord] : []);
+        setData('choices', validNamingSelection(namingQuality, namingDegrees, namingExclude) ? [encodeNamingAnswer(namingQuality, namingDegrees, namingExclude)] : []);
         setData('correct', 0);
-    }, [namedChord]);
+    }, [isNaming, namingQuality, namingDegrees, namingExclude]);
 
     const chooseLength = (value) => {
         setSequenceLength(value);
@@ -796,7 +815,9 @@ function QuestionsPanel({ quiz }) {
     };
 
     const toggleNamingDegree = (option) => {
-        setNamingDegrees((prev) => (prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]));
+        const next = toggleNamingDegreeSelection(namingDegrees, option);
+        setNamingDegrees(next);
+        if (!namingExcludeOptions(next).includes(namingExclude)) setNamingExclude('None');
     };
 
     const changeProgressionSlot = (index, field, value) => {
@@ -839,7 +860,7 @@ function QuestionsPanel({ quiz }) {
                 <div className="rounded-2xl border border-black/5 bg-white p-5">
                     <div className="flex items-center justify-between gap-3">
                         <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">
-                            {quiz.questions.length} question{quiz.questions.length === 1 ? '' : 's'} configured
+                            {quiz.questions_total} question{quiz.questions_total === 1 ? '' : 's'} configured
                         </p>
                     </div>
 
@@ -902,6 +923,7 @@ function QuestionsPanel({ quiz }) {
                         </div>
                     </div>
 
+                    <QuestionPagination pagination={quiz.pagination} />
                     {(() => {
                         // Nothing playable for this instrument at all on a given question
                         // (no generated audio, no live-mix fallback either — e.g. a
@@ -918,7 +940,7 @@ function QuestionsPanel({ quiz }) {
                         if (visibleQuestions.length === 0) {
                             return (
                                 <p className="mt-3 text-xs text-neutral-400">
-                                    No {SOUND_LABELS[activeSound] ?? activeSound} audio or samples for this quiz.
+                                    No {SOUND_LABELS[activeSound] ?? activeSound} audio or samples on this page.
                                 </p>
                             );
                         }
@@ -939,14 +961,14 @@ function QuestionsPanel({ quiz }) {
                                         </span>
                                         {question.audio_url && (
                                             <div className="mt-2 flex items-center gap-2">
-                                                <audio controls src={question.audio_url} className="block h-8 w-full max-w-xs" />
+                                                {!question.notes && <audio controls src={question.audio_url} className="block h-8 w-full max-w-xs" />}
                                                 {question.notes && <LiveMixButton notes={question.notes} />}
                                             </div>
                                         )}
                                         <div className="mt-2">
                                             {variant ? (
                                                 <div className="flex items-center gap-2">
-                                                    <audio controls src={variant.url} className="h-8 w-full max-w-xs" />
+                                                    {!variant.notes && <audio controls src={variant.url} className="h-8 w-full max-w-xs" />}
                                                     {variant.notes && <LiveMixButton notes={variant.notes} />}
                                                 </div>
                                             ) : (() => {
@@ -977,6 +999,7 @@ function QuestionsPanel({ quiz }) {
                     </ul>
                         );
                     })()}
+                    <QuestionPagination pagination={quiz.pagination} />
                 </div>
             )}
         </div>
@@ -1022,7 +1045,7 @@ export default function Editor({ category, categorySlug, categories, difficultie
                         <>
                             <div className="mb-4">
                                 <h2 className="text-xl font-bold text-neutral-900">{quiz.title}</h2>
-                                <p className="text-sm text-neutral-500">{quiz.questions.length} question(s) configured</p>
+                                <p className="text-sm text-neutral-500">{quiz.questions_total} question(s) configured</p>
                             </div>
 
                             <SettingsTabs key={`settings-${quiz.id}`} quiz={quiz} difficulties={difficulties} />

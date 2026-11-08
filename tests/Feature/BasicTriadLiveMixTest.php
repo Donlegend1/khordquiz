@@ -22,6 +22,7 @@ class BasicTriadLiveMixTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Cache::flush();
+        (new \ReflectionProperty(NoteSample::class, 'instrumentFilesMemo'))->setValue(null, []);
     }
 
     private function recordPiano(): void
@@ -35,14 +36,14 @@ class BasicTriadLiveMixTest extends TestCase
     public static function voicings(): array
     {
         return [
-            ['basic-triads/piano/sus2.wav', [48, 50, 55]],
-            ['basic-triads/piano/sus4.wav', [48, 53, 55]],
+            ['basic-triads/piano/sus2.wav', [53, 55, 60]],
+            ['basic-triads/piano/sus4.wav', [53, 58, 60]],
             ['basic-triads/level2/piano/db-minor.wav', [49, 52, 56]],
-            ['basic-triads/level3/piano/major.wav', [52, 60, 67]],
+            ['basic-triads/level3/piano/major.wav', [57, 65, 72]],
             ['basic-triads/level4/piano/b-diminished.wav', [62, 71, 77]],
-            ['basic-triads/level5/piano/suspended-1st.wav', [50, 55, 60]],
+            ['basic-triads/level5/piano/suspended-1st.wav', [55, 60, 65]],
             ['basic-triads/level6/piano/eb-minor-2nd.wav', [58, 63, 66]],
-            ['basic-triads/level7/piano/major-1st.wav', [55, 64, 72]],
+            ['basic-triads/level7/piano/major-1st.wav', [60, 69, 77]],
             ['basic-triads/level8/piano/gb-minor-2nd.wav', [66, 73, 81]],
         ];
     }
@@ -80,7 +81,7 @@ class BasicTriadLiveMixTest extends TestCase
             ->get(route('admin.audio-quiz.lesson', ['basic-triads', 'basic-triads-level-1']))->assertOk()->viewData('page')['props'];
         $preview = collect($props['quiz']['questions'][0]['missing_instrument_previews'])->firstWhere('sound', 'Piano');
         $this->assertNotNull($preview);
-        $this->assertStringContainsString('/fa.wav', $preview['notes'][1]['url']);
+        $this->assertStringContainsString('/asharp.wav', $preview['notes'][1]['url']);
         $this->actingAs(User::factory()->create())->post(route('quiz.start', $quiz), ['sound' => 'Piano'])->assertRedirect();
         $notes = $this->get(route('quiz.play', $quiz))->assertOk()->viewData('page')['props']['question']['notes'];
         $this->assertSame($preview['notes'], $notes);

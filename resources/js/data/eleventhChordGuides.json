@@ -1,0 +1,242 @@
+{
+  "11th Degree Chords · Level 1": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. The chords start with their root, the note they are named after, at the bottom. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "layoutCaption": "F minor eleventh, with all six chord notes played together.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  },
+  "11th Degree Chords · Level 2": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. The chords start with their root, the note they are named after, at the bottom. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "layoutCaption": "F minor eleventh, with all six chord notes played together.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  },
+  "11th Degree Chords · Level 3": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. A three-note chord stays at the bottom while the higher chord notes change position. Some notes may also be repeated. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G",
+      "B♭",
+      "E♭"
+    ],
+    "layoutCaption": "F minor eleventh with its higher notes rearranged above F, A♭ and C.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  },
+  "11th Degree Chords · Level 4": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. A three-note chord stays at the bottom while the higher chord notes change position. Some notes may also be repeated. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G",
+      "B♭",
+      "E♭"
+    ],
+    "layoutCaption": "F minor eleventh with its higher notes rearranged above F, A♭ and C.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  },
+  "11th Degree Chords · Level 5": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. The chord notes are split into a lower group and a higher group. Both groups change position, so the lowest note can be different even when the chord type stays the same. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A♭",
+      "C",
+      "F",
+      "G",
+      "B♭",
+      "E♭"
+    ],
+    "layoutCaption": "F minor eleventh with A♭ at the bottom. The notes are rearranged, but the chord type is unchanged.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  },
+  "11th Degree Chords · Level 6": {
+    "heading": "Hear the full chord. Choose its type.",
+    "intro": "You will hear a chord with an eleventh or a raised eleventh added. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the sound of the whole chord rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Choose one of the six chord names shown. Pay attention to the full name: a raised eleventh, a lowered ninth or a lowered fifth changes the sound."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords build on seventh and ninth chords by adding an eleventh or a raised eleventh. For example, F minor eleventh uses F, A♭, C, E♭, G and B♭. In the answer names, ♯11 means a raised eleventh, ♭9 means a lowered ninth, and ♭5 means a lowered fifth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. The chord notes are split into a lower group and a higher group. Both groups change position, so the lowest note can be different even when the chord type stays the same. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 9(♯11)",
+      "Minor 11th",
+      "Diminished 7(9,11)",
+      "Dominant 9(♯11)",
+      "Minor 11(♭5)",
+      "Dominant 7(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 11th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A♭",
+      "C",
+      "F",
+      "G",
+      "B♭",
+      "E♭"
+    ],
+    "layoutCaption": "F minor eleventh with A♭ at the bottom. The notes are rearranged, but the chord type is unchanged.",
+    "exampleExplanation": "This visual example is F minor eleventh. Choose Minor 11th. During the quiz, listen to the whole chord and select the matching name, even when the notes are arranged differently."
+  }
+}

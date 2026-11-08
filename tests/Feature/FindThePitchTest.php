@@ -22,6 +22,7 @@ class FindThePitchTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Cache::flush();
+        (new \ReflectionProperty(NoteSample::class, 'instrumentFilesMemo'))->setValue(null, []);
     }
 
     private function pool(): Quiz
@@ -267,7 +268,7 @@ class FindThePitchTest extends TestCase
         $quiz = $this->pool();
         $this->recordOctave('tuba', 3);
         $admin = User::factory()->admin()->create();
-        $props = $this->actingAs($admin)->get(route('admin.audio-quiz.lesson', ['relative-pitch', 'find-the-pitch']))->assertOk()->viewData('page')['props'];
+        $props = $this->actingAs($admin)->get(route('admin.audio-quiz.lesson', ['relative-pitch', 'find-the-pitch', 'page' => 2]))->assertOk()->viewData('page')['props'];
         $questions = collect($props['quiz']['questions']);
         $g3 = $questions->firstWhere('answer', 'G3');
         $g4 = $questions->firstWhere('answer', 'G4');
@@ -282,5 +283,20 @@ class FindThePitchTest extends TestCase
         $this->recordOctave('piano', 4);
         $this->assertSame(4, NoteSample::fromAnswer('G', 'melodic', 'piano')[0]['octave']);
         $this->assertSame(3, NoteSample::fromScientificPitchAnswer('G3', 'piano')[0]['octave']);
+    }
+
+    public function test_completed_gm_bank_keeps_question_audio_and_keyboard_on_the_same_scientific_pitch(): void
+    {
+        $quiz = $this->pool();
+        $quiz->questions()->where('answer', '!=', 'F#/Gb4')->delete();
+        $question = $quiz->questions()->firstOrFail();
+        $question->update(['audio_path' => 'notes/voice/fsharp.wav']);
+        Storage::disk('public')->put('notes/voice/gm-bank.json', '{}');
+        Storage::disk('public')->put('notes/voice/midi-66.wav', 'F sharp 4');
+        $this->actingAs(User::factory()->create())->post(route('quiz.start', $quiz), ['sound' => 'Voice']);
+        $props = $this->get(route('quiz.play', $quiz))->assertOk()->viewData('page')['props'];
+        $notes = $props['question']['notes'];
+        $this->assertStringContainsString('notes/voice/midi-66.wav', $notes[0]['url']);
+        $this->assertSame($props['question']['keyboard_audio']['F#/Gb4'], $notes[0]['url']);
     }
 }

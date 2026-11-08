@@ -1,0 +1,308 @@
+{
+  "Modal Harmony #1": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a major three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass is always C in this lesson."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a major triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson keeps C as the bass throughout. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Phrygian · ♭II Major",
+      "Lydian Dominant · II Major",
+      "Aeolian · ♭III Major",
+      "Lydian Augmented · III Major",
+      "Ionian · V Major"
+    ],
+    "example": "Lydian Dominant · II Major",
+    "bass": "C",
+    "upperTriad": "D major",
+    "upperNotes": [
+      "F♯",
+      "A",
+      "D"
+    ],
+    "exampleExplanation": "D major is built on D, the second note above C in the C major scale. The full answer is Lydian Dominant · II Major. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 1,
+    "cOnly": true,
+    "triadQuality": "major"
+  },
+  "Modal Harmony #2": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a major three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass can be any of the twelve notes. Listen for how the upper chord relates to it."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a major triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson moves the same combinations across all twelve bass notes. The relationship stays the same even when the note names change. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Phrygian · ♭II Major",
+      "Lydian Dominant · II Major",
+      "Aeolian · ♭III Major",
+      "Lydian Augmented · III Major",
+      "Ionian · V Major"
+    ],
+    "example": "Lydian Dominant · II Major",
+    "bass": "C",
+    "upperTriad": "D major",
+    "upperNotes": [
+      "F♯",
+      "A",
+      "D"
+    ],
+    "exampleExplanation": "D major is built on D, the second note above C in the C major scale. The full answer is Lydian Dominant · II Major. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 1,
+    "cOnly": false,
+    "triadQuality": "major"
+  },
+  "Modal Harmony #3": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a major three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass is always C in this lesson."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a major triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson keeps C as the bass throughout. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Ionian · IV Major",
+      "Altered Dominant · ♭V Major",
+      "Dominant Diminished · VI Major",
+      "Mixolydian · ♭VII Major",
+      "Lydian Diminished · VII Major"
+    ],
+    "example": "Mixolydian · ♭VII Major",
+    "bass": "C",
+    "upperTriad": "B♭ major",
+    "upperNotes": [
+      "F",
+      "B♭",
+      "D"
+    ],
+    "exampleExplanation": "B♭ major over C bass gives the sound labelled Mixolydian · ♭VII Major in this lesson. ♭VII identifies the upper chord’s root, B♭, relative to C. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 2,
+    "cOnly": true,
+    "triadQuality": "major"
+  },
+  "Modal Harmony #4": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a major three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass can be any of the twelve notes. Listen for how the upper chord relates to it."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a major triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson moves the same combinations across all twelve bass notes. The relationship stays the same even when the note names change. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Ionian · IV Major",
+      "Altered Dominant · ♭V Major",
+      "Dominant Diminished · VI Major",
+      "Mixolydian · ♭VII Major",
+      "Lydian Diminished · VII Major"
+    ],
+    "example": "Mixolydian · ♭VII Major",
+    "bass": "C",
+    "upperTriad": "B♭ major",
+    "upperNotes": [
+      "F",
+      "B♭",
+      "D"
+    ],
+    "exampleExplanation": "B♭ major over C bass gives the sound labelled Mixolydian · ♭VII Major in this lesson. ♭VII identifies the upper chord’s root, B♭, relative to C. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 2,
+    "cOnly": false,
+    "triadQuality": "major"
+  },
+  "Modal Harmony #5": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a minor three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass is always C in this lesson."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a minor triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson keeps C as the bass throughout. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Phrygian Dominant · ♭II Minor",
+      "Dorian · II Minor",
+      "Locrian · ♭III Minor",
+      "Ionian · III Minor",
+      "Aeolian · IV Minor"
+    ],
+    "example": "Dorian · II Minor",
+    "bass": "C",
+    "upperTriad": "D minor",
+    "upperNotes": [
+      "F",
+      "A",
+      "D"
+    ],
+    "exampleExplanation": "D minor is built on D, the second note above C in the C major scale. The full answer is Dorian · II Minor. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 3,
+    "cOnly": true,
+    "triadQuality": "minor"
+  },
+  "Modal Harmony #6": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a minor three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass can be any of the twelve notes. Listen for how the upper chord relates to it."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a minor triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson moves the same combinations across all twelve bass notes. The relationship stays the same even when the note names change. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer.",
+    "choices": [
+      "Phrygian Dominant · ♭II Minor",
+      "Dorian · II Minor",
+      "Locrian · ♭III Minor",
+      "Ionian · III Minor",
+      "Aeolian · IV Minor"
+    ],
+    "example": "Dorian · II Minor",
+    "bass": "C",
+    "upperTriad": "D minor",
+    "upperNotes": [
+      "F",
+      "A",
+      "D"
+    ],
+    "exampleExplanation": "D minor is built on D, the second note above C in the C major scale. The full answer is Dorian · II Minor. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 3,
+    "cOnly": false,
+    "triadQuality": "minor"
+  },
+  "Modal Harmony #7": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a minor three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass is always C in this lesson."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a minor triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson keeps C as the bass throughout. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer. The ♮ sign in Locrian ♮6 means a natural sixth.",
+    "choices": [
+      "Locrian ♮6 · ♭V Minor",
+      "Mixolydian · V Minor",
+      "Harmonic Minor · ♭VI Minor",
+      "Ionian · VI Minor",
+      "Phrygian · ♭VII Minor",
+      "Lydian · VII Minor"
+    ],
+    "example": "Mixolydian · V Minor",
+    "bass": "C",
+    "upperTriad": "G minor",
+    "upperNotes": [
+      "D",
+      "G",
+      "B♭"
+    ],
+    "exampleExplanation": "G minor is built on G, the fifth note above C in the C major scale. The full answer is Mixolydian · V Minor. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 4,
+    "cOnly": true,
+    "triadQuality": "minor"
+  },
+  "Modal Harmony #8": {
+    "heading": "Hear the bass and triad. Find their modal colour.",
+    "intro": "You will hear one bass note with a minor three-note chord above it. Choose the full label that matches the combined sound.",
+    "steps": [
+      {
+        "title": "Listen to the combined sound",
+        "description": "Press Play to hear the bass note and the three higher notes together. Listen for the lower note underneath the chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the matching label",
+        "description": "Each answer gives a modal name and the upper chord’s relationship to the bass. Choose the whole label, not just the modal name. The bass can be any of the twelve notes. Listen for how the upper chord relates to it."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A triad is a chord made of three notes. In this quiz, a single bass note sits below a minor triad. The modal names label the colours taught for these bass-and-chord combinations. The Roman numerals describe where the upper chord is built relative to the bass. For example, II means the second note and V means the fifth. With C as the bass, those notes are D and G. A ♭ before a numeral lowers that note by one keyboard step, counting both white and black keys. This lesson moves the same combinations across all twelve bass notes. The relationship stays the same even when the note names change. Each combination has two arrangements of the upper notes. Choose the same label for either arrangement; there is no separate inversion answer. The ♮ sign in Locrian ♮6 means a natural sixth.",
+    "choices": [
+      "Locrian ♮6 · ♭V Minor",
+      "Mixolydian · V Minor",
+      "Harmonic Minor · ♭VI Minor",
+      "Ionian · VI Minor",
+      "Phrygian · ♭VII Minor",
+      "Lydian · VII Minor"
+    ],
+    "example": "Mixolydian · V Minor",
+    "bass": "C",
+    "upperTriad": "G minor",
+    "upperNotes": [
+      "D",
+      "G",
+      "B♭"
+    ],
+    "exampleExplanation": "G minor is built on G, the fifth note above C in the C major scale. The full answer is Mixolydian · V Minor. The bass C and all three upper notes sound at the same time. This is a visual example.",
+    "group": 4,
+    "cOnly": false,
+    "triadQuality": "minor"
+  }
+}

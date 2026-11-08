@@ -1,8 +1,74 @@
+import ReportQuestion from '@/Components/Quiz/ReportQuestion';
 import AnswerBuilder, { answerLabelFor, answerTypeFor, baseChordFor, buildChordName } from '@/Components/Quiz/AnswerBuilder';
-import { playNotes } from '@/lib/audio-engine';
+import AudioStimulus from '@/Components/Quiz/AudioStimulus';
 import { buildNamedChord, decodeNamingAnswer } from '@/lib/quizAnswerPresets';
+import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+
+function TonicIcon(props) {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
+            <circle cx="7" cy="17" r="3" />
+            <path d="M10 17V5l8-2v12" />
+            <circle cx="18" cy="15" r="3" />
+        </svg>
+    );
+}
+
+// Lets a member re-sound the tonic ("Do") in supported quizzes before
+// answering, the same way a teacher sounds the tonic before a dictation
+// exercise. The quiz never writes out a key, so without this there's
+// nothing establishing one. One-shot playback, no transport controls —
+// reuses the same live-mixing engine AudioStimulus and the admin's
+// LiveMixButton both already play through (resources/js/lib/audio-engine.js).
+function TonicButton({ notes }) {
+    const [playing, setPlaying] = useState(false);
+    const [failed, setFailed] = useState(false);
+    const playerRef = useRef(null);
+    const mounted = useRef(true);
+
+    useEffect(() => {
+        mounted.current = true;
+        return () => {
+            mounted.current = false;
+            playerRef.current?.destroy();
+        };
+    }, []);
+
+    async function play() {
+        setPlaying(true);
+        setFailed(false);
+        try {
+            const player = await playNotes(notes, { onEnded: () => {
+                if (mounted.current) setPlaying(false);
+            } });
+            if (!mounted.current) player.destroy();
+            else playerRef.current = player;
+        } catch {
+            if (mounted.current) {
+                setPlaying(false);
+                setFailed(true);
+            }
+        }
+    }
+
+    return (
+        <div className="text-center">
+            <button
+                type="button"
+                onClick={play}
+                disabled={playing}
+                aria-busy={playing}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition-colors duration-150 hover:bg-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-wait disabled:opacity-60"
+            >
+                <TonicIcon aria-hidden="true" className="h-4 w-4" />
+                {playing ? 'Playing Do…' : 'Play home note (Do)'}
+            </button>
+            {failed && <p role="status" className="mt-2 text-xs text-red-700">The sound could not play. Please try again.</p>}
+        </div>
+    );
+}
 
 function CheckCircleIcon(props) {
     return (
@@ -18,23 +84,6 @@ function XCircleIcon(props) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
             <circle cx="12" cy="12" r="8.5" />
             <path d="M9 9l6 6M15 9l-6 6" />
-        </svg>
-    );
-}
-
-function PlayTriangleIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <path d="M8 5.5v13l11-6.5z" />
-        </svg>
-    );
-}
-
-function PauseIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <rect x="6" y="5" width="4" height="14" rx="1" />
-            <rect x="14" y="5" width="4" height="14" rx="1" />
         </svg>
     );
 }
@@ -87,122 +136,6 @@ function CancelQuizModal({ current, onCancel, onClose, open, total }) {
                     >
                         Cancel Quiz
                     </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// Fixed, decorative bar heights — not a real waveform render of the audio
-// (that would need actual waveform analysis), just visual texture around the
-// play button that holds steady instead of jumping around on every question.
-const WAVEFORM_BARS = [8, 14, 10, 18, 22, 13, 9, 16, 20, 11, 15, 24, 12, 9, 17, 21, 14, 10, 18, 13, 8, 16, 22, 11, 9];
-
-// The app has no recorded audio behind this button on most questions yet — every
-// quiz still shows this same "listen" design (app/practice.tsx's SoundRingButton),
-// it's just decorative there until a real clip exists. Matches that: with a real
-// audio_url (from the generated-audio pipeline, resolved per the attempt's chosen
-// sound — see QuizController::questionAudioUrl) it actually plays and autoplays
-// once; without one, it's the same design, just inert. The student can replay it
-// as many times as they want with the play button itself.
-//
-// `notes` (QuizController::questionLiveNotes — Relative Pitch only today) takes
-// priority over `src` when present: individual note samples get combined live
-// via the Web Audio engine (resources/js/lib/audio-engine.js) instead of
-// fetching one pre-rendered file. Every other category still has `notes` as
-// null and plays `src` through a plain <audio> element exactly as before.
-function AudioStimulus({ questionKey, src, notes }) {
-    const audioRef = useRef(null);
-    const [playing, setPlaying] = useState(false);
-    const liveStopRef = useRef(null);
-    const live = notes && notes.length > 0;
-
-    function stopLive() {
-        liveStopRef.current?.stop();
-        liveStopRef.current = null;
-    }
-
-    function playLive() {
-        stopLive();
-        setPlaying(true);
-        playNotes(notes, { onEnded: () => setPlaying(false) })
-            .then((handle) => {
-                liveStopRef.current = handle;
-            })
-            .catch(() => setPlaying(false));
-    }
-
-    // A new question swaps the audio source — reset so the old question's
-    // playing state doesn't linger on the new one, then autoplay it once.
-    // Browsers can silently block autoplay outside a user gesture; this
-    // follows the Submit/Next click closely enough to work in practice, and
-    // fails quietly (the student can still press play) if a browser blocks it.
-    useEffect(() => {
-        setPlaying(false);
-        if (live) {
-            playLive();
-        } else if (src && audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {});
-        }
-        return stopLive;
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [questionKey, src, live]);
-
-    function toggle() {
-        if (live) {
-            if (playing) {
-                stopLive();
-                setPlaying(false);
-            } else {
-                playLive();
-            }
-            return;
-        }
-        if (!src) {
-            setPlaying((current) => !current);
-            return;
-        }
-        if (!audioRef.current) return;
-        if (playing) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-    }
-
-    return (
-        <div className="rounded-2xl bg-neutral-50 px-6 py-6 text-center">
-            {!live && src && (
-                <audio
-                    key={src}
-                    ref={audioRef}
-                    src={src}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onEnded={() => setPlaying(false)}
-                    className="hidden"
-                />
-            )}
-
-            <div className="flex flex-col items-center gap-5 rounded-xl px-4 py-3.5">
-                <button
-                    type="button"
-                    onClick={toggle}
-                    aria-label={playing ? 'Pause' : 'Play'}
-                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-[0_0_0_10px_rgba(224,0,0,0.08)] transition-colors duration-150 hover:bg-brand-dark"
-                >
-                    {playing ? <PauseIcon className="h-9 w-9" /> : <PlayTriangleIcon className="h-9 w-9 translate-x-[2px]" />}
-                </button>
-
-                <div className="flex h-8 w-full items-center justify-center gap-[3px]">
-                    {WAVEFORM_BARS.map((height, index) => (
-                        <span
-                            key={index}
-                            className={`w-1 shrink-0 rounded-full transition-colors duration-150 ${playing ? 'bg-brand/50' : 'bg-neutral-300'}`}
-                            style={{ height: `${height}px` }}
-                        />
-                    ))}
                 </div>
             </div>
         </div>
@@ -293,6 +226,12 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                             <AudioStimulus questionKey={progress.current} src={question.audio_url} notes={question.notes} />
                         </div>
 
+                        {question.tonic_notes && (
+                            <div className="mt-3 flex justify-center">
+                                <TonicButton key={progress.current} notes={question.tonic_notes} />
+                            </div>
+                        )}
+
                         {baseChordFor(quiz.category, quiz.title) && (() => {
                             const base = baseChordFor(quiz.category, quiz.title);
                             const picked = data.choice ? data.choice.split(', ') : [];
@@ -382,6 +321,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                 </button>
                             )}
                         </div>
+                        <ReportQuestion key={`report-${progress.current}`} quizSlug={quiz.slug} questionId={question.id} />
                     </div>
                 )}
 

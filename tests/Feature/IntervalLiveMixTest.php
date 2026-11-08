@@ -24,6 +24,7 @@ class IntervalLiveMixTest extends TestCase
         parent::setUp();
         Storage::fake('public');
         Cache::flush();
+        (new \ReflectionProperty(NoteSample::class, 'instrumentFilesMemo'))->setValue(null, []);
     }
 
     private function recordBank(string $slug, int $low, int $high, bool $legacy, int $registerOffset = 0): void

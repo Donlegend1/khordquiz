@@ -20,6 +20,18 @@ class QuizAttemptAnswer extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::created(function (QuizAttemptAnswer $answer): void {
+            $attempt = $answer->attempt;
+            QuizAnswer::firstOrCreate(['web_answer_id' => $answer->id], [
+                'user_id' => $attempt->user_id, 'slug' => $attempt->quiz->slug,
+                'answer' => $answer->question->answer, 'picked' => $answer->picked,
+                'correct' => $answer->correct, 'kind' => 'single', 'answered_at' => $answer->created_at,
+            ]);
+        });
+    }
+
     public function attempt(): BelongsTo
     {
         return $this->belongsTo(QuizAttempt::class, 'quiz_attempt_id');

@@ -25,7 +25,7 @@ class AddNineSamples
         $level = ($matches[1] ?? '') === '' ? 1 : (int) $matches[1];
         $slug = $instrument ?? $matches[2];
         $parts = explode('-', $matches[3]);
-        $key = 0;
+        $key = 5;
         if (in_array($level, [2, 4, 6, 8], true)) {
             $key = array_search(array_shift($parts), ['c', 'db', 'd', 'eb', 'e', 'f', 'gb', 'g', 'ab', 'a', 'bb', 'b'], true);
             if ($key === false) {

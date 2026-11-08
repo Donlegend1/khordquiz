@@ -7,14 +7,69 @@ use App\Models\QuizAttempt;
 use App\Models\QuizAttemptAnswer;
 use App\Models\QuizMark;
 use App\Models\QuizQuestion;
+use App\Models\QuizSession;
 use App\Support\AddNineSamples;
+use App\Support\AeolianScaleAllKeysSamples;
+use App\Support\AeolianScaleSamples;
+use App\Support\AeolianVoicingSamples;
+use App\Support\BasicChordNamingSamples;
 use App\Support\BasicTriadSamples;
+use App\Support\CadenceSamples;
+use App\Support\ChordNamingAnswer;
+use App\Support\ChordToneRecognitionSamples;
+use App\Support\DiatonicProgressionSamples;
+use App\Support\DiatonicSeventhProgressionSamples;
+use App\Support\DominantChordExtensionSamples;
+use App\Support\DorianAeolianScaleSamples;
+use App\Support\DorianScaleAllKeysSamples;
+use App\Support\DorianScaleSamples;
+use App\Support\DorianVoicingSamples;
+use App\Support\EleventhDegreeChordSamples;
 use App\Support\IntervalSamples;
+use App\Support\IonianLydianScaleSamples;
+use App\Support\IonianScaleAllKeysSamples;
+use App\Support\IonianScaleSamples;
+use App\Support\IonianVoicingSamples;
+use App\Support\LocrianScaleAllKeysSamples;
+use App\Support\LocrianScaleSamples;
+use App\Support\LocrianVoicingSamples;
+use App\Support\LydianScaleAllKeysSamples;
+use App\Support\LydianScaleSamples;
+use App\Support\MajorChordExtensionSamples;
+use App\Support\MajorModeVoicingSamples;
+use App\Support\MajorScaleAllKeysSamples;
+use App\Support\MajorScaleSamples;
+use App\Support\MinorChordExtensionSamples;
+use App\Support\MinorModeVoicingSamples;
+use App\Support\MixolydianScaleAllKeysSamples;
+use App\Support\MixolydianScaleSamples;
+use App\Support\MixolydianVoicingSamples;
+use App\Support\ModalHarmonySamples;
+use App\Support\ModalVoicingLessons;
+use App\Support\ModalVoicingSamples;
+use App\Support\NinthDegreeChordSamples;
 use App\Support\NoteSample;
+use App\Support\PhrygianLocrianScaleSamples;
+use App\Support\PhrygianScaleAllKeysSamples;
+use App\Support\PhrygianScaleSamples;
+use App\Support\PhrygianVoicingSamples;
+use App\Support\ProgressionBuildSamples;
 use App\Support\QuizAnswerPresets;
 use App\Support\QuizCatalog;
+use App\Support\ReferenceAudioTracks;
+use App\Support\SecondaryEleventhChordSamples;
+use App\Support\SecondaryNinthChordSamples;
+use App\Support\SecondarySeventhChordSamples;
+use App\Support\SeventhDegreeChordSamples;
+use App\Support\SeventhProgressionBuildSamples;
+use App\Support\ThirteenthDegreeChordSamples;
+use App\Support\TonalModeAllKeysSamples;
+use App\Support\TonalModeScaleSamples;
+use App\Support\TwoFiveOneExtensionSamples;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -22,14 +77,6 @@ use Inertia\Response;
 
 class QuizController extends Controller
 {
-    // Same role as the mobile app's hero image on its quiz-preview screen
-    // (app/quiz-preview.tsx): one generic clip shown on every quiz, not a
-    // unique video authored per quiz. Used as a fallback wherever a quiz
-    // has no video_embed of its own.
-    private const DEFAULT_VIDEO_EMBED = <<<'HTML'
-        <script src="https://fast.wistia.com/player.js" async></script><script src="https://fast.wistia.com/embed/ce5tw47h05.js" async type="module"></script><style>wistia-player[media-id='ce5tw47h05']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/ce5tw47h05/swatch'); display: block; filter: blur(5px); padding-top:56.25%; }</style> <wistia-player media-id="ce5tw47h05" aspect="1.7777777777777777"></wistia-player>
-        HTML;
-
     // The canonical chromatic note set generated for "Find the Note" (see
     // scripts/audio/) — reused by any other "tap a note name" keyboard (Find the
     // Key #1/#2) as a generic note-audio lookup, independent of that quiz's own
@@ -134,9 +181,36 @@ class QuizController extends Controller
             ->get()
             ->keyBy('quiz_id');
 
-        $real = $quizzes->map(function (Quiz $quiz) use ($attempts, $marks, $referenceAudioTracksByQuizId) {
+        $lastSessions = QuizSession::query()
+            ->where('user_id', $user->id)
+            ->whereIn('slug', $quizzes->pluck('slug'))
+            ->where('total', '>', 0)
+            ->orderByDesc('played_at')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('slug')
+            ->keyBy('slug');
+
+        $referenceAudioPresenter = new ReferenceAudioTracks;
+
+        // Distinct (quiz_id, sound) pairs for every quiz in this category, in
+        // one query — not per-quiz model hydration. A quiz like "Chordal
+        // Progressions" can have 1,000+ question rows with ~20 audio variants
+        // each; loading those as Eloquent models just to read `sound` off
+        // each one exhausted PHP's memory limit once that quiz's bank grew
+        // past a few hundred rows (real 500 on GET /quiz/chord-progressions).
+        $attachedSoundsByQuizId = DB::table('quiz_question_audio')
+            ->join('quiz_questions', 'quiz_questions.id', '=', 'quiz_question_audio.quiz_question_id')
+            ->whereIn('quiz_questions.quiz_id', $quizzes->pluck('id'))
+            ->select('quiz_questions.quiz_id', 'quiz_question_audio.sound')
+            ->distinct()
+            ->get()
+            ->groupBy('quiz_id');
+
+        $real = $quizzes->toBase()->map(function (Quiz $quiz) use ($attempts, $marks, $referenceAudioTracksByQuizId, $lastSessions, $referenceAudioPresenter, $attachedSoundsByQuizId) {
             $attempt = $attempts->get($quiz->id);
             $mark = $marks->get($quiz->id);
+            $lastSession = $lastSessions->get($quiz->slug);
 
             // Every sound this quiz actually has pre-generated audio attached
             // for, regardless of static category/title tables — ground truth
@@ -145,10 +219,8 @@ class QuizController extends Controller
             // change here. (Melodic Dictation combo files are built/attached
             // per instrument per quiz over time — a static list would always
             // lag behind what's actually been recorded.)
-            $attachedSounds = $quiz->questions()
-                ->with('audioVariants:quiz_question_id,sound')
-                ->get()
-                ->flatMap(fn ($question) => $question->audioVariants->pluck('sound'))
+            $attachedSounds = collect($attachedSoundsByQuizId->get($quiz->id) ?? [])
+                ->pluck('sound')
                 ->unique()
                 // Only the current 27-instrument roster — some quizzes still
                 // carry attached rows under pre-consolidation names (Harp,
@@ -162,9 +234,10 @@ class QuizController extends Controller
                 'available' => true,
                 'slug' => $quiz->slug,
                 'title' => $quiz->title,
+                'category' => $quiz->category,
                 'difficulty' => $quiz->difficulty,
                 'description' => $quiz->description,
-                'video_embed' => $quiz->video_embed ?? self::DEFAULT_VIDEO_EMBED,
+                'video_embed' => $quiz->video_embed,
                 // Same QUIZ_LENGTH (25) the mobile app falls back to for any
                 // quiz without question-specific info — real question_count
                 // still drives actual quiz-taking below, this is display only.
@@ -192,24 +265,13 @@ class QuizController extends Controller
                     ->merge($liveMixSounds)
                     ->unique()
                     ->values(),
-                'referenceAudioTracks' => collect($referenceAudioTracksByQuizId->get($quiz->id) ?? [])
-                    ->map(fn ($track) => [
-                        'id' => $track['id'],
-                        'label' => $track['label'],
-                        'name' => $track['name'] ?? null,
-                        // Which instrument this track is — lets the frontend pick the
-                        // one matching the member's Default Instrument automatically
-                        // instead of always showing the first track. Null for tracks
-                        // that predate this (an admin-uploaded one-off, not part of
-                        // the per-instrument scale set).
-                        'sound' => $track['sound'] ?? null,
-                        'url' => Storage::disk('public')->url($track['path']),
-                    ])
-                    ->values(),
+                // Just the distinct-label list, no audio resolved — see
+                // ReferenceAudioTracks::pool() and referenceAudioClip() above.
+                'referenceAudioPool' => $referenceAudioPresenter->pool($referenceAudioTracksByQuizId->get($quiz->id) ?? []),
                 'status' => $attempt?->status,
                 'score' => $attempt && $attempt->status === QuizAttempt::STATUS_COMPLETED
                     ? (int) round(($attempt->correct_answers / max(1, $quiz->question_count)) * 100)
-                    : null,
+                    : ($lastSession ? (int) round(($lastSession->correct / $lastSession->total) * 100) : null),
                 'stopped_at_question' => $attempt?->stopped_at_question,
                 'bookmarked' => $mark?->bookmarked ?? false,
                 'manuallyCompleted' => $mark?->completed ?? false,
@@ -232,13 +294,14 @@ class QuizController extends Controller
                 'available' => false,
                 'slug' => Str::slug($title),
                 'title' => $title,
+                'category' => $name,
                 'difficulty' => 'Beginner',
                 'description' => null,
-                'video_embed' => self::DEFAULT_VIDEO_EMBED,
+                'video_embed' => null,
                 'question_count' => 25,
                 'sounds' => QuizCatalog::soundsFor($name, $title),
                 'availableSounds' => [],
-                'referenceAudioTracks' => [],
+                'referenceAudioPool' => [],
                 'status' => null,
                 'score' => null,
                 'stopped_at_question' => null,
@@ -273,26 +336,13 @@ class QuizController extends Controller
         ]);
     }
 
-    public function preview(Request $request, Quiz $quiz): Response
+    public function preview(Quiz $quiz): RedirectResponse
     {
         $this->ensurePublished($quiz);
-        $attempt = $this->latestAttempt($request, $quiz);
 
-        return Inertia::render('Member/QuizPreview', [
-            'quiz' => [
-                'slug' => $quiz->slug,
-                'title' => $quiz->title,
-                'category' => $quiz->category,
-                'difficulty' => $quiz->difficulty,
-                'description' => $quiz->description,
-                'question_count' => $quiz->question_count,
-            ],
-            'attempt' => $attempt ? [
-                'status' => $attempt->status,
-                'stopped_at_question' => $attempt->stopped_at_question,
-                'correct_answers' => $attempt->correct_answers,
-                'score' => (int) round(($attempt->correct_answers / max(1, $quiz->question_count)) * 100),
-            ] : null,
+        return redirect()->route('quiz.category', [
+            'category' => Str::slug($quiz->category),
+            'quiz' => $quiz->slug,
         ]);
     }
 
@@ -314,6 +364,23 @@ class QuizController extends Controller
         return back();
     }
 
+    // Lazy counterpart to the 'referenceAudioPool' list sent on the category
+    // page: that list is just distinct labels (free to compute, even for a
+    // quiz with a huge question pool), with no audio resolved at all. This
+    // resolves exactly one clip, for one instrument, on demand — called once
+    // per Listen Mode "Next" press, never for the whole pool up front. Keeps
+    // a quiz with hundreds or thousands of distinct answers from resolving
+    // (28 instruments x every answer) on every single category page load.
+    public function referenceAudioClip(Request $request, Quiz $quiz, string $group): JsonResponse
+    {
+        $this->ensurePublished($quiz);
+
+        $sound = $request->string('sound')->toString();
+        $clip = $sound ? (new ReferenceAudioTracks)->resolveOne($quiz->reference_audio_tracks ?? [], $group, $sound) : null;
+
+        return response()->json(['clip' => $clip]);
+    }
+
     private function markFor(Request $request, Quiz $quiz): QuizMark
     {
         return QuizMark::query()->firstOrCreate([
@@ -329,8 +396,8 @@ class QuizController extends Controller
         $sound = $this->resolveSound($request, $quiz);
 
         // The schema allows only one attempt per user per quiz (a unique index
-        // on user_id + quiz_id), so there's no attempt history to preserve —
-        // "retry" means resetting this same row back to question 1, not a new one.
+        // on user_id + quiz_id). Completed runs are archived with individual
+        // answer snapshots before this active row is reset for a retry.
         $attempt = QuizAttempt::query()
             ->where('user_id', $user->id)
             ->where('quiz_id', $quiz->id)
@@ -349,6 +416,7 @@ class QuizController extends Controller
                 'last_played_at' => now(),
             ]);
         } elseif ($attempt->status === QuizAttempt::STATUS_COMPLETED) {
+            $this->archiveCompletedAttempt($attempt);
             $attempt->answers()->delete();
             $attempt->update([
                 'status' => QuizAttempt::STATUS_IN_PROGRESS,
@@ -400,7 +468,7 @@ class QuizController extends Controller
         $attempt = $this->activeAttempt($request, $quiz);
 
         if (! $attempt) {
-            return redirect()->route('quiz.preview', $quiz);
+            return redirect()->route('quiz.category', ['category' => Str::slug($quiz->category), 'quiz' => $quiz->slug]);
         }
 
         return Inertia::render('Member/QuizPlay', $this->playProps($request, $quiz, $attempt));
@@ -418,7 +486,7 @@ class QuizController extends Controller
 
         $attempt = $this->activeAttempt($request, $quiz);
         if (! $attempt) {
-            return redirect()->route('quiz.preview', $quiz);
+            return redirect()->route('quiz.category', ['category' => Str::slug($quiz->category), 'quiz' => $quiz->slug]);
         }
 
         $position = $attempt->stopped_at_question;
@@ -431,7 +499,11 @@ class QuizController extends Controller
                 return redirect()->route('quiz.play', $quiz);
             }
 
-            $correct = $data['choice'] === $question->answer;
+            $correct = in_array($quiz->title, ['Chord naming', BasicChordNamingSamples::TITLE, BasicChordNamingSamples::LEVEL_TWO_TITLE, BasicChordNamingSamples::LEVEL_THREE_TITLE, BasicChordNamingSamples::LEVEL_FOUR_TITLE, BasicChordNamingSamples::LEVEL_FIVE_TITLE, BasicChordNamingSamples::LEVEL_SIX_TITLE], true)
+                ? ChordNamingAnswer::matches($data['choice'], $question->answer)
+                : ($quiz->title === 'Progression Build #1'
+                    ? ProgressionBuildSamples::answersMatch($data['choice'], $question->answer)
+                    : ($quiz->title === TwoFiveOneExtensionSamples::TITLE ? TwoFiveOneExtensionSamples::answersMatch($data['choice'], $question->answer) : $this->answersMatch($data['choice'], $question->answer)));
             $attempt->correct_answers += $correct ? 1 : 0;
             $attempt->last_played_at = now();
             $attempt->save();
@@ -459,6 +531,29 @@ class QuizController extends Controller
         return redirect()->route('quiz.play', $quiz);
     }
 
+    // Multi-select quizzes (e.g. "Major/Minor/Dominant Chord Extentions" —
+    // ExtensionCheckboxGrid on the frontend) submit the picked tokens
+    // comma-joined in TAP order ("selected.join(', ')" in AnswerBuilder.jsx),
+    // while the stored correct answer is comma-joined in a fixed canonical
+    // order (see scripts/audio/build_major_chord_extensions.php's
+    // mceAnswerTokens()) — an exact string match would reject a correct
+    // pick made in a different order. Every other answer type's value never
+    // contains ", " (comma+space), so falling back to an order-independent
+    // token-set comparison only when that substring is present is safe and
+    // doesn't change grading for any single-value answer.
+    private function answersMatch(string $submitted, string $correct): bool
+    {
+        if ($submitted === $correct) {
+            return true;
+        }
+        if (! str_contains($correct, ', ')) {
+            return false;
+        }
+        $normalize = fn (string $s) => collect(explode(', ', $s))->map(fn ($t) => trim($t))->sort()->values()->all();
+
+        return $normalize($submitted) === $normalize($correct);
+    }
+
     // Moves on from a question that's already been graded — refuses to advance
     // an unanswered one, so the position can't skip ahead without a real answer.
     public function next(Request $request, Quiz $quiz): RedirectResponse
@@ -466,7 +561,7 @@ class QuizController extends Controller
         $this->ensurePublished($quiz);
         $attempt = $this->activeAttempt($request, $quiz);
         if (! $attempt) {
-            return redirect()->route('quiz.preview', $quiz);
+            return redirect()->route('quiz.category', ['category' => Str::slug($quiz->category), 'quiz' => $quiz->slug]);
         }
 
         $position = $attempt->stopped_at_question;
@@ -482,6 +577,7 @@ class QuizController extends Controller
             $attempt->status = QuizAttempt::STATUS_COMPLETED;
             $attempt->completed_at = now();
             $attempt->save();
+            $this->archiveCompletedAttempt($attempt);
 
             return redirect()->route('quiz.results', $quiz);
         }
@@ -531,24 +627,97 @@ class QuizController extends Controller
                 'question_count' => $quiz->question_count,
             ],
             'result' => [
+                'sound' => $attempt->sound,
                 'correct' => $attempt->correct_answers,
                 'total' => $quiz->question_count,
                 'percent' => (int) round(($attempt->correct_answers / max(1, $quiz->question_count)) * 100),
             ],
-            'review' => $attempt->answers()
-                ->with('question.audioVariants')
-                ->orderBy('position')
-                ->get()
-                ->map(fn (QuizAttemptAnswer $answer) => [
-                    'position' => $answer->position,
-                    'picked' => $answer->picked,
-                    'correct' => $answer->correct,
-                    'answer' => $answer->question->answer,
-                    // The same sound this attempt was actually played in, not a fixed
-                    // instrument — null if the quiz has no generated audio for it.
-                    'audio_url' => $this->questionAudioUrl($answer->question, $attempt->sound),
-                ])
-                ->values(),
+            'review_keyboard_audio' => $quiz->title === 'Find the Pitch' ? $this->pitchKeyboardAudioMap($attempt->sound) : [],
+            'review' => $this->reviewRecords($attempt),
+            'initial_review' => $request->boolean('review'),
+        ]);
+    }
+
+    private function reviewRecords(QuizAttempt $attempt): array
+    {
+        $quiz = $attempt->quiz;
+
+        return $attempt->answers()
+            ->with('question.audioVariants')
+            ->orderBy('position')
+            ->get()
+            ->map(fn (QuizAttemptAnswer $answer) => [
+                'position' => $answer->position,
+                'answer_id' => $answer->id,
+                'question_id' => $answer->quiz_question_id,
+                'answered_at' => $answer->created_at?->toIso8601String(),
+                'prompt' => $answer->question->prompt,
+                'choices' => $this->choicesFor($quiz, $answer->question),
+                'answer_length' => str_contains($answer->question->answer, ' - ')
+                    ? count(explode(' - ', $answer->question->answer))
+                    : count(explode(' ', $answer->question->answer)),
+                'reference_note' => $attempt->referenceNoteAt($answer->position),
+                'picked' => $answer->picked,
+                'correct' => $answer->correct,
+                'answer' => $answer->question->answer,
+                // The same sound this attempt was actually played in, not a fixed
+                // instrument — null if the quiz has no generated audio for it.
+                'audio_url' => $this->questionAudioUrl($answer->question, $attempt->sound),
+                'notes' => $this->questionLiveNotes($quiz, $answer->question, $attempt->sound),
+            ])
+            ->values()->all();
+    }
+
+    private function archiveCompletedAttempt(QuizAttempt $attempt): QuizSession
+    {
+        $identity = [
+            'user_id' => $attempt->user_id, 'slug' => $attempt->quiz->slug,
+            'played_at' => $attempt->completed_at ?? $attempt->last_played_at ?? now(),
+        ];
+        $records = $this->reviewRecords($attempt);
+        $answerIds = array_column($records, 'answer_id');
+        $sameTime = QuizSession::where($identity)->orderByDesc('id')->get();
+        $session = $sameTime->first(fn (QuizSession $saved) => $saved->review_answers !== null
+            && array_column($saved->review_answers, 'answer_id') === $answerIds);
+        $session ??= $sameTime->first(fn (QuizSession $saved) => $saved->review_answers === null
+            && $saved->correct === $attempt->correct_answers && $saved->total === $attempt->quiz->question_count);
+        $session ??= new QuizSession($identity);
+        if (! $session->exists) {
+            $session->correct = $attempt->correct_answers;
+            $session->total = $attempt->quiz->question_count;
+        }
+        if ($session->review_answers === null && $records !== []) {
+            $session->review_answers = $records;
+        }
+        $session->sound ??= $attempt->sound;
+        $session->save();
+
+        return $session;
+    }
+
+    public function historyReview(Request $request, QuizSession $quizSession): Response
+    {
+        abort_unless($quizSession->user_id === $request->user()->id, 404);
+        $quiz = Quiz::where('slug', $quizSession->slug)->firstOrFail();
+        $records = $quizSession->review_answers;
+        if ($records === null) {
+            $attempt = QuizAttempt::where('user_id', $request->user()->id)->where('quiz_id', $quiz->id)
+                ->where('status', QuizAttempt::STATUS_COMPLETED)->where('completed_at', $quizSession->played_at)->first();
+            if ($attempt) {
+                $quizSession = $this->archiveCompletedAttempt($attempt);
+                $records = $quizSession->review_answers;
+            }
+        }
+
+        return Inertia::render('Member/QuizResults', [
+            'quiz' => ['slug' => $quiz->slug, 'title' => $quiz->title, 'category' => $quiz->category,
+                'categorySlug' => Str::slug($quiz->category), 'question_count' => $quizSession->total],
+            'result' => ['sound' => $quizSession->sound, 'correct' => $quizSession->correct, 'total' => $quizSession->total,
+                'percent' => (int) round($quizSession->correct / max(1, $quizSession->total) * 100)],
+            'review' => $records ?? [], 'initial_review' => true,
+            'history_session_id' => $quizSession->id,
+            'review_keyboard_audio' => $quiz->title === 'Find the Pitch' ? $this->pitchKeyboardAudioMap($quizSession->sound) : [],
+            'history_notice' => empty($records) ? 'This older result was saved without individual answers. You can practise the quiz again to get a new answer review.' : null,
         ]);
     }
 
@@ -628,7 +797,9 @@ class QuizController extends Controller
             }
         }
 
-        if ($quiz->title === 'Find the Pitch') {
+        if (in_array($quiz->title, ['Chord naming', BasicChordNamingSamples::TITLE, BasicChordNamingSamples::LEVEL_TWO_TITLE, BasicChordNamingSamples::LEVEL_THREE_TITLE, BasicChordNamingSamples::LEVEL_FOUR_TITLE, BasicChordNamingSamples::LEVEL_FIVE_TITLE, BasicChordNamingSamples::LEVEL_SIX_TITLE], true)) {
+            $poolIds = $query->get()->filter(fn (QuizQuestion $question): bool => ChordNamingAnswer::isValid($question->answer))->pluck('id')->all();
+        } elseif ($quiz->title === 'Find the Pitch') {
             $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
             $poolIds = $slug ? $query->get()
                 ->filter(fn (QuizQuestion $question) => NoteSample::fromScientificPitchAnswer($question->answer, $slug) !== null)
@@ -637,7 +808,12 @@ class QuizController extends Controller
             $poolIds = $query->pluck('id')->all();
         }
 
-        return $this->fairLappedShuffle($poolIds, max(1, $quiz->question_count));
+        $sequence = $this->fairLappedShuffle($poolIds, max(1, $quiz->question_count));
+        if ($quiz->category === ModalVoicingSamples::CATEGORY && in_array($quiz->title, [ModalVoicingSamples::TITLE, MixolydianVoicingSamples::TITLE, PhrygianVoicingSamples::TITLE, LocrianVoicingSamples::TITLE, DorianVoicingSamples::TITLE, AeolianVoicingSamples::TITLE, IonianVoicingSamples::TITLE, MajorModeVoicingSamples::TITLE, MinorModeVoicingSamples::TITLE], true) || ($quiz->category === ModalVoicingSamples::CATEGORY && in_array($quiz->title, ModalVoicingLessons::titles(), true)) || ($quiz->category === ModalHarmonySamples::CATEGORY && in_array($quiz->title, ModalHarmonySamples::titles(), true)) || ($quiz->category === TonalModeScaleSamples::CATEGORY && in_array($quiz->title, [TonalModeScaleSamples::TITLE, TonalModeAllKeysSamples::TITLE, DorianScaleSamples::TITLE, DorianScaleAllKeysSamples::TITLE, LydianScaleSamples::TITLE, LydianScaleAllKeysSamples::TITLE, PhrygianScaleSamples::TITLE, PhrygianScaleAllKeysSamples::TITLE, MixolydianScaleSamples::TITLE, MixolydianScaleAllKeysSamples::TITLE, AeolianScaleSamples::TITLE, AeolianScaleAllKeysSamples::TITLE, LocrianScaleSamples::TITLE, LocrianScaleAllKeysSamples::TITLE, IonianScaleSamples::TITLE, IonianScaleAllKeysSamples::TITLE, IonianLydianScaleSamples::TITLE, DorianAeolianScaleSamples::TITLE, PhrygianLocrianScaleSamples::TITLE, MajorScaleSamples::TITLE, MajorScaleAllKeysSamples::TITLE], true))) {
+            shuffle($sequence);
+        }
+
+        return $sequence;
     }
 
     // Find the Key #2's reference note, shuffled fresh per question the same
@@ -715,6 +891,11 @@ class QuizController extends Controller
 
         if ($requested && $this->quizHasAudioFor($quiz, $requested)) {
             return $requested;
+        }
+
+        $default = $request->user()?->default_instrument;
+        if ($default && $this->quizHasAudioFor($quiz, $default)) {
+            return $default;
         }
 
         foreach ($options as $option) {
@@ -810,6 +991,12 @@ class QuizController extends Controller
     // @return list<array{url: string, offset: float}>|null
     private function questionLiveNotes(Quiz $quiz, QuizQuestion $question, ?string $sound): ?array
     {
+        // Scientific answers remain authoritative when a completed GM bank
+        // replaces legacy sharp filenames with explicit MIDI filenames.
+        if ($quiz->title === 'Find the Pitch') {
+            return $this->liveNotesFromAnswer($quiz, $question, $sound);
+        }
+
         $path = $this->questionAudioPath($question, $sound);
         $notes = $path ? NoteSample::resolve($path) : null;
 
@@ -834,6 +1021,24 @@ class QuizController extends Controller
     // @return list<array{url: string, offset: float}>|null
     private function liveNotesFromAnswer(Quiz $quiz, QuizQuestion $question, ?string $sound): ?array
     {
+        // A sound only ever plays when it's actually on this quiz's own
+        // curated instrument list (QuizCatalog::soundsFor()). The live-mixing
+        // branches below can technically produce correct audio for almost
+        // any instrument whose recorded range happens to cover a given
+        // answer — e.g. Bass Guitar easily fits inside a basic triad's
+        // narrow range — but several instruments (Bass Guitar, Upright Bass,
+        // Tuba) are deliberately left off the chord/progression categories'
+        // lists regardless of range. This one gate is what the sound picker,
+        // resolveSound(), and liveMixAvailableSounds() all rely on to keep
+        // those instruments from leaking back in — it replaces the narrower
+        // title/category list this used to hardcode, which missed several
+        // categories (Basic Triads, 7th-13th Degree Chords, Chord Tone
+        // Recognition, Chord Progressions' other titles, …) that exclude the
+        // same three instruments via QuizCatalog but never got added here.
+        if ($sound !== null && ! in_array($sound, QuizCatalog::soundsFor($quiz->category, $quiz->title), true)) {
+            return null;
+        }
+
         $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
         if (! $slug) {
             return null;
@@ -851,8 +1056,53 @@ class QuizController extends Controller
 
         $timing = str_contains($quiz->title, 'Harmonic') ? 'harmonic' : 'melodic';
         $notes = match (true) {
+            $quiz->title === 'Cadences' => CadenceSamples::forQuestion($question, $slug),
+            $quiz->title === 'Diatonic Progression #1' => DiatonicProgressionSamples::forQuestion($question, $slug),
+            $quiz->title === 'Diatonic Progression #2' => DiatonicSeventhProgressionSamples::forQuestion($question, $slug),
+            $quiz->title === 'Progression Build #1' => ProgressionBuildSamples::forQuestion($question, $slug),
+            $quiz->title === 'Progression Build #2' => SeventhProgressionBuildSamples::forQuestion($question, $slug),
+            in_array($quiz->title, [BasicChordNamingSamples::TITLE, BasicChordNamingSamples::LEVEL_TWO_TITLE, BasicChordNamingSamples::LEVEL_THREE_TITLE, BasicChordNamingSamples::LEVEL_FOUR_TITLE, BasicChordNamingSamples::LEVEL_FIVE_TITLE, BasicChordNamingSamples::LEVEL_SIX_TITLE], true) => BasicChordNamingSamples::forQuestion($question, $slug),
             $quiz->category === 'Add 9' => AddNineSamples::forQuestion($question, $slug),
             $quiz->category === 'Basic Triads' => BasicTriadSamples::forQuestion($question, $slug),
+            $quiz->category === '7th Degree Chords' => SeventhDegreeChordSamples::forQuestion($question, $slug),
+            $quiz->category === 'Secondary 7th Chords' => SecondarySeventhChordSamples::forQuestion($question, $slug),
+            $quiz->category === '9th Degree Chords' => NinthDegreeChordSamples::forQuestion($question, $slug),
+            $quiz->category === 'Secondary 9th Chords' => SecondaryNinthChordSamples::forQuestion($question, $slug),
+            $quiz->category === '11th Degree Chords' => EleventhDegreeChordSamples::forQuestion($question, $slug),
+            $quiz->category === 'Secondary 11th Chords' => SecondaryEleventhChordSamples::forQuestion($question, $slug),
+            $quiz->category === '13th Degree Chords' => ThirteenthDegreeChordSamples::forQuestion($question, $slug),
+            in_array($quiz->title, [
+                'Chord Tone Recognition #1', 'Chord Tone Recognition #2',
+                'Chord Tone Recognition #3', 'Chord Tone Recognition #4',
+                'Chord Tone Recognition #5', 'Chord Tone Recognition #6',
+            ], true) => ChordToneRecognitionSamples::forQuestion($question, $slug),
+            in_array($quiz->title, [
+                'Major Chord Extentions · Level 1', 'Major Chord Extentions · Level 2', 'Major Chord Extentions · Level 3',
+                'Major Chord Extentions · Level 4', 'Major Chord Extentions · Level 5', 'Major Chord Extentions · Level 6',
+                'Major Chord Extentions · Level 7',
+                'Major Chord Extentions · Level 8',
+                'Major Chord Extentions · Level 9',
+                'Major Chord Extentions · Level 10',
+                'Major Chord Extentions · Level 11',
+                'Major Chord Extentions · Level 12',
+                'Major Chord Extentions · Level 13',
+            ], true) => MajorChordExtensionSamples::forQuestion($question, $slug),
+            in_array($quiz->title, [
+                'Minor Chord Extentions · Level 1', 'Minor Chord Extentions · Level 2', 'Minor Chord Extentions · Level 3',
+                'Minor Chord Extentions · Level 4', 'Minor Chord Extentions · Level 5', 'Minor Chord Extentions · Level 6',
+                'Minor Chord Extentions · Level 7',
+                'Minor Chord Extentions · Level 8',
+                'Minor Chord Extentions · Level 9',
+                'Minor Chord Extentions · Level 10',
+                'Minor Chord Extentions · Level 11',
+                'Minor Chord Extentions · Level 12',
+                'Minor Chord Extentions · Level 13',
+            ], true) => MinorChordExtensionSamples::forQuestion($question, $slug),
+            in_array($quiz->title, [
+                'Dominant Chord Extentions · Level 1', 'Dominant Chord Extentions · Level 2',
+                'Dominant Chord Extentions · Level 3', 'Dominant Chord Extentions · Level 4',
+                'Dominant Chord Extentions · Level 5', 'Dominant Chord Extentions · Level 6', 'Dominant Chord Extentions · Level 7', 'Dominant Chord Extentions · Level 8',
+            ], true) => DominantChordExtensionSamples::forQuestion($question, $slug),
             $quiz->category === 'Intervals' => IntervalSamples::fromAnswer($question->answer, $timing, $slug),
             $quiz->title === 'Find the Pitch' => NoteSample::fromScientificPitchAnswer($question->answer, $slug),
             default => NoteSample::fromAnswer($question->answer, $timing, $slug),
@@ -885,7 +1135,14 @@ class QuizController extends Controller
         return $quiz->questions()
             ->with('audioVariants')
             ->get()
-            ->mapWithKeys(function (QuizQuestion $question) use ($sound) {
+            ->mapWithKeys(function (QuizQuestion $question) use ($quiz, $sound) {
+                if ($quiz->title === 'Find the Note') {
+                    $notes = $this->questionLiveNotes($quiz, $question, $sound);
+                    if (count($notes ?? []) === 1) {
+                        return [$question->answer => $notes[0]['url']];
+                    }
+                }
+
                 $path = $question->audioVariants->firstWhere('sound', $sound)?->audio_path;
 
                 return $path ? [$question->answer => NoteSample::url($path)] : [];
@@ -916,62 +1173,52 @@ class QuizController extends Controller
         return $map;
     }
 
-    // Fallback for any "tap a note name" keyboard whose own quiz has no per-
-    // instrument note audio in its pool to resolve from (Find the Key #1/#2 —
-    // their own `sound` picker is song-recording types like "Monophonic", not an
-    // instrument, so keyboardAudioMap() above always comes back empty for them).
-    // The keyboard there is a generic "hear this note" widget, so it plays the
-    // member's own Default Instrument from the canonical chromatic note set
-    // instead, independent of whatever sound the quiz itself is playing in.
-    // $onlyNote restricts the map to a single key — Find the Key #2's reference
-    // note is the only key that should ever make a sound; every other key is
-    // deliberately muted (no entry at all, so NoteKeyboardChoices' press() has
-    // nothing to play). Find the Key #1 has no reference note, so it passes
-    // null here and gets the full 12-key map, same as before.
-    // Every instrument's chromatic set lives at bare notes/{slug}/{note}.wav
-    // (the quiz's base C3 octave) except where listed here — Bass Guitar's own
-    // base octave was moved down to C2-C3 (a real bass's open low string sits
-    // closer to C2 than C3), but its bare files stay C3 since RTP2 still reuses
-    // them as its own C3-octave entries; this keyboard reads the octave-2 set
-    // instead so it matches Find the Note/RTP1's octave, not RTP2's. Upright
-    // Bass used to follow the same pattern, but its individual-note-file
-    // rebuild gave it a different real range (C3-C5, no C2 content at all —
-    // see NoteSample's BASE_OCTAVE_OVERRIDES comment for the same change) —
-    // left at the default octave 3 now rather than pointing at octave-2 files
-    // that no longer exist.
-    private const KEYBOARD_NOTE_OCTAVES = [
-        'Bass Guitar' => 2,
-    ];
-
+    // Key-finding recordings use recording types rather than instruments.
+    // Their keyboards follow the member's instrument and Find the Note register.
     private function defaultInstrumentKeyboardAudio(Request $request, ?string $onlyNote = null): array
     {
         $sound = $request->user()?->default_instrument;
-        $slug = QuizCatalog::SOUND_SLUGS[$sound] ?? QuizCatalog::SOUND_SLUGS['Piano'];
-        $octave = self::KEYBOARD_NOTE_OCTAVES[$sound] ?? 3;
-        $notes = $onlyNote ? array_intersect_key(self::NOTE_SLUGS, [$onlyNote => true]) : self::NOTE_SLUGS;
+        $sound = isset(QuizCatalog::SOUND_SLUGS[$sound]) ? $sound : 'Piano';
+        $slug = QuizCatalog::SOUND_SLUGS[$sound];
+        $noteQuiz = Quiz::where('title', 'Find the Note')->first();
+        $map = $noteQuiz ? $this->keyboardAudioMap($noteQuiz, $sound) : [];
+        $labels = $onlyNote ? array_intersect_key(self::NOTE_SLUGS, [$onlyNote => true]) : self::NOTE_SLUGS;
 
-        return collect($notes)
-            ->keys()
-            ->mapWithKeys(function ($note) use ($slug, $octave) {
-                $path = NoteSample::path($slug, $note, $octave);
-                if (! NoteSample::sampleExists($path)) {
-                    // The instruments rebuilt from individual note recordings
-                    // this session only got solfège-named natural files (do,
-                    // re, mi, ...), not the original letter-named scheme this
-                    // keyboard was built against (c, d, e, ...) — sharps are
-                    // unaffected (both schemes already share the same literal
-                    // csharp.wav etc.), so this only ever matters for the 7
-                    // naturals. Fall back to the pitch-identical solfège
-                    // degree rather than serving a URL with nothing behind it.
-                    $equivalent = NoteSample::equivalentDegree($note);
-                    if ($equivalent !== null) {
-                        $path = NoteSample::path($slug, $equivalent, $octave);
-                    }
-                }
+        return collect($labels)->keys()->mapWithKeys(function ($label) use ($map, $slug) {
+            if (isset($map[$label])) {
+                return [$label => $map[$label]];
+            }
 
-                return [$note => NoteSample::url($path)];
-            })
-            ->all();
+            $note = NoteSample::fromAnswer($label, 'melodic', $slug)[0] ?? null;
+            if ($note === null) {
+                return [];
+            }
+
+            $path = NoteSample::path($slug, $note['degree'], $note['octave']);
+
+            return NoteSample::sampleExists($path) ? [$label => NoteSample::url($path)] : [];
+        })->all();
+    }
+
+    // Melodic Dictation only, per explicit request: lets a member re-anchor
+    // to the tonic ("Do") before answering any question, same as a teacher
+    // sounding the tonic before a dictation exercise — the quiz never writes
+    // out a key, so there's nothing else establishing it. Same note on
+    // every question in the attempt (same sound, always "Do"), so this is
+    // cheap to compute per request — one single-note resolve, already
+    // memoized by NoteSample.
+    //
+    // @return list<array{url: string, offset: float}>|null
+    private function tonicNotes(?string $sound): ?array
+    {
+        $slug = $sound ? QuizCatalog::SOUND_SLUGS[$sound] ?? null : null;
+        $note = $slug ? NoteSample::fromAnswer('Do', 'melodic', $slug)[0] ?? null : null;
+        if ($note === null) {
+            return null;
+        }
+        $path = NoteSample::path($slug, $note['degree'], $note['octave']);
+
+        return NoteSample::sampleExists($path) ? [['url' => NoteSample::url($path), 'offset' => 0.0]] : null;
     }
 
     private function playProps(Request $request, Quiz $quiz, QuizAttempt $attempt): array
@@ -998,6 +1245,7 @@ class QuizController extends Controller
                 'correct' => $attempt->correct_answers,
             ],
             'question' => $question ? [
+                'id' => $question->id,
                 'prompt' => $question->prompt,
                 // The real app shows a fixed set of options per quiz (not a
                 // grab-bag per question) — switch to that canonical list only
@@ -1036,6 +1284,8 @@ class QuizController extends Controller
                 // Which key the keyboard highlights as the reference note (Find the
                 // Key #2 only) — shuffled fresh per question, not a fixed "G".
                 'reference_note' => $referenceNote,
+                'tonic_notes' => $quiz->category === 'Melodic Dictation' || in_array($quiz->title, ['Relative Tone Pitch #1', 'Relative Tone Pitch #2'], true)
+                    ? $this->tonicNotes($attempt->sound) : null,
             ] : null,
             'finished' => $finished,
             'feedback' => $feedback,

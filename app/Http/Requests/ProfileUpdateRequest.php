@@ -24,6 +24,7 @@ class ProfileUpdateRequest extends FormRequest
             'last_name' => ['required', 'string', 'max:255'],
             'country' => ['nullable', 'string', 'max:100'],
             'skill_level' => ['nullable', 'string', Rule::in(User::SKILL_LEVELS)],
+            'avatar' => ['sometimes', 'nullable', 'string', Rule::in(User::AVATARS)],
         ];
     }
 }

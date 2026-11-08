@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
+use App\Models\QuizSession;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +21,19 @@ class SettingsController extends Controller
             'dailyGoal' => $user->daily_goal,
             'goalOptions' => ProgressController::GOAL_OPTIONS,
             'defaultInstrument' => $user->default_instrument,
+            'language' => $user->language,
         ]);
+    }
+
+    public function updateLanguage(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'language' => ['required', 'string', 'in:'.implode(',', QuizCatalog::LANGUAGES)],
+        ]);
+
+        $request->user()->update(['language' => $data['language']]);
+
+        return back();
     }
 
     // The specific instrument (e.g. "EP") a member wants pre-selected on every
@@ -28,7 +42,7 @@ class SettingsController extends Controller
     public function updateDefaultInstrument(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'default_instrument' => ['required', 'string', 'in:' . implode(',', QuizCatalog::allInstruments())],
+            'default_instrument' => ['required', 'string', 'in:'.implode(',', QuizCatalog::allInstruments())],
         ]);
 
         $request->user()->update(['default_instrument' => $data['default_instrument']]);
@@ -43,6 +57,8 @@ class SettingsController extends Controller
         $user = $request->user();
 
         QuizAttempt::query()->where('user_id', $user->id)->delete();
+        QuizSession::query()->where('user_id', $user->id)->delete();
+        QuizAnswer::query()->where('user_id', $user->id)->delete();
         $user->update(['current_streak' => 0, 'last_practiced_on' => null]);
 
         return back()->with('success', 'Your progress has been reset.');

@@ -1495,6 +1495,7 @@
                         "example": "piano",
                         "nullable": true,
                         "enum": [
+                            "drum-kit",
                             "piano",
                             "electric-guitar",
                             "note",
@@ -1795,6 +1796,7 @@
                         "example": "piano",
                         "nullable": true,
                         "enum": [
+                            "drum-kit",
                             "piano",
                             "electric-guitar",
                             "note",

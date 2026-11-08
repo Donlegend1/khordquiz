@@ -1,0 +1,340 @@
+{
+  "Chord Tone Recognition #1": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. In this lesson, the root is the lowest note of the chord."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses the five types from 7th Degree Chords across all twelve keys. The chords use root position, with the root at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "3",
+    "chordName": "F major seventh",
+    "chordNotes": [
+      {
+        "note": "F",
+        "degree": "1"
+      },
+      {
+        "note": "A",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      }
+    ],
+    "singleNote": "A",
+    "exampleExplanation": "The single note is A, the third of this chord. Choose 3.",
+    "chordTypes": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ]
+  },
+  "Chord Tone Recognition #2": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. The chord notes are rearranged, so the lowest note is not necessarily the root."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses the five types from 7th Degree Chords across all twelve keys. The chords use first, second and third inversions: the same chord notes are rearranged with a different note at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "1",
+    "chordName": "F major seventh",
+    "chordNotes": [
+      {
+        "note": "A",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      },
+      {
+        "note": "F",
+        "degree": "1"
+      }
+    ],
+    "singleNote": "F",
+    "exampleExplanation": "The chord starts with A at the bottom, but F is still its root. The single note is F, so choose 1.",
+    "chordTypes": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th"
+    ]
+  },
+  "Chord Tone Recognition #3": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. In this lesson, the root is the lowest note of the chord."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses the six types from Secondary 7th Chords across all twelve keys. The chords use root position, with the root at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "3",
+    "chordName": "F minor-major seventh",
+    "chordNotes": [
+      {
+        "note": "F",
+        "degree": "1"
+      },
+      {
+        "note": "A♭",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      }
+    ],
+    "singleNote": "A♭",
+    "exampleExplanation": "The single note is A♭, the third of this chord. Choose 3.",
+    "chordTypes": [
+      "Augmented 7th",
+      "Minor-Major 7th",
+      "Diminished-Major 7th",
+      "Dominant 7(♭5)",
+      "Major 7(♯5)",
+      "Major 7(♭5)"
+    ]
+  },
+  "Chord Tone Recognition #4": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. The chord notes are rearranged, so the lowest note is not necessarily the root."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses the six types from Secondary 7th Chords across all twelve keys. The chords use first, second and third inversions: the same chord notes are rearranged with a different note at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "1",
+    "chordName": "F minor-major seventh",
+    "chordNotes": [
+      {
+        "note": "A♭",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      },
+      {
+        "note": "F",
+        "degree": "1"
+      }
+    ],
+    "singleNote": "F",
+    "exampleExplanation": "The chord starts with A♭ at the bottom, but F is still its root. The single note is F, so choose 1.",
+    "chordTypes": [
+      "Augmented 7th",
+      "Minor-Major 7th",
+      "Diminished-Major 7th",
+      "Dominant 7(♭5)",
+      "Major 7(♯5)",
+      "Major 7(♭5)"
+    ]
+  },
+  "Chord Tone Recognition #5": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. In this lesson, the root is the lowest note of the chord."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses all eleven types from both seventh-chord categories across all twelve keys. The chords use root position, with the root at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "3",
+    "chordName": "F major seventh",
+    "chordNotes": [
+      {
+        "note": "F",
+        "degree": "1"
+      },
+      {
+        "note": "A",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      }
+    ],
+    "singleNote": "A",
+    "exampleExplanation": "The single note is A, the third of this chord. Choose 3.",
+    "chordTypes": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th",
+      "Augmented 7th",
+      "Minor-Major 7th",
+      "Diminished-Major 7th",
+      "Dominant 7(♭5)",
+      "Major 7(♯5)",
+      "Major 7(♭5)"
+    ]
+  },
+  "Chord Tone Recognition #6": {
+    "heading": "Hear the chord. Find the note’s role.",
+    "intro": "You will hear a chord, followed by one of its notes played on its own. Choose whether that note is the root, third, fifth or seventh of the chord.",
+    "steps": [
+      {
+        "title": "Read the chord name and listen",
+        "description": "The question tells you the chord type. Press Play to hear the whole chord first, then one note on its own. You can listen again whenever you need to."
+      },
+      {
+        "title": "Find the single note’s role",
+        "description": "Choose 1 for the root, 3 for the third, 5 for the fifth or 7 for the seventh. The root is the note the chord is named after. The chord notes are rearranged, so the lowest note is not necessarily the root."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A chord tone is one of the notes that makes up a chord. The numbers 1, 3, 5 and 7 name each note’s role in the chord. They do not mean first, second, third and fourth from the bottom. For example, in F major seventh, F is 1, A is 3, C is 5 and E is 7. A lowered third is still answered as 3; a lowered or raised fifth is still 5. This lesson uses all eleven types from both seventh-chord categories across all twelve keys. The chords use first, second and third inversions: the same chord notes are rearranged with a different note at the bottom. Your answer is the single note’s role, rather than the chord type or the note’s letter name.",
+    "choices": [
+      "1",
+      "3",
+      "5",
+      "7"
+    ],
+    "example": "1",
+    "chordName": "F major seventh",
+    "chordNotes": [
+      {
+        "note": "A",
+        "degree": "3"
+      },
+      {
+        "note": "C",
+        "degree": "5"
+      },
+      {
+        "note": "E",
+        "degree": "7"
+      },
+      {
+        "note": "F",
+        "degree": "1"
+      }
+    ],
+    "singleNote": "F",
+    "exampleExplanation": "The chord starts with A at the bottom, but F is still its root. The single note is F, so choose 1.",
+    "chordTypes": [
+      "Diminished 7th",
+      "Dominant 7th",
+      "Minor 7(♭5)",
+      "Major 7th",
+      "Minor 7th",
+      "Augmented 7th",
+      "Minor-Major 7th",
+      "Diminished-Major 7th",
+      "Dominant 7(♭5)",
+      "Major 7(♯5)",
+      "Major 7(♭5)"
+    ]
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "total_sequences": 100,
+  "lengths": {
+    "5": 50,
+    "6": 50
+  },
+  "unique_harmonic_sequences": 100,
+  "existing_literal_pool_compared": 81,
+  "duplicates_of_existing_harmonies": 0,
+  "unique_pitch_class_melodies": 100,
+  "duplicates_of_existing_pitch_class_melodies": 0,
+  "all_chromatic_exits_match_approved_connections": true,
+  "all_note_spellings_match_midi": true,
+  "all_chord_formulas_complete": true,
+  "all_inversions_match_bass": true,
+  "midi_min": 48,
+  "midi_max": 72,
+  "max_melody_leap": 4,
+  "max_individual_voice_leap": 7,
+  "max_bass_leap": 7,
+  "dense_exception_ids": [
+    "CM-051",
+    "CM-052"
+  ],
+  "family_distribution": {
+    "maj7b5": 10,
+    "m7b5": 10,
+    "minMaj7": 10,
+    "min7": 10,
+    "dom7": 11,
+    "maj7": 10,
+    "dim7": 10,
+    "dimMaj7": 10,
+    "maj": 10,
+    "min": 9
+  },
+  "listening_review": "pending",
+  "imported_into_quizzes": false
+}
