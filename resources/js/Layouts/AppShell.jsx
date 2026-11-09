@@ -70,11 +70,11 @@ const adminNav = [
         route: 'admin.audio-quiz.index',
         alsoCurrent: ['admin.audio-quiz.show', 'admin.audio-quiz.lesson', 'admin.quizzes.index', 'admin.quizzes.edit', 'admin.quizzes.create'],
     },
-    { label: 'Question reports', icon: 'support', route: 'admin.question-reports.index' },
-    { label: 'Users', icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
+    { label: tk('Question reports'), icon: 'support', route: 'admin.question-reports.index' },
+    { label: tk('Users'), icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
 ];
 
-export default function AppShell({ title, eyebrow, intro, action, children }) {
+export default function AppShell({ title, eyebrow, intro, action, children, headerClassName = 'flex', breadcrumbTitle }) {
     const t = useTrans();
     const { auth, flash } = usePage().props;
     const user = auth.user;

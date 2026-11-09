@@ -17,69 +17,43 @@ const features = [
         alt: tk('Quiz screen asking to recognise a chord progression and pick each chord quality'),
     },
     {
-        tag: 'Quick Guides',
-        title: 'Know what to do before you press play.',
+        tag: tk('Quick Guides'),
+        title: tk('Know what to do before you press play.'),
         description:
-            'Each quiz has a short guide with clear steps and an illustrated example. See what to listen for and how to choose your answer before you begin.',
+            tk('Each quiz has a short guide with clear steps and an illustrated example. See what to listen for and how to choose your answer before you begin.'),
         points: [
-            'Simple instructions for each quiz',
-            'Illustrations that show how an answer is chosen',
-            'Read at your own pace, then start when you are ready',
-        ],
-        visual: <QuickGuidePreview />,
-    },
-    {
-        tag: 'Quick Guides',
-        title: 'Know what to do before you press play.',
-        description:
-            'Each quiz has a short guide with clear steps and an illustrated example. See what to listen for and how to choose your answer before you begin.',
-        points: [
-            'Simple instructions for each quiz',
-            'Illustrations that show how an answer is chosen',
-            'Read at your own pace, then start when you are ready',
+            tk('Simple instructions for each quiz'),
+            tk('Illustrations that show how an answer is chosen'),
+            tk('Read at your own pace, then start when you are ready'),
         ],
         visual: <QuickGuidePreview />,
     },
     {
         tag: tk('Instrument Sounds'),
-        title: tk('Train on the sound you actually play.'),
+        title: tk('Choose the sound you want to practise with.'),
         description:
-            'Explore familiar instruments and discover new ones. Choose a sound before you start a quiz, or save your favourite in Settings.',
+            tk('Explore familiar instruments and discover new ones. Choose a sound before you start a quiz, or save your favourite in Settings.'),
         points: [
-            '28 instrument sounds across seven families',
-            'Grand piano, Rhodes, Harpejji, violin, choir and more',
-            'Choose from the sounds available for each quiz',
+            tk('28 instrument sounds across seven families'),
+            tk('Grand piano, Rhodes, Harpejji, violin, choir and more'),
+            tk('Choose from the sounds available for each quiz'),
         ],
         image: '/images/app-sounds-current.png',
-        alt: 'Updated sound picker with seven instrument families, colored instrument icons and Harpejji selected',
+        alt: tk('Updated sound picker with seven instrument families, colored instrument icons and Harpejji selected'),
         callout: <SoundCallout />,
     },
     {
-        tag: 'Review Your Answers',
-        title: 'Hear it again. See what you missed.',
+        tag: tk('Review Your Answers'),
+        title: tk('Hear it again. See what you missed.'),
         description:
-            'After a quiz, go through your answers one at a time. Replay the sound, compare a missed answer with the correct one, and move back and forth whenever you need to.',
+            tk('After a quiz, go through your answers one at a time. Replay the sound, compare a missed answer with the correct one, and move back and forth whenever you need to.'),
         points: [
-            'See your answer alongside the correct answer',
-            'Replay the question while you review',
-            'Use Previous, Next or jump to a question',
+            tk('See your answer alongside the correct answer'),
+            tk('Replay the question while you review'),
+            tk('Use Previous, Next or jump to a question'),
         ],
         image: '/images/app-major-extension-review.png',
-        alt: 'Major Chord Extensions answer review with replay controls and the correct extension choices highlighted',
-        callout: <ReviewCallout />,
-    },
-    {
-        tag: 'Review Your Answers',
-        title: 'Hear it again. See what you missed.',
-        description:
-            'After a quiz, go through your answers one at a time. Replay the sound, compare a missed answer with the correct one, and move back and forth whenever you need to.',
-        points: [
-            'See your answer alongside the correct answer',
-            'Replay the question while you review',
-            'Use Previous, Next or jump to a question',
-        ],
-        image: '/images/app-major-extension-review.png',
-        alt: 'Major Chord Extensions answer review with replay controls and the correct extension choices highlighted',
+        alt: tk('Major Chord Extensions answer review with replay controls and the correct extension choices highlighted'),
         callout: <ReviewCallout />,
     },
     {
@@ -96,14 +70,14 @@ const features = [
         tag: tk('Progress'),
         title: tk('See your progress and what needs practice.'),
         description:
-            'Keep track of your practice, work towards a daily goal, and see which quizzes need more attention. Your strongest results show how far you have come.',
+            tk('Keep track of your practice, work towards a daily goal, and see which quizzes need more attention. Your strongest results show how far you have come.'),
         points: [
-            'Set a daily goal and see how many questions remain',
-            'Continue a quiz from where you left off',
-            'Compare Needs work with your Strongest results',
+            tk('Set a daily goal and see how many questions remain'),
+            tk('Continue a quiz from where you left off'),
+            tk('Compare Needs work with your Strongest results'),
         ],
         image: '/images/app-progress-current.png',
-        alt: 'Updated Progress page showing accuracy, practice totals, Continue and Today’s goal',
+        alt: tk('Updated Progress page showing accuracy, practice totals, Continue and Today’s goal'),
         callout: <ProgressCallout />,
     },
     {
@@ -164,7 +138,7 @@ export default function Features() {
     );
 }
 
-function FeatureRow({ tag, title, description, points, image, alt, callout, reversed }) {
+function FeatureRow({ tag, title, description, points, image, alt, callout, visual, reversed }) {
     const t = useTrans();
 
     return (
@@ -204,14 +178,15 @@ function FeatureRow({ tag, title, description, points, image, alt, callout, reve
 }
 
 function QuickGuidePreview() {
+    const t = useTrans();
     const steps = [
-        ['Listen', 'Play the sound. Listen again whenever you need to.'],
-        ['Choose', 'Select the answer that matches what you hear.'],
-        ['Submit', 'Check your choice, then submit your answer.'],
+        [t('Listen'), t('Play the sound. Listen again whenever you need to.')],
+        [t('Choose'), t('Select the answer that matches what you hear.')],
+        [t('Submit'), t('Check your choice, then submit your answer.')],
     ];
 
     return (
-        <figure aria-label="Example Quick Guide with three simple steps and a highlighted piano key" className="relative isolate flex min-h-[420px] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-stone-50 to-rose-50 px-5 py-8 sm:px-8 sm:py-10">
+        <figure aria-label={t('Example Quick Guide with three simple steps and a highlighted piano key')} className="relative isolate flex min-h-[420px] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 via-stone-50 to-rose-50 px-5 py-8 sm:px-8 sm:py-10">
             <div aria-hidden="true" className="absolute -right-10 top-8 h-44 w-44 rounded-full bg-rose-100/60 blur-2xl" />
             <PhoneFrame className="relative w-full max-w-[340px]">
             <div className="bg-white p-5 sm:p-6">
@@ -220,9 +195,9 @@ function QuickGuidePreview() {
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand/5 text-brand">
                         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15" /></svg>
                     </span>
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">Your quick guide</p>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brand">{t('Your quick guide')}</p>
                 </div>
-                <h4 className="mt-4 text-xl font-bold tracking-tight text-neutral-900">Three simple steps.</h4>
+                <h4 className="mt-4 text-xl font-bold tracking-tight text-neutral-900">{t('Three simple steps.')}</h4>
                 <ol className="mt-5 space-y-4">
                     {steps.map(([label, description], index) => (
                         <li key={label} className="flex items-start gap-3">
@@ -235,7 +210,7 @@ function QuickGuidePreview() {
                     ))}
                 </ol>
                 <div className="mt-5 rounded-xl border border-neutral-100 bg-neutral-50 p-3">
-                    <p className="mb-2 text-[10px] font-medium text-neutral-500">An example shows you how</p>
+                    <p className="mb-2 text-[10px] font-medium text-neutral-500">{t('An example shows you how')}</p>
                     <div aria-hidden="true" className="relative flex h-16 overflow-hidden rounded-lg border border-neutral-200 bg-white">
                         {['C', 'D', 'E', 'F', 'G', 'A', 'B'].map((note) => <span key={note} className="flex flex-1 items-end justify-center border-r border-neutral-200 pb-1.5 text-[9px] font-semibold text-neutral-400 last:border-0">{note}</span>)}
                         {[1, 2, 4, 5, 6].map((after) => <span key={after} style={{ left: `${after * 100 / 7 - 4}%`, width: '8%' }} className={`absolute top-0 flex h-10 items-end justify-center rounded-b pb-1 text-[8px] font-bold ${after === 4 ? 'bg-emerald-600 text-white' : 'bg-neutral-900'}`}>{after === 4 ? 'F♯' : ''}</span>)}
@@ -260,27 +235,33 @@ const calloutClass =
 
 // The current instrument list, captured from the updated sound picker.
 function SoundCallout() {
+    const t = useTrans();
+
     return (
         <div className={`${calloutClass} top-[120px] p-2.5 sm:top-[130px]`} aria-hidden="true">
-            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Choose your instrument</p>
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">{t('Choose your instrument')}</p>
             <img src="/images/app-sound-options-current.png" alt="" width="700" height="384" className="h-auto w-[260px] rounded-xl sm:w-[300px]" loading="lazy" />
         </div>
     );
 }
 
 function ReviewCallout() {
+    const t = useTrans();
+
     return (
         <div className={`${calloutClass} top-9 w-[280px] p-2.5 sm:w-[300px]`} aria-hidden="true">
-            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Compare your answers</p>
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">{t('Compare your answers')}</p>
             <img src="/images/app-major-extension-comparison.png" alt="" className="h-auto w-full rounded-xl" loading="lazy" />
         </div>
     );
 }
 
 function ProgressCallout() {
+    const t = useTrans();
+
     return (
         <div className={`${calloutClass} top-[150px] w-[280px] p-2.5 sm:w-[340px]`} aria-hidden="true">
-            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">Your practice at a glance</p>
+            <p className="mb-2 px-2 text-sm font-semibold text-neutral-800">{t('Your practice at a glance')}</p>
             <img src="/images/app-progress-summary-current.png" alt="" className="h-auto w-full rounded-xl" loading="lazy" />
         </div>
     );

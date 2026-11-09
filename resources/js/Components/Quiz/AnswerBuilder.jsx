@@ -75,6 +75,7 @@ const ANSWER_LABELS = {
     progression: tk('Build the progression you hear, chord by chord'),
     sequence: tk('Tap the notes in order to build the melody you hear'),
     keyboard: tk('Choose the correct note'),
+    'pitch-keyboard': tk('Choose the correct note'),
 };
 
 export function answerLabelFor(category, title) {
@@ -549,9 +550,9 @@ function NamingChoices({ answered, correctAnswer, quality, degrees, exclude, onQ
             <NamingPanel
                 answered={answered}
                 correct={correct ? [correct.exclude] : []}
-                hint={t({namingExcludeOptions(degrees).length === 1
-                    ? 'Choose a seventh degree to use No 3 or No 5. Otherwise, select None.'
-                    : 'Choose No 3 or No 5 if that note is left out of the chord. Otherwise, select None.'})}
+                hint={namingExcludeOptions(degrees).length === 1
+                    ? t('Choose a seventh degree to use No 3 or No 5. Otherwise, select None.')
+                    : t('Choose No 3 or No 5 if that note is left out of the chord. Otherwise, select None.')}
                 isActive={(option) => exclude === option}
                 note={t('Pick one')}
                 onToggle={onExclude}
@@ -604,9 +605,9 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
     };
 
     const qualityGroups = config.qualityOnly ? [
-        { label: 'Basic Triads', options: ['Major', 'Minor', 'Diminished', 'Augmented'] },
-        { label: 'Seventh Chords', options: SEVENTH_CHOICES },
-        { label: 'Secondary Seventh Chords', options: SECONDARY_SEVENTH_CHOICES },
+        { label: tk('Basic Triads'), options: ['Major', 'Minor', 'Diminished', 'Augmented'] },
+        { label: tk('Seventh Chords'), options: SEVENTH_CHOICES },
+        { label: tk('Secondary Seventh Chords'), options: SECONDARY_SEVENTH_CHOICES },
     ].map((group) => ({ ...group, options: group.options.filter((option) => config.qualityOptions.includes(option)) })) : null;
     const hasAny = slots.some((slot) => slot.degree || slot.quality || slot.extensions?.length);
     const correctParts = correctAnswer ? correctAnswer.split(' - ') : [];
@@ -652,7 +653,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
     return (
         <div>
             <div className="flex items-center justify-between">
-                <p className="text-[13px] font-semibold text-neutral-400">{t('{review ? 'Correct progression' : 'Your Progression')}'}</p>
+                <p className="text-[13px] font-semibold text-neutral-400">{review ? t('Correct progression') : t('Your Progression')}</p>
                 {!answered && (
                     <button
                         type="button"
@@ -692,14 +693,14 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                 type="button"
                                 disabled={answered}
                                 onClick={() => setActiveIndex(index)}
-                                aria-label={t('Chord :number', { number: index + 1}${quality ? `: ${quality}` : ': choose a quality' })}
+                                aria-label={quality ? t('Chord :number: :quality', { number: index + 1, quality: t(quality) }) : t('Chord :number: choose a quality', { number: index + 1 })}
                                 aria-current={isActive ? 'step' : undefined}
                                 className={`flex min-w-0 flex-1 flex-col items-center justify-center gap-1 rounded-xl border-[1.5px] transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${config.qualityOnly ? 'min-h-[72px] px-1 py-2 sm:px-2' : 'min-h-[58px] px-0.5 py-1.5'} ${classes}`}
                             >
                                 {config.qualityOnly ? (
                                     <>
-                                        <span className={`text-[10px] font-medium sm:text-[11px] ${isActive ? 'text-white/80' : 'opacity-70'}`}>Chord {index + 1}</span>
-                                        <span className="w-full break-words text-center text-[10px] font-semibold leading-tight sm:text-xs">{quality ?? 'Choose'}</span>
+                                        <span className={`text-[10px] font-medium sm:text-[11px] ${isActive ? 'text-white/80' : 'opacity-70'}`}>{t('Chord :number', { number: index + 1 })}</span>
+                                        <span className="w-full break-words text-center text-[10px] font-semibold leading-tight sm:text-xs">{quality ? t(quality) : t('Choose')}</span>
                                     </>
                                 ) : (
                                     <>
@@ -718,7 +719,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
             {!answered && (
                 <div className={`mt-3 rounded-2xl border border-black/10 ${config.qualityOnly ? 'p-3 sm:p-4' : 'p-3.5'}`}>
                     <div className="flex items-center justify-between">
-                        <p className="text-[15px] font-extrabold text-neutral-900">{t('Chord :number', { number: activeIndex + 1 })}</p>
+                        <p aria-live="polite" className="text-[15px] font-extrabold text-neutral-900">{config.qualityOnly ? t('Choose chord :number', { number: activeIndex + 1 }) : t('Chord :number', { number: activeIndex + 1 })}</p>
                         {config.extensionOptions && activeIndex < config.length - 1 && (
                             <button
                                 type="button"
@@ -771,7 +772,7 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                         <div className="mt-3 space-y-3">
                             {qualityGroups.filter((group) => group.options.length).map((group) => (
                                 <fieldset key={group.label}>
-                                    <legend className="mb-1.5 text-xs font-semibold text-neutral-600">{group.label}</legend>
+                                    <legend className="mb-1.5 text-xs font-semibold text-neutral-600">{t(group.label)}</legend>
                                     <div className={`grid grid-cols-2 gap-1.5 ${group.label === 'Basic Triads' ? 'sm:grid-cols-4' : 'sm:grid-cols-3'}`}>
                                         {group.options.map((option) => (
                                             <button
@@ -781,13 +782,13 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                                                 onClick={() => chooseQuality(option)}
                                                 className={`flex min-h-[44px] items-center justify-center rounded-lg px-2 py-2 text-center text-[13px] leading-snug transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-600 focus-visible:ring-offset-2 ${currentQuality === option ? 'bg-neutral-900 font-semibold text-white' : 'bg-neutral-100 font-medium text-neutral-700 hover:bg-neutral-200'}`}
                                             >
-                                                {option}
+                                                {t(option)}
                                             </button>
                                         ))}
                                     </div>
                                 </fieldset>
                             ))}
-                            <p className="text-xs leading-relaxed text-neutral-500">Selections advance automatically. Tap any chord above to edit it.</p>
+                            <p className="text-xs leading-relaxed text-neutral-500">{t('Selections advance automatically. Tap any chord above to edit it.')}</p>
                         </div>
                     ) : !config.fixedQualities && (
                         <div className={config.qualityOnly && config.fixedDegrees ? '' : 'mt-3.5'}>
@@ -815,9 +816,9 @@ function ProgressionChoices({ answered, config, correctAnswer, slots, onChangeSl
                     {config.extensionOptions && (
                         <div className="mt-3.5">
                             <p className="mb-2 text-xs font-semibold text-neutral-400">
-                                {t('{config.requireExtensions ? 'Extensions' : <>Degrees')} <span className="font-medium text-neutral-300">{t('(optional)')}</span></>}
+                                {config.requireExtensions ? t('Extensions') : <>{t('Degrees')} <span className="font-medium text-neutral-300">{t('(optional)')}</span></>}
                             </p>
-                            {config.extensionOptionsByQuality && !currentQuality && <p className="mb-2 text-xs text-neutral-500">Choose a quality to see its extensions.</p>}
+                            {config.extensionOptionsByQuality && !currentQuality && <p className="mb-2 text-xs text-neutral-500">{t('Choose a quality to see its extensions.')}</p>}
                             <div className="flex flex-wrap gap-1.5">
                                 {currentExtensionOptions.map((option) => {
                                     const on = (current.extensions ?? []).includes(option);
@@ -867,9 +868,9 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
 
     return (
         <div>
-            <section aria-label="Your Sequence" className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
+            <section aria-label={t('Your Sequence')} className="rounded-2xl border border-neutral-200 bg-neutral-50 p-4">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-sm font-bold text-neutral-900">Your Sequence</h3>
+                    <h3 className="text-sm font-bold text-neutral-900">{t('Your Sequence')}</h3>
                     <div className="flex shrink-0 gap-4">
                         <button
                             type="button"
@@ -878,7 +879,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                             className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-semibold text-neutral-600 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:pointer-events-none disabled:opacity-40"
                         >
                             <UndoIcon aria-hidden="true" className="h-4 w-4" />
-                            Undo
+                            {t('Undo')}
                         </button>
                         <button
                             type="button"
@@ -887,7 +888,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                             className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-lg px-1 text-xs font-semibold text-red-600 hover:text-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:pointer-events-none disabled:opacity-40"
                         >
                             <TrashIcon aria-hidden="true" className="h-4 w-4" />
-                            Clear
+                            {t('Clear')}
                         </button>
                     </div>
                 </div>
@@ -902,7 +903,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                                 </span>
                                 {incorrect && correctNotes[index] && (
                                     <span className="text-sm font-bold text-emerald-700">
-                                        <span className="sr-only">Correct note: </span>{correctNotes[index]}
+                                        <span className="sr-only">{t('Correct note:')} </span>{correctNotes[index]}
                                     </span>
                                 )}
                             </li>

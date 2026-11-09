@@ -2,10 +2,10 @@ import ReportQuestion from '@/Components/Quiz/ReportQuestion';
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 import AudioStimulus from '@/Components/Quiz/AudioStimulus';
 import AnswerBuilder, { answerTypeFor, baseChordFor } from '@/Components/Quiz/AnswerBuilder';
 import { reviewAnswerLabel } from '@/lib/reviewAnswers';
-import { tk, useTrans } from '@/lib/i18n';
 
 function CheckIcon(props) {
     return (
@@ -24,13 +24,15 @@ function XIcon(props) {
 }
 
 function HistoryButton() {
+    const t = useTrans();
     return <Link href={route('quiz.history')} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
         <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11a9 9 0 1 1 2.6 7M3 4v7h7M12 7v5l3 2" /></svg>
-        Attempt history
+        {t('Attempt history')}
     </Link>;
 }
 
 function AnswerReview({ quiz, records, keyboardAudio, sessionId, onClose }) {
+    const t = useTrans();
     const [index, setIndex] = useState(0);
     const headingRef = useRef(null);
     const record = records[index];
@@ -44,29 +46,29 @@ function AnswerReview({ quiz, records, keyboardAudio, sessionId, onClose }) {
     if (!record) return null;
 
     return (
-        <section aria-label="Answer review">
-            <nav aria-label="Review navigation" className="mb-4 flex flex-wrap items-center justify-between gap-2">
+        <section aria-label={t('Answer review')}>
+            <nav aria-label={t('Review navigation')} className="mb-4 flex flex-wrap items-center justify-between gap-2">
                 <button type="button" onClick={onClose} className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-700">
-                    <span aria-hidden="true">←</span> Back to results
+                    <span aria-hidden="true">←</span> {t('Back to results')}
                 </button>
                 <HistoryButton />
             </nav>
             <div className="rounded-2xl border border-black/5 bg-white p-5 sm:p-7">
                 <div className="flex flex-wrap items-center justify-between gap-3">
-                    <h2 ref={headingRef} tabIndex={-1} className="scroll-mt-6 text-sm font-bold text-neutral-600 outline-none">Question {record.position} of {records.length}</h2>
+                    <h2 ref={headingRef} tabIndex={-1} className="scroll-mt-6 text-sm font-bold text-neutral-600 outline-none">{t('Question :current of :total', { current: record.position, total: records.length })}</h2>
                     <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${record.correct ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
                         {record.correct ? <CheckIcon aria-hidden="true" className="h-3.5 w-3.5" /> : <XIcon aria-hidden="true" className="h-3.5 w-3.5" />}
-                        {record.correct ? 'You got this right' : 'Incorrect answer'}
+                        {record.correct ? t('You got this right') : t('Incorrect answer')}
                     </span>
                 </div>
                 <details className="mt-4 border-b border-neutral-100 pb-4">
-                    <summary className="cursor-pointer text-xs font-semibold text-sky-600 hover:text-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700">Jump to a question</summary>
+                    <summary className="cursor-pointer text-xs font-semibold text-sky-600 hover:text-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700">{t('Jump to a question')}</summary>
                     <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-8">
                         {records.map((item, itemIndex) => (
                             <button
                                 key={item.position}
                                 type="button"
-                                aria-label={`Question ${item.position}: ${item.correct ? 'correct' : 'incorrect'}`}
+                                aria-label={item.correct ? t('Question :number: correct', { number: item.position }) : t('Question :number: incorrect', { number: item.position })}
                                 aria-current={itemIndex === index ? 'step' : undefined}
                                 onClick={() => setIndex(itemIndex)}
                                 className={`flex min-h-11 items-center justify-center gap-1 rounded-lg border text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 ${item.correct ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-rose-200 bg-rose-50 text-rose-800'} ${itemIndex === index ? 'ring-2 ring-neutral-900 ring-offset-2' : ''}`}
@@ -76,20 +78,20 @@ function AnswerReview({ quiz, records, keyboardAudio, sessionId, onClose }) {
                         ))}
                     </div>
                 </details>
-                <h3 className="mt-6 text-center text-lg font-extrabold text-neutral-900">{record.prompt}</h3>
+                <h3 className="mt-6 text-center text-lg font-extrabold text-neutral-900">{t(record.prompt)}</h3>
                 <div className="mt-5">
                     <AudioStimulus key={record.position} questionKey={record.position} src={record.audio_url} notes={record.notes} />
                 </div>
                 <div className="my-6">
                     {!record.correct && (
                         <div className="mb-4 min-w-0 rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
-                            <p className="text-xs font-semibold">Your answer</p>
-                            <p className="mt-1 break-words text-sm font-bold">{reviewAnswerLabel(record.picked, type)}</p>
+                            <p className="text-xs font-semibold">{t('Your answer')}</p>
+                            <p className="mt-1 break-words text-sm font-bold">{record.picked ? t(reviewAnswerLabel(record.picked, type)) : t('No answer selected')}</p>
                         </div>
                     )}
-                    <p className="text-sm font-bold text-emerald-700">{record.correct ? 'Your answer is correct' : 'Correct answer'}</p>
+                    <p className="text-sm font-bold text-emerald-700">{record.correct ? t('Your answer is correct') : t('Correct answer')}</p>
                 </div>
-                {baseChord && <p className="mb-3 text-sm font-bold text-neutral-700">{baseChord}</p>}
+                {baseChord && <p className="mb-3 text-sm font-bold text-neutral-700">{[t(baseChord.split(' ')[0]), ...baseChord.split(' ').slice(1)].join(' ')}</p>}
                 <AnswerBuilder
                     key={record.position}
                     review
@@ -104,8 +106,8 @@ function AnswerReview({ quiz, records, keyboardAudio, sessionId, onClose }) {
                     resetToken={record.position}
                 />
                 <div className="mt-7 flex gap-3 border-t border-neutral-100 pt-5">
-                    <button type="button" disabled={index === 0} onClick={() => setIndex((value) => value - 1)} className="min-h-11 flex-1 rounded-xl border border-neutral-300 bg-white px-4 text-sm font-bold text-neutral-700 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:cursor-default disabled:opacity-35">Previous</button>
-                    <button type="button" onClick={() => index === records.length - 1 ? onClose() : setIndex((value) => value + 1)} className="min-h-11 flex-1 rounded-xl bg-neutral-900 px-4 text-sm font-bold text-white hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900">{index === records.length - 1 ? 'Back to results' : 'Next'}</button>
+                    <button type="button" disabled={index === 0} onClick={() => setIndex((value) => value - 1)} className="min-h-11 flex-1 rounded-xl border border-neutral-300 bg-white px-4 text-sm font-bold text-neutral-700 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:cursor-default disabled:opacity-35">{t('Previous')}</button>
+                    <button type="button" onClick={() => index === records.length - 1 ? onClose() : setIndex((value) => value + 1)} className="min-h-11 flex-1 rounded-xl bg-neutral-900 px-4 text-sm font-bold text-white hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900">{index === records.length - 1 ? t('Back to results') : t('Next')}</button>
                 </div>
                 <ReportQuestion key={`report-${record.position}`} quizSlug={quiz.slug} questionId={record.question_id} sessionId={sessionId} />
             </div>
@@ -180,14 +182,15 @@ function Stat({ color, label, value }) {
 export default function QuizResults({ quiz, result, review, review_keyboard_audio = {}, initial_review = false, history_notice, history_session_id }) {
     const { post, processing } = useForm({ sound: result.sound });
     const [reviewing, setReviewing] = useState(Boolean(initial_review && review?.length));
+    const t = useTrans();
 
     return (
-        <AppShell eyebrow={quiz.category} title={quiz.title} intro={reviewing ? 'Review your answers' : 'Quiz results'}>
-            <Head title={`${quiz.title} — Results`} />
+        <AppShell eyebrow={t(quiz.category)} title={t(quiz.title)} intro={reviewing ? t('Review your answers') : t('Quiz results')}>
+            <Head title={t(':title — Results', { title: t(quiz.title) })} />
 
             <div className={`mx-auto ${reviewing ? 'max-w-3xl' : 'max-w-xl'}`}>
-                {!reviewing && <nav aria-label="Results navigation" className="mb-4 flex justify-end"><HistoryButton /></nav>}
-                {history_notice && <p className="mb-5 rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-600">{history_notice}</p>}
+                {!reviewing && <nav aria-label={t('Results navigation')} className="mb-4 flex justify-end"><HistoryButton /></nav>}
+                {history_notice && <p className="mb-5 rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-600">{t(history_notice)}</p>}
                 {reviewing ? <AnswerReview quiz={quiz} records={review ?? []} keyboardAudio={review_keyboard_audio} sessionId={history_session_id} onClose={() => setReviewing(false)} /> : <>
 
                 <div className="flex flex-col items-center rounded-2xl border border-black/5 bg-white px-6 py-8 text-center">
@@ -227,7 +230,7 @@ export default function QuizResults({ quiz, result, review, review_keyboard_audi
 
                 {Boolean(review?.length) && (
                     <button type="button" onClick={() => setReviewing(true)} className="mt-6 flex min-h-12 w-full items-center justify-between rounded-xl border border-neutral-300 bg-white px-5 text-sm font-bold text-neutral-900 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand">
-                        Review answers <span aria-hidden="true">→</span>
+                        {t('Review answers')} <span aria-hidden="true">→</span>
                     </button>
                 )}
 

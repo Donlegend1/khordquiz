@@ -348,7 +348,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                 >
                                     <ChevronIcon className="h-3 w-3 shrink-0 rotate-180 text-neutral-400" />
                                     <InstrumentIcon sound={FAMILY_INSTRUMENTS[activeGroup]} size={24} />
-                                    {activeGroup}
+                                    {t(activeGroup)}
                                 </button>
                                 {groups.find((group) => group.name === activeGroup).options.map((option) => (
                                     <OptionButton key={option} option={option} />
@@ -364,7 +364,7 @@ function PickerRow({ first, icon: Icon, label, hint, options, groups, value, onC
                                 >
                                     <span className="flex min-w-0 items-center gap-2">
                                         <InstrumentIcon sound={FAMILY_INSTRUMENTS[group.name]} size={26} />
-                                        <span className="truncate">{group.name}</span>
+                                        <span className="truncate">{t(group.name)}</span>
                                     </span>
                                     <span className="flex shrink-0 items-center gap-1.5">
                                         {group.options.includes(value) && (
@@ -488,9 +488,12 @@ function ResetProgressSheet({ open, onClose }) {
 }
 
 export default function Settings({ dailyGoal, goalOptions, defaultInstrument, language: savedLanguage }) {
+    const t = useTrans();
     const [appearance, setAppearance] = useState('System');
     const [language, setLanguage] = useState(savedLanguage ?? 'English');
 
+    // Saved to users.language — the server re-renders this page with the new
+    // locale's translations, so the whole UI switches immediately.
     function chooseLanguage(option) {
         const previous = language;
         setLanguage(option);
@@ -519,9 +522,9 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument, la
             <Head title={t('Settings')} />
 
             <div className="mx-auto max-w-2xl">
-                <Section title="General">
-                    <PickerRow first icon={ContrastIcon} label="Appearance" hint="System follows your phone's setting" options={APPEARANCES} value={appearance} onChange={setAppearance} />
-                    <PickerRow icon={LanguageIcon} label="Language" options={LANGUAGES} value={language} onChange={chooseLanguage} />
+                <Section title={t('General')}>
+                    <PickerRow first icon={ContrastIcon} label={t('Appearance')} hint={t("System follows your phone's setting")} options={APPEARANCES} value={appearance} onChange={setAppearance} formatOption={(option) => t(option)} />
+                    <PickerRow icon={LanguageIcon} label={t('Language')} options={LANGUAGES} value={language} onChange={chooseLanguage} />
                 </Section>
 
                 <Section title={t('Practice')}>

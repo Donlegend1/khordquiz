@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 import VideoEmbed from './VideoEmbed';
 
 export const QuizVideoContext = createContext(null);
@@ -24,7 +25,8 @@ export function GuideExampleChoice({ label, value }) {
     );
 }
 
-export default function QuizQuickGuide({ id, badge, heading, intro, steps, hint, example, about, aboutContent, aboutLabel = 'About this quiz' }) {
+export default function QuizQuickGuide({ id, badge, heading, intro, steps, hint, example, about, aboutContent, aboutLabel = tk('About this quiz') }) {
+    const t = useTrans();
     const videoEmbed = useContext(QuizVideoContext);
     const [aboutOpen, setAboutOpen] = useState(false);
 
@@ -36,20 +38,20 @@ export default function QuizQuickGuide({ id, badge, heading, intro, steps, hint,
                         <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="h-4 w-4">
                             <path d="M3 3.5h4.5A3.5 3.5 0 0110 4.6a3.5 3.5 0 012.5-1.1H17v12h-4.5a3.5 3.5 0 00-2.5 1.1 3.5 3.5 0 00-2.5-1.1H3zM10 4.6v12" />
                         </svg>
-                        Your quick guide
+                        {t('Your quick guide')}
                     </p>
-                    <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-[10px] font-semibold text-neutral-500">{badge}</span>
+                    <span className="rounded-full border border-neutral-200 bg-neutral-50 px-2.5 py-1 text-[10px] font-semibold text-neutral-500">{t(badge)}</span>
                 </div>
-                <h3 id={id} className="mt-3 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl">{heading}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-neutral-500">{intro}</p>
+                <h3 id={id} className="mt-3 text-xl font-bold tracking-tight text-neutral-900 sm:text-2xl">{t(heading)}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-neutral-500">{t(intro)}</p>
             </div>
 
             <div className="grid bg-white sm:grid-cols-2">
                 <div className="px-5 py-6 sm:px-6">
                     <ol className="space-y-5">
-                        {steps.map((step, index) => <GuideStep key={step.title} number={index + 1} title={step.title}>{step.description}</GuideStep>)}
+                        {steps.map((step, index) => <GuideStep key={step.title} number={index + 1} title={t(step.title)}>{t(step.description)}</GuideStep>)}
                     </ol>
-                    {hint && <p className="mt-5 border-t border-neutral-100 pt-4 text-xs leading-relaxed text-neutral-400">{hint}</p>}
+                    {hint && <p className="mt-5 border-t border-neutral-100 pt-4 text-xs leading-relaxed text-neutral-400">{t(hint)}</p>}
                 </div>
 
                 <div className="border-t border-neutral-200 bg-[#F8F6F3] px-5 py-6 sm:border-l sm:border-t-0 sm:px-6">
@@ -60,14 +62,14 @@ export default function QuizQuickGuide({ id, badge, heading, intro, steps, hint,
             <div className="border-t border-neutral-200 bg-white px-5 py-4 sm:px-6">
                 <details className="group" onToggle={(event) => setAboutOpen(event.currentTarget.open)}>
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-xs font-bold text-neutral-900 focus-visible:rounded focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-red-600 [&::-webkit-details-marker]:hidden">
-                        {aboutLabel}
+                        {t(aboutLabel)}
                         <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" className="h-4 w-4 text-neutral-400 transition-transform group-open:rotate-180"><path d="m5 8 5 5 5-5" /></svg>
                     </summary>
-                    <p className="mt-3 text-sm leading-relaxed text-neutral-600">{about}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-neutral-600">{t(about)}</p>
                     {aboutContent}
                     {videoEmbed ? (
                         <div className="mt-5 border-t border-neutral-100 pt-4">
-                            <h4 className="mb-3 text-sm font-semibold text-neutral-900">Video guide</h4>
+                            <h4 className="mb-3 text-sm font-semibold text-neutral-900">{t('Video guide')}</h4>
                             {aboutOpen && <VideoEmbed html={videoEmbed} className="aspect-video overflow-hidden rounded-xl bg-neutral-100 [&_iframe]:h-full [&_iframe]:w-full" />}
                         </div>
                     ) : (
@@ -76,8 +78,8 @@ export default function QuizQuickGuide({ id, badge, heading, intro, steps, hint,
                                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-5 w-5"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="m10 9 5 3-5 3z" /></svg>
                             </span>
                             <div>
-                                <p className="text-sm font-semibold text-neutral-700">Video guide coming soon</p>
-                                <p className="mt-1 text-xs leading-relaxed text-neutral-500">You can use the quick guide above to get started.</p>
+                                <p className="text-sm font-semibold text-neutral-700">{t('Video guide coming soon')}</p>
+                                <p className="mt-1 text-xs leading-relaxed text-neutral-500">{t('You can use the quick guide above to get started.')}</p>
                             </div>
                         </div>
                     )}

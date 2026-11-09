@@ -717,7 +717,7 @@ class QuizController extends Controller
             'review' => $records ?? [], 'initial_review' => true,
             'history_session_id' => $quizSession->id,
             'review_keyboard_audio' => $quiz->title === 'Find the Pitch' ? $this->pitchKeyboardAudioMap($quizSession->sound) : [],
-            'history_notice' => empty($records) ? 'This older result was saved without individual answers. You can practise the quiz again to get a new answer review.' : null,
+            'history_notice' => empty($records) ? __('This older result was saved without individual answers. You can practise the quiz again to get a new answer review.') : null,
         ]);
     }
 

@@ -1,5 +1,6 @@
 import { createNotePlayer } from '@/lib/audio-engine';
 import { useEffect, useRef, useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 function PlayTriangleIcon(props) {
     return (
@@ -24,6 +25,7 @@ function audioTime(seconds) {
 }
 
 export default function AudioStimulus({ questionKey, src, notes, dark = false }) {
+    const t = useTrans();
     const audioRef = useRef(null);
     const playerRef = useRef(null);
     const [playing, setPlaying] = useState(false);
@@ -166,8 +168,8 @@ export default function AudioStimulus({ questionKey, src, notes, dark = false })
                         type="button"
                         onClick={replay}
                         disabled={!available || loading}
-                        title="Replay from the beginning"
-                        aria-label="Replay audio from the beginning"
+                        title={t('Replay from the beginning')}
+                        aria-label={t('Replay audio from the beginning')}
                         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-40 ${dark ? 'text-white/70 hover:bg-white/10 hover:text-white' : 'text-neutral-600 hover:bg-neutral-200/70 hover:text-neutral-900'}`}
                     >
                         <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5"><path d="M4 10a8 8 0 1 1 1.8 8M4 4v6h6" /></svg>
@@ -176,8 +178,8 @@ export default function AudioStimulus({ questionKey, src, notes, dark = false })
                         type="button"
                         onClick={toggle}
                         disabled={!available || loading}
-                        title={loading ? 'Loading audio' : playing ? 'Pause' : 'Play'}
-                        aria-label={loading ? 'Loading audio' : playing ? 'Pause audio' : 'Play audio'}
+                        title={loading ? t('Loading audio') : playing ? t('Pause') : t('Play')}
+                        aria-label={loading ? t('Loading audio') : playing ? t('Pause audio') : t('Play audio')}
                         className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand disabled:opacity-40 ${dark ? 'text-white hover:bg-white/10' : 'text-brand hover:bg-red-50 hover:text-brand-dark'}`}
                     >
                         {loading ? <span aria-hidden="true" className="h-5 w-5 animate-spin rounded-full border-2 border-brand/25 border-t-brand" /> : playing ? <PauseIcon aria-hidden="true" className="h-6 w-6" /> : <PlayTriangleIcon aria-hidden="true" className="h-7 w-7" />}
@@ -185,8 +187,8 @@ export default function AudioStimulus({ questionKey, src, notes, dark = false })
                     <div className="min-w-0 flex-1 px-1">
                         <input
                             type="range"
-                            aria-label="Audio position"
-                            aria-valuetext={`${audioTime(position)} of ${audioTime(duration)}`}
+                            aria-label={t('Audio position')}
+                            aria-valuetext={t(':position of :duration', { position: audioTime(position), duration: audioTime(duration) })}
                             min="0"
                             max={duration || 1}
                             step="0.01"
@@ -199,8 +201,8 @@ export default function AudioStimulus({ questionKey, src, notes, dark = false })
                         <div aria-hidden="true" className={`flex justify-between pb-0.5 text-[11px] font-medium tabular-nums leading-none ${dark ? 'text-white/50' : 'text-neutral-500'}`}><span>{audioTime(position)}</span><span>{audioTime(duration)}</span></div>
                     </div>
                 </div>
-                {error && <p role="alert" className="mt-3 text-xs text-red-700">The audio could not play. Press Replay to try again.</p>}
-                {!available && <p className="mt-3 text-xs text-neutral-500">Audio is not available for this question.</p>}
+                {error && <p role="alert" className="mt-3 text-xs text-red-700">{t('The audio could not play. Press Replay to try again.')}</p>}
+                {!available && <p className="mt-3 text-xs text-neutral-500">{t('Audio is not available for this question.')}</p>}
             </div>
         </div>
     );

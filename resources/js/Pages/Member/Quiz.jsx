@@ -133,7 +133,7 @@ export default function Quiz({ categories }) {
     const t = useTrans();
 
     return (
-        <AppShell eyebrow={t('Member')} title={t('Start Quiz')} intro={t('Choose a category to begin practising.')}>
+        <AppShell eyebrow={t('Member')} title={t('Start Quiz')} intro={t('Choose a Category')}>
             <Head title={t('Start Quiz')} />
 
             {categories.length === 0 ? (
@@ -156,11 +156,13 @@ export default function Quiz({ categories }) {
                                         <CategoryIcon aria-hidden="true" className="h-5 w-5" />
                                     </span>
                                     <div className="min-w-0 flex-1">
-                                        <p className="text-base font-bold leading-snug text-neutral-900">{category.name}</p>
+                                        <p className="text-base font-bold leading-snug text-neutral-900">{t(category.name)}</p>
                                         <p className="mt-0.5 text-sm text-neutral-600">
                                             {category.done > 0
-                                                ? `${category.done} of ${category.quizCount} completed`
-                                                : `${category.quizCount} ${category.quizCount === 1 ? 'quiz' : 'quizzes'} · Not started`}
+                                                ? t(':done of :total completed', { done: category.done, total: category.quizCount })
+                                                : category.quizCount === 1
+                                                  ? t(':count quiz · Not started', { count: category.quizCount })
+                                                  : t(':count quizzes · Not started', { count: category.quizCount })}
                                         </p>
                                         {category.percent > 0 && (
                                             <div className="mt-1.5 flex items-center gap-2">
@@ -169,8 +171,6 @@ export default function Quiz({ categories }) {
                                                 </div>
                                                 <span className="shrink-0 text-sm font-medium text-neutral-600">{category.percent}%</span>
                                             </div>
-                                        ) : (
-                                            <p className="mt-0.5 text-sm text-neutral-400">{t('Not attempted yet')}</p>
                                         )}
                                     </div>
                                     <ChevronIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-neutral-500 transition-colors group-hover:text-brand group-focus-visible:text-brand motion-reduce:transition-none" />
@@ -192,14 +192,13 @@ export default function Quiz({ categories }) {
                                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                                             <CategoryIcon aria-hidden="true" className="h-5 w-5" />
                                         </span>
-                                        <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
-                                    </div>
-
-                                    <div className="min-w-0 flex-1">
-                                        <p className="truncate text-[15px] font-bold text-neutral-900">{t(category.name)}</p>
-                                        <p className="mt-0.5 text-sm text-neutral-400">
-                                            {category.quizCount === 1 ? t(':count quiz', { count: category.quizCount }) : t(':count quizzes', { count: category.quizCount })}
-                                        </p>
+                                        <div className="min-w-0 flex-1">
+                                            <h2 className="text-[15px] font-bold leading-snug text-neutral-900">{t(category.name)}</h2>
+                                            <p className="mt-0.5 text-sm text-neutral-600">
+                                                {category.quizCount === 1 ? t(':count quiz', { count: category.quizCount }) : t(':count quizzes', { count: category.quizCount })}
+                                            </p>
+                                        </div>
+                                        <ChevronIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-neutral-500 transition-colors group-hover:text-brand group-focus-visible:text-brand motion-reduce:transition-none" />
                                     </div>
 
                                     <div>
@@ -207,7 +206,7 @@ export default function Quiz({ categories }) {
                                             {category.percent > 0 && <div className="h-full rounded-full bg-brand" style={{ width: `${category.percent}%` }} />}
                                         </div>
                                         <div className="mt-2 flex items-center justify-between gap-2 text-xs font-medium text-neutral-600">
-                                            <span>{category.done > 0 ? `${category.done} of ${category.quizCount} completed` : 'Not started'}</span>
+                                            <span>{category.done > 0 ? t(':done of :total completed', { done: category.done, total: category.quizCount }) : t('Not started')}</span>
                                             <span>{category.percent}%</span>
                                         </div>
                                     </div>

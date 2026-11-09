@@ -1,11 +1,11 @@
 import ReportQuestion from '@/Components/Quiz/ReportQuestion';
 import AnswerBuilder, { answerLabelFor, answerTypeFor, baseChordFor, buildChordName } from '@/Components/Quiz/AnswerBuilder';
 import AudioStimulus from '@/Components/Quiz/AudioStimulus';
-import { buildNamedChord, decodeNamingAnswer } from '@/lib/quizAnswerPresets';
+import { buildNamedChord, decodeNamingAnswer, namingDisplayQuality } from '@/lib/quizAnswerPresets';
+import { useTrans } from '@/lib/i18n';
 import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
-import { useTrans } from '@/lib/i18n';
 
 function TonicIcon(props) {
     return (
@@ -24,6 +24,7 @@ function TonicIcon(props) {
 // reuses the same live-mixing engine AudioStimulus and the admin's
 // LiveMixButton both already play through (resources/js/lib/audio-engine.js).
 function TonicButton({ notes }) {
+    const t = useTrans();
     const [playing, setPlaying] = useState(false);
     const [failed, setFailed] = useState(false);
     const playerRef = useRef(null);
@@ -64,9 +65,9 @@ function TonicButton({ notes }) {
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700 transition-colors duration-150 hover:bg-emerald-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 disabled:cursor-wait disabled:opacity-60"
             >
                 <TonicIcon aria-hidden="true" className="h-4 w-4" />
-                {playing ? 'Playing Do…' : 'Play home note (Do)'}
+                {playing ? t('Playing Do…') : t('Play home note (Do)')}
             </button>
-            {failed && <p role="status" className="mt-2 text-xs text-red-700">The sound could not play. Please try again.</p>}
+            {failed && <p role="status" className="mt-2 text-xs text-red-700">{t('The sound could not play. Please try again.')}</p>}
         </div>
     );
 }
@@ -138,87 +139,6 @@ function CancelQuizModal({ current, onCancel, onClose, open, total }) {
                     >
                         {t('Cancel Quiz')}
                     </button>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-// Fixed, decorative bar heights — not a real waveform render of the audio
-// (that would need actual waveform analysis), just visual texture around the
-// play button that holds steady instead of jumping around on every question.
-const WAVEFORM_BARS = [8, 14, 10, 18, 22, 13, 9, 16, 20, 11, 15, 24, 12, 9, 17, 21, 14, 10, 18, 13, 8, 16, 22, 11, 9];
-
-// The app has no recorded audio behind this button on most questions yet — every
-// quiz still shows this same "listen" design (app/practice.tsx's SoundRingButton),
-// it's just decorative there until a real clip exists. Matches that: with a real
-// audio_url (from the generated-audio pipeline, resolved per the attempt's chosen
-// sound — see QuizController::questionAudioUrl) it actually plays and autoplays
-// once; without one, it's the same design, just inert. The student can replay it
-// as many times as they want with the play button itself.
-function AudioStimulus({ questionKey, src }) {
-    const t = useTrans();
-    const audioRef = useRef(null);
-    const [playing, setPlaying] = useState(false);
-
-    // A new question swaps the <audio> element's src — reset so the old
-    // question's playing state doesn't linger on the new one, then autoplay it
-    // once. Browsers can silently block autoplay outside a user gesture; this
-    // follows the Submit/Next click closely enough to work in practice, and
-    // fails quietly (the student can still press play) if a browser blocks it.
-    useEffect(() => {
-        setPlaying(false);
-        if (src && audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(() => {});
-        }
-    }, [questionKey, src]);
-
-    function toggle() {
-        if (!src) {
-            setPlaying((current) => !current);
-            return;
-        }
-        if (!audioRef.current) return;
-        if (playing) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-    }
-
-    return (
-        <div className="rounded-2xl bg-neutral-50 px-6 py-6 text-center">
-            {src && (
-                <audio
-                    key={src}
-                    ref={audioRef}
-                    src={src}
-                    onPlay={() => setPlaying(true)}
-                    onPause={() => setPlaying(false)}
-                    onEnded={() => setPlaying(false)}
-                    className="hidden"
-                />
-            )}
-
-            <div className="flex flex-col items-center gap-5 rounded-xl px-4 py-3.5">
-                <button
-                    type="button"
-                    onClick={toggle}
-                    aria-label={playing ? t('Pause') : t('Play')}
-                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-[0_0_0_10px_rgba(224,0,0,0.08)] transition-colors duration-150 hover:bg-brand-dark"
-                >
-                    {playing ? <PauseIcon className="h-9 w-9" /> : <PlayTriangleIcon className="h-9 w-9 translate-x-[2px]" />}
-                </button>
-
-                <div className="flex h-8 w-full items-center justify-center gap-[3px]">
-                    {WAVEFORM_BARS.map((height, index) => (
-                        <span
-                            key={index}
-                            className={`w-1 shrink-0 rounded-full transition-colors duration-150 ${playing ? 'bg-brand/50' : 'bg-neutral-300'}`}
-                            style={{ height: `${height}px` }}
-                        />
-                    ))}
                 </div>
             </div>
         </div>
@@ -376,7 +296,8 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                                     shown = [t(first), ...others].join(' ');
                                                 } else if (type === 'naming') {
                                                     const { quality, degrees, exclude } = decodeNamingAnswer(feedback.correctAnswer);
-                                                    shown = t(quality) + buildNamedChord(quality, degrees, exclude).slice(quality.length);
+                                                    const displayQuality = namingDisplayQuality(quality, degrees);
+                                                    shown = t(displayQuality) + buildNamedChord(quality, degrees, exclude).slice(displayQuality.length);
                                                 } else if (type === 'sequence') {
                                                     shown = feedback.correctAnswer.split(' ').join('-');
                                                 } else if (type === 'compound') {

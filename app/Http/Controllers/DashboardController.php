@@ -191,7 +191,7 @@ class DashboardController extends Controller
         $longestStreak = $user->longest_streak;
 
         return collect([
-            ['name' => __('First Steps'), 'detail' => __('Complete your first quiz'), 'icon' => 'footsteps', 'current' => $allAttempts->isNotEmpty() ? 1 : 0, 'target' => 1],
+            ['name' => __('First Steps'), 'detail' => __('Complete your first quiz'), 'icon' => 'footsteps', 'current' => $completed->isNotEmpty() ? 1 : 0, 'target' => 1],
             ['name' => __('Sharp Ear'), 'detail' => __('Answer 10 questions in a row correctly'), 'icon' => 'ear', 'current' => $bestCorrectRun, 'target' => 10],
             ['name' => __('Perfect Harmony'), 'detail' => __('Score 100% on any quiz'), 'icon' => 'musical-notes', 'current' => $hasPerfectScore ? 1 : 0, 'target' => 1],
             ['name' => __('Week Warrior'), 'detail' => __('Keep a 7-day streak'), 'icon' => 'flame', 'current' => $longestStreak, 'target' => 7],

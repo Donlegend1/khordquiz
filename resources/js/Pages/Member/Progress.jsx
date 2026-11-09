@@ -121,7 +121,7 @@ function GoalPicker({ current, options }) {
         <div className="relative" ref={ref}>
             <button
                 type="button"
-                aria-label="Change daily goal"
+                aria-label={t('Change daily goal')}
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
                 className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-neutral-100 px-3.5 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-200"
@@ -142,7 +142,7 @@ function GoalPicker({ current, options }) {
                                 value === current ? 'font-semibold text-brand' : 'text-neutral-700'
                             }`}
                         >
-                            {value} questions
+                            {t(':count questions', { count: value })}
                             {value === current && <span>✓</span>}
                         </button>
                     ))}
@@ -217,9 +217,9 @@ export default function Progress({
                 <section className="flex min-w-0 flex-col justify-center rounded-2xl border border-black/5 bg-white p-4 xl:p-6">
                     <div className="flex items-center justify-between gap-3">
                         <div className="min-w-0">
-                            <h2 id="progress-goal-heading" className="text-lg font-semibold">Today&apos;s goal</h2>
+                            <h2 id="progress-goal-heading" className="text-lg font-semibold">{t("Today's goal")}</h2>
                             <p className={`mt-0.5 text-sm ${goalRemaining === 0 ? 'font-semibold text-emerald-700' : 'text-neutral-500'}`}>
-                                {goalRemaining === 0 ? 'Goal reached — nice work!' : `${goalRemaining} questions to go`}
+                                {goalRemaining === 0 ? t('Goal reached — nice work!') : t(':count questions to go', { count: goalRemaining })}
                             </p>
                         </div>
                         <GoalPicker current={goal.target} options={goalOptions} />
@@ -242,17 +242,17 @@ export default function Progress({
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
-                            <p className="truncate text-xs text-white/80">Continue where you left off</p>
-                            <h3 className="truncate text-base font-bold leading-tight">{resume.quiz.title}</h3>
-                            <p className="truncate text-xs text-white/70">{resume.quiz.category}</p>
+                            <p className="truncate text-xs text-white/80">{t('Continue where you left off')}</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{t(resume.quiz.title)}</h3>
+                            <p className="truncate text-xs text-white/70">{t(resume.quiz.category)}</p>
                         </div>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
 
                         <div className="hidden min-w-0 flex-1 sm:block">
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                Continue · {resume.quiz.category}
+                                {t('Continue')} · {t(resume.quiz.category)}
                             </p>
-                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">{resume.quiz.title}</h3>
+                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">{t(resume.quiz.title)}</h3>
                             <div className="mt-4 flex items-center gap-3">
                                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
                                     <div className="h-full rounded-full bg-white" style={{ width: `${resume.progress}%` }} />
@@ -271,8 +271,8 @@ export default function Progress({
             <div className="mt-6 grid gap-4 md:grid-cols-2">
                 <section className="min-w-0 rounded-2xl border border-black/5 bg-white p-4 xl:p-6">
                     <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
-                        <h2 className="text-lg font-semibold">Needs work</h2>
-                        <span className="text-sm text-neutral-400">Below 65% accuracy</span>
+                        <h2 className="text-lg font-semibold">{t('Needs work')}</h2>
+                        <span className="text-sm text-neutral-400">{t('Below 65% accuracy')}</span>
                     </div>
                     {needsWork.length > 0 ? (
                         <RankedQuizList
@@ -280,7 +280,7 @@ export default function Progress({
                             tone={(accuracy) => (accuracy < 40 ? 'bg-red-50 text-red-700' : 'bg-orange-50 text-orange-700')}
                         />
                     ) : (
-                        <p className="mt-3 text-sm text-neutral-500">Your weakest quizzes will show here once you&apos;ve practised a few.</p>
+                        <p className="mt-3 text-sm text-neutral-500">{t("Your weakest quizzes will show here once you've practised a few.")}</p>
                     )}
                 </section>
 
@@ -288,14 +288,14 @@ export default function Progress({
                     <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
                         <h2 className="flex items-center gap-2 text-lg font-semibold">
                             <StarIcon className="h-4 w-4 text-amber-500" />
-                            Strongest
+                            {t('Strongest')}
                         </h2>
-                        <span className="text-sm text-neutral-600">Above 65% accuracy</span>
+                        <span className="text-sm text-neutral-600">{t('Above 65% accuracy')}</span>
                     </div>
                     {strongest.length > 0 ? (
                         <RankedQuizList items={strongest} tone={() => 'bg-emerald-50 text-emerald-700'} />
                     ) : (
-                        <p className="mt-3 text-sm text-neutral-500">Your best quizzes will show here once you&apos;ve practised a few.</p>
+                        <p className="mt-3 text-sm text-neutral-500">{t("Your best quizzes will show here once you've practised a few.")}</p>
                     )}
                 </section>
             </div>
@@ -351,8 +351,8 @@ export default function Progress({
             </section>
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <h2 className="text-lg font-semibold">Completed quizzes</h2>
-                <p className="mt-1 text-sm text-neutral-500">Your five most recent completed attempts.</p>
+                <h2 className="text-lg font-semibold">{t('Completed quizzes')}</h2>
+                <p className="mt-1 text-sm text-neutral-500">{t('Your five most recent completed attempts.')}</p>
 
                 {recentQuizzes.length === 0 ? (
                     <p className="mt-3 text-sm text-neutral-500">{t("No completed quizzes yet. Finish one and it'll show up here.")}</p>
@@ -379,7 +379,7 @@ export default function Progress({
                 {recentQuizzes.length > 0 && (
                     <div className="mt-5 border-t border-neutral-100 pt-4">
                         <Link href={route('quiz.history')} className="flex min-h-11 w-full items-center justify-center rounded-xl border border-neutral-300 bg-white px-4 py-3 text-center text-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
-                            View attempt history
+                            {t('View attempt history')}
                         </Link>
                     </div>
                 )}

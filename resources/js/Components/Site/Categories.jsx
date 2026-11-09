@@ -11,23 +11,24 @@ const accents = {
 };
 
 const pathIntroductions = {
-    Beginner: 'Start with clear listening exercises and build your confidence, one quiz at a time.',
-    Intermediate: 'Build on your listening skills with more detailed sounds and musical patterns.',
-    Advanced: 'Challenge your ear with more complex sounds and finer musical details.',
+    Beginner: tk('Start with clear listening exercises and build your confidence, one quiz at a time.'),
+    Intermediate: tk('Build on your listening skills with more detailed sounds and musical patterns.'),
+    Advanced: tk('Challenge your ear with more complex sounds and finer musical details.'),
 };
 const descriptions = Object.fromEntries(fallbackPaths.flatMap((path) => path.categories.map((category) => [category.name, category.description])));
 
 export default function Categories({ catalog }) {
+    const t = useTrans();
     const paths = catalog ? catalog.paths.map((path) => ({
         ...path,
         intro: pathIntroductions[path.level],
-        categories: path.categories.map((category) => ({ ...category, description: descriptions[category.name] ?? 'Develop your listening skills with these quizzes.' })),
+        categories: path.categories.map((category) => ({ ...category, description: descriptions[category.name] ?? tk('Develop your listening skills with these quizzes.') })),
     })) : fallbackPaths;
     const totals = catalog?.totals ?? fallbackTotals;
     const stats = [
-        { value: totals.quizzes, label: 'Quizzes' },
-        { value: totals.categories, label: 'Categories' },
-        { value: paths.length, label: 'Learning paths' },
+        { value: totals.quizzes, label: tk('Quizzes') },
+        { value: totals.categories, label: tk('Categories') },
+        { value: paths.length, label: tk('Learning paths') },
     ];
     const [active, setActive] = useState(0);
     const path = paths[active];
@@ -52,7 +53,7 @@ export default function Categories({ catalog }) {
                         </h2>
 
                         <p className="mt-4 max-w-[520px] text-base leading-relaxed text-neutral-700">
-                            {t('Every quiz sits on a learning path, in the order KhordQuiz teaches it. Pick your level and you always know what to practise next.')}
+                            {t('Explore the quizzes for your level, from your first listening exercises to advanced challenges. Each path follows the same category and lesson order you will find inside KhordQuiz.')}
                         </p>
                     </div>
 

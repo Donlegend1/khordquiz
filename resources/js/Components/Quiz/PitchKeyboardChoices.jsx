@@ -1,12 +1,14 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { NOTE_BLACK_KEYS, NOTE_WHITE_KEYS, blackKeyLeft, blackKeyWidth } from '@/lib/quizAnswerPresets';
 import { clampPitchPage, defaultPitchPage, playablePitchOctaves } from '@/lib/pitchKeyboard';
+import { useTrans } from '@/lib/i18n';
 
 function OctaveArrow({ direction, disabled, onClick, controls }) {
+    const t = useTrans();
     return (
         <button
             type="button"
-            aria-label={direction === 'left' ? 'Previous octave' : 'Next octave'}
+            aria-label={direction === 'left' ? t('Previous octave') : t('Next octave')}
             aria-controls={controls}
             disabled={disabled}
             onClick={onClick}
@@ -20,6 +22,7 @@ function OctaveArrow({ direction, disabled, onClick, controls }) {
 }
 
 export default function PitchKeyboardChoices({ answered, correctAnswer, value, onChange, keyboardAudio = {}, initialPitch = null }) {
+    const t = useTrans();
     const keyboardId = useId();
     const scrollRef = useRef(null);
     const audioRef = useRef(null);
@@ -86,15 +89,15 @@ export default function PitchKeyboardChoices({ answered, correctAnswer, value, o
     }
 
     if (!octaves.length) {
-        return <p className="text-sm text-neutral-500">No pitches are available for this instrument.</p>;
+        return <p className="text-sm text-neutral-500">{t('No pitches are available for this instrument.')}</p>;
     }
 
     return (
         <div className="min-w-0">
             <div className="mb-3 text-center">
-                <p aria-live="polite" aria-atomic="true" className="text-sm font-semibold text-neutral-600">Octave {currentOctave} <span className="font-normal text-neutral-400">· C{currentOctave}–B{currentOctave}</span></p>
-                <p className="mt-1 text-xs text-neutral-400 md:hidden">Swipe to change octave</p>
-                <p className="mt-1 hidden text-xs text-neutral-400 md:block">Use the arrows to change octave</p>
+                <p aria-live="polite" aria-atomic="true" className="text-sm font-semibold text-neutral-600">{t('Octave :number', { number: currentOctave })} <span className="font-normal text-neutral-400">· C{currentOctave}–B{currentOctave}</span></p>
+                <p className="mt-1 text-xs text-neutral-400 md:hidden">{t('Swipe to change octave')}</p>
+                <p className="mt-1 hidden text-xs text-neutral-400 md:block">{t('Use the arrows to change octave')}</p>
             </div>
             <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                 <OctaveArrow direction="left" disabled={currentPage === 0} onClick={() => goToPage(pageRef.current - 1)} controls={keyboardId} />
@@ -102,7 +105,7 @@ export default function PitchKeyboardChoices({ answered, correctAnswer, value, o
                     id={keyboardId}
                     ref={scrollRef}
                     role="region"
-                    aria-label="Pitch keyboard"
+                    aria-label={t('Pitch keyboard')}
                     tabIndex={0}
                     onScroll={syncPage}
                     onKeyDown={(event) => {
@@ -153,7 +156,7 @@ export default function PitchKeyboardChoices({ answered, correctAnswer, value, o
                                         <button
                                             key={pitch}
                                             type="button"
-                                            aria-label={note.split('/').map((label) => `${label}${octave}`).join(' or ')}
+                                            aria-label={t(':sharp or :flat', { sharp: `${note.split('/')[0]}${octave}`, flat: `${note.split('/')[1]}${octave}` })}
                                             aria-pressed={value === pitch}
                                             tabIndex={pageIndex === currentPage ? 0 : -1}
                                             disabled={answered || !available}

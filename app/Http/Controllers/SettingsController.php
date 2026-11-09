@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
+use App\Models\QuizSession;
 use App\Models\UserPreference;
 use App\Support\Locales;
 use App\Support\QuizCatalog;
@@ -32,7 +33,7 @@ class SettingsController extends Controller
     public function updateLanguage(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'language' => ['required', 'string', 'in:' . implode(',', Locales::labels())],
+            'language' => ['required', 'string', 'in:'.implode(',', Locales::labels())],
         ]);
 
         $user = $request->user();

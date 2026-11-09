@@ -1,8 +1,8 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
-import { tk, useTrans } from '@/lib/i18n';
 import { scoreTone } from '@/lib/scoreColor';
+import { tk, useTrans } from '@/lib/i18n';
 
 const iconProps = {
     viewBox: '0 0 24 24',
@@ -445,9 +445,9 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
             <section className="mt-8 grid gap-4 md:grid-cols-2">
                 <div className="flex min-w-0 flex-col justify-center rounded-2xl bg-neutral-800 p-4 text-white xl:p-6">
                     <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                        <h2 id="daily-goal-heading" className="text-sm font-semibold">Today's goal</h2>
+                        <h2 id="daily-goal-heading" className="text-sm font-semibold">{t("Today's goal")}</h2>
                         <p className="text-xs tabular-nums text-white/80 sm:text-sm">
-                            {goal.done}/{goal.target} questions
+                            {t(':done/:total questions', { done: goal.done, total: goal.target })}
                         </p>
                     </div>
                     <div
@@ -483,7 +483,7 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
                                 {t('Continue')} · {t(resume.quiz.category)}
                             </p>
-                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">
                                 {t(resume.quiz.title)}
                             </h3>
                             <div className="mt-4 flex items-center gap-3">

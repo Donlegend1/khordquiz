@@ -32,9 +32,8 @@ export default function Hero() {
                     </h1>
 
                     <p className="mx-auto mt-6 max-w-[600px] text-base leading-relaxed text-neutral-700 lg:text-[17px] lg:mx-0">
-                        <span className="font-semibold text-neutral-900">Go beyond intervals.</span> Train your ear on
-                        melodies, scales, triads, 7th to 13th chords, modal voicings, full progressions and more — 200
-                        audio quizzes, played on the instrument you choose, on a path built for your level.
+                        <span className="font-semibold text-neutral-900">{t('Go beyond intervals.')}</span>{' '}
+                        {t('Train your ear on melodies, scales, triads, 7th to 13th chords, modal voicings, full progressions and more — :count audio quizzes, played on the instrument you choose, on a path built for your level.', { count: 200 })}
                     </p>
 
                     <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
@@ -67,7 +66,7 @@ function PhoneMockup() {
         <div className="mx-auto h-[460px] w-[300px] sm:h-[500px] sm:w-[336px] lg:mr-6">
             <PhoneFrame
                 src="/images/app-progress-current.png"
-                alt="KhordQuiz progress screen showing overall accuracy, streak, questions answered, today's goal, and needs-work/strongest quizzes"
+                alt={t("KhordQuiz progress screen showing overall accuracy, streak, questions answered, today's goal, and needs-work/strongest quizzes")}
                 loading="eager"
             />
         </div>

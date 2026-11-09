@@ -97,7 +97,7 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
                                     className="flex w-full items-center min-h-11 gap-2 border-b border-black/5 px-2.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <ChevronBackIcon className="h-3 w-3" />
-                                    {group.icon && <span className="text-sm leading-none">{group.icon}</span>}
+                                    <InstrumentIcon sound={FAMILY_INSTRUMENTS[group.name]} size={24} />
                                     {t(group.name)}
                                 </button>
                                 {group.options.map((option) => (

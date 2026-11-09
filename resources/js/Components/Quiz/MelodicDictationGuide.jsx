@@ -1,12 +1,14 @@
 import guides from '@/data/melodicDictationGuides.json';
+import { useTrans } from '@/lib/i18n';
 import QuizQuickGuide from './QuizQuickGuide';
 
 export default function MelodicDictationGuide({ quizTitle, difficulty, ...props }) {
+    const t = useTrans();
     const guide = guides[quizTitle];
     if (!guide) return null;
     const bass = guide.focus === 'bass';
     const layered = guide.focus !== 'melody';
-    const otherLabel = guide.focus === 'upper-pair' ? 'Lower note' : 'Other chord notes';
+    const legend = guide.focus === 'upper-pair' ? t('Green: notes to enter. Grey: lower note.') : t('Green: notes to enter. Grey: other chord notes.');
     return (
         <QuizQuickGuide
             {...props}
@@ -18,9 +20,9 @@ export default function MelodicDictationGuide({ quizTitle, difficulty, ...props 
             about={guide.about}
             example={(
                 <>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500">See how to build an answer</p>
-                    <p className="mt-3 text-sm font-semibold text-neutral-800">{bass ? 'Follow the lowest notes' : layered ? 'Follow the highest notes' : 'Read from left to right'}</p>
-                    <div role="img" aria-label={`Example answer in order: ${guide.exampleNotes.join(', ')}${layered ? `. Follow the ${bass ? 'lowest' : 'highest'} notes.` : ''}`} className="mt-4 grid gap-2" style={{ gridTemplateColumns: `repeat(${guide.exampleNotes.length}, minmax(0, 1fr))` }}>
+                    <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500">{t('See how to build an answer')}</p>
+                    <p className="mt-3 text-sm font-semibold text-neutral-800">{bass ? t('Follow the lowest notes') : layered ? t('Follow the highest notes') : t('Read from left to right')}</p>
+                    <div role="img" aria-label={layered ? (bass ? t('Example answer in order: :notes. Follow the lowest notes.', { notes: guide.exampleNotes.join(', ') }) : t('Example answer in order: :notes. Follow the highest notes.', { notes: guide.exampleNotes.join(', ') })) : t('Example answer in order: :notes', { notes: guide.exampleNotes.join(', ') })} className="mt-4 grid gap-2" style={{ gridTemplateColumns: `repeat(${guide.exampleNotes.length}, minmax(0, 1fr))` }}>
                         {guide.exampleNotes.map((note, index) => (
                             <div key={index} aria-hidden="true" className="flex min-w-0 flex-col gap-2 text-center">
                                 <span className="text-[10px] font-semibold text-neutral-500">{index + 1}</span>
@@ -30,12 +32,12 @@ export default function MelodicDictationGuide({ quizTitle, difficulty, ...props 
                             </div>
                         ))}
                     </div>
-                    {layered && <p className="mt-3 text-xs leading-relaxed text-neutral-600">Green: notes to enter. Grey: {otherLabel.toLowerCase()}.</p>}
+                    {layered && <p className="mt-3 text-xs leading-relaxed text-neutral-600">{legend}</p>}
                     <div className="mt-5 rounded-xl border border-neutral-200 bg-white p-4 text-center">
-                        <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">Example answer</p>
+                        <p className="text-[10px] font-semibold uppercase tracking-widest text-neutral-500">{t('Example answer')}</p>
                         <p className="mt-2 text-lg font-bold text-neutral-900">{guide.exampleNotes.join(' → ')}</p>
                     </div>
-                    <p className="mt-4 text-xs leading-relaxed text-neutral-600">{guide.exampleExplanation}</p>
+                    <p className="mt-4 text-xs leading-relaxed text-neutral-600">{t(guide.exampleExplanation)}</p>
                 </>
             )}
         />

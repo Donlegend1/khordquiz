@@ -13,7 +13,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { useTrans } from '@/lib/i18n';
 import { Head } from '@inertiajs/react';
 
-export default function Welcome() {
+export default function Welcome({ catalog }) {
     const t = useTrans();
 
     return (
