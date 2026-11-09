@@ -14,7 +14,7 @@ use Illuminate\Support\Str;
 /**
  * Gives Kingsleykhordpiano subscribers KhordQuiz access.
  *
- * - syncAll()        nightly (kkp:sync): creates/updates every listed member and
+ * - syncAll()        every minute (kkp:sync): creates/updates every listed member and
  *                    revokes access for members no longer listed.
  * - refresh()        on login: live re-check of one member's status.
  * - provisionByEmail on a failed login / forgot-password for an email that has no

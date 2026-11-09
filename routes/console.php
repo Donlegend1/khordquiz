@@ -24,4 +24,4 @@ Artisan::command('kkp:sync {--no-invite : Create accounts without emailing invit
     return 0;
 })->purpose('Sync subscribed Kingsleykhordpiano members into KhordQuiz');
 
-Schedule::command('kkp:sync')->dailyAt('02:00')->withoutOverlapping()->onOneServer();
+Schedule::command('kkp:sync')->everyMinute()->withoutOverlapping()->onOneServer();
