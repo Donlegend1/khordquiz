@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Subscription;
 use App\Models\User;
 use App\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -36,6 +37,22 @@ class UserFactory extends Factory
             'last_practiced_on' => null,
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Give the user a live paid plan, so they can play quizzes.
+     */
+    public function subscribed(string $planId = 'yearly'): static
+    {
+        return $this->afterCreating(function (User $user) use ($planId) {
+            Subscription::forUser($user)->update([
+                'access' => 'paid',
+                'plan_id' => $planId,
+                'status' => 'active',
+                'provider' => Subscription::PROVIDER_STRIPE,
+                'current_period_end' => $planId === 'lifetime' ? null : now()->addYear(),
+            ]);
+        });
     }
 
     /**

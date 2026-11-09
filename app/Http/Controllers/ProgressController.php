@@ -125,10 +125,16 @@ class ProgressController extends Controller
         $needsWork = $ranked->filter(fn ($entry) => $entry['accuracy'] < self::RANKING_THRESHOLD)->sortBy('accuracy')->values();
         $strongest = $ranked->filter(fn ($entry) => $entry['accuracy'] > self::RANKING_THRESHOLD)->sortByDesc('accuracy')->values();
 
-        $week = collect(range(6, 0))->map(function (int $daysAgo) use ($user) {
-            $day = now()->subDays($daysAgo);
+        // Last 7 days, questions answered per day. There's no per-question mistake
+        // tracking on the web yet (only an attempt's final tally), so "Most confused"
+        // has nothing to draw from — it's left empty, same as the dedicated Mistakes page.
+        $week = collect(range(6, 0))->map(function (int $daysAgo) use ($attempts) {
+            $day = now()->subDays($daysAgo)->startOfDay();
+            $count = $attempts
+                ->filter(fn (QuizAttempt $attempt) => $attempt->last_played_at?->isSameDay($day))
+                ->sum(fn (QuizAttempt $attempt) => $this->answeredCount($attempt));
 
-            return ['label' => $day->format('D'), 'count' => QuizHistory::answeredOn($user, $day)];
+            return ['label' => $day->translatedFormat('D'), 'count' => $count];
         });
 
         return Inertia::render('Member/Progress', [

@@ -5,6 +5,7 @@ import { buildNamedChord, decodeNamingAnswer } from '@/lib/quizAnswerPresets';
 import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 function TonicIcon(props) {
     return (
@@ -107,6 +108,7 @@ function ExitIcon(props) {
 
 // Matches app/practice.tsx's cancel-quiz confirmation (ConfirmSheet with icon="exit-outline").
 function CancelQuizModal({ current, onCancel, onClose, open, total }) {
+    const t = useTrans();
     if (!open) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4" onClick={onClose}>
@@ -115,9 +117,9 @@ function CancelQuizModal({ current, onCancel, onClose, open, total }) {
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 text-neutral-700">
                         <ExitIcon className="h-5 w-5" />
                     </span>
-                    <p className="mt-3 text-base font-bold text-neutral-900">Cancel quiz?</p>
+                    <p className="mt-3 text-base font-bold text-neutral-900">{t('Cancel quiz?')}</p>
                     <p className="mt-1 text-sm text-neutral-500">
-                        You&apos;re on question {current} of {total}. Your answers in this set won&apos;t be saved.
+                        {t("You're on question :current of :total. Your answers in this set won't be saved.", { current, total })}
                     </p>
                 </div>
 
@@ -127,14 +129,14 @@ function CancelQuizModal({ current, onCancel, onClose, open, total }) {
                         onClick={onClose}
                         className="w-full rounded-xl bg-neutral-900 py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                     >
-                        Keep Going
+                        {t('Keep Going')}
                     </button>
                     <button
                         type="button"
                         onClick={onCancel}
                         className="block w-full rounded-xl py-3 text-center text-sm font-bold text-brand hover:bg-rose-50"
                     >
-                        Cancel Quiz
+                        {t('Cancel Quiz')}
                     </button>
                 </div>
             </div>
@@ -142,7 +144,89 @@ function CancelQuizModal({ current, onCancel, onClose, open, total }) {
     );
 }
 
+// Fixed, decorative bar heights — not a real waveform render of the audio
+// (that would need actual waveform analysis), just visual texture around the
+// play button that holds steady instead of jumping around on every question.
+const WAVEFORM_BARS = [8, 14, 10, 18, 22, 13, 9, 16, 20, 11, 15, 24, 12, 9, 17, 21, 14, 10, 18, 13, 8, 16, 22, 11, 9];
+
+// The app has no recorded audio behind this button on most questions yet — every
+// quiz still shows this same "listen" design (app/practice.tsx's SoundRingButton),
+// it's just decorative there until a real clip exists. Matches that: with a real
+// audio_url (from the generated-audio pipeline, resolved per the attempt's chosen
+// sound — see QuizController::questionAudioUrl) it actually plays and autoplays
+// once; without one, it's the same design, just inert. The student can replay it
+// as many times as they want with the play button itself.
+function AudioStimulus({ questionKey, src }) {
+    const t = useTrans();
+    const audioRef = useRef(null);
+    const [playing, setPlaying] = useState(false);
+
+    // A new question swaps the <audio> element's src — reset so the old
+    // question's playing state doesn't linger on the new one, then autoplay it
+    // once. Browsers can silently block autoplay outside a user gesture; this
+    // follows the Submit/Next click closely enough to work in practice, and
+    // fails quietly (the student can still press play) if a browser blocks it.
+    useEffect(() => {
+        setPlaying(false);
+        if (src && audioRef.current) {
+            audioRef.current.currentTime = 0;
+            audioRef.current.play().catch(() => {});
+        }
+    }, [questionKey, src]);
+
+    function toggle() {
+        if (!src) {
+            setPlaying((current) => !current);
+            return;
+        }
+        if (!audioRef.current) return;
+        if (playing) {
+            audioRef.current.pause();
+        } else {
+            audioRef.current.play();
+        }
+    }
+
+    return (
+        <div className="rounded-2xl bg-neutral-50 px-6 py-6 text-center">
+            {src && (
+                <audio
+                    key={src}
+                    ref={audioRef}
+                    src={src}
+                    onPlay={() => setPlaying(true)}
+                    onPause={() => setPlaying(false)}
+                    onEnded={() => setPlaying(false)}
+                    className="hidden"
+                />
+            )}
+
+            <div className="flex flex-col items-center gap-5 rounded-xl px-4 py-3.5">
+                <button
+                    type="button"
+                    onClick={toggle}
+                    aria-label={playing ? t('Pause') : t('Play')}
+                    className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-brand text-white shadow-[0_0_0_10px_rgba(224,0,0,0.08)] transition-colors duration-150 hover:bg-brand-dark"
+                >
+                    {playing ? <PauseIcon className="h-9 w-9" /> : <PlayTriangleIcon className="h-9 w-9 translate-x-[2px]" />}
+                </button>
+
+                <div className="flex h-8 w-full items-center justify-center gap-[3px]">
+                    {WAVEFORM_BARS.map((height, index) => (
+                        <span
+                            key={index}
+                            className={`w-1 shrink-0 rounded-full transition-colors duration-150 ${playing ? 'bg-brand/50' : 'bg-neutral-300'}`}
+                            style={{ height: `${height}px` }}
+                        />
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+}
+
 export default function QuizPlay({ quiz, progress, question, finished, feedback }) {
+    const t = useTrans();
     const { data, setData, post, processing, reset } = useForm({ choice: null });
     const [advancing, setAdvancing] = useState(false);
     const [cancelling, setCancelling] = useState(false);
@@ -191,11 +275,11 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
 
     return (
         <div className="min-h-screen bg-[#F6F1EC] px-4 py-8 text-neutral-900 sm:px-8 sm:py-10">
-            <Head title={quiz.title} />
+            <Head title={t(quiz.title)} />
 
             <div className="mx-auto max-w-4xl">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">{quiz.category}</p>
-                <h1 className="mt-1 text-3xl font-bold tracking-tight text-neutral-900">{quiz.title}</h1>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">{t(quiz.category)}</p>
+                <h1 className="mt-1 text-3xl font-bold tracking-tight text-neutral-900">{t(quiz.title)}</h1>
                 {question && (
                     <div className="mt-6 rounded-2xl border border-black/5 bg-white p-6 sm:p-7">
                         <div className="flex items-center justify-between gap-4">
@@ -205,10 +289,10 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                 className="inline-flex items-center gap-1.5 rounded-full border border-black/10 bg-white px-3.5 py-2 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:border-black/20"
                             >
                                 <CloseIcon className="h-3.5 w-3.5" />
-                                Cancel Quiz
+                                {t('Cancel Quiz')}
                             </button>
                             <p className="shrink-0 text-sm text-neutral-400">
-                                Question {progress.current} of {progress.total}
+                                {t('Question :current of :total', { current: progress.current, total: progress.total })}
                             </p>
                         </div>
                         <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-neutral-100">
@@ -216,11 +300,11 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                         </div>
                         {answeredSoFar > 0 && (
                             <p className="mt-2 text-xs text-neutral-400">
-                                {progress.correct} correct of {answeredSoFar} answered
+                                {t(':correct correct of :answered answered', { correct: progress.correct, answered: answeredSoFar })}
                             </p>
                         )}
 
-                        <p className="mt-6 text-center text-lg font-bold leading-snug text-neutral-900">{question.prompt}</p>
+                        <p className="mt-6 text-center text-lg font-bold leading-snug text-neutral-900">{t(question.prompt)}</p>
 
                         <div className="mt-5">
                             <AudioStimulus questionKey={progress.current} src={question.audio_url} notes={question.notes} />
@@ -242,7 +326,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                             return (
                                 <div className="mt-5 rounded-xl border border-black/5 bg-white px-5 py-3 text-center shadow-sm">
                                     <p className="text-xl font-extrabold text-neutral-900">
-                                        {quality}
+                                        {t(quality)}
                                         {rest.length > 0 && <span className={added ? 'text-brand' : 'text-neutral-900'}> {rest.join(' ')}</span>}
                                     </p>
                                 </div>
@@ -250,7 +334,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                         })()}
 
                         <p className="mt-7 text-xs font-semibold text-neutral-400">
-                            {answerLabelFor(quiz.category, quiz.title)}
+                            {t(answerLabelFor(quiz.category, quiz.title))}
                         </p>
 
                         <div className="mt-2.5">
@@ -275,25 +359,40 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                 </span>
                                 <div className="min-w-0 flex-1">
                                     <p className={`text-sm font-extrabold ${feedback.correct ? 'text-emerald-800' : 'text-brand'}`}>
-                                        {feedback.correct ? 'You are Correct!' : 'Incorrect Answer'}
+                                        {feedback.correct ? t('You are Correct!') : t('Incorrect Answer')}
                                     </p>
                                     {!feedback.correct && (
                                         <p className="text-sm text-neutral-600">
-                                            The correct answer is{' '}
-                                            <span className="font-semibold text-emerald-700">
-                                                {(() => {
-                                                    const base = baseChordFor(quiz.category, quiz.title);
-                                                    const type = answerTypeFor(quiz.category, quiz.title);
-                                                    if (base) return buildChordName(base, feedback.correctAnswer.split(', '));
-                                                    if (type === 'naming') {
-                                                        const { quality, degrees, exclude } = decodeNamingAnswer(feedback.correctAnswer);
-                                                        return buildNamedChord(quality, degrees, exclude);
-                                                    }
-                                                    if (type === 'sequence') return feedback.correctAnswer.split(' ').join('-');
-                                                    return feedback.correctAnswer;
-                                                })()}
-                                            </span>
-                                            .
+                                            {(() => {
+                                                // Display-only translation of the descriptive words (chord
+                                                // qualities, inversions, interval names) — the stored/compared
+                                                // answer value itself stays English.
+                                                const base = baseChordFor(quiz.category, quiz.title);
+                                                const type = answerTypeFor(quiz.category, quiz.title);
+                                                let shown;
+                                                if (base) {
+                                                    const name = buildChordName(base, feedback.correctAnswer.split(', '));
+                                                    const [first, ...others] = name.split(' ');
+                                                    shown = [t(first), ...others].join(' ');
+                                                } else if (type === 'naming') {
+                                                    const { quality, degrees, exclude } = decodeNamingAnswer(feedback.correctAnswer);
+                                                    shown = t(quality) + buildNamedChord(quality, degrees, exclude).slice(quality.length);
+                                                } else if (type === 'sequence') {
+                                                    shown = feedback.correctAnswer.split(' ').join('-');
+                                                } else if (type === 'compound') {
+                                                    shown = feedback.correctAnswer.split(' · ').map((part) => t(part)).join(' · ');
+                                                } else {
+                                                    shown = t(feedback.correctAnswer);
+                                                }
+                                                return t('The correct answer is :answer.', { answer: '\u0000' })
+                                                    .split('\u0000')
+                                                    .map((part, i) => (
+                                                        <span key={i}>
+                                                            {i > 0 && <span className="font-semibold text-emerald-700">{shown}</span>}
+                                                            {part}
+                                                        </span>
+                                                    ));
+                                            })()}
                                         </p>
                                     )}
                                 </div>
@@ -308,7 +407,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                     onClick={submit}
                                     className="w-full rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400"
                                 >
-                                    Submit Answer
+                                    {t('Submit Answer')}
                                 </button>
                             ) : (
                                 <button
@@ -317,7 +416,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                     onClick={next}
                                     className="w-full rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
-                                    {isLastQuestion ? 'Finish' : 'Next Question'}
+                                    {isLastQuestion ? t('Finish') : t('Next Question')}
                                 </button>
                             )}
                         </div>
@@ -327,27 +426,27 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
 
                 {!question && finished && (
                     <div className="mt-6 rounded-2xl border border-black/5 bg-white p-8 text-center">
-                        <p className="text-base font-bold text-neutral-900">This quiz is already finished</p>
+                        <p className="text-base font-bold text-neutral-900">{t('This quiz is already finished')}</p>
                         <Link
                             href={route('quiz.results', quiz.slug)}
                             className="mt-5 inline-block rounded-xl bg-neutral-900 px-6 py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                         >
-                            See Results
+                            {t('See Results')}
                         </Link>
                     </div>
                 )}
 
                 {!question && !finished && (
                     <div className="mt-6 rounded-2xl border border-black/5 bg-white p-8 text-center">
-                        <p className="text-base font-bold text-neutral-900">No questions yet</p>
+                        <p className="text-base font-bold text-neutral-900">{t('No questions yet')}</p>
                         <p className="mt-2 text-sm text-neutral-500">
-                            This quiz doesn&apos;t have any questions added yet, so there&apos;s nothing to answer right now.
+                            {t("This quiz doesn't have any questions added yet, so there's nothing to answer right now.")}
                         </p>
                         <Link
                             href={route('quiz.category', { category: quiz.categorySlug, quiz: quiz.slug })}
                             className="mt-5 inline-block rounded-xl bg-neutral-900 px-6 py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                         >
-                            Back to quiz
+                            {t('Back to quiz')}
                         </Link>
                     </div>
                 )}

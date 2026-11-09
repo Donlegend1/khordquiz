@@ -1,6 +1,7 @@
 import AvatarBadge from '@/Components/AvatarBadge';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 function LogOutIcon(props) {
     return (
@@ -12,6 +13,7 @@ function LogOutIcon(props) {
 }
 
 function LogOutModal({ open, onClose }) {
+    const t = useTrans();
     if (!open) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/40 p-4" onClick={onClose}>
@@ -20,8 +22,8 @@ function LogOutModal({ open, onClose }) {
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-brand">
                         <LogOutIcon className="h-5 w-5" />
                     </span>
-                    <p className="mt-3 text-base font-bold text-neutral-900">Log out?</p>
-                    <p className="mt-1 text-sm text-neutral-500">You&apos;ll need to sign in again to keep training. You can come back any time.</p>
+                    <p className="mt-3 text-base font-bold text-neutral-900">{t('Log out?')}</p>
+                    <p className="mt-1 text-sm text-neutral-500">{t("You'll need to sign in again to keep training. You can come back any time.")}</p>
                 </div>
 
                 <div className="mt-5 space-y-2">
@@ -32,10 +34,10 @@ function LogOutModal({ open, onClose }) {
                         className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                     >
                         <LogOutIcon className="h-4 w-4" />
-                        Log Out
+                        {t('Log Out')}
                     </Link>
                     <button type="button" onClick={onClose} className="w-full rounded-xl bg-neutral-100 py-3 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-200">
-                        Cancel
+                        {t('Cancel')}
                     </button>
                 </div>
             </div>
@@ -48,22 +50,22 @@ function LogOutModal({ open, onClose }) {
 // Support (marked `pinned`) sit apart from the rest — pushed down to sit just above
 // Log out and the profile card, instead of flowing with the main list.
 const memberNav = [
-    { label: 'Dashboard', icon: 'dashboard', route: 'dashboard' },
-    { label: 'Quiz', icon: 'quiz', route: 'quiz.categories', alsoCurrent: ['quiz.category', 'quiz.preview', 'quiz.play', 'quiz.results'] },
-    { label: 'Progress', icon: 'progress', route: 'progress' },
-    { label: 'Rank', icon: 'rank', route: 'leaderboard' },
-    { label: 'Account', icon: 'account', route: 'account', alsoCurrent: ['profile.edit', 'account.password', 'account.delete'] },
-    { label: 'Notifications', icon: 'notifications', route: 'notifications' },
-    { label: 'Bookmarks', icon: 'bookmarks', route: 'saved' },
-    { label: 'Suggestions', icon: 'suggestions', route: 'suggestions' },
-    { label: 'Settings', icon: 'settings', route: 'settings', pinned: true },
-    { label: 'Support', icon: 'support', route: 'support', pinned: true },
+    { label: tk('Dashboard'), icon: 'dashboard', route: 'dashboard' },
+    { label: tk('Quiz'), icon: 'quiz', route: 'quiz.categories', alsoCurrent: ['quiz.category', 'quiz.preview', 'quiz.play', 'quiz.results'] },
+    { label: tk('Progress'), icon: 'progress', route: 'progress' },
+    { label: tk('Rank'), icon: 'rank', route: 'leaderboard' },
+    { label: tk('Account'), icon: 'account', route: 'account', alsoCurrent: ['profile.edit', 'account.password', 'account.delete'] },
+    { label: tk('Notifications'), icon: 'notifications', route: 'notifications' },
+    { label: tk('Bookmarks'), icon: 'bookmarks', route: 'saved' },
+    { label: tk('Suggestions'), icon: 'suggestions', route: 'suggestions' },
+    { label: tk('Settings'), icon: 'settings', route: 'settings', pinned: true },
+    { label: tk('Support'), icon: 'support', route: 'support', pinned: true },
 ];
 
 const adminNav = [
-    { label: 'Overview', icon: 'dashboard', route: 'dashboard' },
+    { label: tk('Overview'), icon: 'dashboard', route: 'dashboard' },
     {
-        label: 'Audio Quiz',
+        label: tk('Audio Quiz'),
         icon: 'progress',
         route: 'admin.audio-quiz.index',
         alsoCurrent: ['admin.audio-quiz.show', 'admin.audio-quiz.lesson', 'admin.quizzes.index', 'admin.quizzes.edit', 'admin.quizzes.create'],
@@ -72,7 +74,8 @@ const adminNav = [
     { label: 'Users', icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
 ];
 
-export default function AppShell({ title, eyebrow, intro, action, children, headerClassName = 'flex', breadcrumbTitle }) {
+export default function AppShell({ title, eyebrow, intro, action, children }) {
+    const t = useTrans();
     const { auth, flash } = usePage().props;
     const user = auth.user;
     const isAdmin = user.role === 'admin';
@@ -105,7 +108,7 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
             {open && (
                 <button
                     type="button"
-                    aria-label="Close menu"
+                    aria-label={t('Close menu')}
                     className="fixed inset-0 z-30 bg-neutral-900/40 backdrop-blur-[2px] lg:hidden"
                     onClick={close}
                 />
@@ -117,13 +120,13 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
                 }`}
             >
                 <div className="flex h-16 shrink-0 items-center border-b border-black/5 px-5">
-                    <Link href={route('dashboard')} aria-label="Dashboard" className="flex items-baseline text-[21px] leading-none tracking-tight" onClick={close}>
+                    <Link href={route('dashboard')} aria-label={t('Dashboard')} className="flex items-baseline text-[21px] leading-none tracking-tight" onClick={close}>
                         <span className="font-sans font-bold text-black">Khord</span>
                         <span className="font-serif font-semibold text-brand">Quiz</span>
                     </Link>
                 </div>
 
-                <nav className="flex flex-1 flex-col overflow-y-auto px-3 py-3" aria-label="Account">
+                <nav className="flex flex-1 flex-col overflow-y-auto px-3 py-3" aria-label={t('Account')}>
                     <div className="space-y-1">
                         {topItems.map((item) => (
                             <NavRow key={item.label} item={item} mounted={mounted} onNavigate={close} />
@@ -151,7 +154,7 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
                             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand text-white shadow-sm transition-all duration-200 group-hover:bg-brand-dark">
                                 <NavIcon name="logout" />
                             </span>
-                            Log out
+                            {t('Log out')}
                         </button>
                     </div>
                 </nav>
@@ -183,13 +186,13 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
 
             <div className="lg:pl-72">
                 <header className="sticky top-0 z-20 flex h-16 items-center justify-between border-b border-black/5 bg-[#F6F1EC]/90 px-4 backdrop-blur sm:px-8 lg:hidden">
-                    <Link href={route('dashboard')} aria-label="Dashboard" className="flex items-baseline text-lg leading-none tracking-tight">
+                    <Link href={route('dashboard')} aria-label={t('Dashboard')} className="flex items-baseline text-lg leading-none tracking-tight">
                         <span className="font-bold text-black">Khord</span>
                         <span className="font-serif font-semibold text-brand">Quiz</span>
                     </Link>
                     <button
                         type="button"
-                        aria-label="Open menu"
+                        aria-label={t('Open menu')}
                         className="rounded-md bg-brand p-2 text-white transition-colors duration-200 hover:bg-brand-dark"
                         onClick={() => setOpen(true)}
                     >
@@ -247,24 +250,25 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
 // only appears when the current page is a sub-page of a nav section (e.g. Quiz > a category,
 // or Account > Edit Profile) rather than the section's own landing page.
 function Breadcrumbs({ items, title }) {
+    const t = useTrans();
     if (route().current('dashboard')) return null;
 
     const section = items.find((item) => item.current);
     const onSectionLanding = section && route().current(section.route);
 
     return (
-        <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 overflow-x-auto border-b border-black/5 bg-[#F6F1EC] px-4 py-2.5 text-xs sm:px-8 lg:hidden">
+        <nav aria-label={t('Breadcrumb')} className="flex items-center gap-1.5 overflow-x-auto border-b border-black/5 bg-[#F6F1EC] px-4 py-2.5 text-xs sm:px-8 lg:hidden">
             <Link href={route('dashboard')} className="shrink-0 font-medium text-neutral-500 transition-colors duration-150 hover:text-neutral-900">
-                Dashboard
+                {t('Dashboard')}
             </Link>
             {section && (
                 <>
                     <BreadcrumbSep />
                     {onSectionLanding ? (
-                        <span className="truncate font-semibold text-neutral-900">{section.label}</span>
+                        <span className="truncate font-semibold text-neutral-900">{t(section.label)}</span>
                     ) : (
                         <Link href={section.href} className="shrink-0 font-medium text-neutral-500 transition-colors duration-150 hover:text-neutral-900">
-                            {section.label}
+                            {t(section.label)}
                         </Link>
                     )}
                 </>
@@ -288,13 +292,14 @@ function BreadcrumbSep() {
 }
 
 function NavRow({ item, mounted, onNavigate }) {
+    const t = useTrans();
     const delay = mounted ? `${item.index * 35}ms` : '0ms';
 
     if (!item.href) {
         return (
             <span
                 aria-disabled="true"
-                title="Coming soon"
+                title={t('Coming soon')}
                 style={{ transitionDelay: delay }}
                 className={`flex cursor-default items-center gap-3 rounded-xl border border-transparent px-2.5 py-2 text-sm font-medium text-neutral-400 transition-all duration-200 ease-out ${
                     mounted ? 'translate-x-0 opacity-100' : '-translate-x-1.5 opacity-0'
@@ -303,9 +308,9 @@ function NavRow({ item, mounted, onNavigate }) {
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-neutral-50 text-neutral-300">
                     <NavIcon name={item.icon} />
                 </span>
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">{t(item.label)}</span>
                 <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-neutral-400">
-                    Soon
+                    {t('Soon')}
                 </span>
             </span>
         );
@@ -333,7 +338,7 @@ function NavRow({ item, mounted, onNavigate }) {
             >
                 <NavIcon name={item.icon} />
             </span>
-            {item.label}
+            {t(item.label)}
         </Link>
     );
 }

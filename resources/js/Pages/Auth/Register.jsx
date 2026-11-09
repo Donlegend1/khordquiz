@@ -1,6 +1,7 @@
 import InputError from '@/Components/InputError';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 const fieldClass = (error) =>
     `block w-full rounded-lg border bg-white px-3.5 py-2.5 text-[15px] text-neutral-900 placeholder:text-neutral-400 focus:outline-none focus:ring-2 ${
@@ -28,7 +29,17 @@ function EyeIcon({ open, ...props }) {
     );
 }
 
+// Renders a translated sentence whose `:name` placeholders are JSX elements (links),
+// so the word order can follow the translation.
+function withLinks(sentence, elements) {
+    return sentence.split(/(:[a-z]+)/).map((part, i) => {
+        const element = part.startsWith(':') ? elements[part.slice(1)] : undefined;
+        return element ? <Fragment key={i}>{element}</Fragment> : part;
+    });
+}
+
 export default function Register() {
+    const t = useTrans();
     const [showPassword, setShowPassword] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
@@ -59,20 +70,20 @@ export default function Register() {
                 backgroundSize: '48px 48px, 48px 48px, 100% 100%',
             }}
         >
-            <Head title="Create your account" />
+            <Head title={t('Create your account')} />
 
             <main className="flex flex-1 items-center justify-center px-6 py-16">
                 <div className="w-full max-w-[520px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
-                    <Link href="/" aria-label="KhordQuiz home" className="mx-auto mb-2 block w-fit">
+                    <Link href="/" aria-label={t('KhordQuiz home')} className="mx-auto mb-2 block w-fit">
                         <img src="/images/logo-mark.png" alt="KhordQuiz" width="287" height="192" className="block h-14 w-auto" />
                     </Link>
-                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">Create your account</h1>
-                    <p className="mt-2 text-center text-sm text-neutral-500">Start training your ear today.</p>
+                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">{t('Create your account')}</h1>
+                    <p className="mt-2 text-center text-sm text-neutral-500">{t('Start training your ear today.')}</p>
 
                     <form onSubmit={submit} className="mt-6">
                         <div>
                             <label htmlFor="name" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Name
+                                {t('Name')}
                             </label>
                             <input
                                 id="name"
@@ -82,7 +93,7 @@ export default function Register() {
                                 className={fieldClass(errors.name)}
                                 autoComplete="name"
                                 autoFocus
-                                placeholder="Your name"
+                                placeholder={t('Your name')}
                                 onChange={(e) => setData('name', e.target.value)}
                                 required
                             />
@@ -91,7 +102,7 @@ export default function Register() {
 
                         <div className="mt-4">
                             <label htmlFor="email" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Email
+                                {t('Email')}
                             </label>
                             <input
                                 id="email"
@@ -109,7 +120,7 @@ export default function Register() {
 
                         <div className="mt-4">
                             <label htmlFor="password" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Password
+                                {t('Password')}
                             </label>
                             <div className="relative">
                                 <input
@@ -119,14 +130,14 @@ export default function Register() {
                                     value={data.password}
                                     className={`${fieldClass(errors.password)} pe-11`}
                                     autoComplete="new-password"
-                                    placeholder="Password"
+                                    placeholder={t('Password')}
                                     onChange={(e) => setData('password', e.target.value)}
                                     required
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword((visible) => !visible)}
-                                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                                    aria-label={showPassword ? t('Hide password') : t('Show password')}
                                     className="absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-400 hover:text-neutral-700"
                                 >
                                     <EyeIcon open={showPassword} className="h-[18px] w-[18px]" />
@@ -137,7 +148,7 @@ export default function Register() {
 
                         <div className="mt-4">
                             <label htmlFor="password_confirmation" className="mb-1.5 block text-sm font-medium text-neutral-800">
-                                Confirm password
+                                {t('Confirm password')}
                             </label>
                             <input
                                 id="password_confirmation"
@@ -146,7 +157,7 @@ export default function Register() {
                                 value={data.password_confirmation}
                                 className={fieldClass(errors.password_confirmation)}
                                 autoComplete="new-password"
-                                placeholder="Confirm password"
+                                placeholder={t('Confirm password')}
                                 onChange={(e) => setData('password_confirmation', e.target.value)}
                                 required
                             />
@@ -163,15 +174,18 @@ export default function Register() {
                                     required
                                 />
                                 <span className="text-sm leading-relaxed text-neutral-600">
-                                    I agree to the{' '}
-                                    <a href={route('terms')} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">
-                                        Terms of Service
-                                    </a>{' '}
-                                    and{' '}
-                                    <a href={route('privacy')} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">
-                                        Privacy Policy
-                                    </a>
-                                    .
+                                    {withLinks(t('I agree to the :terms and :privacy.'), {
+                                        terms: (
+                                            <a href={route('terms')} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">
+                                                {t('Terms of Service')}
+                                            </a>
+                                        ),
+                                        privacy: (
+                                            <a href={route('privacy')} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">
+                                                {t('Privacy Policy')}
+                                            </a>
+                                        ),
+                                    })}
                                 </span>
                             </label>
                             <InputError message={errors.terms} className="mt-1.5" />
@@ -182,14 +196,14 @@ export default function Register() {
                             disabled={processing}
                             className="mt-6 inline-flex w-full items-center justify-center rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {processing ? 'Creating account…' : 'Create Account'}
+                            {processing ? t('Creating account…') : t('Create Account')}
                         </button>
                     </form>
 
                     <p className="mt-5 text-center text-sm text-neutral-600">
-                        Already have an account?{' '}
+                        {t('Already have an account?')}{' '}
                         <Link href={route('login')} className="font-medium text-brand hover:underline">
-                            Sign in
+                            {t('Sign in')}
                         </Link>
                     </p>
                 </div>

@@ -1,14 +1,16 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head } from '@inertiajs/react';
+import { tk, useTrans } from '@/lib/i18n';
 
 // Sample rows — there's no challenges table on the web yet, so this can't be
 // computed from real data. Quiz titles are drawn from the real seeded quizzes
 // so it at least reads true to the app.
-const yourTurn = [{ name: 'Jordan M.', meta: 'Find the Note · 4 questions' }];
-const pending = [{ name: 'Chioma A.', meta: 'Diatonic Intervals · 4 questions' }];
+// meta/result are translation keys rendered with their params; quiz titles stay as-is.
+const yourTurn = [{ name: 'Jordan M.', meta: tk(':quiz · :count questions'), metaParams: { quiz: 'Find the Note', count: 4 } }];
+const pending = [{ name: 'Chioma A.', meta: tk(':quiz · :count questions'), metaParams: { quiz: 'Diatonic Intervals', count: 4 } }];
 const completed = [
-    { name: 'David E.', meta: 'Cadences · 4 questions', won: true, result: 'You won 3–2' },
-    { name: 'Tunde B.', meta: 'Basic Triads · Level 1 · 4 questions', won: false, result: 'You lost 1–3' },
+    { name: 'David E.', meta: tk(':quiz · :count questions'), metaParams: { quiz: 'Cadences', count: 4 }, won: true, result: tk('You won :score'), resultParams: { score: '3–2' } },
+    { name: 'Tunde B.', meta: tk(':quiz · :count questions'), metaParams: { quiz: 'Basic Triads · Level 1', count: 4 }, won: false, result: tk('You lost :score'), resultParams: { score: '1–3' } },
 ];
 
 function initials(name) {
@@ -28,7 +30,8 @@ function BoltIcon(props) {
     );
 }
 
-function ChallengeRow({ name, meta, badge }) {
+function ChallengeRow({ name, meta, metaParams, badge }) {
+    const t = useTrans();
     return (
         <li className="flex items-center gap-3 rounded-2xl border border-black/5 bg-white px-5 py-4">
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10 text-xs font-semibold text-brand">
@@ -36,7 +39,7 @@ function ChallengeRow({ name, meta, badge }) {
             </span>
             <div className="min-w-0 flex-1">
                 <p className="font-medium text-neutral-900">{name}</p>
-                <p className="mt-0.5 text-sm text-neutral-500">{meta}</p>
+                <p className="mt-0.5 text-sm text-neutral-500">{t(meta, metaParams)}</p>
             </div>
             {badge}
         </li>
@@ -59,48 +62,49 @@ function ChallengeGroup({ title, items, badge }) {
 }
 
 export default function Challenges() {
+    const t = useTrans();
     const hasAny = yourTurn.length > 0 || pending.length > 0 || completed.length > 0;
 
     return (
-        <AppShell eyebrow="Member" title="Challenges" intro="Head-to-head quizzes with other students.">
-            <Head title="Challenges" />
+        <AppShell eyebrow={t('Member')} title={t('Challenges')} intro={t('Head-to-head quizzes with other students.')}>
+            <Head title={t('Challenges')} />
 
             {!hasAny ? (
                 <div className="flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white px-5 py-12 text-center">
                     <span className="flex h-12 w-12 items-center justify-center rounded-full bg-neutral-100 text-neutral-400">
                         <BoltIcon className="h-5 w-5" />
                     </span>
-                    <p className="mt-3 text-sm font-medium text-neutral-700">No challenges yet</p>
+                    <p className="mt-3 text-sm font-medium text-neutral-700">{t('No challenges yet')}</p>
                     <p className="mt-1 max-w-xs text-sm text-neutral-500">
-                        Finish a quiz and send it as a challenge to a friend — it&apos;ll show up here.
+                        {t("Finish a quiz and send it as a challenge to a friend — it'll show up here.")}
                     </p>
                 </div>
             ) : (
                 <div className="space-y-8">
                     <ChallengeGroup
-                        title="Your turn"
+                        title={t('Your turn')}
                         items={yourTurn}
                         badge={() => (
                             <span className="shrink-0 rounded-full bg-brand px-3 py-1 text-xs font-semibold text-white">
-                                Play now
+                                {t('Play now')}
                             </span>
                         )}
                     />
                     <ChallengeGroup
-                        title="Pending"
+                        title={t('Pending')}
                         items={pending}
                         badge={() => (
                             <span className="shrink-0 rounded-full bg-neutral-100 px-3 py-1 text-xs font-medium text-neutral-500">
-                                Waiting on them
+                                {t('Waiting on them')}
                             </span>
                         )}
                     />
                     <ChallengeGroup
-                        title="Completed"
+                        title={t('Completed')}
                         items={completed}
                         badge={(item) => (
                             <span className={`shrink-0 text-sm font-medium ${item.won ? 'text-emerald-600' : 'text-neutral-500'}`}>
-                                {item.result}
+                                {t(item.result, item.resultParams)}
                             </span>
                         )}
                     />

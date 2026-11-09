@@ -4,6 +4,7 @@ import InputError from '@/Components/InputError';
 import { AVATAR_OPTIONS, INSTRUMENT_GROUPS, INSTRUMENT_LABELS, LANGUAGES, SKILL_LEVELS } from '@/lib/profile-options';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { useTrans } from '@/lib/i18n';
 
 const triggerClass = (error) =>
     `flex w-full items-center justify-between rounded-lg border bg-white px-3.5 py-2.5 text-left text-[15px] text-neutral-900 transition-colors duration-150 ${
@@ -41,6 +42,7 @@ function CheckIcon(props) {
 // Instrument, or `options` for a flat list like Default Language — same split
 // as Settings.jsx's PickerRow, just styled for this card instead of a row list.
 function Dropdown({ label, error, value, onChange, options, groups, format = (option) => option }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const [activeGroup, setActiveGroup] = useState(null);
     const ref = useRef(null);
@@ -95,8 +97,8 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
                                     className="flex w-full items-center min-h-11 gap-2 border-b border-black/5 px-2.5 py-2 text-left text-xs font-bold text-neutral-500 transition-colors duration-150 hover:bg-neutral-50"
                                 >
                                     <ChevronBackIcon className="h-3 w-3" />
-                                    <InstrumentIcon sound={FAMILY_INSTRUMENTS[group.name]} size={24} />
-                                    {group.name}
+                                    {group.icon && <span className="text-sm leading-none">{group.icon}</span>}
+                                    {t(group.name)}
                                 </button>
                                 {group.options.map((option) => (
                                     <button
@@ -123,7 +125,7 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
                                 >
                                     <span className="flex items-center gap-2">
                                         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-neutral-50"><InstrumentIcon sound={FAMILY_INSTRUMENTS[item.name]} size={26} /></span>
-                                        {item.name}
+                                        {t(item.name)}
                                     </span>
                                     <span className="flex items-center gap-2">{item.options.includes(value) && <CheckIcon className="h-3.5 w-3.5 text-brand" />}<ChevronDownIcon className="h-3.5 w-3.5 -rotate-90 text-neutral-400" /></span>
                                 </button>
@@ -151,6 +153,7 @@ function Dropdown({ label, error, value, onChange, options, groups, format = (op
 }
 
 export default function ProfileSetup({ user }) {
+    const t = useTrans();
     const { data, setData, post, processing, errors } = useForm({
         avatar: user.avatar ?? AVATAR_OPTIONS[0].id,
         skill_level: user.skill_level ?? 'Beginner',
@@ -176,19 +179,19 @@ export default function ProfileSetup({ user }) {
                 backgroundSize: '48px 48px, 48px 48px, 100% 100%',
             }}
         >
-            <Head title="Set up your profile" />
+            <Head title={t('Set up your profile')} />
 
             <main className="flex flex-1 items-center justify-center px-6 py-14">
                 <div className="w-full max-w-[560px] rounded-2xl border border-white bg-white/90 px-6 py-8 shadow-[0_18px_50px_-24px_rgba(17,24,39,0.35)] sm:px-8">
-                    <Link href="/" aria-label="KhordQuiz home" className="mx-auto mb-2 block w-fit">
+                    <Link href="/" aria-label={t('KhordQuiz home')} className="mx-auto mb-2 block w-fit">
                         <img src="/images/logo-mark.png" alt="KhordQuiz" width="287" height="192" className="block h-14 w-auto" />
                     </Link>
-                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">Set up your profile</h1>
-                    <p className="mt-2 text-center text-sm text-neutral-500">Let's personalize your experience.</p>
+                    <h1 className="mt-4 text-center text-xl font-bold text-neutral-900">{t('Set up your profile')}</h1>
+                    <p className="mt-2 text-center text-sm text-neutral-500">{t("Let's personalize your experience.")}</p>
 
                     <form onSubmit={submit} className="mt-6 space-y-6">
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-neutral-800">Choose your avatar</label>
+                            <label className="mb-2 block text-sm font-medium text-neutral-800">{t('Choose your avatar')}</label>
                             <div className="grid grid-cols-5 justify-items-center gap-x-2 gap-y-3">
                                 {AVATAR_OPTIONS.map((option) => {
                                     const active = data.avatar === option.id;
@@ -196,7 +199,7 @@ export default function ProfileSetup({ user }) {
                                         <button
                                             key={option.id}
                                             type="button"
-                                            aria-label={option.label}
+                                            aria-label={t(option.label)}
                                             aria-pressed={active}
                                             onClick={() => setData('avatar', option.id)}
                                             className={`relative flex h-13 w-13 items-center justify-center rounded-full border-2 text-2xl transition-colors duration-150 ${
@@ -218,7 +221,7 @@ export default function ProfileSetup({ user }) {
                         </div>
 
                         <div>
-                            <label className="mb-2 block text-sm font-medium text-neutral-800">Skill level</label>
+                            <label className="mb-2 block text-sm font-medium text-neutral-800">{t('Skill level')}</label>
                             <div className="flex rounded-xl bg-neutral-100 p-1">
                                 {SKILL_LEVELS.map((level) => {
                                     const active = level === data.skill_level;
@@ -231,7 +234,7 @@ export default function ProfileSetup({ user }) {
                                                 active ? 'bg-brand text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-700'
                                             }`}
                                         >
-                                            {level}
+                                            {t(level)}
                                         </button>
                                     );
                                 })}
@@ -241,7 +244,7 @@ export default function ProfileSetup({ user }) {
 
                         <div className="grid gap-4 sm:grid-cols-2">
                             <Dropdown
-                                label="Default language"
+                                label={t('Default language')}
                                 error={errors.language}
                                 value={data.language}
                                 onChange={(language) => setData('language', language)}
@@ -249,12 +252,12 @@ export default function ProfileSetup({ user }) {
                             />
 
                             <Dropdown
-                                label="Default instrument"
+                                label={t('Default instrument')}
                                 error={errors.default_instrument}
                                 value={data.default_instrument}
                                 onChange={(instrument) => setData('default_instrument', instrument)}
                                 groups={INSTRUMENT_GROUPS}
-                                format={(option) => INSTRUMENT_LABELS[option] ?? option}
+                                format={(option) => t(INSTRUMENT_LABELS[option] ?? option)}
                             />
                         </div>
 
@@ -263,7 +266,7 @@ export default function ProfileSetup({ user }) {
                             disabled={processing}
                             className="inline-flex w-full items-center justify-center rounded-md bg-brand px-6 py-3 text-base font-medium text-white transition hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {processing ? 'Saving…' : 'Setup'}
+                            {processing ? t('Saving…') : t('Setup')}
                         </button>
                     </form>
                 </div>

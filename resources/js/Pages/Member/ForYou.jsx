@@ -1,8 +1,22 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link } from '@inertiajs/react';
 import { useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
-const LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+// Values double as keys into `paths` below — translate only at render.
+const LEVELS = [tk('Beginner'), tk('Intermediate'), tk('Advanced')];
+
+const COMING_UP_HEADINGS = {
+    Beginner: tk('Coming up for beginners'),
+    Intermediate: tk('Coming up for intermediates'),
+    Advanced: tk('Coming up for advanced learners'),
+};
+
+const PATH_LABELS = {
+    Beginner: tk('Up next · Beginner path'),
+    Intermediate: tk('Up next · Intermediate path'),
+    Advanced: tk('Up next · Advanced path'),
+};
 
 function RefreshIcon(props) {
     return (
@@ -29,13 +43,14 @@ function ChevronIcon(props) {
 }
 
 export default function ForYou({ paths }) {
+    const t = useTrans();
     const [level, setLevel] = useState('Beginner');
     const path = paths[level];
     const practiceAgain = path.practiceAgain;
 
     return (
-        <AppShell eyebrow="Member" title="For You" intro="Quizzes picked for your level and results.">
-            <Head title="For You" />
+        <AppShell eyebrow={t('Member')} title={t('For You')} intro={t('Quizzes picked for your level and results.')}>
+            <Head title={t('For You')} />
 
             <div className="inline-flex rounded-xl bg-neutral-100 p-1">
                 {LEVELS.map((item) => (
@@ -47,20 +62,26 @@ export default function ForYou({ paths }) {
                             item === level ? 'bg-brand text-white shadow-sm' : 'text-neutral-500 hover:text-neutral-700'
                         }`}
                     >
-                        {item}
+                        {t(item)}
                     </button>
                 ))}
             </div>
 
+            <div
+                title={t('Coming soon')}
+                className="mt-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6"
+            >
             <div className="mt-6 rounded-2xl bg-neutral-900 p-5 text-white sm:p-6">
                 <div className="flex items-center justify-between">
                     <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/60">
-                        Up next · {level} path
+                        {t(PATH_LABELS[level])}
                     </p>
                     <p className="text-xs text-white/60">
                         {path.done}/{path.total}
                     </p>
                 </div>
+                <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">{t(path.upNext.title)}</h2>
+                <p className="mt-0.5 text-sm text-white/70">{t(path.upNext.category)}</p>
                 <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">{path.upNext?.title ?? (path.total > 0 ? 'Path completed' : 'No quizzes available yet')}</h2>
                 <p className="mt-0.5 text-sm text-white/70">{path.upNext?.category ?? (path.total > 0 ? 'You have completed every quiz in this path.' : 'Try another skill level.')}</p>
                 <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-white/15">
@@ -74,7 +95,7 @@ export default function ForYou({ paths }) {
                     className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2.5 text-sm font-semibold transition hover:bg-brand-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                 >
                     <PlayIcon className="h-3.5 w-3.5" />
-                    {path.upNext ? 'Start quiz' : 'Browse quizzes'}
+                    {path.upNext ? '{t('Start quiz' : 'Browse quizzes'}')}
                 </Link>
             </div>
 

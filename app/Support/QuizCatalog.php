@@ -11,26 +11,9 @@ namespace App\Support;
  */
 class QuizCatalog
 {
-    // Same list as resources/js/Pages/Member/Settings.jsx's LANGUAGES — kept in
-    // sync by hand (that copy is what the picker UI renders; this one is what
-    // ProfileSetupController validates incoming language values against).
+    // The language picker's options. Kept in sync by hand with
+    // resources/js/lib/profile-options.js's LANGUAGES.
     public const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Nederlands', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
-
-    // Every instrument's storage folder slug (storage/app/public/notes/{slug}/…) —
-    // mirrors QuizCategory.jsx's SOUND_CATEGORIES / Settings.jsx's INSTRUMENT_GROUPS
-    // membership, kept in sync by hand same as allInstruments(). Was previously
-    // QuizController's own private copy — moved here so AudioQuizController (and
-    // anything else that needs "instrument name → storage slug") has one source
-    // instead of a second private duplicate.
-    public const SOUND_SLUGS = [
-        'Piano' => 'piano', 'EP' => 'ep', 'Upright Piano' => 'upright-piano', 'Organ' => 'organ',
-        'Guitar' => 'guitar', 'Electric Guitar' => 'electric-guitar', 'Harpejji' => 'harpejji', 'Bass Guitar' => 'bass-guitar',
-        'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Upright Bass' => 'upright-bass',
-        'Saxophone' => 'saxophone', 'Trombone' => 'trombone', 'Tuba' => 'tuba', 'Trumpet' => 'trumpet',
-        'Voice' => 'voice', 'Tropar Choir' => 'tropar-choir', 'Ensemble Choir' => 'ensemble-choir', 'Sustained Choir' => 'sustained-choir',
-        'Marimba' => 'marimba', 'Steel Drum' => 'steel-drum', 'Celesta' => 'celesta', 'Vibraphone' => 'vibraphone',
-        'Flute' => 'flute', 'Clarinet' => 'clarinet', 'Oboe' => 'oboe', 'Bassoon' => 'bassoon',
-    ];
 
     /**
      * @return array<string, list<string>>

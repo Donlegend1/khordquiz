@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Services\KingsleyKhordPiano\MemberSync;
 use App\Http\Requests\Api\ForgotPasswordRequest;
 use App\Http\Requests\Api\ResetPasswordRequest;
 use App\Http\Requests\Api\VerifyOtpRequest;
@@ -11,8 +12,9 @@ use Illuminate\Http\JsonResponse;
 
 class PasswordResetController extends Controller
 {
-    public function store(ForgotPasswordRequest $request, MobilePasswordReset $resets): JsonResponse
+    public function store(ForgotPasswordRequest $request, MobilePasswordReset $resets, MemberSync $memberSync): JsonResponse
     {
+        $memberSync->provisionByEmail($request->string('email')->toString(), invite: false);
         $resets->send($request->string('email')->toString());
 
         return response()->json([

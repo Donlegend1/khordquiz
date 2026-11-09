@@ -1,5 +1,6 @@
 import InputError from '@/Components/InputError';
 import AppShell from '@/Layouts/AppShell';
+import { useTrans } from '@/lib/i18n';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useRef, useState } from 'react';
 
@@ -25,6 +26,7 @@ function EyeIcon({ open, ...props }) {
 }
 
 function PasswordField({ id, label, hint, value, onChange, error, inputRef, autoComplete }) {
+    const t = useTrans();
     const [visible, setVisible] = useState(false);
 
     return (
@@ -45,7 +47,7 @@ function PasswordField({ id, label, hint, value, onChange, error, inputRef, auto
                 <button
                     type="button"
                     onClick={() => setVisible((v) => !v)}
-                    aria-label={visible ? 'Hide password' : 'Show password'}
+                    aria-label={visible ? t('Hide password') : t('Show password')}
                     className="absolute inset-y-0 right-0 flex items-center px-3.5 text-neutral-400 hover:text-neutral-700"
                 >
                     <EyeIcon open={visible} className="h-[18px] w-[18px]" />
@@ -58,6 +60,7 @@ function PasswordField({ id, label, hint, value, onChange, error, inputRef, auto
 }
 
 export default function ChangePassword() {
+    const t = useTrans();
     const currentPasswordInput = useRef(null);
     const passwordInput = useRef(null);
     const { data, setData, put, errors, processing, reset } = useForm({
@@ -86,14 +89,14 @@ export default function ChangePassword() {
     };
 
     return (
-        <AppShell eyebrow="Security" title="Change Password">
-            <Head title="Change Password" />
+        <AppShell eyebrow={t('Security')} title={t('Change Password')}>
+            <Head title={t('Change Password')} />
 
             <form onSubmit={submit} className="mx-auto max-w-md">
                 <div className="grid gap-5 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                     <PasswordField
                         id="current_password"
-                        label="Current password"
+                        label={t('Current password')}
                         value={data.current_password}
                         onChange={(e) => setData('current_password', e.target.value)}
                         error={errors.current_password}
@@ -105,7 +108,7 @@ export default function ChangePassword() {
 
                     <PasswordField
                         id="password"
-                        label="New password"
+                        label={t('New password')}
                         value={data.password}
                         onChange={(e) => setData('password', e.target.value)}
                         error={errors.password}
@@ -115,7 +118,7 @@ export default function ChangePassword() {
 
                     <PasswordField
                         id="password_confirmation"
-                        label="Confirm new password"
+                        label={t('Confirm new password')}
                         value={data.password_confirmation}
                         onChange={(e) => setData('password_confirmation', e.target.value)}
                         error={errors.password_confirmation}
@@ -129,10 +132,10 @@ export default function ChangePassword() {
                         disabled={processing}
                         className="flex-1 rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 disabled:opacity-60"
                     >
-                        {processing ? 'Updating…' : 'Update Password'}
+                        {processing ? t('Updating…') : t('Update Password')}
                     </button>
                     <Link href={route('account')} className="rounded-xl px-5 py-3.5 text-sm font-semibold text-neutral-600 hover:bg-neutral-50">
-                        Cancel
+                        {t('Cancel')}
                     </Link>
                 </div>
             </form>

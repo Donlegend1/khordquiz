@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, usePage } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 import { scoreTone } from '@/lib/scoreColor';
 
 const iconProps = {
@@ -186,6 +187,7 @@ const ACHIEVEMENT_ICONS = {
 const ACHIEVEMENTS_PREVIEW = 3;
 
 function Achievements({ achievements }) {
+    const t = useTrans();
     const [showAll, setShowAll] = useState(false);
     const unlocked = achievements.filter((a) => a.current >= a.target);
     // Closest to unlocking first, then the ones already earned — same order as the app.
@@ -199,10 +201,10 @@ function Achievements({ achievements }) {
         <section className="lg:col-span-2">
             <div className="flex items-baseline justify-between">
                 <h2 className="text-lg font-semibold">
-                    Achievements <span className="ml-1 text-sm font-normal text-neutral-400">{unlocked.length}/{achievements.length}</span>
+                    {t('Achievements')} <span className="ml-1 text-sm font-normal text-neutral-400">{unlocked.length}/{achievements.length}</span>
                 </h2>
                 <button type="button" onClick={() => setShowAll((v) => !v)} className="text-sm font-semibold text-brand hover:text-brand-dark">
-                    {showAll ? 'Show less' : 'See all'}
+                    {showAll ? t('Show less') : t('See all')}
                 </button>
             </div>
 
@@ -246,10 +248,10 @@ function Achievements({ achievements }) {
 // Mistakes, real bookmark count on Saved, 4 challenges (1 your turn + 1
 // pending + 2 completed) on Challenges.
 const quickAccess = (savedCount) => [
-    { label: 'For You', icon: LightbulbIcon, route: 'for-you' },
-    { label: 'Mistakes', icon: RefreshIcon, route: 'mistakes', count: 5 },
-    { label: 'Saved', icon: BookmarkIcon, route: 'saved', count: savedCount },
-    { label: 'Challenges', icon: BoltIcon, route: 'challenges', count: 4 },
+    { label: tk('For You'), icon: LightbulbIcon, route: 'for-you' },
+    { label: tk('Mistakes'), icon: RefreshIcon, route: 'mistakes', count: 5 },
+    { label: tk('Saved'), icon: BookmarkIcon, route: 'saved', count: savedCount },
+    { label: tk('Challenges'), icon: BoltIcon, route: 'challenges', count: 4 },
 ];
 
 // Sample content only — there's no notifications feature built yet, so nothing here
@@ -259,50 +261,60 @@ const demoNotifications = [
         id: 1,
         icon: FlameIcon,
         tone: 'bg-orange-50 text-orange-600',
-        title: '7-day streak!',
-        body: "You've practiced seven days in a row. Keep it going.",
-        time: '2 hours ago',
+        title: tk('7-day streak!'),
+        body: tk("You've practiced seven days in a row. Keep it going."),
+        time: tk('2 hours ago'),
         read: false,
     },
     {
         id: 2,
         icon: BoltIcon,
         tone: 'bg-brand/10 text-brand',
-        title: 'Jordan challenged you',
-        body: 'Diatonic Intervals · 25 questions',
-        time: '5 hours ago',
+        title: tk(':name challenged you'),
+        titleParams: { name: 'Jordan' },
+        body: tk(':quiz · :count questions'),
+        bodyParams: { quiz: 'Diatonic Intervals', count: 25 },
+        time: tk('5 hours ago'),
         read: false,
     },
     {
         id: 3,
         icon: BookIcon,
         tone: 'bg-sky-50 text-sky-600',
-        title: 'New category added',
-        body: 'Secondary 9th Chords is now live.',
-        time: 'Yesterday',
+        title: tk('New category added'),
+        body: tk(':category is now live.'),
+        bodyParams: { category: 'Secondary 9th Chords' },
+        time: tk('Yesterday'),
         read: false,
     },
     {
         id: 4,
         icon: PlayIcon,
         tone: 'bg-neutral-100 text-neutral-600',
-        title: 'Pick up where you left off',
-        body: 'Diatonic Intervals is 3/4 of the way done.',
-        time: '2 days ago',
+        title: tk('Pick up where you left off'),
+        body: tk(':quiz is 3/4 of the way done.'),
+        bodyParams: { quiz: 'Diatonic Intervals' },
+        time: tk('2 days ago'),
         read: false,
     },
     {
         id: 5,
         icon: TargetIcon,
         tone: 'bg-amber-50 text-amber-700',
-        title: 'Accuracy is up',
-        body: 'Your weekly accuracy climbed to 75%.',
-        time: '3 days ago',
+        title: tk('Accuracy is up'),
+        body: tk('Your weekly accuracy climbed to :percent%.'),
+        bodyParams: { percent: 75 },
+        time: tk('3 days ago'),
         read: false,
     },
 ];
 
+// Quiz/category names inside notification params are catalog keys too.
+const translateParams = (t, params = {}) =>
+    Object.fromEntries(Object.entries(params).map(([key, value]) => [key, typeof value === 'string' ? t(value) : value]));
+
 function NotificationsBell() {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const [notifications, setNotifications] = useState(demoNotifications);
     const containerRef = useRef(null);
@@ -333,6 +345,7 @@ function NotificationsBell() {
                 onClick={() => setOpen((value) => !value)}
                 aria-expanded={open}
                 aria-haspopup="true"
+                aria-label={t('Notifications')}
                 className="relative flex h-11 w-11 items-center justify-center rounded-full border border-black/5 bg-white text-neutral-500 transition hover:bg-neutral-50"
             >
                 <BellIcon className="h-5 w-5" />
@@ -346,14 +359,14 @@ function NotificationsBell() {
             {open && (
                 <div className="absolute right-0 top-full z-30 mt-2 w-80 overflow-hidden rounded-2xl border border-black/5 bg-white shadow-xl">
                     <div className="flex items-center justify-between border-b border-black/5 px-4 py-3">
-                        <p className="font-semibold text-neutral-900">Notifications</p>
+                        <p className="font-semibold text-neutral-900">{t('Notifications')}</p>
                         {unreadCount > 0 && (
                             <button
                                 type="button"
                                 onClick={markAllRead}
                                 className="text-xs font-semibold text-brand hover:underline"
                             >
-                                Mark all read
+                                {t('Mark all read')}
                             </button>
                         )}
                     </div>
@@ -372,10 +385,10 @@ function NotificationsBell() {
                                     <div className="min-w-0 flex-1">
                                         <div className="flex items-center gap-1.5">
                                             {!item.read && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />}
-                                            <p className="text-sm font-medium text-neutral-900">{item.title}</p>
+                                            <p className="text-sm font-medium text-neutral-900">{t(item.title, translateParams(t, item.titleParams))}</p>
                                         </div>
-                                        <p className="mt-0.5 text-sm text-neutral-500">{item.body}</p>
-                                        <p className="mt-1 text-xs text-neutral-400">{item.time}</p>
+                                        <p className="mt-0.5 text-sm text-neutral-500">{t(item.body, translateParams(t, item.bodyParams))}</p>
+                                        <p className="mt-1 text-xs text-neutral-400">{t(item.time)}</p>
                                     </div>
                                 </li>
                             );
@@ -389,24 +402,25 @@ function NotificationsBell() {
 }
 
 export default function Dashboard({ streak, stats, resume, continuePracticing, recentQuizzes, achievements, savedCount, goal }) {
+    const t = useTrans();
     const { auth } = usePage().props;
     const firstName = auth.user.name.split(' ')[0];
 
     return (
         <AppShell
-            eyebrow="Member"
-            title="Dashboard"
-            intro={`Welcome back, ${firstName}.`}
+            eyebrow={t('Member')}
+            title={t('Dashboard')}
+            intro={t('Welcome back, :name.', { name: firstName })}
             action={<NotificationsBell />}
         >
-            <Head title="Your training" />
+            <Head title={t('Your training')} />
 
             <div className="grid grid-cols-3 gap-2 sm:gap-4">
                 <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
                     <FlameIcon className="h-5 w-5 text-brand sm:h-6 sm:w-6" />
                     <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">{streak.current}</p>
                     <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
-                        Day streak <span className="hidden text-neutral-400 sm:inline">· best {streak.longest}</span>
+                        {t('Day streak')} <span className="hidden text-neutral-400 sm:inline">· {t('best :count', { count: streak.longest })}</span>
                     </p>
                 </div>
                 <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
@@ -414,15 +428,15 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                     <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">
                         {stats.accuracy === null ? '—' : `${stats.accuracy}%`}
                     </p>
-                    <p className="mt-1 text-xs text-neutral-500 sm:text-sm">Accuracy</p>
+                    <p className="mt-1 text-xs text-neutral-500 sm:text-sm">{t('Accuracy')}</p>
                 </div>
                 <div className="rounded-2xl bg-neutral-100 px-3 py-3 sm:px-5 sm:py-4">
                     <BookIcon className="h-5 w-5 text-brand sm:h-6 sm:w-6" />
                     <p className="mt-2 text-xl font-bold tracking-tight text-neutral-900 sm:mt-3 sm:text-3xl">{stats.completed}</p>
                     <p className="mt-1 text-xs text-neutral-500 sm:text-sm">
-                        Quizzes done
+                        {t('Quizzes done')}
                         {stats.inProgress > 0 && (
-                            <span className="hidden text-neutral-400 sm:inline"> · {stats.inProgress} in progress</span>
+                            <span className="hidden text-neutral-400 sm:inline"> · {t(':count in progress', { count: stats.inProgress })}</span>
                         )}
                     </p>
                 </div>
@@ -459,18 +473,18 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
-                            <p className="truncate text-xs text-white/80">Continue where you left off</p>
-                            <h3 className="truncate text-base font-bold leading-tight">{resume.quiz.title}</h3>
-                            <p className="truncate text-xs text-white/70">{resume.quiz.category}</p>
+                            <p className="truncate text-xs text-white/80">{t('Continue where you left off')}</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{t(resume.quiz.title)}</h3>
+                            <p className="truncate text-xs text-white/70">{t(resume.quiz.category)}</p>
                         </div>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
 
                         <div className="hidden min-w-0 flex-1 sm:block">
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                Continue · {resume.quiz.category}
+                                {t('Continue')} · {t(resume.quiz.category)}
                             </p>
-                            <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">
-                                {resume.quiz.title}
+                            <h3 className="mt-1 truncate text-xl font-bold tracking-tight sm:text-2xl">
+                                {t(resume.quiz.title)}
                             </h3>
                             <div className="mt-4 flex items-center gap-3">
                                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-white/25">
@@ -492,21 +506,21 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
-                            <p className="truncate text-xs text-white/80">Continue practicing</p>
-                            <h3 className="truncate text-base font-bold leading-tight">{continuePracticing.quiz.title}</h3>
-                            <p className="truncate text-xs text-white/70">{continuePracticing.quiz.category}</p>
+                            <p className="truncate text-xs text-white/80">{t('Continue practicing')}</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{t(continuePracticing.quiz.title)}</h3>
+                            <p className="truncate text-xs text-white/70">{t(continuePracticing.quiz.category)}</p>
                         </div>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
 
                         <div className="hidden min-w-0 flex-1 sm:block">
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                Continue practicing · {continuePracticing.quiz.category}
+                                {t('Continue practicing')} · {t(continuePracticing.quiz.category)}
                             </p>
                             <h3 className="mt-1 break-words text-xl font-bold leading-snug tracking-tight xl:text-2xl">
-                                {continuePracticing.quiz.title}
+                                {t(continuePracticing.quiz.title)}
                             </h3>
                             <p className="mt-1.5 text-sm text-white/80">
-                                Last played {continuePracticing.last_played_at}
+                                {t('Last played :time', { time: continuePracticing.last_played_at })}
                             </p>
                         </div>
                         <ChevronIcon className="hidden h-4 w-4 shrink-0 text-white/60 sm:block xl:h-5 xl:w-5" />
@@ -520,18 +534,18 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                             <PlayIcon className="h-4 w-4 translate-x-0.5 sm:h-5 sm:w-5" />
                         </span>
                         <div className="min-w-0 flex-1 sm:hidden">
-                            <p className="truncate text-xs text-white/80">New here?</p>
-                            <h3 className="truncate text-base font-bold leading-tight">Start here</h3>
-                            <p className="truncate text-xs text-white/70">Pick a category and take your first quiz.</p>
+                            <p className="truncate text-xs text-white/80">{t('New here?')}</p>
+                            <h3 className="truncate text-base font-bold leading-tight">{t('Start here')}</h3>
+                            <p className="truncate text-xs text-white/70">{t('Pick a category and take your first quiz.')}</p>
                         </div>
                         <ChevronIcon className="h-4 w-4 shrink-0 text-white/60 sm:hidden" />
 
                         <div className="hidden min-w-0 flex-1 sm:block">
                             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
-                                New here?
+                                {t('New here?')}
                             </p>
-                            <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">Start here</h3>
-                            <p className="mt-1.5 text-sm text-white/80">Pick a category and take your first quiz.</p>
+                            <h3 className="mt-1 text-xl font-bold tracking-tight sm:text-2xl">{t('Start here')}</h3>
+                            <p className="mt-1.5 text-sm text-white/80">{t('Pick a category and take your first quiz.')}</p>
                         </div>
                         <ChevronIcon className="hidden h-4 w-4 shrink-0 text-white/60 sm:block xl:h-5 xl:w-5" />
                     </Link>
@@ -539,7 +553,7 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
             </section>
 
             <section className="mt-8">
-                <h2 className="text-lg font-semibold">Quick Access</h2>
+                <h2 className="text-lg font-semibold">{t('Quick Access')}</h2>
 
                 <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
                     {quickAccess(savedCount).map((item) => (
@@ -557,7 +571,7 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                                     </span>
                                 )}
                             </span>
-                            <span className="text-sm font-medium text-neutral-700">{item.label}</span>
+                            <span className="text-sm font-medium text-neutral-700">{t(item.label)}</span>
                         </Link>
                     ))}
                 </div>
@@ -565,11 +579,11 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
 
             <div className="mt-8 grid gap-8 lg:grid-cols-5">
                 <section className="lg:col-span-3">
-                    <h2 className="text-lg font-semibold">Completed quizzes</h2>
+                    <h2 className="text-lg font-semibold">{t('Completed quizzes')}</h2>
 
                     <div className="mt-4 overflow-hidden rounded-2xl border border-black/5 bg-white">
                         {recentQuizzes.length === 0 ? (
-                            <p className="px-5 py-8 text-sm text-neutral-500">No completed quizzes yet. Finish one and it&apos;ll show up here.</p>
+                            <p className="px-5 py-8 text-sm text-neutral-500">{t("No completed quizzes yet. Finish one and it'll show up here.")}</p>
                         ) : (
                             <ul className="divide-y divide-black/5">
                                 {recentQuizzes.map((attempt) => (
@@ -578,9 +592,9 @@ export default function Dashboard({ streak, stats, resume, continuePracticing, r
                                             <QuizNoteIcon className="h-5 w-5" />
                                         </span>
                                         <div className="min-w-0 flex-1">
-                                            <p className="truncate font-semibold text-neutral-900">{attempt.quiz.title}</p>
+                                            <p className="truncate font-semibold text-neutral-900">{t(attempt.quiz.title)}</p>
                                             <p className="mt-0.5 truncate text-sm text-neutral-500">
-                                                {attempt.quiz.category} · {attempt.last_played_at}
+                                                {t(attempt.quiz.category)} · {attempt.last_played_at}
                                             </p>
                                         </div>
                                         <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${scoreTone(attempt.score)}`}>

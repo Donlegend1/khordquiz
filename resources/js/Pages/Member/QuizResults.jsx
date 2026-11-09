@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import AudioStimulus from '@/Components/Quiz/AudioStimulus';
 import AnswerBuilder, { answerTypeFor, baseChordFor } from '@/Components/Quiz/AnswerBuilder';
 import { reviewAnswerLabel } from '@/lib/reviewAnswers';
+import { tk, useTrans } from '@/lib/i18n';
 
 function CheckIcon(props) {
     return (
@@ -133,9 +134,10 @@ function SendIcon(props) {
 
 // Same bands and wording as the mobile app's quiz-results screen (app/quiz-results.tsx).
 const scoreColor = (value) => (value <= 30 ? '#E00000' : value <= 65 ? '#D9A400' : '#1E8E3E');
-const headline = (value) => (value >= 90 ? 'Outstanding!' : value >= 65 ? 'Nice work!' : value >= 30 ? 'Good effort' : 'Keep practising');
+const headline = (value) => (value >= 90 ? tk('Outstanding!') : value >= 65 ? tk('Nice work!') : value >= 30 ? tk('Good effort') : tk('Keep practising'));
 
 function ScoreRing({ correct, total, percent }) {
+    const t = useTrans();
     const size = 148;
     const stroke = 12;
     const radius = (size - stroke) / 2;
@@ -160,7 +162,7 @@ function ScoreRing({ correct, total, percent }) {
             </svg>
             <div className="absolute flex flex-col items-center">
                 <span className="text-4xl font-extrabold tracking-tight text-neutral-900">{percent}%</span>
-                <span className="text-sm font-semibold tabular-nums text-neutral-500">{correct} of {total}</span>
+                <span className="text-sm font-semibold tabular-nums text-neutral-500">{t(':done of :total', { done: correct, total })}</span>
             </div>
         </div>
     );
@@ -190,16 +192,16 @@ export default function QuizResults({ quiz, result, review, review_keyboard_audi
 
                 <div className="flex flex-col items-center rounded-2xl border border-black/5 bg-white px-6 py-8 text-center">
                     <ScoreRing correct={result.correct} total={result.total} percent={result.percent} />
-                    <p className="mt-3.5 text-xl font-extrabold text-neutral-900">{headline(result.percent)}</p>
+                    <p className="mt-3.5 text-xl font-extrabold text-neutral-900">{t(headline(result.percent))}</p>
                     <p className="mt-1 text-sm text-neutral-500">
-                        {quiz.title} · {quiz.category}
+                        {t(quiz.title)} · {t(quiz.category)}
                     </p>
                 </div>
 
                 <div className="mt-4 flex gap-2.5">
-                    <Stat color="#1E8E3E" label="Correct" value={result.correct} />
-                    <Stat color="#E00000" label="Wrong" value={result.total - result.correct} />
-                    <Stat color="#171717" label="Questions" value={result.total} />
+                    <Stat color="#1E8E3E" label={t('Correct')} value={result.correct} />
+                    <Stat color="#E00000" label={t('Wrong')} value={result.total - result.correct} />
+                    <Stat color="#171717" label={t('Questions')} value={result.total} />
                 </div>
 
                 <div className="mt-4 rounded-2xl border border-black/5 bg-white p-4">
@@ -208,9 +210,9 @@ export default function QuizResults({ quiz, result, review, review_keyboard_audi
                             <PeopleIcon className="h-5 w-5" />
                         </span>
                         <div className="min-w-0 flex-1">
-                            <p className="text-sm font-extrabold text-neutral-900">Challenge a friend</p>
+                            <p className="text-sm font-extrabold text-neutral-900">{t('Challenge a friend')}</p>
                             <p className="text-xs text-neutral-500">
-                                Same questions, same order. Can they beat your {result.correct}/{result.total}?
+                                {t('Same questions, same order. Can they beat your :correct/:total?', { correct: result.correct, total: result.total })}
                             </p>
                         </div>
                     </div>
@@ -219,7 +221,7 @@ export default function QuizResults({ quiz, result, review, review_keyboard_audi
                         className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-white hover:bg-brand-dark disabled:opacity-50"
                     >
                         <SendIcon className="h-3.5 w-3.5" />
-                        Send Challenge
+                        {t('Send Challenge')}
                     </button>
                 </div>
 
@@ -236,13 +238,13 @@ export default function QuizResults({ quiz, result, review, review_keyboard_audi
                         onClick={() => post(route('quiz.start', quiz.slug))}
                         className="flex flex-1 items-center justify-center rounded-xl bg-brand py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
                     >
-                        Try Again
+                        {t('Try Again')}
                     </button>
                     <Link
                         href={route('quiz.category', quiz.categorySlug)}
                         className="flex flex-1 items-center justify-center rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90"
                     >
-                        Done
+                        {t('Done')}
                     </Link>
                 </div>
                 </>}

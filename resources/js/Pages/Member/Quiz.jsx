@@ -1,5 +1,6 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link } from '@inertiajs/react';
+import { useTrans } from '@/lib/i18n';
 
 function NoteIcon(props) {
     return (
@@ -129,13 +130,15 @@ function ChevronIcon(props) {
 }
 
 export default function Quiz({ categories }) {
+    const t = useTrans();
+
     return (
-        <AppShell eyebrow="Member" title="Start Quiz" intro="Choose a Category">
-            <Head title="Start Quiz" />
+        <AppShell eyebrow={t('Member')} title={t('Start Quiz')} intro={t('Choose a category to begin practising.')}>
+            <Head title={t('Start Quiz')} />
 
             {categories.length === 0 ? (
                 <div className="flex flex-col items-center rounded-2xl border border-dashed border-neutral-300 bg-white px-5 py-16 text-center">
-                    <p className="text-sm text-neutral-500">No quizzes are published yet. Check back soon.</p>
+                    <p className="text-sm text-neutral-500">{t('No quizzes are published yet. Check back soon.')}</p>
                 </div>
             ) : (
                 <>
@@ -166,6 +169,8 @@ export default function Quiz({ categories }) {
                                                 </div>
                                                 <span className="shrink-0 text-sm font-medium text-neutral-600">{category.percent}%</span>
                                             </div>
+                                        ) : (
+                                            <p className="mt-0.5 text-sm text-neutral-400">{t('Not attempted yet')}</p>
                                         )}
                                     </div>
                                     <ChevronIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-neutral-500 transition-colors group-hover:text-brand group-focus-visible:text-brand motion-reduce:transition-none" />
@@ -187,13 +192,14 @@ export default function Quiz({ categories }) {
                                         <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-neutral-100 text-neutral-700">
                                             <CategoryIcon aria-hidden="true" className="h-5 w-5" />
                                         </span>
-                                        <div className="min-w-0 flex-1">
-                                            <h2 className="text-[15px] font-bold leading-snug text-neutral-900">{category.name}</h2>
-                                            <p className="mt-0.5 text-sm text-neutral-600">
-                                                {category.quizCount} {category.quizCount === 1 ? 'quiz' : 'quizzes'}
-                                            </p>
-                                        </div>
-                                        <ChevronIcon aria-hidden="true" className="h-4 w-4 shrink-0 text-neutral-500 transition-colors group-hover:text-brand group-focus-visible:text-brand motion-reduce:transition-none" />
+                                        <ChevronIcon className="h-4 w-4 shrink-0 text-neutral-300" />
+                                    </div>
+
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate text-[15px] font-bold text-neutral-900">{t(category.name)}</p>
+                                        <p className="mt-0.5 text-sm text-neutral-400">
+                                            {category.quizCount === 1 ? t(':count quiz', { count: category.quizCount }) : t(':count quizzes', { count: category.quizCount })}
+                                        </p>
                                     </div>
 
                                     <div>

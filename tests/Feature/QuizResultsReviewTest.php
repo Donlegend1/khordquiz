@@ -25,7 +25,7 @@ class QuizResultsReviewTest extends TestCase
 
     public function test_results_page_includes_a_per_question_review(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->subscribed()->create();
         $quiz = Quiz::factory()->create(['question_count' => 2]);
         QuizQuestion::factory()->create(['quiz_id' => $quiz->id, 'position' => 1, 'answer' => 'C', 'choices' => ['C', 'D']]);
         QuizQuestion::factory()->create(['quiz_id' => $quiz->id, 'position' => 2, 'answer' => 'D', 'choices' => ['C', 'D']]);
@@ -60,7 +60,7 @@ class QuizResultsReviewTest extends TestCase
 
     public function test_retrying_a_quiz_clears_the_previous_review(): void
     {
-        $user = User::factory()->create();
+        $user = User::factory()->subscribed()->create();
         $quiz = Quiz::factory()->create(['question_count' => 1]);
         QuizQuestion::factory()->create(['quiz_id' => $quiz->id, 'position' => 1, 'answer' => 'C', 'choices' => ['C', 'D']]);
 

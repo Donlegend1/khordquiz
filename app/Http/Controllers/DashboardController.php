@@ -191,12 +191,12 @@ class DashboardController extends Controller
         $longestStreak = $user->longest_streak;
 
         return collect([
-            ['name' => 'First Steps', 'detail' => 'Complete your first quiz', 'icon' => 'footsteps', 'current' => $completed->isNotEmpty() ? 1 : 0, 'target' => 1],
-            ['name' => 'Sharp Ear', 'detail' => 'Answer 10 questions in a row correctly', 'icon' => 'ear', 'current' => $bestCorrectRun, 'target' => 10],
-            ['name' => 'Perfect Harmony', 'detail' => 'Score 100% on any quiz', 'icon' => 'musical-notes', 'current' => $hasPerfectScore ? 1 : 0, 'target' => 1],
-            ['name' => 'Week Warrior', 'detail' => 'Keep a 7-day streak', 'icon' => 'flame', 'current' => $longestStreak, 'target' => 7],
-            ['name' => 'Consistent Player', 'detail' => 'Keep a 14-day streak', 'icon' => 'calendar', 'current' => $longestStreak, 'target' => 14],
-            ['name' => 'Monthly Master', 'detail' => 'Keep a 30-day streak', 'icon' => 'trophy', 'current' => $longestStreak, 'target' => 30],
+            ['name' => __('First Steps'), 'detail' => __('Complete your first quiz'), 'icon' => 'footsteps', 'current' => $allAttempts->isNotEmpty() ? 1 : 0, 'target' => 1],
+            ['name' => __('Sharp Ear'), 'detail' => __('Answer 10 questions in a row correctly'), 'icon' => 'ear', 'current' => $bestCorrectRun, 'target' => 10],
+            ['name' => __('Perfect Harmony'), 'detail' => __('Score 100% on any quiz'), 'icon' => 'musical-notes', 'current' => $hasPerfectScore ? 1 : 0, 'target' => 1],
+            ['name' => __('Week Warrior'), 'detail' => __('Keep a 7-day streak'), 'icon' => 'flame', 'current' => $longestStreak, 'target' => 7],
+            ['name' => __('Consistent Player'), 'detail' => __('Keep a 14-day streak'), 'icon' => 'calendar', 'current' => $longestStreak, 'target' => 14],
+            ['name' => __('Monthly Master'), 'detail' => __('Keep a 30-day streak'), 'icon' => 'trophy', 'current' => $longestStreak, 'target' => 30],
         ])
             ->map(fn ($a) => [...$a, 'current' => min($a['current'], $a['target'])])
             ->values()
@@ -241,15 +241,15 @@ class DashboardController extends Controller
     private function practicedLabel(?Carbon $date): string
     {
         if ($date === null) {
-            return 'No practice yet';
+            return __('No practice yet');
         }
 
         if ($date->isToday()) {
-            return 'Today';
+            return __('Today');
         }
 
         if ($date->isYesterday()) {
-            return 'Yesterday';
+            return __('Yesterday');
         }
 
         return $date->diffForHumans();

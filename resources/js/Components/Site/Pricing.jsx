@@ -1,4 +1,5 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
+import { tk, useTrans } from '@/lib/i18n';
 
 // Mirrors the app's own paywall exactly (app/paywall/[screen].tsx PLANS,
 // src/lib/subscription.ts PLAN_INFO/TRIAL_DAYS/INCLUDED) — same plans,
@@ -6,44 +7,45 @@ import Eyebrow from '@/Components/Site/Eyebrow';
 // Store / Google Play inside the app, so every CTA here just leads to the
 // download section rather than a web checkout that doesn't exist yet.
 const PLANS = [
-    { id: 'monthly', tier: 'Standard', title: 'Monthly', price: '$5.99', period: '/month', subtitle: 'Billed every month', trial: true },
+    { id: 'monthly', tier: tk('Standard'), title: tk('Monthly'), price: '$5.99', period: tk('/month'), subtitle: tk('Billed every month'), trial: true },
     {
         id: 'yearly',
-        tier: 'Standard',
-        title: 'Yearly',
+        tier: tk('Standard'),
+        title: tk('Yearly'),
         price: '$49.99',
-        period: '/year',
-        originalPrice: '$70.99/year',
-        badge: '30% OFF',
-        subtitle: 'Billed every year',
+        period: tk('/year'),
+        originalPrice: '$70.99', // shown with the period, struck through
+        badge: tk('30% OFF'),
+        subtitle: tk('Billed every year'),
         trial: true,
         highlight: true,
     },
-    { id: 'lifetime', tier: 'Premium', title: 'Lifetime', price: '$99.99', period: ' once', subtitle: 'Pay once, use forever', trial: false },
+    { id: 'lifetime', tier: tk('Premium'), title: tk('Lifetime'), price: '$99.99', period: tk('once'), subtitle: tk('Pay once, use forever'), trial: false },
 ];
 
 const INCLUDED = [
-    'Every quiz category and level',
-    'Unlimited practice and reviews',
-    'Progress tracking and daily goals',
-    'Personal For You recommendations',
+    tk('Every quiz category and level'),
+    tk('Unlimited practice and reviews'),
+    tk('Progress tracking and daily goals'),
+    tk('Personal For You recommendations'),
 ];
 
 export default function Pricing() {
+    const t = useTrans();
+
     return (
         <section id="pricing" className="scroll-mt-[88px] bg-gradient-to-b from-[#F3F6FB] via-[#FBF5F1] to-[#FDEFE7]">
             <div className="mx-auto max-w-7xl px-6 py-16 lg:px-[100px] lg:py-20">
                 <div className="mx-auto max-w-2xl text-center">
-                    <Eyebrow>Simple pricing</Eyebrow>
+                    <Eyebrow>{t('Simple pricing')}</Eyebrow>
 
                     <h2 className="mt-5 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl lg:text-[44px]">
-                        Start your{' '}
-                        <span className="font-display font-semibold tracking-normal text-brand">7-day free trial.</span>
+                        {t('Start your')}{' '}
+                        <span className="font-display font-semibold tracking-normal text-brand">{t('7-day free trial.')}</span>
                     </h2>
 
                     <p className="mx-auto mt-4 max-w-[480px] text-base leading-relaxed text-neutral-700">
-                        Full access to every quiz, category and feature from day one. Your 7-day trial is
-                        completely free — you won&apos;t be charged until it ends.
+                        {t("Full access to every quiz, category and feature from day one. Your 7-day trial is completely free — you won't be charged until it ends.")}
                     </p>
                 </div>
 
@@ -54,12 +56,12 @@ export default function Pricing() {
                 </div>
 
                 <div className="mx-auto mt-10 max-w-2xl rounded-2xl border border-black/5 bg-white p-6 sm:p-8">
-                    <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">What&apos;s included</p>
+                    <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">{t("What's included")}</p>
                     <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                         {INCLUDED.map((item) => (
                             <li key={item} className="flex items-start gap-2.5 text-[15px] text-neutral-800">
                                 <CheckIcon />
-                                {item}
+                                {t(item)}
                             </li>
                         ))}
                     </ul>
@@ -70,6 +72,7 @@ export default function Pricing() {
 }
 
 function PlanCard({ plan }) {
+    const t = useTrans();
     const isLifetime = plan.id === 'lifetime';
 
     return (
@@ -91,7 +94,7 @@ function PlanCard({ plan }) {
 
             {plan.badge && (
                 <span className="absolute -top-3 right-6 rounded-full bg-brand px-3 py-1 text-xs font-bold text-white">
-                    {plan.badge}
+                    {t(plan.badge)}
                 </span>
             )}
 
@@ -102,22 +105,22 @@ function PlanCard({ plan }) {
             )}
 
             <p className={`relative text-xs font-bold uppercase tracking-wide ${isLifetime ? 'text-amber-300' : 'text-neutral-400'}`}>
-                {plan.tier}
+                {t(plan.tier)}
             </p>
-            <p className={`relative mt-1 text-xl font-bold ${isLifetime ? 'text-white' : 'text-neutral-900'}`}>{plan.title}</p>
+            <p className={`relative mt-1 text-xl font-bold ${isLifetime ? 'text-white' : 'text-neutral-900'}`}>{t(plan.title)}</p>
 
             {/* Price sits in the middle of the card's free space, between the
                 header above and the badge+button group pinned below. */}
             <div className="relative flex flex-1 flex-col justify-center">
                 {/* Reserved even when empty, so every card's price sits on the same line. */}
                 <p className="mt-4 text-sm text-neutral-400 line-through">
-                    {plan.originalPrice || <span className="invisible">placeholder</span>}
+                    {plan.originalPrice ? `${plan.originalPrice}${t(plan.period)}` : <span className="invisible">placeholder</span>}
                 </p>
                 <p className="-mt-0.5">
                     <span className={`text-3xl font-extrabold ${isLifetime ? 'text-white' : 'text-neutral-900'}`}>{plan.price}</span>
-                    <span className={`text-sm ${isLifetime ? 'text-white/50' : 'text-neutral-500'}`}>{plan.period}</span>
+                    <span className={`text-sm ${isLifetime ? 'text-white/50' : 'text-neutral-500'}`}>{plan.period.startsWith('/') ? t(plan.period) : ` ${t(plan.period)}`}</span>
                 </p>
-                <p className={`mt-1 text-sm ${isLifetime ? 'text-white/50' : 'text-neutral-500'}`}>{plan.subtitle}</p>
+                <p className={`mt-1 text-sm ${isLifetime ? 'text-white/50' : 'text-neutral-500'}`}>{t(plan.subtitle)}</p>
             </div>
 
             {/* Badge and button move as one unit, anchored to the card's
@@ -126,12 +129,12 @@ function PlanCard({ plan }) {
             <div className="relative mt-3">
                 {plan.trial && (
                     <span className="inline-block w-fit rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-bold text-emerald-700">
-                        7 DAYS FREE
+                        {t('7 DAYS FREE')}
                     </span>
                 )}
                 {isLifetime && (
                     <span className="inline-block w-fit rounded-full bg-amber-400/15 px-2.5 py-1 text-xs font-bold text-amber-300">
-                        BEST VALUE
+                        {t('BEST VALUE')}
                     </span>
                 )}
             </div>
@@ -146,7 +149,7 @@ function PlanCard({ plan }) {
                           : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
                 }`}
             >
-                {plan.trial ? 'Start Free Trial' : 'Get Lifetime'}
+                {plan.trial ? t('Start Free Trial') : t('Get Lifetime')}
             </a>
         </div>
     );

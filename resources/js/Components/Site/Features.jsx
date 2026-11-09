@@ -1,18 +1,20 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
 import PhoneFrame from '@/Components/Site/PhoneFrame';
+import { tk, useTrans } from '@/lib/i18n';
 
 // Mirrors LANGUAGES in the app's settings screen (app/settings.tsx). Add to this list as languages are added.
+// Native names — not translated.
 const languages = ['English', 'Français', 'Español', 'Português', 'Deutsch'];
 
 const features = [
     {
-        tag: 'Audio Quizzes',
-        title: 'Listen, then answer.',
+        tag: tk('Audio Quizzes'),
+        title: tk('Listen, then answer.'),
         description:
-            'Every question starts with a sound. Press play, then name the note, interval, chord or progression you hear.',
-        points: ['25 questions in every quiz', 'Instant feedback after each answer', 'Multi-select questions for chord extensions'],
+            tk('Every question starts with a sound. Press play, then name the note, interval, chord or progression you hear.'),
+        points: [tk('25 questions in every quiz'), tk('Instant feedback after each answer'), tk('Multi-select questions for chord extensions')],
         image: '/images/app-quiz.png',
-        alt: 'Quiz screen asking to recognise a chord progression and pick each chord quality',
+        alt: tk('Quiz screen asking to recognise a chord progression and pick each chord quality'),
     },
     {
         tag: 'Quick Guides',
@@ -27,8 +29,20 @@ const features = [
         visual: <QuickGuidePreview />,
     },
     {
-        tag: 'Instrument Sounds',
-        title: 'Choose the sound you want to practise with.',
+        tag: 'Quick Guides',
+        title: 'Know what to do before you press play.',
+        description:
+            'Each quiz has a short guide with clear steps and an illustrated example. See what to listen for and how to choose your answer before you begin.',
+        points: [
+            'Simple instructions for each quiz',
+            'Illustrations that show how an answer is chosen',
+            'Read at your own pace, then start when you are ready',
+        ],
+        visual: <QuickGuidePreview />,
+    },
+    {
+        tag: tk('Instrument Sounds'),
+        title: tk('Train on the sound you actually play.'),
         description:
             'Explore familiar instruments and discover new ones. Choose a sound before you start a quiz, or save your favourite in Settings.',
         points: [
@@ -55,18 +69,32 @@ const features = [
         callout: <ReviewCallout />,
     },
     {
-        tag: 'Mistake Review',
-        title: 'Know exactly what trips you up.',
+        tag: 'Review Your Answers',
+        title: 'Hear it again. See what you missed.',
         description:
-            'KhordQuiz spots the pairs you keep mixing up — like hearing a Major chord but picking Augmented — so you know exactly what to listen for next time.',
-        points: ['Your most-confused pairs, ranked by how often you mix them up', 'Every missed question saved to a replay list', 'One tap from Progress — no digging through quizzes'],
+            'After a quiz, go through your answers one at a time. Replay the sound, compare a missed answer with the correct one, and move back and forth whenever you need to.',
+        points: [
+            'See your answer alongside the correct answer',
+            'Replay the question while you review',
+            'Use Previous, Next or jump to a question',
+        ],
+        image: '/images/app-major-extension-review.png',
+        alt: 'Major Chord Extensions answer review with replay controls and the correct extension choices highlighted',
+        callout: <ReviewCallout />,
+    },
+    {
+        tag: tk('Mistake Review'),
+        title: tk('Know exactly what trips you up.'),
+        description:
+            tk('KhordQuiz spots the pairs you keep mixing up — like hearing a Major chord but picking Augmented — so you know exactly what to listen for next time.'),
+        points: [tk('Your most-confused pairs, ranked by how often you mix them up'), tk('Every missed question saved to a replay list'), tk('One tap from Progress — no digging through quizzes')],
         image: '/images/app-confused.png',
-        alt: 'Most confused screen showing answer pairs mixed up most often, with a Review mistakes button',
+        alt: tk('Most confused screen showing answer pairs mixed up most often, with a Review mistakes button'),
         callout: <MistakeCallout />,
     },
     {
-        tag: 'Progress',
-        title: 'See your progress and what needs practice.',
+        tag: tk('Progress'),
+        title: tk('See your progress and what needs practice.'),
         description:
             'Keep track of your practice, work towards a daily goal, and see which quizzes need more attention. Your strongest results show how far you have come.',
         points: [
@@ -79,49 +107,50 @@ const features = [
         callout: <ProgressCallout />,
     },
     {
-        tag: 'Leaderboard',
-        title: 'Climb the global leaderboard.',
+        tag: tk('Leaderboard'),
+        title: tk('Climb the global leaderboard.'),
         description:
-            'Compete with other students. Your rank stays on screen, along with how many points it takes to pass the next player.',
-        points: ['This week and all-time rankings', 'A podium for the top three players', 'Points needed to pass the next player'],
+            tk('Compete with other students. Your rank stays on screen, along with how many points it takes to pass the next player.'),
+        points: [tk('This week and all-time rankings'), tk('A podium for the top three players'), tk('Points needed to pass the next player')],
         image: '/images/app-leaderboard.png',
-        alt: 'Leaderboard screen showing your rank and the top players this week',
+        alt: tk('Leaderboard screen showing your rank and the top players this week'),
     },
     {
-        tag: 'Languages',
-        title: 'Learn in your language.',
-        description: 'Use KhordQuiz in the language you are most comfortable with, so nothing gets in the way of training your ear.',
-        points: [`Available in ${languages.join(', ')}\u00A0and\u00A0more`, 'Switch any time from Settings', 'Light and dark mode, too'],
+        tag: tk('Languages'),
+        title: tk('Learn in your language.'),
+        description: tk('Use KhordQuiz in the language you are most comfortable with, so nothing gets in the way of training your ear.'),
+        points: [tk('Available in :languages and more'), tk('Switch any time from Settings'), tk('Light and dark mode, too')],
         image: '/images/app-settings.png',
-        alt: 'Settings screen with appearance, language and practice options',
+        alt: tk('Settings screen with appearance, language and practice options'),
         callout: <LanguageCallout />,
     },
     {
-        tag: 'Challenges',
-        title: 'Challenge your friends.',
+        tag: tk('Challenges'),
+        title: tk('Challenge your friends.'),
         description:
-            'Finish any quiz and send it as a challenge. Your friend plays the same quiz, and you both see who came out on top.',
-        points: ['Send a challenge after any quiz', 'See whose turn it is at a glance', 'Track your wins, losses and win rate'],
+            tk('Finish any quiz and send it as a challenge. Your friend plays the same quiz, and you both see who came out on top.'),
+        points: [tk('Send a challenge after any quiz'), tk('See whose turn it is at a glance'), tk('Track your wins, losses and win rate')],
         image: '/images/app-challenges.png',
-        alt: 'Challenges screen showing wins, losses and challenges from friends',
+        alt: tk('Challenges screen showing wins, losses and challenges from friends'),
     },
 ];
 
 export default function Features() {
+    const t = useTrans();
+
     return (
         <section id="features" className="scroll-mt-[88px] bg-white">
             <div className="mx-auto max-w-7xl px-6 py-16 lg:px-[100px] lg:py-20">
                 <div className="mx-auto max-w-2xl text-center">
-                    <Eyebrow>Everything you need</Eyebrow>
+                    <Eyebrow>{t('Everything you need')}</Eyebrow>
 
                     <h2 className="mt-5 text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl lg:text-[44px]">
-                        Built for real{' '}
-                        <span className="font-display font-semibold tracking-normal text-brand">Progress.</span>
+                        {t('Built for real')}{' '}
+                        <span className="font-display font-semibold tracking-normal text-brand">{t('Progress.')}</span>
                     </h2>
 
                     <p className="mx-auto mt-4 max-w-[480px] text-base leading-relaxed text-neutral-700">
-                        KhordQuiz turns ear training into a daily habit. It tracks what you can recognise, shows where
-                        you are weakest, and pushes you forward.
+                        {t('KhordQuiz turns ear training into a daily habit. It tracks what you can recognise, shows where you are weakest, and pushes you forward.')}
                     </p>
                 </div>
 
@@ -135,23 +164,25 @@ export default function Features() {
     );
 }
 
-function FeatureRow({ tag, title, description, points, image, alt, callout, visual, reversed }) {
+function FeatureRow({ tag, title, description, points, image, alt, callout, reversed }) {
+    const t = useTrans();
+
     return (
         <article className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
             <div className={reversed ? 'lg:order-2' : ''}>
                 <span className="inline-block rounded bg-gray-100 px-2 py-1 text-xs font-medium uppercase tracking-wide text-neutral-700">
-                    {tag}
+                    {t(tag)}
                 </span>
                 <h3 className="mt-3 text-2xl font-bold tracking-tight text-neutral-900 sm:text-[28px] sm:leading-tight">
-                    {title}
+                    {t(title)}
                 </h3>
-                <p className="mt-3 max-w-[480px] text-base leading-relaxed text-neutral-700">{description}</p>
+                <p className="mt-3 max-w-[480px] text-base leading-relaxed text-neutral-700">{t(description)}</p>
 
                 <ul className="mt-5 space-y-2.5">
                     {points.map((point) => (
                         <li key={point} className="flex items-start gap-3 text-[15px] text-neutral-800">
                             <CheckIcon />
-                            {point}
+                            {t(point, { languages: languages.join(', ') })}
                         </li>
                     ))}
                 </ul>
@@ -163,7 +194,7 @@ function FeatureRow({ tag, title, description, points, image, alt, callout, visu
             >
                 <PhoneFrame
                     src={image}
-                    alt={alt}
+                    alt={t(alt)}
                     className={`mx-auto mt-10 w-[220px] sm:w-[240px] ${callout ? 'opacity-60' : ''}`}
                 />
                 {callout}
@@ -277,10 +308,12 @@ function MistakeCallout() {
 }
 
 function LanguageCallout() {
+    const t = useTrans();
+
     return (
         <div className={`${calloutClass} top-[72px] w-[260px] py-2`} aria-hidden="true">
             <p className="px-5 pb-1.5 pt-1 text-[11px] font-semibold uppercase tracking-wide text-neutral-500">
-                Choose language
+                {t('Choose language')}
             </p>
             <ul>
                 {languages.map((language, index) => (
@@ -300,7 +333,7 @@ function LanguageCallout() {
                         )}
                     </li>
                 ))}
-                <li className="border-t border-gray-100 px-5 py-2 text-[13px] leading-5 text-neutral-500">and more…</li>
+                <li className="border-t border-gray-100 px-5 py-2 text-[13px] leading-5 text-neutral-500">{t('and more…')}</li>
             </ul>
         </div>
     );

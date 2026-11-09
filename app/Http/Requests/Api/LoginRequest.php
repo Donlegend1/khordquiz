@@ -4,6 +4,7 @@ namespace App\Http\Requests\Api;
 
 use App\Http\Requests\Api\Concerns\NormalizesEmail;
 use App\Models\User;
+use App\Services\KingsleyKhordPiano\MemberSync;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -47,6 +48,10 @@ class LoginRequest extends FormRequest
         if (! $user || ! Hash::check($this->string('password')->toString(), $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
+            if (! $user && app(MemberSync::class)->provisionByEmail($this->string('email')->toString())) {
+                throw ValidationException::withMessages(['email' => __('Your Kingsleykhordpiano membership includes KhordQuiz! We\'ve emailed you a link to set your password.')]);
+            }
+
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
@@ -54,7 +59,9 @@ class LoginRequest extends FormRequest
 
         RateLimiter::clear($this->throttleKey());
 
-        return $user;
+        app(MemberSync::class)->refresh($user);
+
+        return $user->refresh();
     }
 
     /**

@@ -42,6 +42,7 @@ import NotePairGuide from '@/Components/Quiz/NotePairGuide';
 import KeyFindingGuide from '@/Components/Quiz/KeyFindingGuide';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { tk, useTrans } from '@/lib/i18n';
 
 function PlayIcon(props) {
     return (
@@ -250,6 +251,8 @@ const INSTRUMENT_EMOJI = {
 // any quiz yet (Organ, Cello, Upright Bass, Trumpet, Flute, Celesta, Vibraphone,
 // Bass Guitar) — they simply won't appear until a quiz's `sounds` list
 // actually includes them.
+// `name` doubles as an identifier (compared, keyed into CATEGORY_EMOJI) — it's
+// only translated where it's displayed; `pickPrompt` is the drill-in subtitle.
 const SOUND_CATEGORIES = [
     { name: 'Piano', sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
@@ -329,6 +332,7 @@ function CompletionCheck({ quiz }) {
 }
 
 function SidebarRow({ quiz, categorySlug, selected }) {
+    const t = useTrans();
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
@@ -360,6 +364,7 @@ function SidebarRow({ quiz, categorySlug, selected }) {
 // with green checks for completed quizzes) — tapping still navigates to its own preview screen rather than
 // opening inline, so unlike SidebarRow this is a plain navigation, not preserveState.
 function MobileCategoryRow({ quiz, categorySlug, selected }) {
+    const t = useTrans();
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
@@ -389,6 +394,7 @@ function MobileCategoryRow({ quiz, categorySlug, selected }) {
 // recording types, not instruments) and as the per-category tile row below the
 // category tabs.
 function SoundTiles({ sounds, sound, onSelect }) {
+    const t = useTrans();
     return (
         <div className="mt-2.5 flex flex-wrap gap-2.5 sm:flex-nowrap">
             {sounds.map((option) => {
@@ -404,7 +410,7 @@ function SoundTiles({ sounds, sound, onSelect }) {
                     >
                         <SoundIcon sound={option} />
                         <span className={`truncate text-xs ${active ? 'font-bold text-brand' : 'font-medium text-neutral-600'}`}>
-                            {INSTRUMENT_LABELS[option] ?? option}
+                            {t(INSTRUMENT_LABELS[option] ?? option)}
                         </span>
                     </button>
                 );
@@ -421,6 +427,7 @@ function SoundTiles({ sounds, sound, onSelect }) {
 // (e.g. Strings specifically, not whichever Strings-family instrument
 // resolves by default) is always exactly one tap.
 function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSounds }) {
+    const t = useTrans();
     // `sounds` is a narrow, curated "one tile per family" list (e.g. just
     // "Piano", never EP/Upright Piano/Organ alongside it) — kept around only
     // as the fallback for placeholder quizzes with no real audio yet at all.
@@ -481,7 +488,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
     if (categories.length === 0) {
         return (
             <div className="mt-4">
-                <p className="text-xs font-semibold text-neutral-700">Choose a sound</p>
+                <p className="text-xs font-semibold text-neutral-700">{t('Choose a sound')}</p>
                 <SoundTiles sounds={sounds} sound={sound} onSelect={onSelect} />
             </div>
         );
@@ -489,7 +496,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
 
     return (
         <div className="mt-4">
-            <p className="text-xs font-semibold text-neutral-700">Choose a sound</p>
+            <p className="text-xs font-semibold text-neutral-700">{t('Choose a sound')}</p>
 
             <button
                 type="button"
@@ -545,8 +552,8 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                 <p className="mt-3 text-lg font-bold text-neutral-900">{drillCategory ?? 'Choose a sound'}</p>
                                 <p className="mt-1 text-sm text-neutral-500">
                                     {drillCategory
-                                        ? `Pick which ${drillCategory.toLowerCase()} instrument plays this quiz.`
-                                        : 'Pick which instrument plays this quiz.'}
+                                        ? t(SOUND_CATEGORIES.find((category) => category.name === drillCategory)?.pickPrompt ?? 'Pick which instrument plays this quiz.')
+                                        : t('Pick which instrument plays this quiz.')}
                                 </p>
                             </div>
 
@@ -561,7 +568,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                     className="mx-auto mt-3 flex items-center gap-1 text-xs font-semibold text-neutral-400 hover:text-neutral-600"
                                 >
                                     <ChevronLeftIcon className="h-3.5 w-3.5" />
-                                    All categories
+                                    {t('All categories')}
                                 </button>
                             )}
 
@@ -608,11 +615,11 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                                       <span
                                                           className={`flex-1 text-sm ${active ? 'font-semibold text-brand' : 'font-medium text-neutral-800'}`}
                                                       >
-                                                          {INSTRUMENT_LABELS[option] ?? option}
+                                                          {t(INSTRUMENT_LABELS[option] ?? option)}
                                                       </span>
                                                       {isDefault && (
                                                           <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">
-                                                              Default
+                                                              {t('Default')}
                                                           </span>
                                                       )}
                                                       {active && <CheckIcon className="h-4 w-4 text-brand" />}
@@ -626,7 +633,7 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                 onClick={closeMenu}
                                 className="mt-4 w-full rounded-xl py-3 text-sm font-bold text-neutral-900 transition-colors duration-150 hover:bg-neutral-100"
                             >
-                                Cancel
+                                {t('Cancel')}
                             </button>
                         </div>
                     </div>
@@ -726,7 +733,7 @@ function ReferenceAudioModal({ quizSlug, pool, sound, onClose, isMelodicDictatio
                         <HeadsetIcon className="h-[18px] w-[18px]" />
                         <p className="text-xs font-semibold">{isMelodicDictation ? 'Listen and learn' : 'Reference Audio'}</p>
                     </div>
-                    <button type="button" onClick={onClose} aria-label="Close" className="text-white/50 hover:text-white">
+                    <button type="button" onClick={onClose} aria-label={trans('Close')} className="text-white/50 hover:text-white">
                         <CloseIcon className="h-5 w-5" />
                     </button>
                 </div>
@@ -794,7 +801,7 @@ function DetailPane({ quiz, standalone = false }) {
     if (!quiz) {
         return (
             <div className="flex h-full min-h-[320px] items-center justify-center rounded-2xl border border-black/5 bg-white p-8 text-center text-sm text-neutral-500">
-                No quizzes in this category are ready yet. Check back soon.
+                {t('No quizzes in this category are ready yet. Check back soon.')}
             </div>
         );
     }
@@ -856,9 +863,9 @@ function DetailPane({ quiz, standalone = false }) {
     // Same DEFAULT_TIPS the mobile app falls back to for every quiz it has no
     // specific override for (app/quiz-preview.tsx) — not invented copy.
     const tips = [
-        'Use headphones for best results.',
-        'Listen carefully before answering.',
-        'Take your time and answer the questions.',
+        t('Use headphones for best results.'),
+        t('Listen carefully before answering.'),
+        t('Take your time and answer the questions.'),
     ];
 
     function start() {
@@ -994,7 +1001,7 @@ function DetailPane({ quiz, standalone = false }) {
                 />
             ) : (
                 <div className="-mx-6 mt-5 flex aspect-video items-center justify-center rounded-2xl bg-neutral-100 text-sm text-neutral-400 sm:-mx-7">
-                    No video for this quiz yet
+                    {t('No video for this quiz yet')}
                 </div>
             )}
 
@@ -1003,7 +1010,7 @@ function DetailPane({ quiz, standalone = false }) {
             <div className="mt-4 rounded-2xl border border-black/5 bg-neutral-50 p-4">
                 <div className="flex items-center gap-2 text-neutral-400">
                     <BulbIcon className="h-4 w-4" />
-                    <p className="text-xs font-semibold">Tips</p>
+                    <p className="text-xs font-semibold">{t('Tips')}</p>
                 </div>
                 <ul className="mt-2 space-y-1.5">
                     {tips.map((tip) => (
@@ -1042,7 +1049,7 @@ function DetailPane({ quiz, standalone = false }) {
                         className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98] disabled:opacity-50"
                     >
                         <HeadsetIcon className="h-5 w-5" />
-                        Listen Mode
+                        {t('Listen Mode')}
                     </button>
                 )}
             </div>
@@ -1054,7 +1061,7 @@ function DetailPane({ quiz, standalone = false }) {
                 </p>
             )}
             {blockedNotice && (
-                <p className="mt-2.5 text-center text-sm text-neutral-500">Questions for this quiz haven&apos;t been added yet.</p>
+                <p className="mt-2.5 text-center text-sm text-neutral-500">{t("Questions for this quiz haven't been added yet.")}</p>
             )}
 
             {audioModalOpen && (
@@ -1100,17 +1107,17 @@ function DetailPane({ quiz, standalone = false }) {
                     <button
                         type="button"
                         disabled
-                        title="Coming soon"
+                        title={t('Coming soon')}
                         className="flex min-h-[48px] flex-1 cursor-default items-center justify-center gap-2 rounded-xl border-[1.5px] border-brand/40 text-sm font-bold text-brand/40"
                     >
                         <CheckCircleIcon className="h-5 w-5" />
-                        Mark as Completed
+                        {t('Mark as Completed')}
                     </button>
                     <button
                         type="button"
                         disabled
-                        title="Coming soon"
-                        aria-label="Bookmark this quiz"
+                        title={t('Coming soon')}
+                        aria-label={t('Bookmark this quiz')}
                         className="flex min-h-[48px] w-[52px] shrink-0 cursor-default items-center justify-center rounded-xl border-[1.5px] border-neutral-200 text-neutral-300"
                     >
                         <BookmarkIcon className="h-5 w-5" />
@@ -1162,7 +1169,7 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                 <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm xl:hidden">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">
-                            {progress.done}/{progress.total} Completed
+                            {t(':done/:total Completed', { done: progress.done, total: progress.total })}
                         </span>
                         <span className="font-semibold text-neutral-500">{progress.percent}%</span>
                     </div>
@@ -1187,7 +1194,7 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                 <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">
-                            {progress.done}/{progress.total} Completed
+                            {t(':done/:total Completed', { done: progress.done, total: progress.total })}
                         </span>
                         <span className="font-semibold text-neutral-500">{progress.percent}%</span>
                     </div>

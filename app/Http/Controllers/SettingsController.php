@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
-use App\Models\QuizSession;
+use App\Models\UserPreference;
+use App\Support\Locales;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,17 +22,22 @@ class SettingsController extends Controller
             'dailyGoal' => $user->daily_goal,
             'goalOptions' => ProgressController::GOAL_OPTIONS,
             'defaultInstrument' => $user->default_instrument,
-            'language' => $user->language,
+            'language' => $user->language ?? Locales::DEFAULT_LABEL,
         ]);
     }
 
+    // Switches the whole UI to the chosen language — SetLocale reads
+    // users.language on every request. Mirrored to user_preferences so the
+    // mobile app's settings screen shows the same pick.
     public function updateLanguage(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'language' => ['required', 'string', 'in:'.implode(',', QuizCatalog::LANGUAGES)],
+            'language' => ['required', 'string', 'in:' . implode(',', Locales::labels())],
         ]);
 
-        $request->user()->update(['language' => $data['language']]);
+        $user = $request->user();
+        $user->update(['language' => $data['language']]);
+        UserPreference::forUser($user)->update(['language' => $data['language']]);
 
         return back();
     }
@@ -61,6 +67,6 @@ class SettingsController extends Controller
         QuizAnswer::query()->where('user_id', $user->id)->delete();
         $user->update(['current_streak' => 0, 'last_practiced_on' => null]);
 
-        return back()->with('success', 'Your progress has been reset.');
+        return back()->with('success', __('Your progress has been reset.'));
     }
 }

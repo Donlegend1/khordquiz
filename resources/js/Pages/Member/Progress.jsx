@@ -2,6 +2,7 @@ import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import { scoreTone } from '@/lib/scoreColor';
+import { useTrans } from '@/lib/i18n';
 
 function FlameIcon(props) {
     return (
@@ -97,6 +98,7 @@ function StatTile({ icon: Icon, value, label }) {
 }
 
 function GoalPicker({ current, options }) {
+    const t = useTrans();
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
     const { transform, patch, processing } = useForm({ daily_goal: current });
@@ -125,7 +127,7 @@ function GoalPicker({ current, options }) {
                 className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-neutral-100 px-3.5 py-2 text-sm font-semibold text-neutral-700 transition hover:bg-neutral-200"
             >
                 <TuneIcon className="h-4 w-4" />
-                Change
+                {t('Change')}
             </button>
 
             {open && (
@@ -151,13 +153,14 @@ function GoalPicker({ current, options }) {
 }
 
 function RankedQuizList({ items, tone }) {
+    const t = useTrans();
     return (
         <ul className="mt-3 divide-y divide-black/5">
             {items.map((item) => (
-                <li key={item.quiz.title} title="Coming soon" className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
+                <li key={item.quiz.title} title={t('Coming soon')} className="flex items-center gap-3 py-3.5 first:pt-0 last:pb-0">
                     <div className="min-w-0 flex-1">
-                        <p className="font-medium text-neutral-900">{item.quiz.title}</p>
-                        <p className="mt-0.5 text-sm text-neutral-500">{item.quiz.category}</p>
+                        <p className="font-medium text-neutral-900">{t(item.quiz.title)}</p>
+                        <p className="mt-0.5 text-sm text-neutral-500">{t(item.quiz.category)}</p>
                     </div>
                     <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${tone(item.accuracy)}`}>
                         {item.accuracy}%
@@ -181,6 +184,7 @@ export default function Progress({
     week,
     recentQuizzes,
 }) {
+    const t = useTrans();
     const goalRemaining = Math.max(0, goal.target - goal.done);
     const goalPercent = goal.target > 0 ? Math.min(100, Math.round((goal.done / goal.target) * 100)) : 0;
     const goalTone = goalPercent <= 30 ? 'bg-brand' : goalPercent <= 65 ? 'bg-amber-500' : 'bg-emerald-600';
@@ -188,24 +192,24 @@ export default function Progress({
     const weekMax = Math.max(1, ...week.map((day) => day.count));
 
     return (
-        <AppShell eyebrow="Member" title="Your progress" intro="How your practice is adding up.">
-            <Head title="Your progress" />
+        <AppShell eyebrow={t('Member')} title={t('Your progress')} intro={t('How your practice is adding up.')}>
+            <Head title={t('Your progress')} />
 
             <section className="rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
-                <p className="text-sm text-neutral-500">Overall accuracy</p>
+                <p className="text-sm text-neutral-500">{t('Overall accuracy')}</p>
                 <div className="mt-1 flex flex-wrap items-baseline justify-between gap-2">
                     <p className="text-5xl font-bold tracking-tight text-emerald-600">
                         {overall.accuracy === null ? '—' : `${overall.accuracy}%`}
                     </p>
                     <p className="text-sm text-neutral-500">
-                        {overall.correct} of {overall.answered} correct
+                        {t(':correct of :answered correct', { correct: overall.correct, answered: overall.answered })}
                     </p>
                 </div>
 
                 <div className="mt-5 grid grid-cols-3 gap-3">
-                    <StatTile icon={FlameIcon} value={streak} label="Days streak" />
-                    <StatTile icon={NoteIcon} value={overall.answered} label="Questions answered" />
-                    <StatTile icon={TrophyIcon} value={quizzesCompleted.done} label="Quizzes done" />
+                    <StatTile icon={FlameIcon} value={streak} label={t('Days streak')} />
+                    <StatTile icon={NoteIcon} value={overall.answered} label={t('Questions answered')} />
+                    <StatTile icon={TrophyIcon} value={quizzesCompleted.done} label={t('Quizzes done')} />
                 </div>
             </section>
 
@@ -298,19 +302,28 @@ export default function Progress({
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-baseline justify-between">
-                    <h2 className="text-lg font-semibold">Most confused</h2>
+                    <h2 className="text-lg font-semibold">{t('Most confused')}</h2>
                     <Link href={route('mistakes')} className="text-sm font-semibold text-brand hover:text-brand-dark">
-                        See all
+                        {t('See all')}
                     </Link>
                 </div>
 
                 <ul className="mt-3 space-y-2.5">
                     {confusions.map((item) => (
                         <li key={`${item.picked}-${item.answer}`} className="rounded-2xl bg-[#FBEDEC] px-4 py-3 text-sm text-neutral-800">
-                            You picked <span className="font-semibold text-brand">{item.picked}</span> when it was{' '}
-                            <span className="font-semibold text-emerald-700">{item.answer}</span>
+                            {t('You picked :picked when it was :answer')
+                                .split(/(:picked|:answer)/)
+                                .map((part, i) =>
+                                    part === ':picked' ? (
+                                        <span key={i} className="font-semibold text-brand">{item.picked}</span>
+                                    ) : part === ':answer' ? (
+                                        <span key={i} className="font-semibold text-emerald-700">{item.answer}</span>
+                                    ) : (
+                                        part
+                                    ),
+                                )}
                             <span className="mt-0.5 block text-neutral-500">
-                                {item.count} {item.count === 1 ? 'time' : 'times'}
+                                {item.count === 1 ? t(':count time', { count: item.count }) : t(':count times', { count: item.count })}
                             </span>
                         </li>
                     ))}
@@ -319,8 +332,8 @@ export default function Progress({
 
             <section className="mt-6 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">
                 <div className="flex items-baseline justify-between">
-                    <h2 className="text-lg font-semibold">This week</h2>
-                    <span className="text-sm text-neutral-400">{weekTotal} this week</span>
+                    <h2 className="text-lg font-semibold">{t('This week')}</h2>
+                    <span className="text-sm text-neutral-400">{t(':count this week', { count: weekTotal })}</span>
                 </div>
 
                 <div className="mt-6 flex items-end justify-between gap-2" style={{ height: '120px' }}>
@@ -342,7 +355,7 @@ export default function Progress({
                 <p className="mt-1 text-sm text-neutral-500">Your five most recent completed attempts.</p>
 
                 {recentQuizzes.length === 0 ? (
-                    <p className="mt-3 text-sm text-neutral-500">No completed quizzes yet. Finish one and it&apos;ll show up here.</p>
+                    <p className="mt-3 text-sm text-neutral-500">{t("No completed quizzes yet. Finish one and it'll show up here.")}</p>
                 ) : (
                     <ul className="mt-3 divide-y divide-black/5">
                         {recentQuizzes.map((attempt) => (
@@ -351,9 +364,9 @@ export default function Progress({
                                     <QuizNoteIcon className="h-5 w-5" />
                                 </span>
                                 <div className="min-w-0 flex-1">
-                                    <p className="truncate font-semibold text-neutral-900">{attempt.quiz.title}</p>
+                                    <p className="truncate font-semibold text-neutral-900">{t(attempt.quiz.title)}</p>
                                     <p className="mt-0.5 truncate text-sm text-neutral-500">
-                                        {attempt.quiz.category} · {attempt.last_played_at}
+                                        {t(attempt.quiz.category)} · {attempt.last_played_at}
                                     </p>
                                 </div>
                                 <span className={`shrink-0 rounded-full px-3 py-1 text-sm font-bold ${scoreTone(attempt.score)}`}>

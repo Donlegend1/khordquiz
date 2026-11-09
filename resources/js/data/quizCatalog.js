@@ -2,83 +2,86 @@
 // learning paths from src/lib/learning-path.ts (in teaching order). Keep in sync when quizzes change.
 // `levels` stands for quizzes the app names "Level 1", "Level 2", …; `general` adds its "General" quiz.
 
+import { tk } from '@/lib/i18n';
+
+// Display strings are wrapped in tk() so the key extractor finds them; render them with t().
 export const QUESTIONS_PER_QUIZ = 25;
 
 export const paths = [
     {
-        level: 'Beginner',
-        intro: 'Start here. Train your ear on single notes, intervals, melodies and simple chords.',
+        level: tk('Beginner'),
+        intro: tk('Start here. Train your ear on single notes, intervals, melodies and simple chords.'),
         categories: [
             {
-                name: 'Relative Pitch',
-                description: 'Compare notes to a reference tone, then find the key.',
+                name: tk('Relative Pitch'),
+                description: tk('Compare notes to a reference tone, then find the key.'),
                 quizzes: [
-                    'Find the Note',
-                    'Relative Tone Pitch #1',
-                    'Relative Tone Pitch #2',
-                    'Melodic Second',
-                    'Harmonic Second',
-                    'Melodic Third',
-                    'Harmonic Third',
-                    'Melodic Fourth',
-                    'Harmonic Fourth',
-                    'Melodic Fifth',
-                    'Harmonic Fifth',
-                    'Melodic Sixth',
-                    'Harmonic Sixth',
-                    'Melodic Seventh',
-                    'Harmonic Seventh',
-                    'Find the Key #1',
-                    'Find the Key #2',
+                    tk('Find the Note'),
+                    tk('Relative Tone Pitch #1'),
+                    tk('Relative Tone Pitch #2'),
+                    tk('Melodic Second'),
+                    tk('Harmonic Second'),
+                    tk('Melodic Third'),
+                    tk('Harmonic Third'),
+                    tk('Melodic Fourth'),
+                    tk('Harmonic Fourth'),
+                    tk('Melodic Fifth'),
+                    tk('Harmonic Fifth'),
+                    tk('Melodic Sixth'),
+                    tk('Harmonic Sixth'),
+                    tk('Melodic Seventh'),
+                    tk('Harmonic Seventh'),
+                    tk('Find the Key #1'),
+                    tk('Find the Key #2'),
                 ],
             },
             {
-                name: 'Intervals',
-                description: 'Learn to hear the distance between two notes.',
+                name: tk('Intervals'),
+                description: tk('Learn to hear the distance between two notes.'),
                 quizzes: [
-                    'Melodic Diatonic Intervals',
-                    'Harmonic Diatonic Intervals',
-                    'Melodic Non-diatonic Intervals',
-                    'Harmonic Non-diatonic Intervals',
-                    'Melodic Intervals: General',
-                    'Harmonic Intervals: General',
+                    tk('Melodic Diatonic Intervals'),
+                    tk('Harmonic Diatonic Intervals'),
+                    tk('Melodic Non-diatonic Intervals'),
+                    tk('Harmonic Non-diatonic Intervals'),
+                    tk('Melodic Intervals: General'),
+                    tk('Harmonic Intervals: General'),
                 ],
             },
             {
-                name: 'Basic Triads',
-                description: 'Hear triads in root position and every inversion, in all 12 keys.',
+                name: tk('Basic Triads'),
+                description: tk('Hear triads in root position and every inversion, in all 12 keys.'),
                 levels: 8,
             },
             {
-                name: 'Melodic Dictation',
-                description: 'Listen to short melodies and identify the notes played.',
-                quizzes: ['3-Note Stepwise', '3-Note with Skips', '5-Note Melodies', 'Dual-tonic melodies', 'Chordal melodies'],
+                name: tk('Melodic Dictation'),
+                description: tk('Listen to short melodies and identify the notes played.'),
+                quizzes: [tk('3-Note Stepwise'), tk('3-Note with Skips'), tk('5-Note Melodies'), tk('Dual-tonic melodies'), tk('Chordal melodies')],
             },
         ],
     },
     {
-        level: 'Intermediate',
-        intro: 'Add colour and movement: sevenths, added ninths, progressions and the modes.',
+        level: tk('Intermediate'),
+        intro: tk('Add colour and movement: sevenths, added ninths, progressions and the modes.'),
         categories: [
             {
-                name: 'Add 9',
-                description: 'Hear the colour an added 9th or ♭9 brings to a chord.',
+                name: tk('Add 9'),
+                description: tk('Hear the colour an added 9th or ♭9 brings to a chord.'),
                 levels: 8,
             },
             {
-                name: '7th Degree Chords',
-                description: 'Recognise seventh chords by their position in a key.',
+                name: tk('7th Degree Chords'),
+                description: tk('Recognise seventh chords by their position in a key.'),
                 levels: 8,
             },
             {
-                name: 'Secondary 7th Chords',
-                description: 'Hear secondary seventh chords and where they lead.',
+                name: tk('Secondary 7th Chords'),
+                description: tk('Hear secondary seventh chords and where they lead.'),
                 levels: 8,
                 general: true,
             },
             {
-                name: 'Chord Progressions',
-                description: 'From cadences and 2-5-1s to building whole progressions yourself.',
+                name: tk('Chord Progressions'),
+                description: tk('From cadences and 2-5-1s to building whole progressions yourself.'),
                 quizzes: [
                     'Cadences',
                     'Diatonic Progression #1',
@@ -91,8 +94,8 @@ export const paths = [
                 ],
             },
             {
-                name: 'Scales',
-                description: 'Recognise the tonal modes by their sound.',
+                name: tk('Scales'),
+                description: tk('Recognise the tonal modes by their sound.'),
                 quizzes: [
                     'Ionian and Lydian',
                     'Dorian and Aeolian',
@@ -120,34 +123,34 @@ export const paths = [
         ],
     },
     {
-        level: 'Advanced',
-        intro: 'Extended harmony: 9ths, 11ths and 13ths, chord extensions and modal voicings.',
+        level: tk('Advanced'),
+        intro: tk('Extended harmony: 9ths, 11ths and 13ths, chord extensions and modal voicings.'),
         categories: [
             {
-                name: '9th Degree Chords',
-                description: 'Identify ninth chords by their degree in a key.',
+                name: tk('9th Degree Chords'),
+                description: tk('Identify ninth chords by their degree in a key.'),
                 levels: 6,
             },
             {
-                name: 'Secondary 9th Chords',
-                description: 'Hear secondary chords coloured with ninths.',
-                levels: 6,
-                general: true,
-            },
-            {
-                name: '11th Degree Chords',
-                description: 'Identify eleventh chords by their degree in a key.',
-                levels: 6,
-            },
-            {
-                name: 'Secondary 11th Chords',
-                description: 'Hear secondary chords coloured with elevenths.',
+                name: tk('Secondary 9th Chords'),
+                description: tk('Hear secondary chords coloured with ninths.'),
                 levels: 6,
                 general: true,
             },
             {
-                name: '13th Degree Chords',
-                description: 'The fullest chords of all — identify thirteenths by ear.',
+                name: tk('11th Degree Chords'),
+                description: tk('Identify eleventh chords by their degree in a key.'),
+                levels: 6,
+            },
+            {
+                name: tk('Secondary 11th Chords'),
+                description: tk('Hear secondary chords coloured with elevenths.'),
+                levels: 6,
+                general: true,
+            },
+            {
+                name: tk('13th Degree Chords'),
+                description: tk('The fullest chords of all — identify thirteenths by ear.'),
                 levels: 6,
             },
             {

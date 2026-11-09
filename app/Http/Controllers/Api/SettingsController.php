@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserPreference;
+use App\Support\Locales;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -28,7 +29,7 @@ class SettingsController extends Controller
         $data = $request->validate([
             'appearance' => ['sometimes', 'string', Rule::in(UserPreference::APPEARANCES)],
             'haptics' => ['sometimes', 'boolean'],
-            'language' => ['sometimes', 'string', 'max:50'],
+            'language' => ['sometimes', 'string', Rule::in(Locales::labels())],
             'push_notifications' => ['sometimes', 'boolean'],
             'reminder_time' => ['sometimes', 'string', 'max:20'],
             'reminders' => ['sometimes', 'boolean'],
@@ -42,9 +43,8 @@ class SettingsController extends Controller
         $preferences->fill(collect($data)->except('daily_goal')->all());
         $preferences->save();
 
-        if (array_key_exists('daily_goal', $data)) {
-            $user->update(['daily_goal' => $data['daily_goal']]);
-        }
+        // users.language is what the web UI's locale is driven from (SetLocale).
+        $user->update(collect($data)->only(['daily_goal', 'language'])->all());
 
         return response()->json([
             'message' => 'Settings saved.',

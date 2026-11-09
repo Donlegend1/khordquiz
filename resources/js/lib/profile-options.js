@@ -1,29 +1,35 @@
+import { tk } from '@/lib/i18n';
+
 // Shared between Settings.jsx (where a member can change these later) and
 // Auth/ProfileSetup.jsx (the one-time onboarding step right after signup) —
 // single source so the two pickers never drift apart. Keep in sync by hand
 // with the mobile app's own copies (app/settings.tsx's LANGUAGES, and
 // src/lib/quiz-progress.ts's INSTRUMENT_GROUPS, trimmed there to the
 // instruments that app actually has).
+//
+// Values are what's stored/sent to the server, so they stay English; every
+// display string is a tk() key — pickers render them with t(value). LANGUAGES
+// are native names and are never translated.
 export const LANGUAGES = ['English', 'Français', 'Español', 'Português', 'Deutsch', 'Nederlands', 'Italiano', '한국어', '中文', 'हिन्दी', '日本語'];
 
 // Same families as the quiz-preview sound picker (resources/js/Pages/Member/QuizCategory.jsx's
 // SOUND_CATEGORIES) — kept as a separate constant since each picker's shell is its
 // own component, but the groupings themselves should stay identical.
 export const INSTRUMENT_GROUPS = [
-    { name: 'Piano', icon: '🎹', options: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
-    { name: 'Guitar', icon: '🎸', options: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
-    { name: 'Strings', icon: '🎻', options: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
-    { name: 'Brass', icon: '🎺', options: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', icon: '🎤', options: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
-    { name: 'Percussion', icon: '🥁', options: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
-    { name: 'Woodwinds', icon: '🪈', options: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
+    { name: tk('Piano'), icon: '🎹', options: [tk('Piano'), tk('EP'), tk('Upright Piano'), tk('Organ')] },
+    { name: tk('Guitar'), icon: '🎸', options: [tk('Guitar'), tk('Electric Guitar'), tk('Harpejji'), tk('Bass Guitar')] },
+    { name: tk('Strings'), icon: '🎻', options: [tk('Violin'), tk('Strings'), tk('Cello'), tk('Upright Bass')] },
+    { name: tk('Brass'), icon: '🎺', options: [tk('Saxophone'), tk('Trombone'), tk('Tuba'), tk('Trumpet')] },
+    { name: tk('Vocals'), icon: '🎤', options: [tk('Voice'), tk('Audience Choir'), tk('Ensemble Choir'), tk('Sustained Choir'), tk('Bulgarian Choir')] },
+    { name: tk('Percussion'), icon: '🥁', options: [tk('Marimba'), tk('Steel Drum'), tk('Celesta'), tk('Vibraphone')] },
+    { name: tk('Woodwinds'), icon: '🪈', options: [tk('Flute'), tk('Clarinet'), tk('Oboe'), tk('Bassoon')] },
 ];
 
 // Display-only — the underlying value stays "Piano"/"EP" everywhere else; this just
 // makes the two piano options clearly distinct from each other in any picker.
-export const INSTRUMENT_LABELS = { Piano: 'Grand Piano', EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone', Voice: 'Solo Choir' };
+export const INSTRUMENT_LABELS = { Piano: tk('Grand Piano'), EP: tk('Rhodes'), Guitar: tk('Acoustic Guitar'), Saxophone: tk('Tenor Saxophone') };
 
-export const SKILL_LEVELS = ['Beginner', 'Intermediate', 'Advanced'];
+export const SKILL_LEVELS = [tk('Beginner'), tk('Intermediate'), tk('Advanced')];
 
 // Ten illustrated music avatars, shared visually with the mobile app.
 export const AVATAR_OPTIONS = [

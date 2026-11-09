@@ -1,6 +1,7 @@
 import AppShell from '@/Layouts/AppShell';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
+import { tk, useLocale, useTrans } from '@/lib/i18n';
 
 // Sample leaderboard, same as the mobile app's own Rank tab (see
 // src/lib/demo-leaderboard.ts there): "Sample leaderboard used to preview the
@@ -15,7 +16,7 @@ const ROW_COLORS = ['bg-amber-50 text-amber-700', 'bg-sky-50 text-sky-700', 'bg-
 
 const PERIODS = {
     week: {
-        label: 'This week',
+        label: tk('This week'),
         total: 1248,
         you: { rank: 485, points: 296, accuracy: 74, streak: 6 },
         ahead: { name: 'Aisha H.', pointsToPass: 4 },
@@ -33,7 +34,7 @@ const PERIODS = {
         ],
     },
     all: {
-        label: 'All time',
+        label: tk('All time'),
         total: 1248,
         you: { rank: 512, points: 4120, accuracy: 74, streak: 6 },
         ahead: { name: 'Esther R.', pointsToPass: 18 },
@@ -72,6 +73,8 @@ function TrophyIcon(props) {
 }
 
 function PodiumSpot({ entry, order }) {
+    const t = useTrans();
+    const locale = useLocale();
     const first = entry.place === 1;
     const color = PODIUM_COLORS[entry.place - 1];
     const barHeight = first ? 'h-24' : entry.place === 2 ? 'h-[72px]' : 'h-14';
@@ -93,22 +96,24 @@ function PodiumSpot({ entry, order }) {
             <p className="max-w-full truncate text-sm font-semibold text-neutral-900">{entry.name}</p>
             <div className={`flex w-full flex-col items-center justify-start rounded-t-xl pt-2.5 ${barHeight} ${first ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
                 <span className={`text-sm font-extrabold tabular-nums ${first ? 'text-white' : 'text-neutral-900'}`}>
-                    {entry.points.toLocaleString('en-US')}
+                    {entry.points.toLocaleString(locale)}
                 </span>
-                <span className={`text-[11px] ${first ? 'text-white/70' : 'text-neutral-500'}`}>pts</span>
+                <span className={`text-[11px] ${first ? 'text-white/70' : 'text-neutral-500'}`}>{t('pts')}</span>
             </div>
         </div>
     );
 }
 
 export default function Leaderboard() {
+    const t = useTrans();
+    const locale = useLocale();
     const [period, setPeriod] = useState('week');
     const board = PERIODS[period];
     const topPercent = Math.max(1, Math.ceil((board.you.rank / board.total) * 100));
 
     return (
-        <AppShell eyebrow="Member" title="Leaderboard" intro="See how your practice stacks up against other members.">
-            <Head title="Leaderboard" />
+        <AppShell eyebrow={t('Member')} title={t('Leaderboard')} intro={t('See how your practice stacks up against other members.')}>
+            <Head title={t('Leaderboard')} />
 
             <div className="mb-6 grid grid-cols-2 gap-2 sm:inline-flex sm:gap-0 sm:rounded-xl sm:bg-neutral-100 sm:p-1">
                 {Object.entries(PERIODS).map(([key, value]) => (
@@ -120,30 +125,30 @@ export default function Leaderboard() {
                             period === key ? 'bg-brand text-white shadow-sm' : 'bg-neutral-100 text-neutral-500 hover:text-neutral-900 sm:bg-transparent'
                         }`}
                     >
-                        {value.label}
+                        {t(value.label)}
                     </button>
                 ))}
             </div>
 
             <div className="mb-6 flex items-center gap-4 rounded-2xl bg-neutral-900 p-4 text-white sm:gap-6 sm:p-6">
                 <div className="flex shrink-0 flex-col items-start text-left">
-                    <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60 sm:text-[11px]">Your rank</span>
-                    <span className="text-2xl font-extrabold tabular-nums sm:text-3xl">#{board.you.rank.toLocaleString('en-US')}</span>
-                    <span className="text-[11px] text-white/60 sm:text-xs">of {board.total.toLocaleString('en-US')}</span>
+                    <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60 sm:text-[11px]">{t('Your rank')}</span>
+                    <span className="text-2xl font-extrabold tabular-nums sm:text-3xl">#{board.you.rank.toLocaleString(locale)}</span>
+                    <span className="text-[11px] text-white/60 sm:text-xs">{t('of :total', { total: board.total.toLocaleString(locale) })}</span>
                 </div>
                 <div className="h-12 w-px shrink-0 bg-white/15 sm:h-14" />
                 <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">
-                    <span className="text-sm font-extrabold tabular-nums sm:text-base">{board.you.points.toLocaleString('en-US')} pts</span>
+                    <span className="text-sm font-extrabold tabular-nums sm:text-base">{t(':points pts', { points: board.you.points.toLocaleString(locale) })}</span>
                     <span className="truncate text-xs text-white/70 sm:text-sm">
-                        {board.ahead.pointsToPass.toLocaleString('en-US')} pts to pass {board.ahead.name}
+                        {t(':points pts to pass :name', { points: board.ahead.pointsToPass.toLocaleString(locale), name: board.ahead.name })}
                     </span>
-                    <span className="mt-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold sm:text-[11px]">Top {topPercent}%</span>
+                    <span className="mt-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold sm:text-[11px]">{t('Top :percent%', { percent: topPercent })}</span>
                 </div>
             </div>
 
             <div className="mb-3 flex items-baseline justify-between">
-                <h2 className="text-lg font-bold text-neutral-900">Top players</h2>
-                <span className="text-sm text-neutral-500">Top 50</span>
+                <h2 className="text-lg font-bold text-neutral-900">{t('Top players')}</h2>
+                <span className="text-sm text-neutral-500">{t('Top :count', { count: 50 })}</span>
             </div>
 
             <div className="mb-4 flex items-end gap-3">
@@ -162,10 +167,10 @@ export default function Leaderboard() {
                         <div className="min-w-0 flex-1">
                             <p className="truncate text-sm font-semibold text-neutral-900">{row.name}</p>
                             <p className="truncate text-xs text-neutral-500">
-                                {row.accuracy}% accuracy &middot; {row.streak}-day streak
+                                {t(':accuracy% accuracy · :streak-day streak', { accuracy: row.accuracy, streak: row.streak })}
                             </p>
                         </div>
-                        <span className="shrink-0 text-sm font-extrabold tabular-nums text-neutral-900">{row.points.toLocaleString('en-US')}</span>
+                        <span className="shrink-0 text-sm font-extrabold tabular-nums text-neutral-900">{row.points.toLocaleString(locale)}</span>
                     </li>
                 ))}
             </ul>

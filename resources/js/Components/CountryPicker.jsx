@@ -1,5 +1,80 @@
 import { COUNTRIES } from '@/lib/countries';
-import { useEffect, useRef, useState } from 'react';
+import { useLocale, useTrans } from '@/lib/i18n';
+import { useEffect, useMemo, useRef, useState } from 'react';
+
+// COUNTRIES holds English names (that's the stored value), not ISO codes, so the
+// ISO code each name stands for is worked out once by matching against Intl's own
+// English region names — plus the handful whose spelling differs from Intl's.
+// The code is then used only to DISPLAY the name in the member's language;
+// onChange still receives the English name.
+const ISO_ALIASES = {
+    'Antigua and Barbuda': 'AG',
+    'Bosnia and Herzegovina': 'BA',
+    'Cabo Verde': 'CV',
+    'Congo, Democratic Republic of the': 'CD',
+    'Congo, Republic of the': 'CG',
+    "Cote d'Ivoire": 'CI',
+    'Holy See': 'VA',
+    Myanmar: 'MM',
+    'Palestine, State of': 'PS',
+    'Saint Kitts and Nevis': 'KN',
+    'Saint Lucia': 'LC',
+    'Saint Vincent and the Grenadines': 'VC',
+    'Sao Tome and Principe': 'ST',
+    'Trinidad and Tobago': 'TT',
+    Turkey: 'TR',
+};
+
+let isoCodes = null;
+function countryCodes() {
+    if (isoCodes) return isoCodes;
+    isoCodes = { ...ISO_ALIASES };
+    try {
+        const english = new Intl.DisplayNames(['en'], { type: 'region' });
+        const byName = {};
+        for (let a = 65; a < 91; a++) {
+            for (let b = 65; b < 91; b++) {
+                const code = String.fromCharCode(a, b);
+                try {
+                    const name = english.of(code);
+                    if (name && name !== code && !byName[name]) byName[name] = code;
+                } catch {
+                    // Not a valid region code.
+                }
+            }
+        }
+        for (const country of COUNTRIES) {
+            if (!isoCodes[country] && byName[country]) isoCodes[country] = byName[country];
+        }
+    } catch {
+        // No Intl.DisplayNames — names just stay in English.
+    }
+    return isoCodes;
+}
+
+function useCountryName() {
+    const locale = useLocale();
+
+    return useMemo(() => {
+        if (locale.startsWith('en')) return (country) => country;
+        let display = null;
+        try {
+            display = new Intl.DisplayNames([locale], { type: 'region' });
+        } catch {
+            return (country) => country;
+        }
+        const codes = countryCodes();
+        return (country) => {
+            const code = codes[country];
+            if (!code) return country;
+            try {
+                return display.of(code) || country;
+            } catch {
+                return country;
+            }
+        };
+    }, [locale]);
+}
 
 function ChevronDownIcon(props) {
     return (
@@ -32,10 +107,19 @@ function SearchIcon(props) {
 // `error` to switch border color; EditProfile's don't), rather than this
 // component guessing one shared look.
 export default function CountryPicker({ value, onChange, triggerClassName }) {
+    const t = useTrans();
+    const locale = useLocale();
+    const countryName = useCountryName();
     const [open, setOpen] = useState(false);
     const [query, setQuery] = useState('');
     const ref = useRef(null);
-    const matches = COUNTRIES.filter((c) => c.toLowerCase().includes(query.trim().toLowerCase()));
+    const options = useMemo(
+        () => COUNTRIES.map((country) => ({ value: country, label: countryName(country) })).sort((a, b) => a.label.localeCompare(b.label, locale)),
+        [countryName, locale],
+    );
+    const needle = query.trim().toLowerCase();
+    // Matches the shown (translated) name or the English one.
+    const matches = options.filter((c) => c.label.toLowerCase().includes(needle) || c.value.toLowerCase().includes(needle));
 
     useEffect(() => {
         if (!open) return;
@@ -49,7 +133,7 @@ export default function CountryPicker({ value, onChange, triggerClassName }) {
     return (
         <div className="relative" ref={ref}>
             <button type="button" onClick={() => setOpen((v) => !v)} className={`${triggerClassName} flex items-center justify-between text-left`}>
-                <span className={value ? 'text-neutral-900' : 'text-neutral-400'}>{value || 'Select your country'}</span>
+                <span className={value ? 'text-neutral-900' : 'text-neutral-400'}>{value ? countryName(value) : t('Select your country')}</span>
                 <ChevronDownIcon className="h-4 w-4 shrink-0 text-neutral-400" />
             </button>
 
@@ -62,12 +146,12 @@ export default function CountryPicker({ value, onChange, triggerClassName }) {
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search countries"
+                            placeholder={t('Search countries')}
                             className="w-full text-sm text-neutral-900 placeholder:text-neutral-400 focus:outline-none"
                         />
                     </div>
                     <div className="max-h-60 overflow-y-auto py-1">
-                        {matches.map((country) => (
+                        {matches.map(({ value: country, label }) => (
                             <button
                                 key={country}
                                 type="button"
@@ -78,11 +162,11 @@ export default function CountryPicker({ value, onChange, triggerClassName }) {
                                 }}
                                 className="flex w-full items-center justify-between px-3.5 py-2 text-left text-sm text-neutral-800 transition-colors duration-150 hover:bg-neutral-50"
                             >
-                                {country}
+                                {label}
                                 {country === value && <CheckIcon className="h-4 w-4 text-brand" />}
                             </button>
                         ))}
-                        {matches.length === 0 && <p className="px-3.5 py-3 text-sm text-neutral-400">No matches.</p>}
+                        {matches.length === 0 && <p className="px-3.5 py-3 text-sm text-neutral-400">{t('No matches.')}</p>}
                     </div>
                 </div>
             )}

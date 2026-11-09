@@ -20,13 +20,27 @@ class Subscription extends Model
         'next_plan',
         'trial_ends_at',
         'trial_cancelled',
+        'trial_used',
+        'stripe_customer_id',
+        'stripe_subscription_id',
+        'current_period_end',
     ];
+
+    public const PROVIDER_STRIPE = 'Stripe';
+
+    public const PROVIDER_KKP = 'KingsleyKhordPiano';
+
+    // Days a lapsed paid plan keeps working while a renewal payment is retried
+    // or the nightly Kingsleykhordpiano sync catches up.
+    public const GRACE_DAYS = 3;
 
     protected function casts(): array
     {
         return [
             'trial_ends_at' => 'datetime',
             'trial_cancelled' => 'boolean',
+            'trial_used' => 'boolean',
+            'current_period_end' => 'datetime',
         ];
     }
 
@@ -37,13 +51,20 @@ class Subscription extends Model
 
     public static function forUser(User $user): self
     {
-        return self::query()->firstOrCreate(['user_id' => $user->id]);
+        // Explicit defaults: a freshly created row doesn't load the column
+        // defaults back, and access === null must never read as unlocked.
+        return self::query()->firstOrCreate(['user_id' => $user->id], ['access' => 'none', 'status' => 'active']);
     }
 
     public function unlocksQuizzes(): bool
     {
-        if ($this->access === 'none') {
+        if (in_array($this->access, [null, 'none'], true) || $this->status === 'expired') {
             return false;
+        }
+
+        if ($this->access === 'paid') {
+            return $this->current_period_end === null
+                || $this->current_period_end->copy()->addDays(self::GRACE_DAYS)->isFuture();
         }
 
         $trial = $this->trial();
