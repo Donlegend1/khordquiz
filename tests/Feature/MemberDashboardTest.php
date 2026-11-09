@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Quiz;
+use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
 use App\Models\QuizQuestion;
 use App\Models\User;
@@ -25,6 +26,7 @@ class MemberDashboardTest extends TestCase
             'current_streak' => 7,
             'longest_streak' => 12,
             'last_practiced_on' => now()->toDateString(),
+            'daily_goal' => 250,
         ]);
 
         $quiz = Quiz::factory()->create([
@@ -66,6 +68,10 @@ class MemberDashboardTest extends TestCase
             'completed_at' => now(),
         ]);
 
+        foreach (range(1, 15) as $position) {
+            QuizAnswer::create(['user_id' => $member->id, 'slug' => $quiz->slug, 'answer' => 'Do', 'correct' => true, 'answered_at' => now()]);
+        }
+
         $this->actingAs($member)
             ->get(route('dashboard'))
             ->assertOk()
@@ -74,6 +80,8 @@ class MemberDashboardTest extends TestCase
                 ->where('auth.user.role', 'member')
                 ->where('streak.current', 7)
                 ->where('streak.longest', 12)
+                ->where('goal.target', 250)
+                ->where('goal.done', 15)
                 ->where('resume.quiz.title', 'Melodic Diatonic Intervals')
                 ->where('resume.stopped_at_question', 12)
                 ->where('resume.quiz.question_count', 25)
@@ -88,5 +96,52 @@ class MemberDashboardTest extends TestCase
                 ->where('achievements.0.current', 1)
                 ->where('achievements.3.name', 'Week Warrior')
                 ->where('achievements.3.current', 7));
+    }
+
+    public function test_daily_goal_starts_empty_and_ignores_other_members_and_previous_days(): void
+    {
+        $member = User::factory()->create(['daily_goal' => 50]);
+        QuizAttempt::factory()->create(['user_id' => $member->id, 'last_played_at' => now()->subDay(), 'stopped_at_question' => 20]);
+        QuizAttempt::factory()->create(['stopped_at_question' => 20]);
+        QuizAttempt::factory()->create(['user_id' => $member->id, 'stopped_at_question' => 1]);
+
+        $this->actingAs($member)->get(route('dashboard'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('goal.target', 50)
+                ->where('goal.done', 0));
+    }
+
+    public function test_daily_goal_progress_stops_at_the_saved_target(): void
+    {
+        $member = User::factory()->create(['daily_goal' => 20]);
+        QuizAttempt::factory()->create([
+            'user_id' => $member->id,
+            'quiz_id' => Quiz::factory()->create(['question_count' => 25])->id,
+            'status' => QuizAttempt::STATUS_COMPLETED,
+            'completed_at' => now(),
+        ]);
+
+        foreach (range(1, 25) as $position) {
+            QuizAnswer::create(['user_id' => $member->id, 'slug' => 'test', 'answer' => 'Do', 'correct' => true, 'answered_at' => now()]);
+        }
+
+        $this->actingAs($member)->get(route('dashboard'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->where('goal.target', 20)
+                ->where('goal.done', 20));
+    }
+
+    public function test_progress_continue_card_receives_the_exact_lesson_slug(): void
+    {
+        $user = User::factory()->create();
+        $quiz = Quiz::factory()->create(['title' => 'Basic Triads · Level 2', 'category' => 'Basic Triads']);
+        QuizAttempt::factory()->create(['user_id' => $user->id, 'quiz_id' => $quiz->id, 'stopped_at_question' => 5]);
+        $this->actingAs($user)->get(route('progress'))->assertOk()->assertInertia(fn (Assert $page) => $page
+            ->component('Member/Progress')
+            ->where('resume.quiz.slug', $quiz->slug)
+            ->where('resume.quiz.categorySlug', 'basic-triads')
+            ->where('resume.stopped_at_question', 5));
     }
 }

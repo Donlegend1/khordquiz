@@ -1,0 +1,422 @@
+{
+  "Dominant Chord Extentions · Level 1": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains seven chords with a lowered ninth (♭9), a raised ninth (♯9), or both. This lesson uses chords built on F. The chords use their basic arrangement, with no doubled or shifted notes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "♭9",
+      "♯11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "exampleChord": "F dominant 7(♭9, ♯11)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G♭ adds ♭9 and B adds ♯11, so select ♭9 and ♯11.",
+    "group": 1,
+    "basic": true,
+    "availableChords": [
+      "Dom7(♭9, ♯11)",
+      "Dom7(♭9, 13)",
+      "Dom7(♭9, ♭13)",
+      "Dom7(♯9, ♯11)",
+      "Dom7(♯9, ♭13)",
+      "Dom7(♭9, ♯11, 13)",
+      "Dom7(♭9, ♯9, ♭13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 2": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains seven chords with a lowered ninth (♭9), a raised ninth (♯9), or both. This lesson uses all twelve keys. The chords use their basic arrangement, with no doubled or shifted notes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "♭9",
+      "♯11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "exampleChord": "F dominant 7(♭9, ♯11)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G♭ adds ♭9 and B adds ♯11, so select ♭9 and ♯11.",
+    "group": 1,
+    "basic": true,
+    "availableChords": [
+      "Dom7(♭9, ♯11)",
+      "Dom7(♭9, 13)",
+      "Dom7(♭9, ♭13)",
+      "Dom7(♯9, ♯11)",
+      "Dom7(♯9, ♭13)",
+      "Dom7(♭9, ♯11, 13)",
+      "Dom7(♭9, ♯9, ♭13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 3": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains seven chords with a lowered ninth (♭9), a raised ninth (♯9), or both. This lesson uses chords built on F. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Select the same extensions even when the arrangement changes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "♭9",
+      "♯11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "exampleChord": "F dominant 7(♭9, ♯11)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G♭ adds ♭9 and B adds ♯11, so select ♭9 and ♯11.",
+    "group": 1,
+    "basic": false,
+    "availableChords": [
+      "Dom7(♭9, ♯11)",
+      "Dom7(♭9, 13)",
+      "Dom7(♭9, ♭13)",
+      "Dom7(♯9, ♯11)",
+      "Dom7(♯9, ♭13)",
+      "Dom7(♭9, ♯11, 13)",
+      "Dom7(♭9, ♯9, ♭13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 4": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains seven chords with a lowered ninth (♭9), a raised ninth (♯9), or both. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Select the same extensions even when the arrangement changes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "♭9",
+      "♯11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "exampleChord": "F dominant 7(♭9, ♯11)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G♭ adds ♭9 and B adds ♯11, so select ♭9 and ♯11.",
+    "group": 1,
+    "basic": false,
+    "availableChords": [
+      "Dom7(♭9, ♯11)",
+      "Dom7(♭9, 13)",
+      "Dom7(♭9, ♭13)",
+      "Dom7(♯9, ♯11)",
+      "Dom7(♯9, ♭13)",
+      "Dom7(♭9, ♯11, 13)",
+      "Dom7(♭9, ♯9, ♭13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 5": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six chords with a natural ninth (9) or no ninth. This lesson uses chords built on F. The chords use their basic arrangement, with no doubled or shifted notes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G",
+      "D"
+    ],
+    "exampleChord": "F dominant 7(9, 13)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G adds 9 and D adds 13, so select 9 and 13.",
+    "group": 2,
+    "basic": true,
+    "availableChords": [
+      "Dom7(9, ♯11)",
+      "Dom7(9, 13)",
+      "Dom7(9, ♭13)",
+      "Dom7(9, 11)",
+      "Dom7(♯11, 13)",
+      "Dom7(9, ♯11, 13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 6": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six chords with a natural ninth (9) or no ninth. This lesson uses all twelve keys. The chords use their basic arrangement, with no doubled or shifted notes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G",
+      "D"
+    ],
+    "exampleChord": "F dominant 7(9, 13)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G adds 9 and D adds 13, so select 9 and 13.",
+    "group": 2,
+    "basic": true,
+    "availableChords": [
+      "Dom7(9, ♯11)",
+      "Dom7(9, 13)",
+      "Dom7(9, ♭13)",
+      "Dom7(9, 11)",
+      "Dom7(♯11, 13)",
+      "Dom7(9, ♯11, 13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 7": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six chords with a natural ninth (9) or no ninth. This lesson uses chords built on F. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Select the same extensions even when the arrangement changes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G",
+      "D"
+    ],
+    "exampleChord": "F dominant 7(9, 13)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G adds 9 and D adds 13, so select 9 and 13.",
+    "group": 2,
+    "basic": false,
+    "availableChords": [
+      "Dom7(9, ♯11)",
+      "Dom7(9, 13)",
+      "Dom7(9, ♭13)",
+      "Dom7(9, 11)",
+      "Dom7(♯11, 13)",
+      "Dom7(9, ♯11, 13)"
+    ]
+  },
+  "Dominant Chord Extentions · Level 8": {
+    "heading": "Hear the dominant chord. Find the added notes.",
+    "intro": "Dominant 7 is already given. Listen and select all the extra extensions you hear above that chord.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the dominant seventh chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select all the added extensions",
+        "description": "Choose all the extensions present, such as ♭9 and ♯11, or 9 and 13. More than one answer is needed. Tap a selected extension again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check every selected extension, then press Submit Answer. The seventh is already part of the given Dominant 7 chord, so there is no separate 7 button to choose."
+      }
+    ],
+    "about": "A dominant seventh chord already contains four notes. In F, they are F, A, C and E♭. This quiz asks which extra notes are added to that chord. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six chords with a natural ninth (9) or no ninth. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Select the same extensions even when the arrangement changes. Select every extension present. For example, a chord with both ♭9 and ♯9 needs both buttons selected.",
+    "choices": [
+      "♭9",
+      "9",
+      "♯9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A",
+      "C",
+      "E♭",
+      "G",
+      "D"
+    ],
+    "exampleChord": "F dominant 7(9, 13)",
+    "exampleExplanation": "F, A, C and E♭ make the dominant seventh chord. G adds 9 and D adds 13, so select 9 and 13.",
+    "group": 2,
+    "basic": false,
+    "availableChords": [
+      "Dom7(9, ♯11)",
+      "Dom7(9, 13)",
+      "Dom7(9, ♭13)",
+      "Dom7(9, 11)",
+      "Dom7(♯11, 13)",
+      "Dom7(9, ♯11, 13)"
+    ]
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "13th Degree Chords · Level 1": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. The root, the note the chord is named after, stays at the bottom. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "layoutCaption": "F minor thirteenth, with all seven notes played together.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  },
+  "13th Degree Chords · Level 2": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. The root, the note the chord is named after, stays at the bottom. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "layoutCaption": "F minor thirteenth, with all seven notes played together.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  },
+  "13th Degree Chords · Level 3": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. A three-note chord stays at the bottom while the four higher notes change position. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G",
+      "B♭",
+      "D",
+      "E♭"
+    ],
+    "layoutCaption": "F minor thirteenth with its higher notes rearranged above F, A♭ and C.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  },
+  "13th Degree Chords · Level 4": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. A three-note chord stays at the bottom while the four higher notes change position. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G",
+      "B♭",
+      "D",
+      "E♭"
+    ],
+    "layoutCaption": "F minor thirteenth with its higher notes rearranged above F, A♭ and C.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  },
+  "13th Degree Chords · Level 5": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses chords built on F. The chord notes are split into a lower group and a higher group. Both groups change position, so the lowest note can change while the chord type stays the same. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A♭",
+      "C",
+      "F",
+      "G",
+      "B♭",
+      "D",
+      "E♭"
+    ],
+    "layoutCaption": "F minor thirteenth with A♭ at the bottom. The notes are rearranged, but the chord type is unchanged.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  },
+  "13th Degree Chords · Level 6": {
+    "heading": "Hear a thirteenth chord. Choose its type.",
+    "intro": "You will hear a chord with several notes played together, including a thirteenth. Choose the chord name that matches its sound.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to the notes together. Focus on the overall sound rather than trying to name every note. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the chord type",
+        "description": "Select Major 13(♯11), Minor 13th, Dominant 13(♯11) or Dominant 13(♭9,♯11). Listen for the difference between the four chord sounds."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "These chords add a thirteenth to a chord that also contains a seventh, ninth and eleventh or raised eleventh. For example, F minor thirteenth uses F, A♭, C, E♭, G, B♭ and D. The added D is the thirteenth. In the answer names, ♯11 means a raised eleventh and ♭9 means a lowered ninth. Raising or lowering a note means moving one keyboard step, counting both white and black keys. This lesson uses all twelve keys. The chord notes are split into a lower group and a higher group. Both groups change position, so the lowest note can change while the chord type stays the same. Choose only the chord type; there is no separate inversion answer.",
+    "qualities": [
+      "Major 13(♯11)",
+      "Minor 13th",
+      "Dominant 13(♯11)",
+      "Dominant 13(♭9,♯11)"
+    ],
+    "inversions": [],
+    "exampleQuality": "Minor 13th",
+    "exampleInversion": null,
+    "exampleNotes": [
+      "A♭",
+      "C",
+      "F",
+      "G",
+      "B♭",
+      "D",
+      "E♭"
+    ],
+    "layoutCaption": "F minor thirteenth with A♭ at the bottom. The notes are rearranged, but the chord type is unchanged.",
+    "exampleExplanation": "This visual example is F minor thirteenth. Choose Minor 13th. During the quiz, choose the chord type you hear, even when the notes are arranged differently."
+  }
+}

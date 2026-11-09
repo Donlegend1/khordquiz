@@ -1,0 +1,101 @@
+ID,Events,Progression,Melody,Solfege,Diatonic events,Chromatic events,Exception
+CM-001,5,C -> Cmaj7b5 -> Bbmaj7 -> F -> C,E4 -> E4 -> D4 -> C4 -> C4,Mi Mi Re Do Do,3,2,False
+CM-002,5,C -> F -> Em7b5 -> Dm7b5 -> C,E4 -> F4 -> E4 -> F4 -> G4,Mi Fa Mi Fa So,3,2,False
+CM-003,5,C -> FmMaj7 -> Em7 -> Fmaj7 -> Cmaj7,G4 -> F4 -> D4 -> C4 -> C4,So Fa Re Do Do,4,1,False
+CM-004,5,C -> Ebm7 -> Dm7 -> G7 -> C,G4 -> F#4 -> F4 -> F4 -> E4,So Fi Fa Fa Mi,4,1,False
+CM-005,5,C -> Bb7 -> Am7 -> G7 -> C,G4 -> F4 -> E4 -> F4 -> G4,So Fa Mi Fa So,4,1,False
+CM-006,5,C -> Bb7 -> Cmaj7 -> Fmaj7 -> C,G4 -> Bb4 -> B4 -> A4 -> G4,So Li Ti La So,4,1,False
+CM-007,5,C -> Bbmaj7 -> F -> G7 -> C,G4 -> Bb4 -> C5 -> B4 -> C5,So Li Do Ti Do,4,1,False
+CM-008,5,C -> F -> A7 -> Dm7b5 -> C,G4 -> F4 -> G4 -> F4 -> E4,So Fa So Fa Mi,3,2,False
+CM-009,5,C -> C#dim7 -> Dm -> G7 -> Cmaj7,G4 -> Bb4 -> A4 -> B4 -> B4,So Li La Ti Ti,4,1,False
+CM-010,5,Cmaj7 -> G7 -> C -> FdimMaj7 -> C,E4 -> F4 -> G4 -> Ab4 -> G4,Mi Fa So Si So,4,1,False
+CM-011,5,C -> A -> Dm -> G7 -> Cmaj7,E4 -> E4 -> F4 -> G4 -> G4,Mi Mi Fa So So,4,1,False
+CM-012,5,F -> Gm -> F -> Dm -> C,F4 -> G4 -> F4 -> F4 -> E4,Fa So Fa Fa Mi,4,1,False
+CM-013,5,Cmaj7 -> Em7 -> Fmaj7 -> Fmaj7b5 -> C,E4 -> E4 -> F4 -> F4 -> G4,Mi Mi Fa Fa So,5,0,False
+CM-014,5,Fmaj7 -> FdimMaj7 -> Em7 -> Fmaj7 -> Cmaj7,A4 -> Ab4 -> G4 -> F4 -> G4,La Si So Fa So,4,1,False
+CM-015,5,Cmaj7 -> Cdim7 -> Am7 -> Dm7 -> C,E4 -> Eb4 -> E4 -> F4 -> E4,Mi Ri Mi Fa Mi,4,1,False
+CM-016,5,C -> Fmaj7 -> C -> FmMaj7 -> Cmaj7,G4 -> F4 -> G4 -> E4 -> C4,So Fa So Mi Do,4,1,False
+CM-017,5,Dm7 -> Dm7b5 -> C -> F -> C,F4 -> F4 -> E4 -> C4 -> C4,Fa Fa Mi Do Do,4,1,False
+CM-018,5,F -> Fm -> C -> Dm7 -> Cmaj7,A4 -> Ab4 -> G4 -> A4 -> B4,La Si So La Ti,4,1,False
+CM-019,5,Cmaj7 -> Em7 -> Fmaj7 -> Fm7 -> C,G4 -> G4 -> A4 -> Ab4 -> G4,So So La Si So,4,1,False
+CM-020,5,F -> Bb -> F -> Dm7 -> Cmaj7,A4 -> Bb4 -> C5 -> C5 -> B4,La Li Do Do Ti,4,1,False
+CM-021,5,C -> F -> Abmaj7 -> G7 -> C,G4 -> A4 -> Ab4 -> B4 -> C5,So La Si Ti Do,4,1,False
+CM-022,5,Cmaj7 -> Fmaj7 -> C -> Fmaj7b5 -> Cmaj7,E4 -> F4 -> G4 -> A4 -> B4,Mi Fa So La Ti,5,0,False
+CM-023,5,Em7 -> EbdimMaj7 -> Dm7 -> G7 -> C,G4 -> F#4 -> F4 -> F4 -> G4,So Fi Fa Fa So,4,1,False
+CM-024,5,C -> C#dim7 -> Dm7 -> Fmaj7 -> C,G4 -> G4 -> A4 -> A4 -> C5,So So La La Do,4,1,False
+CM-025,5,Cmaj7 -> G7 -> C -> AbmMaj7 -> Cmaj7,E4 -> F4 -> G4 -> Ab4 -> E4,Mi Fa So Si Mi,4,1,False
+CM-026,5,C -> Fmaj7 -> F#m7b5 -> Fmaj7 -> Cmaj7,G4 -> F4 -> F#4 -> F4 -> G4,So Fa Fi Fa So,4,1,False
+CM-027,5,C -> E -> Am -> G7 -> Cmaj7,G4 -> Ab4 -> A4 -> G4 -> G4,So Si La So So,4,1,False
+CM-028,5,F -> Ebmaj7 -> Dm -> F -> C,A4 -> G4 -> A4 -> F4 -> G4,La So La Fa So,4,1,False
+CM-029,5,F -> Gm7 -> F#m7b5 -> F -> C,F4 -> G4 -> F#4 -> F4 -> G4,Fa So Fi Fa So,3,2,False
+CM-030,5,C -> F -> Gm -> Fm -> C,G4 -> A4 -> Bb4 -> C5 -> C5,So La Li Do Do,3,2,False
+CM-031,5,C -> Fmaj7b5 -> Em -> Fmaj7 -> C,G4 -> F4 -> E4 -> F4 -> E4,So Fa Mi Fa Mi,5,0,False
+CM-032,5,Fmaj7 -> F7 -> C -> Dm7 -> Cmaj7,E4 -> Eb4 -> E4 -> D4 -> C4,Mi Ri Mi Re Do,4,1,False
+CM-033,5,Cmaj7 -> Cdim7 -> Dm7 -> G7 -> C,B4 -> A4 -> A4 -> G4 -> G4,Ti La La So So,4,1,False
+CM-034,5,C -> FmMaj7 -> Am7 -> G7 -> Cmaj7,G4 -> Ab4 -> A4 -> B4 -> B4,So Si La Ti Ti,4,1,False
+CM-035,5,C -> Em7b5 -> Am -> Fmaj7 -> Cmaj7,G4 -> Bb4 -> A4 -> A4 -> B4,So Li La La Ti,4,1,False
+CM-036,5,F -> D -> F -> G7 -> C,F4 -> F#4 -> F4 -> F4 -> G4,Fa Fi Fa Fa So,4,1,False
+CM-037,5,C -> Fmaj7 -> BbdimMaj7 -> Fmaj7 -> C,G4 -> F4 -> Db4 -> C4 -> C4,So Fa Di Do Do,4,1,False
+CM-038,5,C -> F -> Abmaj7 -> G -> C,G4 -> A4 -> Ab4 -> G4 -> G4,So La Si So So,4,1,False
+CM-039,5,F -> Gm7 -> C7 -> Fmaj7 -> Cmaj7,F4 -> F4 -> E4 -> F4 -> G4,Fa Fa Mi Fa So,3,2,False
+CM-040,5,F -> Fm -> C -> G -> C,A4 -> Ab4 -> G4 -> B4 -> C5,La Si So Ti Do,4,1,False
+CM-041,5,C -> Bb7 -> C -> F -> C,G4 -> F4 -> E4 -> C4 -> C4,So Fa Mi Do Do,4,1,False
+CM-042,5,C -> Fmaj7 -> Dm7 -> Dbmaj7b5 -> Cmaj7,E4 -> E4 -> D4 -> Db4 -> C4,Mi Mi Re Di Do,4,1,False
+CM-043,5,C -> Bdim7 -> Cmaj7 -> Fmaj7 -> Cmaj7,G4 -> Ab4 -> G4 -> F4 -> G4,So Si So Fa So,4,1,False
+CM-044,5,F -> Em7b5 -> F -> G7 -> C,A4 -> Bb4 -> C5 -> B4 -> C5,La Li Do Ti Do,4,1,False
+CM-045,5,Am7 -> AbmMaj7 -> C -> G -> C,E4 -> Eb4 -> E4 -> D4 -> E4,Mi Ri Mi Re Mi,4,1,False
+CM-046,5,Fmaj7 -> BbdimMaj7 -> Am7 -> Fmaj7 -> C,A4 -> Bb4 -> G4 -> F4 -> G4,La Li So Fa So,4,1,False
+CM-047,5,C -> F -> D -> G -> C,G4 -> F4 -> F#4 -> D4 -> E4,So Fa Fi Re Mi,4,1,False
+CM-048,5,F -> Ebm7 -> Dm7 -> G7 -> Cmaj7,F4 -> F#4 -> F4 -> F4 -> E4,Fa Fi Fa Fa Mi,4,1,False
+CM-049,5,F -> Bbmaj7 -> F -> Dm7 -> Cmaj7,A4 -> A4 -> F4 -> F4 -> E4,La La Fa Fa Mi,4,1,False
+CM-050,5,F -> Gm -> F -> G7 -> Cmaj7,F4 -> G4 -> F4 -> D4 -> C4,Fa So Fa Re Do,4,1,False
+CM-051,6,C -> F -> FmMaj7 -> FdimMaj7 -> Fdim7 -> C,G4 -> F4 -> E4 -> F4 -> F4 -> G4,So Fa Mi Fa Fa So,3,3,True
+CM-052,6,C -> F -> Dm7b5 -> Am7b5 -> Dm7b5 -> C,E4 -> F4 -> F4 -> G4 -> Ab4 -> G4,Mi Fa Fa So Si So,3,3,True
+CM-053,6,Fmaj7 -> Bbmaj7b5 -> Fmaj7 -> C -> Dm7 -> C,F4 -> E4 -> F4 -> E4 -> D4 -> C4,Fa Mi Fa Mi Re Do,5,1,False
+CM-054,6,F -> Fdim7 -> C -> Dm -> G -> C,A4 -> Ab4 -> G4 -> A4 -> G4 -> G4,La Si So La So So,5,1,False
+CM-055,6,F -> Bb7 -> Fmaj7 -> C -> Dm7 -> C,F4 -> Ab4 -> A4 -> G4 -> A4 -> G4,Fa Si La So La So,5,1,False
+CM-056,6,C -> FdimMaj7 -> Fdim7 -> C -> G7 -> Cmaj7,G4 -> F4 -> F4 -> E4 -> F4 -> E4,So Fa Fa Mi Fa Mi,4,2,False
+CM-057,6,C -> F -> C -> Abmaj7 -> G7 -> Cmaj7,G4 -> F4 -> E4 -> Eb4 -> F4 -> E4,So Fa Mi Ri Fa Mi,5,1,False
+CM-058,6,C -> D -> F -> C -> Fmaj7 -> Cmaj7,G4 -> A4 -> C5 -> C5 -> A4 -> B4,So La Do Do La Ti,5,1,False
+CM-059,6,C -> Fm7 -> C -> Dm7 -> G7 -> C,E4 -> Eb4 -> E4 -> F4 -> F4 -> G4,Mi Ri Mi Fa Fa So,5,1,False
+CM-060,6,F -> Gm -> Fm -> C -> Dm7 -> C,F4 -> G4 -> F4 -> G4 -> F4 -> E4,Fa So Fa So Fa Mi,4,2,False
+CM-061,6,F -> Em7b5 -> Fmaj7 -> C -> Fmaj7 -> C,A4 -> G4 -> F4 -> G4 -> F4 -> G4,La So Fa So Fa So,5,1,False
+CM-062,6,C -> Cdim7 -> C -> Am -> G7 -> Cmaj7,G4 -> A4 -> G4 -> A4 -> B4 -> B4,So La So La Ti Ti,5,1,False
+CM-063,6,Cmaj7 -> Dm7 -> Bb7 -> F -> Dm -> C,G4 -> A4 -> Ab4 -> A4 -> A4 -> G4,So La Si La La So,5,1,False
+CM-064,6,Cmaj7 -> Cmaj7b5 -> Dm7 -> C -> Dm7 -> Cmaj7,G4 -> F#4 -> F4 -> E4 -> F4 -> G4,So Fi Fa Mi Fa So,5,1,False
+CM-065,6,C -> FmMaj7 -> C -> Dm -> G7 -> Cmaj7,G4 -> F4 -> G4 -> A4 -> G4 -> G4,So Fa So La So So,5,1,False
+CM-066,6,C -> CdimMaj7 -> Cdim7 -> Am7 -> Dm7 -> Cmaj7,E4 -> Eb4 -> Eb4 -> E4 -> D4 -> E4,Mi Ri Ri Mi Re Mi,4,2,False
+CM-067,6,Cmaj7 -> G7 -> C -> Ebmaj7 -> Dm -> C,E4 -> F4 -> G4 -> Bb4 -> A4 -> G4,Mi Fa So Li La So,5,1,False
+CM-068,6,C -> Bb -> F -> C -> Dm7 -> Cmaj7,G4 -> F4 -> F4 -> E4 -> F4 -> G4,So Fa Fa Mi Fa So,5,1,False
+CM-069,6,F -> Gm7 -> F#m7b5 -> Fmaj7 -> G7 -> C,F4 -> D4 -> C4 -> C4 -> D4 -> E4,Fa Re Do Do Re Mi,4,2,False
+CM-070,6,F -> Fm -> C -> Am -> Dm7 -> Cmaj7,F4 -> F4 -> G4 -> E4 -> F4 -> E4,Fa Fa So Mi Fa Mi,5,1,False
+CM-071,6,C -> C7 -> Fmaj7 -> C -> G7 -> C,G4 -> G4 -> F4 -> G4 -> F4 -> E4,So So Fa So Fa Mi,5,1,False
+CM-072,6,C -> F#m7b5 -> F -> Dm -> G7 -> C,G4 -> F#4 -> F4 -> F4 -> D4 -> C4,So Fi Fa Fa Re Do,5,1,False
+CM-073,6,C -> Ebmaj7b5 -> Dm7 -> Cmaj7 -> G7 -> C,E4 -> Eb4 -> D4 -> E4 -> F4 -> E4,Mi Ri Re Mi Fa Mi,5,1,False
+CM-074,6,C -> Bdim7 -> C -> Fmaj7 -> Dm7 -> C,E4 -> F4 -> E4 -> E4 -> D4 -> E4,Mi Fa Mi Mi Re Mi,5,1,False
+CM-075,6,Fmaj7 -> FmMaj7 -> FdimMaj7 -> C -> Fmaj7 -> C,C5 -> C5 -> B4 -> C5 -> A4 -> C5,Do Do Ti Do La Do,4,2,False
+CM-076,6,C -> FdimMaj7 -> C -> Em7 -> Fmaj7 -> Cmaj7,E4 -> F4 -> G4 -> E4 -> F4 -> E4,Mi Fa So Mi Fa Mi,5,1,False
+CM-077,6,F -> Abmaj7 -> G -> Am -> Fmaj7 -> C,A4 -> Ab4 -> G4 -> E4 -> F4 -> E4,La Si So Mi Fa Mi,5,1,False
+CM-078,6,F -> D -> G -> Am7 -> G7 -> C,F4 -> F#4 -> G4 -> E4 -> F4 -> G4,Fa Fi So Mi Fa So,5,1,False
+CM-079,6,Dm7 -> Gm7 -> C7 -> F -> G7 -> Cmaj7,F4 -> F4 -> E4 -> F4 -> G4 -> G4,Fa Fa Mi Fa So So,4,2,False
+CM-080,6,C -> Fmaj7 -> C -> Gm -> F -> C,G4 -> A4 -> G4 -> Bb4 -> A4 -> G4,So La So Li La So,5,1,False
+CM-081,6,C -> B7 -> G7 -> C -> F -> C,E4 -> Eb4 -> D4 -> C4 -> C4 -> E4,Mi Ri Re Do Do Mi,5,1,False
+CM-082,6,Cmaj7 -> Dm7 -> Dbmaj7b5 -> C -> Dm7 -> C,E4 -> F4 -> F4 -> E4 -> F4 -> G4,Mi Fa Fa Mi Fa So,5,1,False
+CM-083,6,C -> Fm7b5 -> Em -> Am -> G7 -> C,E4 -> F4 -> E4 -> E4 -> F4 -> G4,Mi Fa Mi Mi Fa So,5,1,False
+CM-084,6,C -> Ebdim7 -> C -> Am -> G7 -> Cmaj7,G4 -> F#4 -> G4 -> E4 -> F4 -> E4,So Fi So Mi Fa Mi,5,1,False
+CM-085,6,C -> AbmMaj7 -> Fm7b5 -> Em -> F -> C,G4 -> Ab4 -> Ab4 -> G4 -> A4 -> G4,So Si Si So La So,4,2,False
+CM-086,6,C -> Dm7 -> C -> BbdimMaj7 -> Fmaj7 -> C,G4 -> A4 -> G4 -> Bb4 -> C5 -> C5,So La So Li Do Do,5,1,False
+CM-087,6,C -> F -> A -> Dm -> F -> C,G4 -> F4 -> E4 -> D4 -> C4 -> C4,So Fa Mi Re Do Do,5,1,False
+CM-088,6,C -> F -> Bbmaj7 -> F -> G7 -> Cmaj7,G4 -> F4 -> D4 -> F4 -> F4 -> E4,So Fa Re Fa Fa Mi,5,1,False
+CM-089,6,Fmaj7 -> Fm7 -> C -> F -> Dm -> C,F4 -> F4 -> G4 -> F4 -> F4 -> E4,Fa Fa So Fa Fa Mi,5,1,False
+CM-090,6,F -> Gm -> Fm -> C -> Fmaj7 -> C,F4 -> G4 -> Ab4 -> G4 -> F4 -> G4,Fa So Si So Fa So,4,2,False
+CM-091,6,C -> B7 -> Fmaj7 -> C -> F -> C,G4 -> F#4 -> F4 -> G4 -> F4 -> E4,So Fi Fa So Fa Mi,5,1,False
+CM-092,6,C -> C#m7b5 -> Dm7 -> Fmaj7 -> Dm7 -> C,E4 -> E4 -> D4 -> E4 -> D4 -> C4,Mi Mi Re Mi Re Do,5,1,False
+CM-093,6,C -> Ebmaj7b5 -> Dm -> F -> G7 -> C,E4 -> Eb4 -> D4 -> F4 -> F4 -> E4,Mi Ri Re Fa Fa Mi,5,1,False
+CM-094,6,C -> Cdim7 -> Fmaj7 -> C -> G7 -> C,G4 -> F#4 -> F4 -> G4 -> B4 -> C5,So Fi Fa So Ti Do,5,1,False
+CM-095,6,C -> AbmMaj7 -> C -> F -> Dm -> C,G4 -> Ab4 -> G4 -> A4 -> A4 -> G4,So Si So La La So,5,1,False
+CM-096,6,Cmaj7 -> G7 -> C -> EbdimMaj7 -> Dm7 -> Cmaj7,E4 -> F4 -> G4 -> F#4 -> F4 -> E4,Mi Fa So Fi Fa Mi,5,1,False
+CM-097,6,C -> E -> Am -> F -> G7 -> Cmaj7,G4 -> Ab4 -> A4 -> C5 -> B4 -> B4,So Si La Do Ti Ti,5,1,False
+CM-098,6,C -> Dm7 -> C -> Ebm7 -> Dm7 -> C,E4 -> F4 -> E4 -> Eb4 -> D4 -> C4,Mi Fa Mi Ri Re Do,5,1,False
+CM-099,6,C -> Abmaj7 -> G7 -> C -> Dm7 -> C,G4 -> G4 -> F4 -> E4 -> F4 -> E4,So So Fa Mi Fa Mi,5,1,False
+CM-100,6,F -> A7 -> Dm -> C -> G7 -> C,A4 -> G4 -> A4 -> G4 -> F4 -> G4,La So La So Fa So,5,1,False

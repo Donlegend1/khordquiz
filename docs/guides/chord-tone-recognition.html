@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chord Tone Recognition · Illustrated Guide · KhordQuiz</title>
+<style>
+@page { size:A4; margin:0; }
+* { box-sizing:border-box; }
+body { margin:0; background:#e9e7e4; font-family:Arial,Helvetica,sans-serif; color:#191919; font-size:10pt; line-height:1.5; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+.page { width:210mm; height:297mm; margin:8mm auto; padding:17mm 18mm 18mm; background:white; position:relative; break-after:page; overflow:hidden; }
+.page:last-child { break-after:auto; }
+header { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #e3e1dd; padding-bottom:4mm; margin-bottom:9mm; }
+.logo { font-size:17pt; font-weight:800; letter-spacing:-.8px; }.logo span { color:#c32720; font-family:Georgia,serif; }
+.edition { font-size:8pt; color:#777; }.eyebrow { font-size:8pt; font-weight:700; color:#c32720; letter-spacing:1.7px; text-transform:uppercase; margin:0 0 3mm; }
+h1 { font-size:31pt; line-height:1.08; letter-spacing:-1.2px; margin:0 0 5mm; max-width:160mm; }
+h2 { font-size:24pt; line-height:1.15; letter-spacing:-.7px; margin:0 0 4mm; }h3 { font-size:12pt; line-height:1.3; margin:0 0 2mm; }p { margin:0 0 3mm; }.lead { font-size:12pt; line-height:1.55; color:#5c5c5c; max-width:163mm; }
+section { margin-top:6mm; }.panel { border:1px solid #e2e0dc; border-radius:12px; padding:5mm; }.warm { background:#f7f5f2; }.two { display:grid; grid-template-columns:1fr 1fr; gap:5mm; }.small { font-size:8.5pt; color:#666; }.tiny { font-size:7.7pt; color:#777; }.red { color:#b72620; }.green { color:#127946; }.quiet { color:#666; }
+.callout { padding:4mm 5mm; border-left:3px solid #c32720; background:#fcf1ef; border-radius:0 9px 9px 0; }.answer { background:#eaf6ef; border:1px solid #b7dfc6; border-radius:9px; color:#127946; padding:3mm 4mm; }.pill { display:inline-flex; align-items:center; justify-content:center; background:#191919; color:white; border-radius:20px; padding:1mm 3mm; font-size:8pt; font-weight:700; }
+.notes { display:flex; gap:2.5mm; }.note { flex:1; background:#f1f1ef; border:1px solid #e4e3df; border-radius:8px; text-align:center; padding:3mm 1mm; font-size:18pt; font-weight:700; }.note em { display:block; font-style:normal; font-weight:400; font-size:8pt; color:#666; margin-top:1mm; }.note.root { background:#fff4de; border-color:#e5c57e; }.note.selected { background:#eaf6ef; border-color:#8fc6a5; color:#127946; }
+.listen { display:grid; grid-template-columns:1.35fr 14mm .65fr; align-items:center; gap:3mm; }.arrow { text-align:center; font-size:22pt; color:#aaa; }.label { font-size:8pt; font-weight:700; color:#686868; margin-bottom:2mm; }.choices { display:flex; gap:2mm; }.choice { border:1px solid #ddd; background:white; border-radius:8px; padding:2mm 5mm; font-weight:700; }.choice.on { color:#127946; border-color:#69b187; background:#eaf6ef; }
+.roles { display:grid; grid-template-columns:repeat(4,1fr); gap:3mm; }.role { padding:3mm; border:1px solid #e2e0dc; border-radius:9px; }.role strong { display:block; font-size:22pt; }.role p { font-size:8pt; margin:0; }.role b { font-size:9pt; }
+footer .copyright { display:block; margin-top:1mm; font-size:7pt; line-height:1.4; }
+footer { position:absolute; bottom:6mm; left:18mm; right:18mm; display:flex; justify-content:space-between; border-top:1px solid #e4e2de; padding-top:3mm; color:#777; font-size:7.5pt; }
+table { width:100%; border-collapse:separate; border-spacing:0; font-size:9pt; }th { text-align:left; color:#777; font-size:8pt; font-weight:700; border-bottom:1px solid #d9d7d3; padding:3mm 2mm; }td { padding:3.5mm 2mm; border-bottom:1px solid #e8e6e2; vertical-align:top; }td:first-child { font-weight:700; color:#b72620; width:12mm; }tr:last-child td { border-bottom:0; }.vocab { margin:0; padding:0; list-style:none; }.vocab li { padding:1.25mm 0; border-bottom:1px solid #eeece8; font-size:9pt; }.vocab li:last-child { border:0; }
+.inversions { display:grid; gap:3mm; }.invrow { display:grid; grid-template-columns:32mm 1fr; gap:4mm; align-items:center; }.invrow .note { padding:2mm 1mm; font-size:16pt; }.invrow .note em { font-size:8pt; }.invrow .caption { font-size:9pt; }.caption b { display:block; }.flow { counter-reset:steps; display:grid; gap:3mm; }.step { display:grid; grid-template-columns:8mm 1fr; gap:3mm; }.step:before { counter-increment:steps; content:counter(steps); display:flex; align-items:center; justify-content:center; width:7mm; height:7mm; border:1px solid #ddd; border-radius:50%; font-size:9pt; font-weight:700; }.step p { font-size:9pt; margin:0; }.step h3 { font-size:10pt; margin:0 0 1mm; }
+.keyboard { position:relative; height:29mm; display:flex; border:1px solid #d9d9d5; border-radius:8px; overflow:hidden; }.white { flex:1; display:flex; align-items:flex-end; justify-content:center; padding-bottom:2mm; border-right:1px solid #ddd; font-weight:700; font-size:9pt; }.white:last-child { border:0; }.white.hi { background:#eaf6ef; color:#127946; }.black { position:absolute; top:0; height:17mm; width:8%; background:#202020; border-radius:0 0 4px 4px; }.check { display:flex; gap:3mm; align-items:flex-start; padding:2.5mm 0; border-bottom:1px solid #eee; font-size:9pt; }.check:before { content:'✓'; color:#127946; font-weight:700; }.check:last-child { border:0; }
+.page-map header,.page-inversions header,.page-practice header { margin-bottom:7mm; }
+.page-map section,.page-inversions section,.page-practice section { margin-top:5mm; }
+.page-map td { padding:2.5mm 2mm; }.page-map th { padding:2mm; }
+.page-map .vocab li { padding:1mm 0; font-size:8.5pt; }
+.page-inversions .panel { padding:4mm; }.page-inversions .inversions { gap:2mm; }
+.page-practice .check { padding:2mm 0; }
+@media print { body { background:white; }.page { margin:0; } }
+</style>
+</head>
+<body>
+<article class="page">
+<header><div class="logo">Khord<span>Quiz</span></div><div class="edition">ILLUSTRATED CATEGORY GUIDE</div></header>
+<p class="eyebrow">01 / Understand the task</p>
+<h1>Chord Tone<br>Recognition</h1>
+<p class="lead">Hear a chord. Then hear one note on its own.<br>Can you tell what that note does inside the chord?</p>
+<section class="two">
+<div><h3>What you are practising</h3><p>You are learning to recognise the <b>root, third, fifth and seventh</b> of a chord by ear. These are the four roles a note can have in this quiz.</p></div>
+<div><h3>Why it helps</h3><p>You can hear how a melody note fits a chord, follow bass lines more confidently and recognise chord sounds even when their notes are rearranged.</p></div>
+</section>
+<section class="panel warm">
+<h3>One question, in two sounds</h3><p class="small">Example: the question tells you this is a <b>Major 7th</b> chord.</p>
+<div class="listen" style="margin-top:3mm"><div><p class="label">FIRST · THE WHOLE CHORD</p><div class="notes"><div class="note">F<em>1 · root</em></div><div class="note selected">A<em>3 · third</em></div><div class="note">C<em>5 · fifth</em></div><div class="note">E<em>7 · seventh</em></div></div></div><div class="arrow">→</div><div><p class="label">THEN · ONE NOTE</p><div class="note selected">A<em>played on its own</em></div></div></div>
+<p style="margin-top:4mm">A is the third of this chord, so choose <b class="green">3</b>.</p><div class="choices"><span class="choice">1</span><span class="choice on">✓ 3</span><span class="choice">5</span><span class="choice">7</span></div>
+</section>
+<section><h3>The four answer buttons</h3><div class="roles"><div class="role"><strong>1</strong><b>Root</b><p>The note the chord is named after.</p></div><div class="role"><strong>3</strong><b>Third</b><p>Helps give the chord its major or minor sound.</p></div><div class="role"><strong>5</strong><b>Fifth</b><p>A chord note that can also be lowered or raised.</p></div><div class="role"><strong>7</strong><b>Seventh</b><p>The fourth note added to the basic three-note chord.</p></div></div></section>
+<section class="callout"><b>The question gives you the chord type.</b><p style="margin:1mm 0 0">Your job is to identify the single note’s role. Choose a number, rather than a letter name or another chord type.</p></section>
+<footer><span>KhordQuiz · Chord Tone Recognition</span><span>1 / 4</span></footer>
+</article>
+<article class="page page-map">
+<header><div class="logo">Khord<span>Quiz</span></div><div class="edition">YOUR SIX-QUIZ ROUTE</div></header>
+<p class="eyebrow">02 / Know what changes</p><h2>What do #1–#6 mean?</h2>
+<p class="lead">The numbers identify different chord groups and arrangements. <b>All six quizzes use all twelve keys.</b></p>
+<section class="panel warm" style="padding:3mm 4mm"><table><thead><tr><th>Quiz</th><th>Chord group</th><th>Arrangement</th><th>Keys</th></tr></thead><tbody>
+<tr><td>#1</td><td>Five standard seventh-chord types</td><td>Root position</td><td>All 12</td></tr>
+<tr><td>#2</td><td>Same five types as #1</td><td>1st, 2nd and 3rd inversions</td><td>All 12</td></tr>
+<tr><td>#3</td><td>Six secondary seventh-chord types</td><td>Root position</td><td>All 12</td></tr>
+<tr><td>#4</td><td>Same six types as #3</td><td>1st, 2nd and 3rd inversions</td><td>All 12</td></tr>
+<tr><td>#5</td><td>Both groups combined: 11 types</td><td>Root position</td><td>All 12</td></tr>
+<tr><td>#6</td><td>Same 11 types as #5</td><td>1st, 2nd and 3rd inversions</td><td>All 12</td></tr>
+</tbody></table></section>
+<section class="two">
+<div class="panel"><p class="eyebrow">Quizzes #1 &amp; #2</p><h3>The five standard types</h3><ul class="vocab"><li>Major 7th</li><li>Minor 7th</li><li>Dominant 7th</li><li>Minor 7(♭5) <span class="tiny">· half-diminished</span></li><li>Diminished 7th</li></ul></div>
+<div class="panel"><p class="eyebrow">Quizzes #3 &amp; #4</p><h3>The six secondary types</h3><ul class="vocab"><li>Augmented 7th</li><li>Minor-Major 7th</li><li>Diminished-Major 7th</li><li>Dominant 7(♭5)</li><li>Major 7(♯5)</li><li>Major 7(♭5)</li></ul></div>
+</section>
+<section class="callout"><b>F is an illustration, not a key restriction.</b><p style="margin:1mm 0 0">The worked examples in this guide use F to make comparisons easy. In every quiz, the same chord types also appear on other roots.</p></section>
+<section><h3>A useful way to work through the category</h3><p>Work in pairs: <b>#1 → #2</b>, then <b>#3 → #4</b>. Finish with <b>#5 → #6</b> to practise both chord groups together.</p></section>
+<footer><span>KhordQuiz · Chord Tone Recognition</span><span>2 / 4</span></footer>
+</article>
+<article class="page page-inversions">
+<header><div class="logo">Khord<span>Quiz</span></div><div class="edition">ILLUSTRATED NOTE ROLES</div></header>
+<p class="eyebrow">03 / Understand inversions</p><h2>Different positions.<br>The same four roles.</h2>
+<p class="lead">An inversion rearranges the chord notes so a different note sits at the bottom. The root keeps its name and role.</p>
+<section class="panel warm"><h3>One F major seventh chord, four arrangements</h3><p class="small">Read each row from lowest to highest. The highlighted F is always <b>1</b>.</p>
+<div class="inversions" style="margin-top:4mm">
+<div class="invrow"><div class="caption"><b>Root position</b>Root at the bottom</div><div class="notes"><div class="note root">F<em>1</em></div><div class="note">A<em>3</em></div><div class="note">C<em>5</em></div><div class="note">E<em>7</em></div></div></div>
+<div class="invrow"><div class="caption"><b>1st inversion</b>Third at the bottom</div><div class="notes"><div class="note">A<em>3</em></div><div class="note">C<em>5</em></div><div class="note">E<em>7</em></div><div class="note root">F<em>1</em></div></div></div>
+<div class="invrow"><div class="caption"><b>2nd inversion</b>Fifth at the bottom</div><div class="notes"><div class="note">C<em>5</em></div><div class="note">E<em>7</em></div><div class="note root">F<em>1</em></div><div class="note">A<em>3</em></div></div></div>
+<div class="invrow"><div class="caption"><b>3rd inversion</b>Seventh at the bottom</div><div class="notes"><div class="note">E<em>7</em></div><div class="note root">F<em>1</em></div><div class="note">A<em>3</em></div><div class="note">C<em>5</em></div></div></div>
+</div></section>
+<section class="callout"><b>1 does not mean “the lowest note.”</b><p style="margin:1mm 0 0">If the chord is A–C–E–F and the single note is F, the answer is still <b>1</b>. A is at the bottom, but the chord is named after F.</p></section>
+<section><h3>The chord type matters too</h3><p>A lowered or raised note keeps its role. Read the chord type in the question before listening.</p>
+<div class="two" style="margin-top:3mm"><div class="panel"><h3>F major seventh</h3><p style="font-size:15pt;font-weight:700;margin-bottom:2mm">F · A · C · E</p><p class="small" style="margin:0">A is the third → choose <b>3</b>.<br>E is the seventh → choose <b>7</b>.</p></div><div class="panel"><h3>F minor seventh</h3><p style="font-size:15pt;font-weight:700;margin-bottom:2mm">F · A♭ · C · E♭</p><p class="small" style="margin:0">A♭ is still the third → choose <b>3</b>.<br>E♭ is still the seventh → choose <b>7</b>.</p></div></div>
+</section>
+<footer><span>KhordQuiz · Chord Tone Recognition</span><span>3 / 4</span></footer>
+</article>
+<article class="page page-practice">
+<header><div class="logo">Khord<span>Quiz</span></div><div class="edition">PUT IT INTO PRACTICE</div></header>
+<p class="eyebrow">04 / Your listening routine</p><h2>One chord.<br>One note. One choice.</h2>
+<section class="two" style="margin-top:6mm">
+<div class="flow">
+<div class="step"><div><h3>Read the question</h3><p>Notice the chord type that is given, such as Major 7th or Minor 7th.</p></div></div>
+<div class="step"><div><h3>Hear the whole chord</h3><p>Press Play. Get a sense of the full sound before focusing on the single note.</p></div></div>
+<div class="step"><div><h3>Follow the note on its own</h3><p>Listen for where it belongs inside the chord. Replay the audio if you need to.</p></div></div>
+<div class="step"><div><h3>Choose and submit</h3><p>Select 1, 3, 5 or 7. You can change your choice before pressing Submit Answer.</p></div></div>
+</div>
+<div class="panel warm"><p class="label">WORKED EXAMPLE</p><h3>F major seventh</h3><p class="small">Chord: A–C–E–F<br>Single note: F</p><div class="keyboard" style="margin:4mm 0"><div class="white hi">F</div><div class="white">G</div><div class="white">A</div><div class="white">B</div><div class="white">C</div><div class="white">D</div><div class="white">E</div><span class="black" style="left:10.3%"></span><span class="black" style="left:24.6%"></span><span class="black" style="left:38.9%"></span><span class="black" style="left:67.4%"></span><span class="black" style="left:81.7%"></span></div><div class="answer"><b>Answer: 1 · Root</b></div><p class="small" style="margin:3mm 0 0">The highlighted key shows the note’s name. You answer its role in the chord.</p></div>
+</section>
+<section class="panel"><h3>A quick visual check</h3><p class="small">Use the written notes to check that the roles make sense. Then practise recognising those roles by sound in the quiz.</p><table><thead><tr><th>Chord</th><th>Notes, low to high</th><th>Single note</th><th>Answer</th></tr></thead><tbody><tr><td style="color:#191919;width:36mm">F major seventh</td><td>F · A · C · E</td><td>E</td><td><b class="green">7</b></td></tr><tr><td style="color:#191919">F minor seventh</td><td>A♭ · C · E♭ · F</td><td>A♭</td><td><b class="green">3</b></td></tr><tr><td style="color:#191919">F dominant seventh</td><td>C · E♭ · F · A</td><td>C</td><td><b class="green">5</b></td></tr></tbody></table></section>
+
+<section><h3>Before you move to the next quiz</h3><div class="check">I can explain what 1, 3, 5 and 7 mean.</div><div class="check">I know the root may be above another chord note.</div><div class="check">I can use the chord type in the question to guide my listening.</div></section>
+<footer><span>KhordQuiz · Chord Tone Recognition</span><span>4 / 4</span></footer>
+</article>
+</body>
+</html>

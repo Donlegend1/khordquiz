@@ -10,6 +10,42 @@ class ProfileTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_members_can_save_each_supported_avatar_without_changing_other_profile_fields(): void
+    {
+        $user = User::factory()->create(['name' => 'Test Member']);
+        $other = User::factory()->create(['avatar' => 'piano']);
+
+        foreach (User::AVATARS as $avatar) {
+            $this->actingAs($user)->patch(route('profile.update'), [
+                'first_name' => 'Test',
+                'last_name' => 'Member',
+                'avatar' => $avatar,
+                'name' => 'Changed name',
+                'user_id' => $other->id,
+            ])->assertSessionHasNoErrors()->assertRedirect(route('profile.edit'));
+
+            $this->assertSame($avatar, $user->fresh()->avatar);
+            $this->assertSame('Test Member', $user->fresh()->name);
+            $this->assertSame('piano', $other->fresh()->avatar);
+        }
+    }
+
+    public function test_unsupported_avatar_is_rejected(): void
+    {
+        $user = User::factory()->create(['avatar' => 'violin']);
+
+        foreach (['invalid-icon', 'unknown-avatar'] as $avatar) {
+            $this->actingAs($user)->patch(route('profile.update'), ['first_name' => 'Test', 'last_name' => 'Member', 'avatar' => $avatar])
+                ->assertSessionHasErrors('avatar');
+            $this->assertSame('violin', $user->fresh()->avatar);
+        }
+    }
+
+    public function test_guests_cannot_update_an_avatar(): void
+    {
+        $this->patch(route('profile.update'), ['avatar' => 'piano'])->assertRedirect(route('login'));
+    }
+
     public function test_profile_page_is_displayed(): void
     {
         $user = User::factory()->create();

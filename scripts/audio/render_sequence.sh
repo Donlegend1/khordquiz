@@ -14,12 +14,12 @@ shift 4
 NOTES=("$@")
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SF2="${GENERALUSER_SF2:-/private/tmp/claude-501/-Users-khord-Documents-GitHub-Khordquizwebsite/024aab61-577b-471a-93e1-53dcbc70aa8d/scratchpad/soundfonts/GeneralUser.sf2}"
+SF2="${GENERALUSER_SF2:-/private/tmp/claude-501/-Users-khord-Documents-GitHub-Khordquizwebsite/024aab61-577b-471a-93e1-53dcbc70aa8d/scratchpad/soundfonts/FluidR3_GM.sf2}"
 TMP_MID="$(mktemp -t render_sequence).mid"
 TMP_WAV="$(mktemp -t render_sequence).wav"
 
 python3 -I "$SCRIPT_DIR/make_sequence_midi.py" "$TMP_MID" "$PROGRAM" "$VELOCITY" "$BEATS_PER_NOTE" "${NOTES[@]}"
-fluidsynth -ni -F "$TMP_WAV" -r 44100 -q "$SF2" "$TMP_MID"
-sox "$TMP_WAV" "$OUT" gain -n -8 fade 0 0 0.3
+fluidsynth -ni -F "$TMP_WAV" -r 48000 -o audio.file.format=s24 -q "$SF2" "$TMP_MID"
+sox "$TMP_WAV" -b 24 "$OUT" gain -n -8 fade 0 0 0.3
 
 rm -f "$TMP_MID" "$TMP_WAV"

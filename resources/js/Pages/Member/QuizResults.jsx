@@ -1,7 +1,11 @@
+import ReportQuestion from '@/Components/Quiz/ReportQuestion';
 import AppShell from '@/Layouts/AppShell';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
+import AudioStimulus from '@/Components/Quiz/AudioStimulus';
+import AnswerBuilder, { answerTypeFor, baseChordFor } from '@/Components/Quiz/AnswerBuilder';
+import { reviewAnswerLabel } from '@/lib/reviewAnswers';
 
 function CheckIcon(props) {
     return (
@@ -19,107 +23,95 @@ function XIcon(props) {
     );
 }
 
-function ChevronIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M6 9l6 6 6-6" />
-        </svg>
-    );
-}
-
-function PlayIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <path d="M8 5.5v13l11-6.5z" />
-        </svg>
-    );
-}
-
-function PauseIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <rect x="6" y="5" width="4" height="14" rx="1" />
-            <rect x="14" y="5" width="4" height="14" rx="1" />
-        </svg>
-    );
-}
-
-// Collapsible per-question breakdown for the quiz just finished — real answers recorded
-// server-side per question (QuizController::answer), not a fabricated summary.
-function AnswerReview({ records }) {
+function HistoryButton() {
     const t = useTrans();
-    const [open, setOpen] = useState(false);
-    const [playing, setPlaying] = useState(null);
+    return <Link href={route('quiz.history')} className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-neutral-300 bg-white px-3 text-sm font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-700">
+        <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 11a9 9 0 1 1 2.6 7M3 4v7h7M12 7v5l3 2" /></svg>
+        {t('Attempt history')}
+    </Link>;
+}
 
-    if (records.length === 0) return null;
+function AnswerReview({ quiz, records, keyboardAudio, sessionId, onClose }) {
+    const t = useTrans();
+    const [index, setIndex] = useState(0);
+    const headingRef = useRef(null);
+    const record = records[index];
+    const type = answerTypeFor(quiz.category, quiz.title);
+    const baseChord = baseChordFor(quiz.category, quiz.title);
 
-    const toggleNote = (position, url) => {
-        if (playing?.position === position) {
-            playing.audio.pause();
-            setPlaying(null);
-            return;
-        }
-        playing?.audio.pause();
+    useEffect(() => {
+        headingRef.current?.focus();
+    }, [index]);
 
-        const audio = new Audio(url);
-        audio.addEventListener('ended', () => setPlaying((current) => (current?.position === position ? null : current)));
-        audio.play().catch(() => {});
-        setPlaying({ audio, position });
-    };
+    if (!record) return null;
 
     return (
-        <div className="mt-6 overflow-hidden rounded-2xl border border-black/5 bg-white">
-            <button
-                type="button"
-                aria-expanded={open}
-                onClick={() => setOpen((current) => !current)}
-                className="flex w-full items-center justify-between px-5 py-4 text-left transition-colors duration-150 hover:bg-neutral-50"
-            >
-                <span className="text-sm font-extrabold text-neutral-900">{t('Review your answers')}</span>
-                <ChevronIcon className={`h-4 w-4 text-neutral-400 transition-transform duration-150 ${open ? 'rotate-180' : ''}`} />
-            </button>
-            {open && (
-                <ul className="divide-y divide-black/5 border-t border-black/5">
-                    {records.map((record) => {
-                        const canPlayCorrect = Boolean(record.audio_url);
-                        return (
-                            <li key={record.position} className="flex items-center gap-2.5 px-5 py-3">
-                                <span
-                                    className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full ${
-                                        record.correct ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-brand'
-                                    }`}
-                                >
-                                    {record.correct ? <CheckIcon className="h-3 w-3" /> : <XIcon className="h-3 w-3" />}
-                                </span>
-                                <span className="w-5 shrink-0 text-xs font-bold tabular-nums text-neutral-300">{record.position}</span>
-                                <span className="min-w-0 flex-1">
-                                    <p className={`truncate text-sm font-bold ${record.correct ? 'text-neutral-900' : 'text-brand'}`}>{record.picked ? t(record.picked) : '—'}</p>
-                                    {!record.correct && <p className="truncate text-xs text-emerald-700">{t('Correct: :answer', { answer: t(record.answer) })}</p>}
-                                </span>
-                                {canPlayCorrect && (() => {
-                                    const isPlaying = playing?.position === record.position;
-                                    return (
-                                        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center">
-                                            {isPlaying && <span className="absolute inset-0 animate-ping rounded-full bg-brand/30" />}
-                                            <button
-                                                type="button"
-                                                aria-label={isPlaying ? t('Pause') : t('Play the correct note, :answer', { answer: t(record.answer) })}
-                                                onClick={() => toggleNote(record.position, record.audio_url)}
-                                                className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-colors duration-150 ${
-                                                    isPlaying ? 'bg-brand text-white' : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                                                }`}
-                                            >
-                                                {isPlaying ? <PauseIcon className="h-3.5 w-3.5" /> : <PlayIcon className="ml-0.5 h-3.5 w-3.5" />}
-                                            </button>
-                                        </span>
-                                    );
-                                })()}
-                            </li>
-                        );
-                    })}
-                </ul>
-            )}
-        </div>
+        <section aria-label={t('Answer review')}>
+            <nav aria-label={t('Review navigation')} className="mb-4 flex flex-wrap items-center justify-between gap-2">
+                <button type="button" onClick={onClose} className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 text-sm font-semibold text-neutral-600 hover:bg-neutral-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-sky-700">
+                    <span aria-hidden="true">←</span> {t('Back to results')}
+                </button>
+                <HistoryButton />
+            </nav>
+            <div className="rounded-2xl border border-black/5 bg-white p-5 sm:p-7">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <h2 ref={headingRef} tabIndex={-1} className="scroll-mt-6 text-sm font-bold text-neutral-600 outline-none">{t('Question :current of :total', { current: record.position, total: records.length })}</h2>
+                    <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-bold ${record.correct ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
+                        {record.correct ? <CheckIcon aria-hidden="true" className="h-3.5 w-3.5" /> : <XIcon aria-hidden="true" className="h-3.5 w-3.5" />}
+                        {record.correct ? t('You got this right') : t('Incorrect answer')}
+                    </span>
+                </div>
+                <details className="mt-4 border-b border-neutral-100 pb-4">
+                    <summary className="cursor-pointer text-xs font-semibold text-sky-600 hover:text-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-sky-700">{t('Jump to a question')}</summary>
+                    <div className="mt-3 grid grid-cols-5 gap-2 sm:grid-cols-8">
+                        {records.map((item, itemIndex) => (
+                            <button
+                                key={item.position}
+                                type="button"
+                                aria-label={item.correct ? t('Question :number: correct', { number: item.position }) : t('Question :number: incorrect', { number: item.position })}
+                                aria-current={itemIndex === index ? 'step' : undefined}
+                                onClick={() => setIndex(itemIndex)}
+                                className={`flex min-h-11 items-center justify-center gap-1 rounded-lg border text-xs font-bold focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900 ${item.correct ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-rose-200 bg-rose-50 text-rose-800'} ${itemIndex === index ? 'ring-2 ring-neutral-900 ring-offset-2' : ''}`}
+                            >
+                                {item.position}{item.correct ? <CheckIcon aria-hidden="true" className="h-3 w-3" /> : <XIcon aria-hidden="true" className="h-3 w-3" />}
+                            </button>
+                        ))}
+                    </div>
+                </details>
+                <h3 className="mt-6 text-center text-lg font-extrabold text-neutral-900">{t(record.prompt)}</h3>
+                <div className="mt-5">
+                    <AudioStimulus key={record.position} questionKey={record.position} src={record.audio_url} notes={record.notes} />
+                </div>
+                <div className="my-6">
+                    {!record.correct && (
+                        <div className="mb-4 min-w-0 rounded-xl border border-rose-200 bg-rose-50 p-4 text-rose-800">
+                            <p className="text-xs font-semibold">{t('Your answer')}</p>
+                            <p className="mt-1 break-words text-sm font-bold">{record.picked ? t(reviewAnswerLabel(record.picked, type)) : t('No answer selected')}</p>
+                        </div>
+                    )}
+                    <p className="text-sm font-bold text-emerald-700">{record.correct ? t('Your answer is correct') : t('Correct answer')}</p>
+                </div>
+                {baseChord && <p className="mb-3 text-sm font-bold text-neutral-700">{[t(baseChord.split(' ')[0]), ...baseChord.split(' ').slice(1)].join(' ')}</p>}
+                <AnswerBuilder
+                    key={record.position}
+                    review
+                    answered
+                    quiz={quiz}
+                    choices={record.choices ?? []}
+                    chosen={record.picked}
+                    correctAnswer={record.answer}
+                    keyboardAudio={keyboardAudio}
+                    referenceNote={record.reference_note}
+                    answerLength={record.answer_length}
+                    resetToken={record.position}
+                />
+                <div className="mt-7 flex gap-3 border-t border-neutral-100 pt-5">
+                    <button type="button" disabled={index === 0} onClick={() => setIndex((value) => value - 1)} className="min-h-11 flex-1 rounded-xl border border-neutral-300 bg-white px-4 text-sm font-bold text-neutral-700 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand disabled:cursor-default disabled:opacity-35">{t('Previous')}</button>
+                    <button type="button" onClick={() => index === records.length - 1 ? onClose() : setIndex((value) => value + 1)} className="min-h-11 flex-1 rounded-xl bg-neutral-900 px-4 text-sm font-bold text-white hover:bg-neutral-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900">{index === records.length - 1 ? t('Back to results') : t('Next')}</button>
+                </div>
+                <ReportQuestion key={`report-${record.position}`} quizSlug={quiz.slug} questionId={record.question_id} sessionId={sessionId} />
+            </div>
+        </section>
     );
 }
 
@@ -187,15 +179,20 @@ function Stat({ color, label, value }) {
     );
 }
 
-export default function QuizResults({ quiz, result, review }) {
+export default function QuizResults({ quiz, result, review, review_keyboard_audio = {}, initial_review = false, history_notice, history_session_id }) {
+    const { post, processing } = useForm({ sound: result.sound });
+    const [reviewing, setReviewing] = useState(Boolean(initial_review && review?.length));
     const t = useTrans();
-    const { post, processing } = useForm();
 
     return (
-        <AppShell eyebrow={t(quiz.category)} title={t(quiz.title)} intro={t('Quiz results')}>
+        <AppShell eyebrow={t(quiz.category)} title={t(quiz.title)} intro={reviewing ? t('Review your answers') : t('Quiz results')}>
             <Head title={t(':title — Results', { title: t(quiz.title) })} />
 
-            <div className="mx-auto max-w-xl">
+            <div className={`mx-auto ${reviewing ? 'max-w-3xl' : 'max-w-xl'}`}>
+                {!reviewing && <nav aria-label={t('Results navigation')} className="mb-4 flex justify-end"><HistoryButton /></nav>}
+                {history_notice && <p className="mb-5 rounded-xl border border-neutral-200 bg-white p-4 text-sm leading-relaxed text-neutral-600">{t(history_notice)}</p>}
+                {reviewing ? <AnswerReview quiz={quiz} records={review ?? []} keyboardAudio={review_keyboard_audio} sessionId={history_session_id} onClose={() => setReviewing(false)} /> : <>
+
                 <div className="flex flex-col items-center rounded-2xl border border-black/5 bg-white px-6 py-8 text-center">
                     <ScoreRing correct={result.correct} total={result.total} percent={result.percent} />
                     <p className="mt-3.5 text-xl font-extrabold text-neutral-900">{t(headline(result.percent))}</p>
@@ -224,16 +221,18 @@ export default function QuizResults({ quiz, result, review }) {
                     </div>
                     <button
                         type="button"
-                        disabled
-                        title={t('Coming soon')}
-                        className="mt-3.5 flex w-full cursor-default items-center justify-center gap-2 rounded-xl bg-brand/60 py-3 text-sm font-bold text-white"
+                        className="mt-3.5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-white hover:bg-brand-dark disabled:opacity-50"
                     >
                         <SendIcon className="h-3.5 w-3.5" />
                         {t('Send Challenge')}
                     </button>
                 </div>
 
-                <AnswerReview records={review ?? []} />
+                {Boolean(review?.length) && (
+                    <button type="button" onClick={() => setReviewing(true)} className="mt-6 flex min-h-12 w-full items-center justify-between rounded-xl border border-neutral-300 bg-white px-5 text-sm font-bold text-neutral-900 hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-brand">
+                        {t('Review answers')} <span aria-hidden="true">→</span>
+                    </button>
+                )}
 
                 <div className="mt-6 flex gap-2.5">
                     <button
@@ -251,6 +250,7 @@ export default function QuizResults({ quiz, result, review }) {
                         {t('Done')}
                     </Link>
                 </div>
+                </>}
             </div>
         </AppShell>
     );

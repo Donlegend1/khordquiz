@@ -3,16 +3,8 @@ import InputError from '@/Components/InputError';
 import AppShell from '@/Layouts/AppShell';
 import { tk, useTrans } from '@/lib/i18n';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { useState } from 'react';
-
-function initials(name) {
-    return name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('');
-}
+import AvatarBadge from '@/Components/AvatarBadge';
+import { AVATAR_OPTIONS } from '@/lib/profile-options';
 
 function LockIcon(props) {
     return (
@@ -42,6 +34,7 @@ export default function EditProfile() {
     const user = auth.user;
     const { first, last } = splitName(user.name);
     const { data, setData, patch, processing, errors, recentlySuccessful } = useForm({
+        avatar: user.avatar ?? null,
         first_name: first,
         last_name: last,
         email: user.email ?? '',
@@ -60,9 +53,17 @@ export default function EditProfile() {
 
             <form onSubmit={submit} className="mx-auto max-w-xl space-y-6">
                 <div className="flex flex-col items-center gap-2 py-2">
-                    <span className="flex h-20 w-20 items-center justify-center rounded-full bg-brand/10 text-2xl font-bold text-brand ring-4 ring-white">
-                        {initials(`${data.first_name} ${data.last_name}`.trim() || user.name)}
-                    </span>
+                    <AvatarBadge id={data.avatar} name={`${data.first_name} ${data.last_name}`.trim() || user.name} size={88} />
+                    <p id="avatar-heading" className="text-sm text-neutral-500">Choose your avatar</p>
+                    <div role="group" aria-labelledby="avatar-heading" className="mt-2 grid grid-cols-5 gap-1.5 sm:gap-3">
+                        {AVATAR_OPTIONS.map((option) => (
+                            <button key={option.id} type="button" aria-label={option.label} aria-pressed={data.avatar === option.id} disabled={processing} onClick={() => setData('avatar', option.id)} className={`relative rounded-full border-2 p-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${data.avatar === option.id ? 'border-brand' : 'border-transparent hover:border-neutral-300'}`}>
+                                <AvatarBadge id={option.id} size={44} />
+                                {data.avatar === option.id && <span aria-hidden="true" className="absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand text-[10px] text-white ring-2 ring-white">✓</span>}
+                            </button>
+                        ))}
+                    </div>
+                    <InputError message={errors.avatar} className="mt-1.5" />
                 </div>
 
                 <div className="grid gap-5 rounded-2xl border border-black/5 bg-white p-5 sm:p-6">

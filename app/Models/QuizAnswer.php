@@ -8,7 +8,7 @@ class QuizAnswer extends Model
 {
     public $timestamps = false;
 
-    protected $fillable = ['user_id', 'slug', 'answer', 'picked', 'correct', 'kind', 'answered_at'];
+    protected $fillable = ['web_answer_id', 'user_id', 'slug', 'answer', 'picked', 'correct', 'kind', 'answered_at'];
 
     protected function casts(): array
     {

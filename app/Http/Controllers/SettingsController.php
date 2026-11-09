@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\QuizAnswer;
 use App\Models\QuizAttempt;
+use App\Models\QuizSession;
 use App\Models\UserPreference;
 use App\Support\Locales;
 use App\Support\QuizCatalog;
@@ -31,7 +33,7 @@ class SettingsController extends Controller
     public function updateLanguage(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'language' => ['required', 'string', 'in:' . implode(',', Locales::labels())],
+            'language' => ['required', 'string', 'in:'.implode(',', Locales::labels())],
         ]);
 
         $user = $request->user();
@@ -47,7 +49,7 @@ class SettingsController extends Controller
     public function updateDefaultInstrument(Request $request): RedirectResponse
     {
         $data = $request->validate([
-            'default_instrument' => ['required', 'string', 'in:' . implode(',', QuizCatalog::allInstruments())],
+            'default_instrument' => ['required', 'string', 'in:'.implode(',', QuizCatalog::allInstruments())],
         ]);
 
         $request->user()->update(['default_instrument' => $data['default_instrument']]);
@@ -62,6 +64,8 @@ class SettingsController extends Controller
         $user = $request->user();
 
         QuizAttempt::query()->where('user_id', $user->id)->delete();
+        QuizSession::query()->where('user_id', $user->id)->delete();
+        QuizAnswer::query()->where('user_id', $user->id)->delete();
         $user->update(['current_streak' => 0, 'last_practiced_on' => null]);
 
         return back()->with('success', __('Your progress has been reset.'));

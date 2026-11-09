@@ -1,5 +1,5 @@
 import Eyebrow from '@/Components/Site/Eyebrow';
-import { pathQuizCount, paths, quizCount, totals } from '@/data/quizCatalog';
+import { pathQuizCount, paths as fallbackPaths, quizCount, totals as fallbackTotals } from '@/data/quizCatalog';
 import { tk, useTrans } from '@/lib/i18n';
 import { useState } from 'react';
 
@@ -10,15 +10,26 @@ const accents = {
     Advanced: { dot: 'bg-brand', tint: 'bg-brand/10 text-brand' },
 };
 
-const stats = [
-    { value: totals.quizzes, label: tk('Quizzes') },
-    { value: totals.categories, label: tk('Categories') },
-    { value: '5,000+', label: tk('Audio samples') },
-    { value: paths.length, label: tk('Learning paths') },
-];
+const pathIntroductions = {
+    Beginner: tk('Start with clear listening exercises and build your confidence, one quiz at a time.'),
+    Intermediate: tk('Build on your listening skills with more detailed sounds and musical patterns.'),
+    Advanced: tk('Challenge your ear with more complex sounds and finer musical details.'),
+};
+const descriptions = Object.fromEntries(fallbackPaths.flatMap((path) => path.categories.map((category) => [category.name, category.description])));
 
-export default function Categories() {
+export default function Categories({ catalog }) {
     const t = useTrans();
+    const paths = catalog ? catalog.paths.map((path) => ({
+        ...path,
+        intro: pathIntroductions[path.level],
+        categories: path.categories.map((category) => ({ ...category, description: descriptions[category.name] ?? tk('Develop your listening skills with these quizzes.') })),
+    })) : fallbackPaths;
+    const totals = catalog?.totals ?? fallbackTotals;
+    const stats = [
+        { value: totals.quizzes, label: tk('Quizzes') },
+        { value: totals.categories, label: tk('Categories') },
+        { value: paths.length, label: tk('Learning paths') },
+    ];
     const [active, setActive] = useState(0);
     const path = paths[active];
     const accent = accents[path.level];
@@ -42,11 +53,11 @@ export default function Categories() {
                         </h2>
 
                         <p className="mt-4 max-w-[520px] text-base leading-relaxed text-neutral-700">
-                            {t('Every quiz sits on a learning path, in the order KhordQuiz teaches it. Pick your level and you always know what to practise next.')}
+                            {t('Explore the quizzes for your level, from your first listening exercises to advanced challenges. Each path follows the same category and lesson order you will find inside KhordQuiz.')}
                         </p>
                     </div>
 
-                    <dl className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[460px]">
+                    <dl className="grid grid-cols-3 gap-3 lg:w-[460px]">
                         {stats.map((stat) => (
                             <div key={stat.label} className="rounded-xl border border-white bg-white/70 px-4 py-3 shadow-sm">
                                 <dt className="sr-only">{t(stat.label)}</dt>

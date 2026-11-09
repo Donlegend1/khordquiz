@@ -1,5 +1,5 @@
 // iPhone-style frame around a 589×1280 app screenshot. Size it via className (width).
-export default function PhoneFrame({ src, alt, className = '', compact = false, loading = 'lazy' }) {
+export default function PhoneFrame({ src, alt, children, className = '', compact = false, loading = 'lazy' }) {
     return (
         <div className={`relative ${className}`}>
             {/* Side buttons */}
@@ -14,14 +14,14 @@ export default function PhoneFrame({ src, alt, className = '', compact = false, 
                         : 'rounded-[44px] bg-gray-900 p-[7px] shadow-[0_24px_60px_-12px_rgba(17,24,39,0.35)]'
                 }
             >
-                <img
+                {children ? <div className={`overflow-hidden bg-white ${compact ? 'rounded-[22px]' : 'rounded-[38px]'}`}>{children}</div> : <img
                     src={src}
                     alt={alt}
                     className={`block w-full ${compact ? 'rounded-[22px]' : 'rounded-[38px]'}`}
                     width="589"
                     height="1280"
                     loading={loading}
-                />
+                />}
             </div>
         </div>
     );

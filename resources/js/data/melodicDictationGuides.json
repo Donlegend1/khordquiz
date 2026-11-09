@@ -1,0 +1,193 @@
+{
+  "3-Note Stepwise": {
+    "heading": "Follow three notes, one step at a time.",
+    "intro": "You will hear three notes that move up or down to the next note in the scale.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen for whether each note moves up or down. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the note names on the keyboard in the order you hear them. Each tap adds the next note to your answer. Your answer needs three notes."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "The notes move between neighbouring names, such as Do to Re or Mi to Re. Tap one key for each note, in the order you hear it.",
+    "exampleNotes": [
+      "Do",
+      "Re",
+      "Mi"
+    ],
+    "focus": "melody",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "3-Note with Skips": {
+    "heading": "Follow three notes, including the jumps.",
+    "intro": "You will hear three notes. Some move to the next note in the scale, while others jump past it.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen for the first note, then follow where the next two notes go. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the note names on the keyboard in the order you hear them. Each tap adds the next note to your answer. Your answer needs three notes."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "A skip is a jump past a note in the scale. For example, Do to Mi skips over Re. Listen to the whole phrase and enter all three notes in order.",
+    "exampleNotes": [
+      "Do",
+      "Mi",
+      "Re"
+    ],
+    "focus": "melody",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "5-Note Melodies": {
+    "heading": "Build the melody, five notes at a time.",
+    "intro": "You will hear five notes, one after the other. Choose their names in the same order.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen to the whole melody. Notice which notes move up, move down or jump. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the note names on the keyboard in the order you hear them. Each tap adds the next note to your answer. Your answer needs five notes."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "These melodies combine small steps and larger jumps. Follow all five notes from beginning to end. If a note comes back, select it again in its new position.",
+    "exampleNotes": [
+      "Do",
+      "Mi",
+      "Fa",
+      "Mi",
+      "Do"
+    ],
+    "focus": "melody",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "Dyad Melodies": {
+    "heading": "Follow the higher note in each pair.",
+    "intro": "You will hear five pairs of notes. Two notes play together each time. Your answer is the line made by the higher notes.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen for the higher sound in each pair, from the first pair to the last. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the name of the higher note from each pair, in order. Your answer needs five notes."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "A dyad means two notes played together. Focus on the higher note of each pair. Enter five note names, one for each pair, in the order you hear them.",
+    "exampleNotes": [
+      "Do",
+      "Mi",
+      "Fa",
+      "Mi",
+      "Do"
+    ],
+    "focus": "upper-pair",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "Dual-tonic melodies": {
+    "heading": "Follow the melody between the familiar notes.",
+    "intro": "You will hear a melody that also uses notes between Do, Re, Mi, Fa, So, La and Ti.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen to the whole melody, including the short notes that connect the others. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the note names on the keyboard in the order you hear them. Each tap adds the next note to your answer."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "Some notes sit between the seven white-key notes. Use the black keys for these sounds: Di, Ri, Fi, Si and Li. For example, Di sits between Do and Re. Enter every note you hear, including these connecting notes.",
+    "exampleNotes": [
+      "Do",
+      "Di",
+      "Re",
+      "Mi"
+    ],
+    "focus": "melody",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "Chordal melodies": {
+    "heading": "Follow the highest note of each chord.",
+    "intro": "You will hear a series of chords. Each chord contains several notes played together. Follow the line made by the highest notes.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen for the highest sound in each chord as the chords change. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the name of the highest note from each chord, in order."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "The melody is the highest note of each chord. Enter one note name for each chord, in order. The other notes provide the harmony underneath. Some answers use black-key notes as well as white-key notes.",
+    "exampleNotes": [
+      "Mi",
+      "Fa",
+      "Re",
+      "So",
+      "Mi"
+    ],
+    "focus": "upper-chord",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  },
+  "Chordal Bass Lines": {
+    "heading": "Follow the lowest note of each chord.",
+    "intro": "You will hear a series of chords. Follow the deep, low notes underneath them.",
+    "steps": [
+      {
+        "title": "Listen to the phrase",
+        "description": "Press Play. Listen for the lowest sound in each chord as the chords change. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Tap the name of the lowest note from each chord, in order."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Read your notes from left to right. Use Undo to remove your last choice, or Clear to start your answer again. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "The bass line is the lowest note of each chord. Enter one note name for each chord, in order. The lowest note is the one you hear at the bottom, even when it is not the note the chord is named after. Some answers use black-key notes as well as white-key notes.",
+    "exampleNotes": [
+      "Do",
+      "Fa",
+      "Re",
+      "So",
+      "Do"
+    ],
+    "focus": "bass",
+    "exampleExplanation": "This is a visual example of an answer, not a recording to identify. The numbered notes show the order to enter on the keyboard."
+  }
+}

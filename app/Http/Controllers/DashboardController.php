@@ -7,9 +7,12 @@ use App\Models\QuizAttempt;
 use App\Models\QuizMark;
 use App\Models\User;
 use App\Role;
+use App\Support\QuizHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -113,7 +116,8 @@ class DashboardController extends Controller
     {
         $attempts = QuizAttempt::query()->where('user_id', $user->id);
         $allAttempts = (clone $attempts)->with('quiz')->get();
-        $completed = $allAttempts->where('status', QuizAttempt::STATUS_COMPLETED)->values();
+        $completed = QuizHistory::completed($user, $allAttempts);
+        $answeredToday = QuizHistory::answeredOn($user, now());
 
         $accuracy = null;
 
@@ -148,22 +152,16 @@ class DashboardController extends Controller
                 'last_practiced_on' => $this->practicedLabel($user->last_practiced_on),
             ],
             'stats' => [
-                'completed' => $completed->count(),
+                'completed' => $completed->pluck('quiz_id')->unique()->count(),
                 'inProgress' => (clone $attempts)->where('status', QuizAttempt::STATUS_IN_PROGRESS)->count(),
                 'accuracy' => $accuracy,
             ],
             'resume' => $resume ? $this->attemptPayload($resume) : null,
+            'goal' => ['target' => $user->daily_goal, 'done' => min($answeredToday, $user->daily_goal)],
             'continuePracticing' => $continuePracticing ? $this->attemptPayload($continuePracticing) : null,
             // In-progress attempts already have their own "Continue where you
             // left off" card above, so this is completed quizzes only.
-            'recentQuizzes' => (clone $attempts)
-                ->where('status', QuizAttempt::STATUS_COMPLETED)
-                ->with('quiz.questions')
-                ->latest('completed_at')
-                ->limit(5)
-                ->get()
-                ->map(fn (QuizAttempt $attempt) => $this->attemptPayload($attempt))
-                ->values(),
+            'recentQuizzes' => $completed->take(5)->map(fn (QuizAttempt $attempt) => $this->attemptPayload($attempt))->values(),
             'achievements' => $this->achievements($user, $allAttempts, $completed),
             'savedCount' => QuizMark::query()->where('user_id', $user->id)->where('bookmarked', true)->count(),
         ];
@@ -178,8 +176,8 @@ class DashboardController extends Controller
      * that many correct answers in a row, rather than inventing a log that
      * doesn't exist.
      *
-     * @param  \Illuminate\Support\Collection<int, QuizAttempt>  $allAttempts
-     * @param  \Illuminate\Support\Collection<int, QuizAttempt>  $completed
+     * @param  Collection<int, QuizAttempt>  $allAttempts
+     * @param  Collection<int, QuizAttempt>  $completed
      * @return array<int, array<string, mixed>>
      */
     private function achievements(User $user, $allAttempts, $completed): array
@@ -193,7 +191,7 @@ class DashboardController extends Controller
         $longestStreak = $user->longest_streak;
 
         return collect([
-            ['name' => __('First Steps'), 'detail' => __('Complete your first quiz'), 'icon' => 'footsteps', 'current' => $allAttempts->isNotEmpty() ? 1 : 0, 'target' => 1],
+            ['name' => __('First Steps'), 'detail' => __('Complete your first quiz'), 'icon' => 'footsteps', 'current' => $completed->isNotEmpty() ? 1 : 0, 'target' => 1],
             ['name' => __('Sharp Ear'), 'detail' => __('Answer 10 questions in a row correctly'), 'icon' => 'ear', 'current' => $bestCorrectRun, 'target' => 10],
             ['name' => __('Perfect Harmony'), 'detail' => __('Score 100% on any quiz'), 'icon' => 'musical-notes', 'current' => $hasPerfectScore ? 1 : 0, 'target' => 1],
             ['name' => __('Week Warrior'), 'detail' => __('Keep a 7-day streak'), 'icon' => 'flame', 'current' => $longestStreak, 'target' => 7],
@@ -227,6 +225,7 @@ class DashboardController extends Controller
                 'slug' => $quiz->slug,
                 'title' => $quiz->title,
                 'category' => $quiz->category,
+                'categorySlug' => Str::slug($quiz->category),
                 'difficulty' => $quiz->difficulty,
                 'question_count' => $quiz->question_count,
             ],

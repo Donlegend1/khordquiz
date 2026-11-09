@@ -1,0 +1,491 @@
+{
+  "Cadences": {
+    "kind": "cadence",
+    "heading": "Hear the ending. Name the cadence.",
+    "intro": "Listen to two chords and identify how they return to the home chord.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to how the first chord moves into the final chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the cadence",
+        "description": "Choose Authentic, Plagal, Minor Plagal or Sub-Plagal. Listen for the type of chord that leads into the home chord."
+      },
+      {
+        "title": "Check and submit",
+        "description": "You can change your choice before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "A cadence is a short chord movement that sounds like an ending. These examples use all twelve keys and finish on the home major chord. Authentic moves from 5 dominant seventh to 1; Plagal from 4 major to 1; Minor Plagal from 4 minor to 1; Sub-Plagal from 2 minor to 1. Some versions add a seventh to 4 major or 2 minor, or a sixth to 4 minor. The home chord may include an added ninth or major seventh. The notes can be rearranged, but the cadence name stays the same.",
+    "exampleSlots": [
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "In F, C dominant seventh moves to F major. This is an Authentic cadence. Choose Authentic.",
+    "anchor": false,
+    "choices": [
+      "Authentic",
+      "Plagal",
+      "Minor Plagal",
+      "Sub-Plagal"
+    ],
+    "exampleAnswer": "Authentic"
+  },
+  "Diatonic Progression #1": {
+    "kind": "degrees",
+    "heading": "Hear four chords. Find their numbers.",
+    "intro": "Use the opening reference to hear the key, then enter the four chord numbers in order.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play. First you hear the key’s home major chord, then its single home note. After these references, listen to the four progression chords. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "For each of the four answer slots, choose the chord number from 1 to 7. The chord type is filled in for you."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "Diatonic means the chords use notes from the same major scale. This quiz uses all twelve keys. The home chord is called 1, and the other chord numbers come from their place in that scale. In F, the numbers 1 to 7 start on F, G, A, B♭, C, D and E. The chord types are 1 Major, 2 Minor, 3 Minor, 4 Major, 5 Major, 6 Minor and 7 Diminished. The opening home chord and single note help you hear the key; do not enter them in your answer. The chord notes can be rearranged, so the lowest note is not always the note the chord is named after.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Major",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major",
+        "extensions": []
+      },
+      {
+        "degree": "4",
+        "quality": "Major",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "This example follows 2 → 5 → 1 → 4. Choose these four numbers in order; each chord type is provided automatically.",
+    "anchor": true,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Diatonic Progression #2": {
+    "kind": "degrees",
+    "heading": "Hear four chords. Find their numbers.",
+    "intro": "Use the opening reference to hear the key, then enter the four chord numbers in order.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play. First you hear the key’s home major chord, then its single home note. After these references, listen to the four progression chords. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "For each of the four answer slots, choose the chord number from 1 to 7. The chord type is filled in for you."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "Diatonic means the chords use notes from the same major scale. This quiz uses all twelve keys. The home chord is called 1, and the other chord numbers come from their place in that scale. In F, the numbers 1 to 7 start on F, G, A, B♭, C, D and E. The chord types are 1 Major 7th, 2 Minor 7th, 3 Minor 7th, 4 Major 7th, 5 Dominant 7th, 6 Minor 7th and 7 Minor 7(♭5). The opening home chord and single note help you hear the key; do not enter them in your answer. The chord notes can be rearranged, so the lowest note is not always the note the chord is named after.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      },
+      {
+        "degree": "4",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "This example follows 2 → 5 → 1 → 4. Choose these four numbers in order; each chord type is provided automatically.",
+    "anchor": true,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Build #1": {
+    "kind": "build",
+    "heading": "Find each chord’s number and type.",
+    "intro": "Listen to four chords, then choose a number and a chord type for each one.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play. First hear the key’s home major chord, then its single home note. The four chords you need to identify follow those references. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Select each chord slot and choose both its number and its type. The type is not fixed by the number in this quiz."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses all twelve keys and includes chords with notes outside the home major scale. That means the same chord number can have a different type. Choose Major, Minor, Diminished or Sus4. The ♭7 number means a chord built one keyboard step below the scale’s seventh note. A Sus4 chord leads into a major chord on the same number. The opening home chord and single home note are references only; enter the four chords that follow. The chord notes stay close together and can be rearranged.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor",
+        "extensions": []
+      },
+      {
+        "degree": "3",
+        "quality": "Major",
+        "extensions": []
+      },
+      {
+        "degree": "6",
+        "quality": "Minor",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Major",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "This visual example shows four complete choices. The 3 is Major in this example, even though it would usually be Minor within the home major scale. Choose the type you hear.",
+    "anchor": true,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Build #2": {
+    "kind": "build",
+    "heading": "Find each chord’s number and type.",
+    "intro": "Listen to four chords, then choose a number and a chord type for each one.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play. First hear the key’s home major chord, then its single home note. The four chords you need to identify follow those references. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Select each chord slot and choose both its number and its type. The type is not fixed by the number in this quiz."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses all twelve keys and includes chords with notes outside the home major scale. That means the same chord number can have a different type. Choose Major 7th, Minor 7th, Dominant 7th, Minor 7(♭5) or 7 Sus4. A 7 Sus4 chord leads into a dominant seventh chord on the same number. The opening home chord and single home note are references only; enter the four chords that follow. The chord notes stay close together and can be rearranged.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "2",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "This visual example shows four complete choices. The first two chords share number 2 but have different types: Minor 7th, then Dominant 7th.",
+    "anchor": true,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Recognition #1": {
+    "kind": "recognition",
+    "heading": "The numbers are 2–5–1. Find the chord types.",
+    "intro": "You will hear three chords in a 2–5–1 sequence. Choose the type of each chord.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to the first, second and final chord in order. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "The three chord numbers are already set to 2, 5 and 1. Select each slot and choose its chord type from the available options."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses the key of F. The 2 and 1 chords have their root at the bottom. The 5 chord uses second inversion, with its fifth at the bottom. For 2, choose Minor 7th, Minor 7(♭5), Dominant 7th or Minor 6. For 5, choose Dominant 7th, Minor 7th or Minor 7(♭5). For 1, choose Dominant 7th, Minor 7th, Major 7th, Major 6 or Minor 6. Your answer is the three chord types, not an inversion name.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "In this example, choose Minor 7th for 2, Dominant 7th for 5, and Major 7th for 1.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Recognition #2": {
+    "kind": "recognition",
+    "heading": "The numbers are 2–5–1. Find the chord types.",
+    "intro": "You will hear three chords in a 2–5–1 sequence. Choose the type of each chord.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to the first, second and final chord in order. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "The three chord numbers are already set to 2, 5 and 1. Select each slot and choose its chord type from the available options."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses all twelve keys. The 2 and 1 chords have their root at the bottom. The 5 chord uses second inversion, with its fifth at the bottom. For 2, choose Minor 7th, Minor 7(♭5), Dominant 7th or Minor 6. For 5, choose Dominant 7th, Minor 7th or Minor 7(♭5). For 1, choose Dominant 7th, Minor 7th, Major 7th, Major 6 or Minor 6. Your answer is the three chord types, not an inversion name.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "In this example, choose Minor 7th for 2, Dominant 7th for 5, and Major 7th for 1.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Recognition #3": {
+    "kind": "recognition",
+    "heading": "The numbers are 2–5–1. Find the chord types.",
+    "intro": "You will hear three chords in a 2–5–1 sequence. Choose the type of each chord.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to the first, second and final chord in order. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "The three chord numbers are already set to 2, 5 and 1. Select each slot and choose its chord type from the available options."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses the key of F. The chords use different inversions, with nearby notes between one chord and the next. The chord type stays the same when its notes are rearranged. For 2, choose Minor 7th, Minor 7(♭5), Dominant 7th or Minor 6. For 5, choose Dominant 7th, Minor 7th or Minor 7(♭5). For 1, choose Dominant 7th, Minor 7th, Major 7th, Major 6 or Minor 6. Your answer is the three chord types, not an inversion name.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "In this example, choose Minor 7th for 2, Dominant 7th for 5, and Major 7th for 1.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Progression Recognition #4": {
+    "kind": "recognition",
+    "heading": "The numbers are 2–5–1. Find the chord types.",
+    "intro": "You will hear three chords in a 2–5–1 sequence. Choose the type of each chord.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to the first, second and final chord in order. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "The three chord numbers are already set to 2, 5 and 1. Select each slot and choose its chord type from the available options."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses all twelve keys. The chords use different inversions, with nearby notes between one chord and the next. The chord type stays the same when its notes are rearranged. For 2, choose Minor 7th, Minor 7(♭5), Dominant 7th or Minor 6. For 5, choose Dominant 7th, Minor 7th or Minor 7(♭5). For 1, choose Dominant 7th, Minor 7th, Major 7th, Major 6 or Minor 6. Your answer is the three chord types, not an inversion name.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "In this example, choose Minor 7th for 2, Dominant 7th for 5, and Major 7th for 1.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "2-5-1 chord degree": {
+    "kind": "extensions",
+    "heading": "Find each chord type and its extensions.",
+    "intro": "You will hear 2–5–1 with added chord notes. Choose each chord type and all its extensions.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to all three chords in order. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "The numbers 2, 5 and 1 are given. For each slot, choose its chord type, then select every added extension present. Each chord needs at least one extension."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses all twelve keys. All chords have their root, the note they are named after, at the bottom. Choose the chord type first; the available extension buttons depend on that choice. A seventh or sixth is already included in the type name, so select only the additional extensions. For example, Minor 7th with 9 means Minor 9th. More than one extension can be needed, and their selection order does not matter.",
+    "exampleSlots": [
+      {
+        "degree": "2",
+        "quality": "Minor 7th",
+        "extensions": [
+          "9"
+        ]
+      },
+      {
+        "degree": "5",
+        "quality": "Dominant 7th",
+        "extensions": [
+          "9",
+          "♯11",
+          "13"
+        ]
+      },
+      {
+        "degree": "1",
+        "quality": "Major 7th",
+        "extensions": [
+          "9"
+        ]
+      }
+    ],
+    "exampleExplanation": "Choose Minor 7th with 9 for 2; Dominant 7th with 9, ♯11 and 13 for 5; and Major 7th with 9 for 1. Include every extension shown, not just the highest one.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  },
+  "Chordal Progressions": {
+    "kind": "qualities",
+    "heading": "Hear five chords. Name their types.",
+    "intro": "Follow the five-chord sequence and choose the type of each chord in order.",
+    "steps": [
+      {
+        "title": "Listen to the progression",
+        "description": "Press Play and listen to all five chord sounds from beginning to end. You can listen again whenever you need to."
+      },
+      {
+        "title": "Build your answer",
+        "description": "Select each of the five slots and choose its chord type. This quiz asks for the type only; there is no chord-number selection."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check the chords from left to right. You can select a chord slot to change it before you submit. When you are ready, press Submit Answer."
+      }
+    ],
+    "about": "This quiz uses five-chord examples from the Chordal Melodies and Chordal Bass Lines pool, across all twelve keys. Here, your task is to identify each whole chord, rather than its highest or lowest note. The choices include major, minor, diminished and augmented triads; the five standard seventh-chord types; and the six secondary seventh-chord types. Rearranging the chord notes does not change its type.",
+    "exampleSlots": [
+      {
+        "degree": null,
+        "quality": "Major",
+        "extensions": []
+      },
+      {
+        "degree": null,
+        "quality": "Minor 7th",
+        "extensions": []
+      },
+      {
+        "degree": null,
+        "quality": "Dominant 7th",
+        "extensions": []
+      },
+      {
+        "degree": null,
+        "quality": "Major 7th",
+        "extensions": []
+      },
+      {
+        "degree": null,
+        "quality": "Minor",
+        "extensions": []
+      }
+    ],
+    "exampleExplanation": "This visual example has five answers, one for each chord. Choose the types from left to right, without entering chord numbers.",
+    "anchor": false,
+    "choices": [],
+    "exampleAnswer": ""
+  }
+}

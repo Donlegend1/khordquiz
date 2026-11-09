@@ -18,6 +18,12 @@ const FIVE_NOTE_TEMPLATES = [
     'rising-skips-falling-steps' => [2, 2, -1, -1],
     'rising-steps-falling-skips' => [1, 1, -2, -2],
     'zigzag' => [2, -1, 2, -1],
+    // Added later, same user-approved-shapes process as the original 5 —
+    // see add_five_note_melodies_new_templates.php for how existing rows
+    // were left untouched and only these got new QuizQuestion rows.
+    'ascending-run' => [1, 1, 1, 1],
+    'descending-run' => [-1, -1, -1, -1],
+    'zigzag-down' => [-2, 1, -2, 1],
 ];
 
 // Same return shape as stepwisePatterns()/skipsPatterns(): ['label', 'fileSlug', 'startDegree', 'relativeIndices'].
@@ -25,7 +31,7 @@ function fiveNoteMelodyPatterns(): array
 {
     $patterns = [];
     foreach (range(0, 6) as $startDegree) {
-        foreach (FIVE_NOTE_TEMPLATES as $moves) {
+        foreach (FIVE_NOTE_TEMPLATES as $template => $moves) {
             $relativeIndices = [0];
             $running = 0;
             foreach ($moves as $move) {
@@ -39,6 +45,7 @@ function fiveNoteMelodyPatterns(): array
                 'fileSlug' => implode('-', array_map('stepwiseSlugForIndex', $labelIndices)),
                 'startDegree' => $startDegree,
                 'relativeIndices' => $relativeIndices,
+                'template' => $template,
             ];
         }
     }

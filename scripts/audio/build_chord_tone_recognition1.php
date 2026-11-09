@@ -1,14 +1,16 @@
 <?php
 
-// Builds "Chord Tone Recognition #1" — the 5 7th Degree Chord qualities +
-// the 6 Secondary 7th Chord qualities, root position, all 12 keys, each of
+// Builds "Chord Tone Recognition #1" — the 5 7th Degree Chord qualities
+// ONLY (the 6 Secondary 7th Chord qualities moved to #3 — see
+// build_chord_tone_recognition3.php), root position, all 12 keys, each of
 // the 4 chord tones (1/3/5/7) highlighted in turn. The chord's quality is
 // shown in the prompt text (per user decision) — only which tone was
-// highlighted is tested. 12 keys x 11 qualities x 4 tones = 528 rows — the
-// admin shows exactly these 528 rows (not padded); QuizController::
-// buildQuestionSequence() fair-shuffles a random 25 per attempt from the
-// real pool. Rebuilds the quiz's questions and every instrument's attached
-// audio from scratch every run.
+// highlighted is tested. Bass Guitar, Tuba, and Upright Bass are excluded
+// (explicit request, same as every "Degree Chords" category). 12 keys x 5
+// qualities x 4 tones = 240 rows — the admin shows exactly these 240 rows
+// (not padded); QuizController::buildQuestionSequence() fair-shuffles a
+// random 25 per attempt from the real pool. Rebuilds the quiz's questions
+// and every instrument's attached audio from scratch every run.
 
 use App\Models\Quiz;
 use App\Models\QuizAttempt;
@@ -18,8 +20,6 @@ use App\Models\QuizQuestionAudio;
 const CTR1_QUALITIES = [
     'diminished7' => 'Diminished 7th', 'dominant7' => 'Dominant 7th', 'm7b5' => 'Minor 7(♭5)',
     'major7' => 'Major 7th', 'minor7' => 'Minor 7th',
-    'aug7' => 'Augmented 7th', 'minmaj7' => 'Minor-Major 7th', 'dimmaj7' => 'Diminished-Major 7th',
-    'dom7b5' => 'Dominant 7(♭5)', 'maj7s5' => 'Major 7(♯5)', 'maj7b5' => 'Major 7(♭5)',
 ];
 
 const CTR1_DEGREES = ['1', '3', '5', '7'];
@@ -31,7 +31,7 @@ const CTR1_KEYS = [
 
 const CTR1_INSTRUMENTS = [
     'Piano' => 'piano', 'EP' => 'ep', 'Organ' => 'organ',
-    'Guitar' => 'guitar', 'Jazz Guitar' => 'jazz-guitar', 'Bass Guitar' => 'bass-guitar',
+    'Guitar' => 'guitar', 'Jazz Guitar' => 'jazz-guitar',
     'Violin' => 'violin', 'Strings' => 'strings', 'Cello' => 'cello', 'Harp' => 'harp',
     'Voice' => 'voice',
     'Trombone' => 'trombone', 'Saxophone' => 'saxophone', 'Marimba' => 'marimba',
@@ -72,4 +72,4 @@ foreach (CTR1_KEYS as $keySlug => $keyName) {
     }
 }
 
-echo "Created {$created} rows on \"{$quiz->title}\" (pool of ".count(CTR1_KEYS)." keys x ".count(CTR1_QUALITIES)." qualities x 4 tones; question_count stays {$quiz->question_count}), attached {$audioAttached} audio rows across ".count(CTR1_INSTRUMENTS)." instruments.".PHP_EOL;
+echo "Created {$created} rows on \"{$quiz->title}\" (pool of ".count(CTR1_KEYS).' keys x '.count(CTR1_QUALITIES)." qualities x 4 tones; question_count stays {$quiz->question_count}), attached {$audioAttached} audio rows across ".count(CTR1_INSTRUMENTS).' instruments (Bass Guitar/Tuba/Upright Bass excluded).'.PHP_EOL;

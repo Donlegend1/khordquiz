@@ -197,7 +197,7 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Cadences',
                 'category' => 'Chord Progressions',
-                'difficulty' => 'Intermediate',
+                'difficulty' => 'Advanced',
                 'description' => 'Hear authentic, plagal, half and deceptive cadences.',
                 'question_count' => 25,
                 'is_published' => true,
@@ -205,14 +205,14 @@ class DatabaseSeeder extends Seeder
             [
                 'title' => 'Tonal Modes',
                 'category' => 'Scales',
-                'difficulty' => 'Intermediate',
+                'difficulty' => 'Advanced',
                 'description' => 'Tell the modes apart by their sound.',
                 'question_count' => 25,
                 'is_published' => true,
             ],
             [
                 'title' => 'Chord naming',
-                'category' => 'Extensions',
+                'category' => 'Chord Naming',
                 'difficulty' => 'Advanced',
                 'description' => 'Name the chord after you hear its extensions.',
                 'question_count' => 25,

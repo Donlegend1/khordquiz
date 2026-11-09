@@ -54,6 +54,7 @@ collect(walk(join(ROOT, 'app'), ['.php']), PHP_CALL);
 // instruments and sound types from App\Support\QuizCatalog.
 const catalog = execFileSync('php', ['-r', `
     require 'vendor/autoload.php';
+    use App\\Models\\QuestionReport;
     use App\\Support\\QuizCatalog;
     $names = [];
     foreach (QuizCatalog::all() as $category => $titles) {
@@ -63,9 +64,26 @@ const catalog = execFileSync('php', ['-r', `
             array_push($names, ...QuizCatalog::soundsFor($category, $title));
         }
     }
-    echo json_encode(array_values(array_unique([...$names, ...QuizCatalog::allInstruments()])));
+    echo json_encode(array_values(array_unique([...$names, ...QuizCatalog::allInstruments(), ...QuestionReport::REASONS])));
 `], { cwd: ROOT, encoding: 'utf8' });
 for (const name of JSON.parse(catalog)) keys.add(name);
+
+// Quick-guide copy lives in resources/js/data/*Guides.json and is rendered with
+// t(guide.field). Collect the prose fields; note names, degrees and answer
+// values in the other fields aren't translated.
+const GUIDE_PROSE = new Set(['heading', 'intro', 'title', 'description', 'about', 'layoutCaption', 'exampleExplanation', 'chordName', 'exampleChord', 'upperTriad', 'upperLabel', 'playedTogetherLabel', 'diagramLabel', 'comparison', 'exampleAnswer', 'example']);
+const collectGuide = (value, field) => {
+    if (typeof value === 'string') {
+        if (GUIDE_PROSE.has(field) && /[a-z]{2}/i.test(value)) keys.add(value);
+    } else if (Array.isArray(value)) {
+        value.forEach((item) => collectGuide(item, field));
+    } else if (value && typeof value === 'object') {
+        for (const [name, item] of Object.entries(value)) collectGuide(item, name);
+    }
+};
+for (const file of readdirSync(join(ROOT, 'resources/js/data')).filter((name) => /Guides\.json$/.test(name))) {
+    collectGuide(JSON.parse(readFileSync(join(ROOT, 'resources/js/data', file), 'utf8')), '');
+}
 
 // Answer labels (chord qualities, inversions, intervals, modes…) live as plain
 // values in quizAnswerPresets.js — they're also stored/compared server-side, so
@@ -73,10 +91,13 @@ for (const name of JSON.parse(catalog)) keys.add(name);
 // literal there; note names and solfège syllables are skipped.
 const SOLFEGE = new Set(['Doh', 'Reh', 'Mi', 'Fah', 'Sol', 'Lah', 'Ti', 'Do', 'Re', 'Fa', 'So', 'La', 'Di', 'Ri', 'Fi', 'Si', 'Li', 'Ra', 'Me', 'Se', 'Le', 'Te']);
 const isSolfege = (s) => s.split(/[\s\-–,/]+/).filter(Boolean).every((part) => SOLFEGE.has(part));
-const presets = readFileSync(join(ROOT, 'resources/js/lib/quizAnswerPresets.js'), 'utf8')
-    .replace(/\/\/.*$/gm, '');
-for (const m of presets.matchAll(/'([A-Z][^'\n]*[a-z][^'\n]*)'/g)) {
-    if (!isSolfege(m[1]) && !/^[A-G][#♯b♭]?(\/|$)/.test(m[1])) keys.add(m[1]);
+// chordNaming.js holds the Chord Naming quality/exclude labels the same way.
+for (const file of ['quizAnswerPresets.js', 'chordNaming.js']) {
+    const presets = readFileSync(join(ROOT, 'resources/js/lib', file), 'utf8')
+        .replace(/\/\/.*$/gm, '');
+    for (const m of presets.matchAll(/'([A-Z][^'\n]*[a-z][^'\n]*)'/g)) {
+        if (!isSolfege(m[1]) && !/^[A-G][#♯b♭]?(\/|$)/.test(m[1])) keys.add(m[1]);
+    }
 }
 
 const sorted = [...keys].sort((a, b) => a.localeCompare(b));

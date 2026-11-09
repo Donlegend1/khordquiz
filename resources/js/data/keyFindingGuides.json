@@ -1,0 +1,53 @@
+{
+  "Find the Key #1": {
+    "heading": "Listen to the music. Find its key.",
+    "intro": "Find the note that sounds like a natural ending to the music, then choose it on the keyboard.",
+    "steps": [
+      {
+        "title": "Listen to the music",
+        "description": "Press Play and listen to the clip. You can replay any part you need."
+      },
+      {
+        "title": "Find the matching key",
+        "description": "Tap the keyboard keys to compare their sounds with the music. Choose the note that makes the music feel settled."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you have chosen a key, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "The song's key is named after the note that feels like a resting point in the music. Try humming that note, then find it on the keyboard. Black piano keys show two names, such as C♯ and D♭. Both names belong to the same keyboard key.",
+    "example": "C",
+    "keyboardExample": {
+      "answer": "C"
+    },
+    "exampleExplanation": "This example shows C selected as the song's key. In your quiz, choose the key that matches the music you hear."
+  },
+  "Find the Key #2": {
+    "heading": "Use the reference note to find the song's key.",
+    "intro": "The highlighted key gives you a known note. Use it as a starting point to work out the note the music feels settled on.",
+    "steps": [
+      {
+        "title": "Hear the reference note",
+        "description": "Tap the highlighted key. Its label tells you the name of the note you are hearing. You can listen to it again whenever you need to."
+      },
+      {
+        "title": "Trace the centre of the song",
+        "description": "Play the music and compare it with the reference note. Listen to how that note fits the song, then use that relationship to work out the song's key."
+      },
+      {
+        "title": "Choose the song's key",
+        "description": "Select the note you worked back to, then press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "The highlighted note is a known starting point for your ear. Use it to trace the tonal centre: the note the song feels settled on. Work out how the reference note relates to that centre, then find the centre's name. Only the highlighted key plays the reference note, but you can choose any key as your answer.",
+    "example": "C",
+    "keyboardExample": {
+      "answer": "C",
+      "helper": "G#/Ab",
+      "helperLabel": "A♭",
+      "relationship": "♭6"
+    },
+    "exampleExplanation": "Here, the reference note is A♭. If you hear it as the flat sixth (♭6) of the song, you can work back to C as the tonal centre. Select C as your answer. Your reference note and the song's key may be different in each question."
+  }
+}

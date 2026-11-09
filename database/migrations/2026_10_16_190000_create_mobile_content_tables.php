@@ -40,16 +40,6 @@ return new class extends Migration
             $table->unique(['user_id', 'slug']);
         });
 
-        Schema::create('quiz_sessions', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('slug');
-            $table->unsignedSmallInteger('correct');
-            $table->unsignedSmallInteger('total');
-            $table->timestamp('played_at');
-            $table->index(['user_id', 'played_at']);
-        });
-
         Schema::create('quiz_answers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
@@ -184,7 +174,6 @@ return new class extends Migration
         Schema::dropIfExists('suggestion_votes');
         Schema::dropIfExists('suggestions');
         Schema::dropIfExists('quiz_answers');
-        Schema::dropIfExists('quiz_sessions');
         Schema::dropIfExists('quiz_completions');
         Schema::dropIfExists('quiz_bookmarks');
         Schema::dropIfExists('user_preferences');

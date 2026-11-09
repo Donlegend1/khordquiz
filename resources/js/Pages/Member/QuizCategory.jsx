@@ -1,7 +1,48 @@
+import VideoEmbed from '@/Components/Quiz/VideoEmbed';
+import { QuizVideoContext } from '@/Components/Quiz/QuizQuickGuide';
+import { shuffled, reshuffleAvoiding } from '@/lib/referenceAudio';
+import InstrumentIcon, { FAMILY_INSTRUMENTS } from '@/Components/Quiz/InstrumentIcon';
+import instrumentIcons from '@/data/instrumentIcons.json';
+import illustratedGuides from '@/data/illustratedGuides.json';
+import IllustratedGuideDialog from '@/Components/Quiz/IllustratedGuideDialog';
+import ScaleGuide from '@/Components/Quiz/ScaleGuide';
+import scaleGuides from '@/data/scaleGuides.json';
+import modalVoicingGuides from '@/data/modalVoicingGuides.json';
+import ModalHarmonyGuide from '@/Components/Quiz/ModalHarmonyGuide';
+import modalHarmonyGuides from '@/data/modalHarmonyGuides.json';
+import ProgressionGuide from '@/Components/Quiz/ProgressionGuide';
+import progressionGuides from '@/data/progressionGuides.json';
+import chordNamingGuides from '@/data/chordNamingGuides.json';
+import dominantExtensionGuides from '@/data/dominantExtensionGuides.json';
+import minorExtensionGuides from '@/data/minorExtensionGuides.json';
+import ChordExtensionGuide from '@/Components/Quiz/ChordExtensionGuide';
+import majorExtensionGuides from '@/data/majorExtensionGuides.json';
+import ChordToneGuide from '@/Components/Quiz/ChordToneGuide';
+import chordToneGuides from '@/data/chordToneGuides.json';
+import thirteenthChordGuides from '@/data/thirteenthChordGuides.json';
+import secondaryEleventhGuides from '@/data/secondaryEleventhGuides.json';
+import eleventhChordGuides from '@/data/eleventhChordGuides.json';
+import secondaryNinthGuides from '@/data/secondaryNinthGuides.json';
+import ninthChordGuides from '@/data/ninthChordGuides.json';
+import secondarySeventhGuides from '@/data/secondarySeventhGuides.json';
+import seventhChordGuides from '@/data/seventhChordGuides.json';
+import addNineGuides from '@/data/addNineGuides.json';
+import BasicTriadGuide from '@/Components/Quiz/BasicTriadGuide';
+import basicTriadGuides from '@/data/basicTriadGuides.json';
+import IntervalGuide from '@/Components/Quiz/IntervalGuide';
+import intervalGuides from '@/data/intervalGuides.json';
+import MelodicDictationGuide from '@/Components/Quiz/MelodicDictationGuide';
+import melodicDictationGuides from '@/data/melodicDictationGuides.json';
+import AudioStimulus from '@/Components/Quiz/AudioStimulus';
 import AppShell from '@/Layouts/AppShell';
+import ChordNamingGuide from '@/Components/Quiz/ChordNamingGuide';
+import PitchQuizGuide from '@/Components/Quiz/PitchQuizGuide';
+import RelativeTonePitchGuide from '@/Components/Quiz/RelativeTonePitchGuide';
+import NotePairGuide from '@/Components/Quiz/NotePairGuide';
+import KeyFindingGuide from '@/Components/Quiz/KeyFindingGuide';
 import { Head, Link, router, usePage } from '@inertiajs/react';
-import { useEffect, useMemo, useRef, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 function PlayIcon(props) {
     return (
@@ -37,65 +78,10 @@ function ChevronDownIcon(props) {
     );
 }
 
-function GaugeIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M4 15a8 8 0 0116 0" />
-            <path d="M12 15l3.5-4.5" />
-            <circle cx="12" cy="15" r="1.3" fill="currentColor" stroke="none" />
-        </svg>
-    );
-}
-
-function HelpIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="12" cy="12" r="8.5" />
-            <path d="M9.5 9.5a2.5 2.5 0 014.8 1c0 1.7-2.3 1.9-2.3 3.5" />
-            <path d="M12 17.2v.01" />
-        </svg>
-    );
-}
-
-function RepeatIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M4 7h11a4 4 0 014 4v1M20 17H9a4 4 0 01-4-4v-1" />
-            <path d="M8 4L4 7l4 3M16 14l4 3-4 3" />
-        </svg>
-    );
-}
-
 function BulbIcon(props) {
     return (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
             <path d="M9 18h6M10 21h4M8 11a4 4 0 118 0c0 1.8-1 2.6-2 3.5-.6.6-1 1.1-1 1.5h-2c0-.4-.4-.9-1-1.5-1-.9-2-1.7-2-3.5z" />
-        </svg>
-    );
-}
-
-function PlayTriangleIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <path d="M8 5.5v13l11-6.5z" />
-        </svg>
-    );
-}
-
-function PauseIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}>
-            <rect x="6" y="5" width="4" height="14" rx="1" />
-            <rect x="14" y="5" width="4" height="14" rx="1" />
-        </svg>
-    );
-}
-
-function RestartIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M3 12a9 9 0 1 1 2.6 6.3" />
-            <path d="M3 7v5h5" />
         </svg>
     );
 }
@@ -124,11 +110,11 @@ function ChevronRightIcon(props) {
     );
 }
 
-function CheckCircleIcon(props) {
+function CheckCircleIcon({ filled = false, ...props }) {
     return (
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <circle cx="12" cy="12" r="9" />
-            <path d="M8 12.5l2.5 2.5L16 9.5" />
+            <circle cx="12" cy="12" r="9" fill={filled ? 'currentColor' : 'none'} />
+            <path d="M8 12.5l2.5 2.5L16 9.5" stroke={filled ? 'white' : 'currentColor'} />
         </svg>
     );
 }
@@ -226,14 +212,13 @@ function TubaIcon({ size = 22 }) {
 // Display-only, same pattern as Settings.jsx's INSTRUMENT_LABELS — the stored
 // sound value and every audio path stay "Guitar"; this just clarifies the tile's
 // label now that Harpejji and Bass Guitar sit in the same category.
-const INSTRUMENT_LABELS = { EP: tk('Rhodes'), Guitar: tk('Acoustic Guitar'), Saxophone: tk('Tenor Saxophone') };
+const INSTRUMENT_LABELS = { EP: tk('Rhodes'), Guitar: tk('Acoustic Guitar'), Saxophone: tk('Tenor Saxophone'), Voice: tk('Solo Choir') };
 
 const INSTRUMENT_EMOJI = {
     All: '🔀',
-    'Audience Choir': '🎤',
+    'Tropar Choir': '🎤',
     'Bass Guitar': '🎸',
     Bassoon: '🪈',
-    'Bulgarian Choir': '🎤',
     Cello: '🎻',
     Celesta: '🔔',
     Clarinet: '🪈',
@@ -266,80 +251,66 @@ const INSTRUMENT_EMOJI = {
 // any quiz yet (Organ, Cello, Upright Bass, Trumpet, Flute, Celesta, Vibraphone,
 // Bass Guitar) — they simply won't appear until a quiz's `sounds` list
 // actually includes them.
-// `name` doubles as an identifier (compared, keyed into CATEGORY_EMOJI) — it's
+// `name` doubles as an identifier (compared, keyed into FAMILY_INSTRUMENTS) — it's
 // only translated where it's displayed; `pickPrompt` is the drill-in subtitle.
 const SOUND_CATEGORIES = [
     { name: tk('Piano'), pickPrompt: tk('Pick which piano instrument plays this quiz.'), sounds: ['Piano', 'EP', 'Upright Piano', 'Organ'] },
     { name: tk('Guitar'), pickPrompt: tk('Pick which guitar instrument plays this quiz.'), sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: tk('Strings'), pickPrompt: tk('Pick which strings instrument plays this quiz.'), sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: tk('Brass'), pickPrompt: tk('Pick which brass instrument plays this quiz.'), sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: tk('Vocals'), pickPrompt: tk('Pick which vocals instrument plays this quiz.'), sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: tk('Vocals'), pickPrompt: tk('Pick which vocals instrument plays this quiz.'), sounds: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: tk('Percussion'), pickPrompt: tk('Pick which percussion instrument plays this quiz.'), sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: tk('Woodwinds'), pickPrompt: tk('Pick which woodwinds instrument plays this quiz.'), sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
-
-const CATEGORY_EMOJI = {
-    Piano: '🎹',
-    Guitar: '🎸',
-    Strings: '🎻',
-    Brass: '🎷',
-    Vocals: '🎤',
-};
 
 function categoryFor(sound) {
     return SOUND_CATEGORIES.find((category) => category.sounds.includes(sound))?.name ?? null;
 }
 
-// Settings → Default instrument is a specific instrument (e.g. "Bass Guitar"),
-// not just a category — checked against `availableSounds` (every sound this quiz
-// actually has generated audio for) rather than `quizSounds` (the picker's
-// *pickable* tiles), since Default-Instrument-only variants like EP, Jazz
-// Guitar, Bass Guitar and Organ get real audio without ever being a tile of
-// their own — that's the whole point of the substitution (picking the Guitar
-// category should play Bass Guitar if that's the member's default, not fall
-// back to plain Guitar just because Bass Guitar isn't a selectable tile).
-// Otherwise fall back to whichever sound this quiz offers within that
-// instrument's *category* (e.g. default "EP" + a quiz that only has "Piano"
-// built → "Piano", not some unrelated sound), so a member's category
-// preference still carries over even before every instrument in it has
-// generated audio. No match at all (no default set, or its category isn't
-// offered here) falls back to the quiz's own first sound, same as before any
-// of this existed.
-// Every branch below is gated on actually having real audio (availableSounds)
-// wherever it's known — never just the static catalog list (quizSounds) — so
-// this can never resolve to a sound with nothing recorded behind it. Without
-// this, a member defaulted to e.g. Marimba could silently start a quiz with
-// `sound: 'Marimba'` even though that quiz's Percussion tile is hidden (no
-// real Marimba audio exists for it): the category-match fallback used to
-// search quizSounds alone, which only reflects what a category CLAIMS to
-// offer, not what was actually recorded — the Start Quiz button would then
-// submit a sound whose Play button does nothing.
-function resolveDefaultSound(defaultInstrument, quizSounds, availableSounds) {
-    if (!quizSounds || quizSounds.length === 0) return null;
-    // Placeholder quizzes report no availableSounds at all — fall back to the
-    // static list alone rather than resolving to nothing playable.
+// The question sound picker's initial selection — deliberately strict, unlike
+// any instrument-family fallback. Pre-fills the member's Default Instrument only
+// when it's an exact match for something this quiz actually has real audio
+// for; otherwise leaves the picker empty rather than silently substituting a
+// family sibling or "whatever's first". A silent substitution used to mean a
+// member defaulted to Bass Guitar could open a quiz with no Bass Guitar audio
+// and find themselves already set to Guitar (or something else) without ever
+// choosing it — and separately, Reference Audio resolved its own instrument
+// independently, so the two could disagree with nothing to tell the member
+// why. Requiring an explicit tap here means there's exactly one decision
+// instead of two silent ones, and Reference Audio (see ReferenceAudioModal)
+// now follows this same selection instead of re-deciding on its own.
+function resolveExactSound(defaultInstrument, quizSounds, availableSounds) {
+    if (!defaultInstrument) return null;
     const real = availableSounds?.length ? availableSounds : quizSounds;
+    return real?.includes(defaultInstrument) ? defaultInstrument : null;
+}
 
-    if (defaultInstrument && real.includes(defaultInstrument)) return defaultInstrument;
+// Find the Key #1/#2's "sounds" are recording types (Monophonic, Full Song,
+// …), not instruments — resolveExactSound above never has anything to match
+// a Default Instrument against there, so it always comes back empty and the
+// member would always have to tap a tile before starting. "All" exists
+// specifically as this picker's no-filter option, so pre-select it instead
+// of leaving the picker blank for a category where there's no real default
+// to resolve in the first place.
+function resolveInitialSound(defaultInstrument, quizSounds, availableSounds) {
+    const exact = resolveExactSound(defaultInstrument, quizSounds, availableSounds);
+    if (exact) return exact;
 
-    const category = categoryFor(defaultInstrument);
-    if (category) {
-        const match = quizSounds.find((sound) => categoryFor(sound) === category && real.includes(sound));
-        if (match) return match;
-    }
+    const soundsAreInstruments = (quizSounds?.length ?? 0) > 0 && categoryFor(quizSounds[0]) !== null;
+    if (!soundsAreInstruments && quizSounds?.includes('All')) return 'All';
 
-    return quizSounds.find((sound) => real.includes(sound)) ?? quizSounds[0];
+    return null;
 }
 
 // Mostly mallet instruments (Marimba, Celesta, Vibraphone), so the category tab
 // reuses MarimbaIcon rather than a generic 🥁 drum emoji — Steel Drum gets its
 // own 🥁 at the per-sound level instead (see INSTRUMENT_EMOJI above).
-function CategoryIcon({ name, size = 22 }) {
-    if (name === 'Percussion') return <MarimbaIcon size={size} />;
-    return <span style={{ fontSize: size * 0.85 }}>{CATEGORY_EMOJI[name] ?? '🎵'}</span>;
+function CategoryIcon({ name, size = 24 }) {
+    return <InstrumentIcon sound={FAMILY_INSTRUMENTS[name] ?? 'Piano'} size={size} />;
 }
 
-function SoundIcon({ sound, size = 22 }) {
+function SoundIcon({ sound, size = 24 }) {
+    if (instrumentIcons[sound]) return <InstrumentIcon sound={sound} size={size} />;
     if (sound === 'Marimba') return <MarimbaIcon size={size} />;
     if (sound === 'Strings') return <StringsIcon size={size} />;
     if (sound === 'Organ') return <OrganIcon size={size} />;
@@ -348,114 +319,77 @@ function SoundIcon({ sound, size = 22 }) {
     return <span style={{ fontSize: size * 0.85 }}>{INSTRUMENT_EMOJI[sound] ?? '🎵'}</span>;
 }
 
-function StatusDot({ quiz, inverted, large }) {
-    const size = large ? 'h-7 w-7' : 'h-4 w-4';
-    const dotSize = large ? 'h-2.5 w-2.5' : 'h-1.5 w-1.5';
-    const checkSize = large ? 'h-4 w-4' : 'h-2.5 w-2.5';
-    const borderWidth = large ? 'border-[2.5px]' : 'border-2';
+function CompletionCheck({ quiz }) {
+    const t = useTrans();
+    const completed = quiz.status === 'completed' || quiz.manuallyCompleted || quiz.score != null;
+    if (!completed) return null;
 
-    // A member's explicit "Mark as Completed" (or a genuinely finished attempt) wins over
-    // a merely in-progress one — otherwise restarting an already-completed quiz would make
-    // it look unfinished again in the sidebar, which reads as the completion being lost.
-    if (quiz.status === 'completed' || quiz.manuallyCompleted) {
-        return (
-            <span className={`flex ${size} shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white`}>
-                <CheckIcon className={checkSize} />
-            </span>
-        );
-    }
-
-    if (quiz.status === 'in_progress') {
-        return (
-            <span
-                className={`flex ${size} shrink-0 items-center justify-center rounded-full ${borderWidth} ${inverted ? 'border-white' : 'border-brand'}`}
-            >
-                <span className={`${dotSize} rounded-full ${inverted ? 'bg-white' : 'bg-brand'}`} />
-            </span>
-        );
-    }
-
-    return <span className={`${size} shrink-0 rounded-full ${borderWidth} ${inverted ? 'border-white/40' : 'border-neutral-300'}`} />;
+    return (
+        <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-white">
+            <CheckIcon aria-hidden="true" className="h-2.5 w-2.5" />
+            <span className="sr-only">{t('Completed')}</span>
+        </span>
+    );
 }
 
 function SidebarRow({ quiz, categorySlug, selected }) {
     const t = useTrans();
+
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
+            aria-current={selected ? 'page' : undefined}
             preserveScroll
             preserveState
             replace
-            className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-150 ${
-                selected ? 'bg-brand shadow-sm' : 'bg-neutral-100 hover:bg-neutral-200'
+            className={`relative flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-left transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                selected ? 'border-neutral-300 bg-neutral-100 shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50'
             }`}
         >
+            {selected && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-brand" />}
             <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                    selected ? 'bg-white/15 text-white' : 'bg-white text-neutral-600'
+                    selected ? 'bg-white text-neutral-700' : 'bg-neutral-50 text-neutral-600'
                 }`}
             >
                 <PlayIcon className="h-3.5 w-3.5" />
             </span>
-            <p className={`min-w-0 flex-1 truncate text-sm font-semibold ${selected ? 'text-white' : 'text-neutral-900'}`}>
+            <p className={`min-w-0 flex-1 truncate text-sm font-semibold text-neutral-900`}>
                 {t(quiz.title)}
             </p>
-            <StatusDot quiz={quiz} inverted={selected} />
+            <CompletionCheck quiz={quiz} />
         </Link>
     );
 }
 
-// Same pill look as the desktop SidebarRow (left play icon, colored fill when selected,
-// status dot on the right) — tapping still navigates to its own preview screen rather than
+// Same row style as the desktop SidebarRow (gray fill and a red accent when selected,
+// with green checks for completed quizzes) — tapping still navigates to its own preview screen rather than
 // opening inline, so unlike SidebarRow this is a plain navigation, not preserveState.
 function MobileCategoryRow({ quiz, categorySlug, selected }) {
     const t = useTrans();
+
     return (
         <Link
             href={route('quiz.category', { category: categorySlug, quiz: quiz.slug })}
-            className={`flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition-all duration-150 ${
-                selected ? 'bg-brand shadow-sm' : 'bg-neutral-100 hover:bg-neutral-200'
+            aria-current={selected ? 'page' : undefined}
+            className={`relative flex w-full items-center gap-2.5 rounded-lg border px-2.5 py-2 text-left transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                selected ? 'border-neutral-300 bg-neutral-100 shadow-sm' : 'border-neutral-200 bg-white hover:border-neutral-300 hover:bg-neutral-50'
             }`}
         >
+            {selected && <span aria-hidden="true" className="absolute inset-y-2 left-0 w-[3px] rounded-r-full bg-brand" />}
             <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full ${
-                    selected ? 'bg-white/15 text-white' : 'bg-white text-neutral-600'
+                    selected ? 'bg-white text-neutral-700' : 'bg-neutral-50 text-neutral-600'
                 }`}
             >
                 <PlayIcon className="h-3.5 w-3.5" />
             </span>
-            <p className={`min-w-0 flex-1 truncate text-sm font-semibold ${selected ? 'text-white' : 'text-neutral-900'}`}>
+            <p className={`min-w-0 flex-1 truncate text-sm font-semibold text-neutral-900`}>
                 {t(quiz.title)}
             </p>
-            <StatusDot quiz={quiz} inverted={selected} />
+            <CompletionCheck quiz={quiz} />
         </Link>
     );
-}
-
-// dangerouslySetInnerHTML never executes <script> tags (browsers ignore
-// script elements created via innerHTML), so embed codes that load a player
-// via <script src="..."> — Wistia, Vimeo's JS embed, etc. — need their
-// script tags recreated as real DOM nodes to actually run.
-function VideoEmbed({ html, className }) {
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-        const container = containerRef.current;
-        if (!container) return;
-
-        container.innerHTML = html;
-
-        container.querySelectorAll('script').forEach((oldScript) => {
-            const newScript = document.createElement('script');
-            for (const { name, value } of oldScript.attributes) {
-                newScript.setAttribute(name, value);
-            }
-            newScript.textContent = oldScript.textContent;
-            oldScript.replaceWith(newScript);
-        });
-    }, [html]);
-
-    return <div ref={containerRef} className={className} />;
 }
 
 // Row of instrument tiles — the same tile design used before categories existed,
@@ -464,6 +398,7 @@ function VideoEmbed({ html, className }) {
 // category tabs.
 function SoundTiles({ sounds, sound, onSelect }) {
     const t = useTrans();
+
     return (
         <div className="mt-2.5 flex flex-wrap gap-2.5 sm:flex-nowrap">
             {sounds.map((option) => {
@@ -570,12 +505,24 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="mt-2.5 flex w-full items-center gap-2.5 rounded-xl border border-black/10 bg-white px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-50"
+                className={`mt-2.5 flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-50 ${
+                    sound ? 'border-black/10 bg-white' : 'border-brand/30 bg-brand/5'
+                }`}
             >
-                <SoundIcon sound={sound} />
-                <span className="flex-1 text-sm font-semibold text-neutral-900">{t(INSTRUMENT_LABELS[sound] ?? sound)}</span>
-                {sound === defaultInstrument && (
-                    <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">{t('Default')}</span>
+                {sound ? (
+                    <>
+                        <SoundIcon sound={sound} />
+                        <span className="flex-1 text-sm font-semibold text-neutral-900">{t(INSTRUMENT_LABELS[sound] ?? sound)}</span>
+                        {sound === defaultInstrument && (
+                            <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold text-brand">{t('Default')}</span>
+                        )}
+                    </>
+                ) : (
+                    // The member's Default Instrument isn't available for this
+                    // quiz (see resolveExactSound) — nothing pre-filled, so
+                    // Start Quiz/Reference Audio stay disabled until they tap
+                    // in and pick one of what IS actually available below.
+                    <span className="flex-1 text-sm font-semibold text-brand">{t('Choose a sound to continue')}</span>
                 )}
                 <ChevronDownIcon className="h-4 w-4 text-neutral-400" />
             </button>
@@ -588,6 +535,9 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                     onClick={closeMenu}
                 >
                     <div
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={t('Choose a sound')}
                         className={`flex max-h-[85vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white shadow-xl transition-transform duration-300 ease-out sm:max-w-sm sm:rounded-2xl ${
                             entered ? 'translate-y-0' : 'translate-y-full'
                         }`}
@@ -598,18 +548,22 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                             <div className="h-1.5 w-10 rounded-full bg-neutral-200" />
                         </div>
 
-                        <div className="shrink-0 overflow-y-auto px-6 pb-6 pt-2 sm:pt-5">
+                        <div className="shrink-0 overflow-y-auto px-5 pb-4 pt-2 sm:pt-4">
                             <div className="flex flex-col items-center text-center">
-                                <span className="flex h-14 w-14 items-center justify-center rounded-full bg-rose-50 text-brand">
+                                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-rose-50 text-brand">
                                     {drillCategory ? <CategoryIcon name={drillCategory} size={26} /> : <SpeakerIcon className="h-6 w-6" />}
                                 </span>
-                                <p className="mt-3 text-xl font-extrabold text-neutral-900">{drillCategory ? t(drillCategory) : t('Choose a sound')}</p>
+                                <p className="mt-3 text-lg font-bold text-neutral-900">{drillCategory ? t(drillCategory) : t('Choose a sound')}</p>
                                 <p className="mt-1 text-sm text-neutral-500">
                                     {drillCategory
                                         ? t(SOUND_CATEGORIES.find((category) => category.name === drillCategory)?.pickPrompt ?? 'Pick which instrument plays this quiz.')
                                         : t('Pick which instrument plays this quiz.')}
                                 </p>
                             </div>
+
+                            <p className="mt-3 text-center text-sm text-neutral-600">
+                                {t('Current sound:')} <span className="font-semibold text-neutral-900">{sound ? t(INSTRUMENT_LABELS[sound] ?? sound) : t('Not selected')}</span>
+                            </p>
 
                             {drillCategory && (
                                 <button
@@ -631,13 +585,14 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                                   key={category.name}
                                                   type="button"
                                                   onClick={() => setDrillCategory(category.name)}
-                                                  className="flex w-full items-center gap-2.5 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-100"
+                                                  className="flex min-h-11 w-full items-center gap-2.5 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-100"
                                               >
-                                                  <CategoryIcon name={category.name} size={18} />
+                                                  <CategoryIcon name={category.name} size={24} />
                                                   <span className="flex-1 text-sm font-medium text-neutral-800">{t(category.name)}</span>
                                                   {pickedHere && (
-                                                      <span className="text-sm font-semibold text-brand">
+                                                      <span className="flex items-center gap-1.5 text-sm font-semibold text-brand">
                                                           {t(INSTRUMENT_LABELS[pickedHere] ?? pickedHere)}
+                                                          <CheckIcon aria-hidden="true" className="h-4 w-4" />
                                                       </span>
                                                   )}
                                                   <ChevronDownIcon className="h-4 w-4 -rotate-90 text-neutral-400" />
@@ -653,13 +608,14 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
                                                   <button
                                                       key={option}
                                                       type="button"
+                                                      aria-pressed={active}
                                                       onClick={() => {
                                                           onSelect(option);
                                                           closeMenu();
                                                       }}
-                                                      className="flex w-full items-center gap-2.5 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-100"
+                                                      className="flex min-h-11 w-full items-center gap-2.5 px-3.5 py-3 text-left transition-colors duration-150 hover:bg-neutral-100"
                                                   >
-                                                      <SoundIcon sound={option} size={18} />
+                                                      <SoundIcon sound={option} size={26} />
                                                       <span
                                                           className={`flex-1 text-sm ${active ? 'font-semibold text-brand' : 'font-medium text-neutral-800'}`}
                                                       >
@@ -691,61 +647,77 @@ function SoundPicker({ sounds, sound, onSelect, defaultInstrument, availableSoun
     );
 }
 
-// Opened from the button next to Start Quiz. Always plays the one track matching
-// the member's Default Instrument (same category-primary fallback as the question
-// sound picker) — whatever sound the member separately picks for the quiz
-// questions below has no bearing on this. Most quizzes have exactly one
-// track per instrument (a single reference scale) and autoplay it directly;
-// quizzes with several distinct clips per instrument (e.g. Melodic Diatonic
-// Intervals' one demo per interval type) show the same single-track player
-// with Next/Previous to step between clips, rather than a flat list.
-//
-// Quizzes whose clips are themselves two-part (quality + inversion, labeled
-// "{Quality} · {Inversion}" — Basic Triads Level 5 and similar) group by the
-// first part instead: Next/Previous steps between qualities (Major, Minor…),
-// and small tabs switch inversion within the current quality — a flat
-// "1 of 15" scrub was too many taps to compare a single chord's inversions,
-// and doesn't match how a member actually wants to browse these.
-function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
-    const trans = useTrans();
-    const matchingTracks = useMemo(() => {
-        const trackSounds = tracks.map((t) => t.sound).filter(Boolean);
-        const resolved = resolveDefaultSound(defaultInstrument, trackSounds);
-        const forResolved = tracks.filter((t) => t.sound === resolved);
-        return forResolved.length > 0 ? forResolved : tracks.length > 0 ? [tracks[0]] : [];
-    }, [tracks, defaultInstrument]);
+// Resolve one clip at a time for the exact selected instrument. Each shuffled
+// pass visits the complete clip pool once; unavailable clips are skipped.
+function ReferenceAudioModal({ quizSlug, pool, sound, onClose, isMelodicDictation }) {
+    const t = useTrans();
+    const poolIds = useMemo(() => pool.map((p) => p.id), [pool]);
+    const labelById = useMemo(() => new Map(pool.map((p) => [p.id, p.label])), [pool]);
 
-    // Grouped mode only kicks in when EVERY matching track has a "{X} · {Y}"
-    // label — a quiz with a mix of plain and compound labels just falls back
-    // to the flat list, same as before this existed.
-    const groups = useMemo(() => {
-        if (matchingTracks.length === 0 || !matchingTracks.every((t) => t.label.includes(' · '))) return null;
-        const map = new Map();
-        matchingTracks.forEach((t) => {
-            const [groupLabel, subLabel] = t.label.split(' · ');
-            if (!map.has(groupLabel)) map.set(groupLabel, []);
-            map.get(groupLabel).push({ ...t, subLabel });
-        });
-        return [...map.entries()].map(([label, groupTracks]) => ({ label, tracks: groupTracks }));
-    }, [matchingTracks]);
+    const [queue, setQueue] = useState(() => shuffled(poolIds));
+    const [position, setPosition] = useState(0);
+    const [clip, setClip] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [unavailable, setUnavailable] = useState(false);
+    const requestRef = useRef(0);
 
-    const [clipIndex, setClipIndex] = useState(0);
-    const [groupIndex, setGroupIndex] = useState(0);
-    const [subIndex, setSubIndex] = useState(0);
+    // A clip id can fail to resolve for the current instrument (narrow-range
+    // instruments don't cover every answer) — try the rest of this pass's
+    // queue, in order, before giving up, so one gap doesn't look like the
+    // whole quiz has no reference audio for this sound.
+    const loadFrom = useCallback(async (q, startPosition) => {
+        const requestId = ++requestRef.current;
+        setLoading(true);
+        setUnavailable(false);
+        for (let tries = 0; tries < q.length; tries++) {
+            const pos = (startPosition + tries) % q.length;
+            const id = q[pos];
+            let data;
+            try {
+                const response = await fetch(`${route('quiz.reference-audio-clip', [quizSlug, id])}?sound=${encodeURIComponent(sound)}`);
+                data = await response.json();
+            } catch {
+                data = null;
+            }
+            if (requestRef.current !== requestId) return; // superseded by a newer Next press
+            if (data?.clip) {
+                setClip(data.clip);
+                setPosition(pos);
+                setLoading(false);
+                return;
+            }
+        }
+        setClip(null);
+        setLoading(false);
+        setUnavailable(true);
+    }, [quizSlug, sound]);
+
+    // A fresh shuffled pass whenever the pool or the chosen instrument changes.
     useEffect(() => {
-        setClipIndex(0);
-        setGroupIndex(0);
-        setSubIndex(0);
-    }, [matchingTracks]);
+        const next = shuffled(poolIds);
+        setQueue(next);
+        if (next.length === 0) {
+            setClip(null);
+            setLoading(false);
+            setUnavailable(true);
+            return;
+        }
+        loadFrom(next, 0);
+        // loadFrom already depends on quizSlug/sound; poolIds is the real trigger here.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [poolIds, sound]);
 
-    const group = groups?.[groupIndex] ?? null;
-    const track = groups ? (group?.tracks[subIndex] ?? null) : (matchingTracks[clipIndex] ?? null);
-    const hasMultiple = groups ? groups.length > 1 : matchingTracks.length > 1;
-
-    const [playing, setPlaying] = useState(false);
-    const [currentTime, setCurrentTime] = useState(0);
-    const [duration, setDuration] = useState(0);
-    const audioRef = useRef(null);
+    function next() {
+        if (loading) return;
+        const nextPosition = position + 1;
+        if (nextPosition >= queue.length) {
+            const reshuffledQueue = reshuffleAvoiding(poolIds, queue[position]);
+            setQueue(reshuffledQueue);
+            loadFrom(reshuffledQueue, 0);
+        } else {
+            loadFrom(queue, nextPosition);
+        }
+    }
 
     useEffect(() => {
         const onKeyDown = (event) => event.key === 'Escape' && onClose();
@@ -753,20 +725,7 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
         return () => document.removeEventListener('keydown', onKeyDown);
     }, [onClose]);
 
-    const togglePlay = () => {
-        if (!audioRef.current) return;
-        if (playing) {
-            audioRef.current.pause();
-        } else {
-            audioRef.current.play();
-        }
-    };
-
-    const restart = () => {
-        if (!audioRef.current) return;
-        audioRef.current.currentTime = 0;
-        audioRef.current.play();
-    };
+    const label = clip ? labelById.get(queue[position]) ?? clip.label : null;
 
     return (
         <div
@@ -777,134 +736,79 @@ function ReferenceAudioModal({ tracks, defaultInstrument, onClose }) {
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 text-white/50">
                         <HeadsetIcon className="h-[18px] w-[18px]" />
-                        <p className="text-xs font-semibold">{trans('Reference Audio')}</p>
+                        <p className="text-xs font-semibold">{isMelodicDictation ? t('Listen and learn') : t('Reference Audio')}</p>
                     </div>
-                    <button type="button" onClick={onClose} aria-label={trans('Close')} className="text-white/50 hover:text-white">
+                    <button type="button" onClick={onClose} aria-label={t('Close')} className="text-white/50 hover:text-white">
                         <CloseIcon className="h-5 w-5" />
                     </button>
                 </div>
 
-                {track ? (
+                {clip ? (
                     <>
-                        <audio
-                            key={track.id}
-                            ref={audioRef}
-                            src={track.url}
-                            autoPlay
-                            onPlay={() => setPlaying(true)}
-                            onPause={() => setPlaying(false)}
-                            onEnded={() => setPlaying(false)}
-                            onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-                            onTimeUpdate={(e) => setCurrentTime(e.currentTarget.currentTime)}
-                        />
-
-                        <div className="mt-5 flex items-center gap-3 rounded-xl bg-white/5 px-3 py-2.5">
-                            <button type="button" onClick={restart} aria-label={trans('Restart')} className="shrink-0 text-white/70 hover:text-white">
-                                <RestartIcon className="h-5 w-5" />
-                            </button>
-                            <button type="button" onClick={togglePlay} aria-label={playing ? trans('Pause') : trans('Play')} className="shrink-0 text-white">
-                                {playing ? <PauseIcon className="h-5 w-5" /> : <PlayTriangleIcon className="h-5 w-5" />}
-                            </button>
-                            <input
-                                type="range"
-                                min={0}
-                                max={duration || 0}
-                                step={0.01}
-                                value={currentTime}
-                                onChange={(e) => {
-                                    const value = Number(e.target.value);
-                                    if (audioRef.current) audioRef.current.currentTime = value;
-                                    setCurrentTime(value);
-                                }}
-                                className="h-1.5 w-full accent-brand"
-                            />
+                        <p className="mt-4 text-center text-xs font-semibold text-white/60">{t(INSTRUMENT_LABELS[sound] ?? sound)}</p>
+                        <div className="mt-3">
+                            <AudioStimulus key={`${sound}:${queue[position]}`} questionKey={`${sound}:${queue[position]}`} src={clip.url} notes={clip.notes} dark />
                         </div>
 
-                        <p className="mt-6 text-center text-sm text-white/50">{trans('Listen and familiarize yourself with the sound.')}</p>
-                        <p className="font-display mt-3 text-center text-4xl font-semibold">{trans(group ? group.label : track.label)}</p>
-
-                        {group && group.tracks.length > 1 && (
-                            <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
-                                {group.tracks.map((groupTrack, index) => (
-                                    <button
-                                        key={groupTrack.id}
-                                        type="button"
-                                        onClick={() => setSubIndex(index)}
-                                        className={`rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors duration-150 ${
-                                            index === subIndex ? 'bg-brand text-white' : 'bg-white/10 text-white/70 hover:bg-white/15'
-                                        }`}
-                                    >
-                                        {trans(groupTrack.subLabel)}
-                                    </button>
-                                ))}
-                            </div>
+                        {!isMelodicDictation && (
+                            <p className="mt-6 text-center text-sm text-white/50">{t('Listen and familiarize yourself with the sound.')}</p>
                         )}
+                        <p className={`font-display text-center text-4xl font-semibold ${isMelodicDictation ? 'mt-6' : 'mt-3'}`}>{t(label)}</p>
 
-                        {hasMultiple && (
+                        {queue.length > 1 && (
                             <div className="mt-6 flex flex-col items-center gap-2.5">
-                                <p className="text-xs text-white/40">
-                                    {group
-                                        ? trans(':done of :total', { done: groupIndex + 1, total: groups.length })
-                                        : trans(':done of :total', { done: clipIndex + 1, total: matchingTracks.length })}
-                                </p>
-                                <div className="flex items-center gap-3">
-                                    {(group ? groupIndex > 0 : clipIndex > 0) && (
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (group) {
-                                                    setGroupIndex((i) => Math.max(0, i - 1));
-                                                    setSubIndex(0);
-                                                } else {
-                                                    setClipIndex((i) => Math.max(0, i - 1));
-                                                }
-                                            }}
-                                            className="rounded-lg bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-rose-700"
-                                        >
-                                            {trans('Previous')}
-                                        </button>
-                                    )}
-                                    {(group ? groupIndex < groups.length - 1 : clipIndex < matchingTracks.length - 1) && (
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                if (group) {
-                                                    setGroupIndex((i) => Math.min(groups.length - 1, i + 1));
-                                                    setSubIndex(0);
-                                                } else {
-                                                    setClipIndex((i) => Math.min(matchingTracks.length - 1, i + 1));
-                                                }
-                                            }}
-                                            className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-emerald-700"
-                                        >
-                                            {trans('Next')}
-                                        </button>
-                                    )}
-                                </div>
+                                <button
+                                    type="button"
+                                    disabled={loading}
+                                    onClick={next}
+                                    className="rounded-lg bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-150 hover:bg-emerald-700 disabled:opacity-60"
+                                >
+                                    {t('Next')}
+                                </button>
                             </div>
                         )}
                     </>
-                ) : (
-                    <p className="mt-10 text-center text-sm text-white/50">{trans('No reference audio has been added for this quiz yet.')}</p>
-                )}
+                ) : loading ? (
+                    <p className="mt-10 text-center text-sm text-white/50">{t('Loading…')}</p>
+                ) : unavailable ? (
+                    <p className="mt-10 text-center text-sm text-white/50">
+                        {sound
+                            ? t('Reference audio is not available for :sound yet.', { sound: t(INSTRUMENT_LABELS[sound] ?? sound) })
+                            : t('Reference audio is not available for the selected sound yet.')}
+                    </p>
+                ) : null}
             </div>
         </div>
     );
 }
 
-function DetailPane({ quiz }) {
+function LastAttemptCard({ quiz, className }) {
+    const t = useTrans();
+
+    return (
+        <div className={`items-center justify-between gap-4 rounded-2xl border border-black/5 bg-neutral-50 px-5 py-4 ${className}`}>
+            <div>
+                <p className="text-sm font-semibold text-neutral-900">{t('Last attempt')}</p>
+                <p className="mt-1 text-xs text-neutral-500">{quiz.score != null ? t('Your latest completed quiz') : t('Not attempted yet')}</p>
+            </div>
+            <p className="text-3xl font-bold tabular-nums tracking-tight text-neutral-900">{quiz.score != null ? `${quiz.score}%` : '—'}</p>
+        </div>
+    );
+}
+
+function DetailPane({ quiz, standalone = false }) {
     const t = useTrans();
     const defaultInstrument = usePage().props.auth?.user?.default_instrument ?? null;
     const [processing, setProcessing] = useState(false);
-    const [sound, setSound] = useState(resolveDefaultSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
+    const [sound, setSound] = useState(resolveInitialSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
     const [blockedNotice, setBlockedNotice] = useState(false);
     const [audioModalOpen, setAudioModalOpen] = useState(false);
 
     useEffect(() => {
-        setSound(resolveDefaultSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
+        setSound(resolveInitialSound(defaultInstrument, quiz?.sounds, quiz?.availableSounds));
         setBlockedNotice(false);
         setAudioModalOpen(false);
-    }, [quiz?.slug]);
+    }, [quiz?.slug, defaultInstrument]);
 
     if (!quiz) {
         return (
@@ -914,17 +818,51 @@ function DetailPane({ quiz }) {
         );
     }
 
+    const chordQualityGuide = basicTriadGuides[quiz.title] ?? addNineGuides[quiz.title] ?? seventhChordGuides[quiz.title] ?? ninthChordGuides[quiz.title] ?? eleventhChordGuides[quiz.title] ?? thirteenthChordGuides[quiz.title]
+        ?? (quiz.category === 'Secondary 7th Chords' ? secondarySeventhGuides[quiz.title] : null)
+        ?? (quiz.category === 'Secondary 9th Chords' ? secondaryNinthGuides[quiz.title] : null)
+        ?? (quiz.category === 'Secondary 11th Chords' ? secondaryEleventhGuides[quiz.title] : null);
+    const scaleGuide = scaleGuides[quiz.title];
+    const modalHarmonyGuide = modalHarmonyGuides[quiz.title] ?? modalVoicingGuides[quiz.title];
+    const progressionGuide = quiz.category === 'Chord Progressions' ? progressionGuides[quiz.title] : null;
+    const extensionGuide = majorExtensionGuides[quiz.title] ?? minorExtensionGuides[quiz.title] ?? dominantExtensionGuides[quiz.title];
+    const hasChordToneGuide = Object.hasOwn(chordToneGuides, quiz.title);
+    const hasBasicTriadGuide = Boolean(chordQualityGuide);
+    const hasIntervalGuide = Object.hasOwn(intervalGuides, quiz.title);
+    const hasMelodicDictationGuide = Object.hasOwn(melodicDictationGuides, quiz.title);
+    const hasNamingGuide = Object.hasOwn(chordNamingGuides, quiz.title);
+    const hasPitchGuide = ['Find the Note', 'Find the Pitch'].includes(quiz.title);
+    const hasRelativeTonePitchGuide = ['Relative Tone Pitch #1', 'Relative Tone Pitch #2'].includes(quiz.title);
+    const hasNotePairGuide = /^(Melodic|Harmonic) (Second|Third|Fourth|Fifth|Sixth|Seventh)$/.test(quiz.title);
+    const hasKeyFindingGuide = ['Find the Key #1', 'Find the Key #2'].includes(quiz.title);
     const resuming = quiz.status === 'in_progress';
     const completed = quiz.status === 'completed';
+    // Cheap on purpose: whether this quiz has any reference pool at all, not
+    // whether the current instrument specifically resolves — checking that
+    // would mean resolving audio just to decide if the button should show.
+    // If the current instrument truly has nothing, the modal itself says so.
+    const hasReferenceAudio = (quiz.referenceAudioPool?.length ?? 0) > 0;
     // The top badge/sidebar checkmark reflect a manual mark too, but the
     // Start/Continue/Retry button and score text below stay tied to a real
-    // attempt only — manually marking a quiz complete doesn't mean it's been
+    // attempt or completed score — manually marking a quiz complete doesn't mean it's been
     // played, so "Retry Quiz" would be the wrong thing to say.
     //
     // A completed/manually-marked quiz keeps showing as completed even with a
     // leftover in-progress attempt (e.g. after a cancelled retry) — otherwise
     // restarting it would make an already-earned completion look undone.
-    const showsCompleted = completed || quiz.manuallyCompleted;
+
+    // Only quizzes that actually offer a sound picker need one chosen before
+    // starting — a quiz with no sounds at all (SoundPicker renders nothing)
+    // shouldn't get blocked waiting on a selection that was never offered.
+    const soundRequired = (quiz.sounds?.length ?? 0) > 0;
+    const soundMissing = soundRequired && !sound;
+    // Find the Key #1/#2's "sounds" are recording types (Monophonic, Full
+    // Song, …), not instruments — categoryFor() only recognizes real
+    // instrument names, so it comes back null for these. The member's
+    // Default Instrument was never meant to apply here (there's nothing to
+    // default to), so the missing-sound message shouldn't name it or imply
+    // it was looked for and failed.
+    const soundsAreInstruments = (quiz.sounds?.length ?? 0) > 0 && categoryFor(quiz.sounds[0]) !== null;
 
     function toggleCompleted() {
         router.post(route('quiz.mark-completed', quiz.slug), {}, { preserveScroll: true, preserveState: true });
@@ -952,20 +890,123 @@ function DetailPane({ quiz }) {
     }
 
     return (
-        <div className="rounded-2xl border border-black/5 bg-white p-6 sm:p-7">
-            <div className="flex items-start justify-between gap-4">
-                <div className="min-w-0">
-                    <h2 className="text-2xl font-bold text-neutral-900">{t(quiz.title)}</h2>
+        <div className={standalone ? '' : 'rounded-2xl border border-black/5 bg-white p-6 sm:p-7'}>
+            <div className="flex items-start justify-between gap-4 xl:items-center">
+                <div className="min-w-0 flex-1">
+                    {standalone
+                        ? <h1 className="text-3xl font-bold tracking-tight text-neutral-900">{t(quiz.title)}</h1>
+                        : <h2 className="text-2xl font-bold text-neutral-900">{t(quiz.title)}</h2>}
                 </div>
-                {showsCompleted && (
-                    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-sm font-semibold text-emerald-700">
-                        <CheckIcon className="h-3.5 w-3.5" />
-                        {t('Completed')}
-                    </span>
-                )}
+                <LastAttemptCard quiz={quiz} className="hidden shrink-0 xl:flex" />
             </div>
 
-            {quiz.video_embed ? (
+            <QuizVideoContext.Provider value={quiz.video_embed}>
+            {scaleGuide ? (
+                <ScaleGuide
+                    guide={scaleGuide}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : modalHarmonyGuide ? (
+                <ModalHarmonyGuide
+                    guide={modalHarmonyGuide}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : progressionGuide ? (
+                <ProgressionGuide
+                    guide={progressionGuide}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : extensionGuide ? (
+                <ChordExtensionGuide
+                    guide={extensionGuide}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasChordToneGuide ? (
+                <ChordToneGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasBasicTriadGuide ? (
+                <BasicTriadGuide
+                    guide={chordQualityGuide}
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasIntervalGuide ? (
+                <IntervalGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasMelodicDictationGuide ? (
+                <MelodicDictationGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasNamingGuide ? (
+                <ChordNamingGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasPitchGuide ? (
+                <PitchQuizGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasRelativeTonePitchGuide ? (
+                <RelativeTonePitchGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasNotePairGuide ? (
+                <NotePairGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : hasKeyFindingGuide ? (
+                <KeyFindingGuide
+                    quizTitle={quiz.title}
+                    difficulty={quiz.difficulty}
+                    onListen={() => setAudioModalOpen(true)}
+                    listenAvailable={hasReferenceAudio}
+                    listenDisabled={soundMissing}
+                />
+            ) : quiz.video_embed ? (
                 <VideoEmbed
                     html={quiz.video_embed}
                     className="-mx-6 mt-5 aspect-video overflow-hidden rounded-2xl bg-neutral-900 [&_iframe]:h-full [&_iframe]:w-full sm:-mx-7"
@@ -976,35 +1017,7 @@ function DetailPane({ quiz }) {
                 </div>
             )}
 
-            <div className="mt-6 grid grid-cols-3 gap-2 sm:gap-3">
-                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-black/5 bg-neutral-50 px-2 py-3 text-center sm:flex-row sm:items-center sm:gap-3 sm:px-3.5 sm:text-left">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-neutral-400 ring-1 ring-black/5 sm:h-9 sm:w-9">
-                        <GaugeIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-                    </span>
-                    <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">{t('Difficulty')}</p>
-                        <p className="text-sm font-bold text-neutral-900">{t(quiz.difficulty)}</p>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-black/5 bg-neutral-50 px-2 py-3 text-center sm:flex-row sm:items-center sm:gap-3 sm:px-3.5 sm:text-left">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-neutral-400 ring-1 ring-black/5 sm:h-9 sm:w-9">
-                        <HelpIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-                    </span>
-                    <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">{t('Questions')}</p>
-                        <p className="text-sm font-bold text-neutral-900">{quiz.question_count}</p>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center gap-1.5 rounded-xl border border-black/5 bg-neutral-50 px-2 py-3 text-center sm:flex-row sm:items-center sm:gap-3 sm:px-3.5 sm:text-left">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white text-neutral-400 ring-1 ring-black/5 sm:h-9 sm:w-9">
-                        <RepeatIcon className="h-4 w-4 sm:h-4.5 sm:w-4.5" />
-                    </span>
-                    <div className="min-w-0">
-                        <p className="text-xs text-neutral-400">{t('Attempts')}</p>
-                        <p className="text-sm font-bold text-neutral-900">{t('Unlimited')}</p>
-                    </div>
-                </div>
-            </div>
+            </QuizVideoContext.Provider>
 
             <div className="mt-4 rounded-2xl border border-black/5 bg-neutral-50 p-4">
                 <div className="flex items-center gap-2 text-neutral-400">
@@ -1029,36 +1042,48 @@ function DetailPane({ quiz }) {
                 availableSounds={quiz.availableSounds}
             />
 
-            {completed && quiz.score !== null && (
-                <p className="mt-4 text-sm font-semibold text-emerald-700">{t('Last attempt: :score% correct', { score: quiz.score })}</p>
-            )}
+            {quiz.score != null && <LastAttemptCard quiz={quiz} className="mt-5 flex xl:hidden" />}
 
             <div className="mt-6 flex gap-2.5">
                 <button
                     type="button"
-                    disabled={processing}
+                    disabled={processing || soundMissing}
                     onClick={start}
                     className="flex-1 rounded-xl bg-neutral-900 py-3.5 text-sm font-bold text-white transition-opacity duration-150 hover:opacity-90 disabled:opacity-60"
                 >
-                    {resuming ? t('Continue Quiz') : completed ? t('Retry Quiz') : t('Start Quiz')}
+                    {completed || quiz.score != null ? t('Retry Quiz') : resuming ? t('Continue Quiz') : t('Start Quiz')}
                 </button>
-                {quiz.referenceAudioTracks.length > 0 && (
+                {hasReferenceAudio && (
                     <button
                         type="button"
+                        disabled={soundMissing}
                         onClick={() => setAudioModalOpen(true)}
-                        className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98]"
+                        className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3.5 text-sm font-extrabold text-white shadow-sm transition-all duration-150 hover:bg-green-700 hover:shadow active:scale-[0.98] disabled:opacity-50"
                     >
                         <HeadsetIcon className="h-5 w-5" />
                         {t('Listen Mode')}
                     </button>
                 )}
             </div>
+            {soundMissing && (
+                <p className="mt-2.5 text-center text-sm text-brand">
+                    {soundsAreInstruments && defaultInstrument
+                        ? t(":sound isn't available for this quiz — choose a sound above to continue.", { sound: t(INSTRUMENT_LABELS[defaultInstrument] ?? defaultInstrument) })
+                        : t('Choose a sound above to continue.')}
+                </p>
+            )}
             {blockedNotice && (
                 <p className="mt-2.5 text-center text-sm text-neutral-500">{t("Questions for this quiz haven't been added yet.")}</p>
             )}
 
             {audioModalOpen && (
-                <ReferenceAudioModal tracks={quiz.referenceAudioTracks} defaultInstrument={defaultInstrument} onClose={() => setAudioModalOpen(false)} />
+                <ReferenceAudioModal
+                    quizSlug={quiz.slug}
+                    pool={quiz.referenceAudioPool ?? []}
+                    sound={sound}
+                    onClose={() => setAudioModalOpen(false)}
+                    isMelodicDictation={quiz.category === 'Melodic Dictation'}
+                />
             )}
 
             {quiz.available ? (
@@ -1066,22 +1091,24 @@ function DetailPane({ quiz }) {
                     <button
                         type="button"
                         onClick={toggleCompleted}
-                        className={`flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] text-sm font-bold transition-colors duration-150 ${
-                            quiz.manuallyCompleted ? 'border-emerald-600 text-emerald-600' : 'border-brand text-brand'
+                        aria-pressed={Boolean(quiz.manuallyCompleted)}
+                        className={`flex min-h-[48px] flex-1 items-center justify-center gap-2 rounded-xl border-[1.5px] text-sm font-bold transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700 ${
+                            quiz.manuallyCompleted ? 'border-emerald-600 bg-emerald-50 text-emerald-700 hover:bg-emerald-100' : 'border-neutral-300 bg-white text-neutral-700 hover:border-neutral-400 hover:bg-neutral-50'
                         }`}
                     >
-                        <CheckCircleIcon className="h-5 w-5" />
+                        <CheckCircleIcon filled={quiz.manuallyCompleted} aria-hidden="true" className="h-5 w-5" />
                         {quiz.manuallyCompleted ? t('Completed') : t('Mark as Completed')}
                     </button>
                     <button
                         type="button"
                         onClick={toggleBookmark}
+                        aria-pressed={Boolean(quiz.bookmarked)}
                         aria-label={quiz.bookmarked ? t('Remove bookmark') : t('Bookmark this quiz')}
-                        className={`flex min-h-[48px] w-[52px] shrink-0 items-center justify-center rounded-xl border-[1.5px] transition-colors duration-150 ${
-                            quiz.bookmarked ? 'border-brand text-brand' : 'border-neutral-300 text-neutral-400'
+                        className={`flex min-h-[48px] w-[52px] shrink-0 items-center justify-center rounded-xl border-[1.5px] transition-colors duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand ${
+                            quiz.bookmarked ? 'border-brand bg-red-50 text-brand hover:bg-red-100' : 'border-neutral-300 bg-white text-neutral-500 hover:border-neutral-400 hover:bg-neutral-50 hover:text-neutral-700'
                         }`}
                     >
-                        <BookmarkIcon filled={quiz.bookmarked} className="h-5 w-5" />
+                        <BookmarkIcon filled={quiz.bookmarked} aria-hidden="true" className="h-5 w-5" />
                     </button>
                 </div>
             ) : (
@@ -1115,29 +1142,44 @@ function DetailPane({ quiz }) {
 
 export default function QuizCategory({ category, categorySlug, selectedSlug, quizzes, progress }) {
     const t = useTrans();
+    const [guideOpen, setGuideOpen] = useState(false);
+    const illustratedGuide = illustratedGuides[category];
     const selected = quizzes.find((quiz) => quiz.slug === selectedSlug) ?? quizzes[0] ?? null;
 
     return (
-        <AppShell eyebrow={t('Start Quiz')} title={t(category)} intro={t('Pick a quiz to begin.')}>
+        <AppShell
+            eyebrow={t('Start Quiz')}
+            title={t(category)}
+            intro={t('Choose a quiz')}
+            headerClassName={selectedSlug ? 'hidden xl:flex' : 'flex'}
+            breadcrumbTitle={selectedSlug ? t(selected?.title) : t(category)}
+            action={illustratedGuide && (
+                <div className="w-full lg:w-auto lg:self-center">
+                    <button type="button" onClick={() => setGuideOpen(true)} aria-haspopup="dialog" className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2.5 text-sm font-semibold text-neutral-700 transition-colors hover:border-neutral-400 hover:text-neutral-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                        <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 shrink-0">
+                            <path d="M14 3H6a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8z" />
+                            <path d="M14 3v5h5M8 12h8M8 16h6" />
+                        </svg>
+                        {t('View illustrated guide')}
+                        <span className="sr-only"> {t('(PDF, :pages pages, opens inside KhordQuiz)', { pages: illustratedGuide.pages })}</span>
+                    </button>
+                </div>
+            )}
+        >
             <Head title={selected ? `${t(selected.title)} · ${t(category)}` : t(category)} />
+            <IllustratedGuideDialog guide={illustratedGuide} open={guideOpen} onClose={() => setGuideOpen(false)} />
 
-            {/* Mobile: the list and the preview are two separate screens, like the app — never
+
+            {/* Phones and tablets: the list and preview are separate screens, like the app — never
                 both stacked on one page. selectedSlug only exists once a specific quiz is in
                 the URL (quiz.category route's optional {quiz} segment), so it alone decides
                 which one shows. */}
             {selectedSlug ? (
-                <div className="lg:hidden">
-                    <Link
-                        href={route('quiz.category', categorySlug)}
-                        className="mb-4 inline-flex items-center gap-1.5 text-sm font-semibold text-neutral-500 transition-colors duration-150 hover:text-neutral-900"
-                    >
-                        <ChevronLeftIcon className="h-4 w-4" />
-                        {t(category)}
-                    </Link>
-                    <DetailPane quiz={selected} />
+                <div className="xl:hidden">
+                    <DetailPane quiz={selected} standalone />
                 </div>
             ) : (
-                <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm lg:hidden">
+                <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm xl:hidden">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">
                             {t(':done/:total Completed', { done: progress.done, total: progress.total })}
@@ -1154,14 +1196,14 @@ export default function QuizCategory({ category, categorySlug, selectedSlug, qui
                                 key={quiz.slug}
                                 quiz={quiz}
                                 categorySlug={categorySlug}
-                                selected={quiz.slug === selected?.slug}
+                                selected={quiz.slug === selectedSlug}
                             />
                         ))}
                     </div>
                 </div>
             )}
 
-            <div className="hidden gap-6 lg:grid lg:grid-cols-[360px_1fr]">
+            <div className="hidden gap-6 xl:grid xl:grid-cols-[360px_minmax(0,1fr)]">
                 <div className="rounded-2xl border border-black/5 bg-white p-4 shadow-sm">
                     <div className="mb-4 flex items-center justify-between text-sm">
                         <span className="font-semibold text-neutral-700">

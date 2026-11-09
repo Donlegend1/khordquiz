@@ -1,0 +1,697 @@
+{
+  "Minor Chord Extentions · Level 1": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains five four-note chords: a minor chord with a sixth, seventh or one added note. This lesson uses chords built on F. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G"
+    ],
+    "exampleChord": "F minor add 9",
+    "exampleExplanation": "F, A♭ and C make the minor chord. G adds 9, so select 9.",
+    "group": 1,
+    "basic": true,
+    "availableChords": [
+      "Minor 6",
+      "Minor 7",
+      "Minor add ♭9",
+      "Minor add 9",
+      "Minor add 11"
+    ]
+  },
+  "Minor Chord Extentions · Level 2": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains five four-note chords: a minor chord with a sixth, seventh or one added note. This lesson uses all twelve keys. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G"
+    ],
+    "exampleChord": "F minor add 9",
+    "exampleExplanation": "F, A♭ and C make the minor chord. G adds 9, so select 9.",
+    "group": 1,
+    "basic": true,
+    "availableChords": [
+      "Minor 6",
+      "Minor 7",
+      "Minor add ♭9",
+      "Minor add 9",
+      "Minor add 11"
+    ]
+  },
+  "Minor Chord Extentions · Level 3": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains five four-note chords: a minor chord with a sixth, seventh or one added note. This lesson uses chords built on F. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G"
+    ],
+    "exampleChord": "F minor add 9",
+    "exampleExplanation": "F, A♭ and C make the minor chord. G adds 9, so select 9.",
+    "group": 1,
+    "basic": false,
+    "availableChords": [
+      "Minor 6",
+      "Minor 7",
+      "Minor add ♭9",
+      "Minor add 9",
+      "Minor add 11"
+    ]
+  },
+  "Minor Chord Extentions · Level 4": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 1 contains five four-note chords: a minor chord with a sixth, seventh or one added note. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "9"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "G"
+    ],
+    "exampleChord": "F minor add 9",
+    "exampleExplanation": "F, A♭ and C make the minor chord. G adds 9, so select 9.",
+    "group": 1,
+    "basic": false,
+    "availableChords": [
+      "Minor 6",
+      "Minor 7",
+      "Minor add ♭9",
+      "Minor add 9",
+      "Minor add 11"
+    ]
+  },
+  "Minor Chord Extentions · Level 5": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six five-note chords, including added-note chords, sixth chords and seventh chords with extensions. This lesson uses chords built on F. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "B♭"
+    ],
+    "exampleChord": "F minor 7(11)",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7 and B♭ adds 11, so select 7 and 11.",
+    "group": 2,
+    "basic": true,
+    "availableChords": [
+      "Minor add 9, 11",
+      "Minor 6/9",
+      "Minor 6 add 11",
+      "Minor 9",
+      "Minor 7(11)",
+      "Minor 7(13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 6": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six five-note chords, including added-note chords, sixth chords and seventh chords with extensions. This lesson uses all twelve keys. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "B♭"
+    ],
+    "exampleChord": "F minor 7(11)",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7 and B♭ adds 11, so select 7 and 11.",
+    "group": 2,
+    "basic": true,
+    "availableChords": [
+      "Minor add 9, 11",
+      "Minor 6/9",
+      "Minor 6 add 11",
+      "Minor 9",
+      "Minor 7(11)",
+      "Minor 7(13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 7": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six five-note chords, including added-note chords, sixth chords and seventh chords with extensions. This lesson uses chords built on F. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "B♭"
+    ],
+    "exampleChord": "F minor 7(11)",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7 and B♭ adds 11, so select 7 and 11.",
+    "group": 2,
+    "basic": false,
+    "availableChords": [
+      "Minor add 9, 11",
+      "Minor 6/9",
+      "Minor 6 add 11",
+      "Minor 9",
+      "Minor 7(11)",
+      "Minor 7(13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 8": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 2 contains six five-note chords, including added-note chords, sixth chords and seventh chords with extensions. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "11"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "B♭"
+    ],
+    "exampleChord": "F minor 7(11)",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7 and B♭ adds 11, so select 7 and 11.",
+    "group": 2,
+    "basic": false,
+    "availableChords": [
+      "Minor add 9, 11",
+      "Minor 6/9",
+      "Minor 6 add 11",
+      "Minor 9",
+      "Minor 7(11)",
+      "Minor 7(13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 9": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 3 contains six chords with six or seven notes. Some use a sixth, while others use a seventh with extensions. This lesson uses chords built on F. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "9",
+      "11",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "exampleChord": "F minor 13",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7, G adds 9, B♭ adds 11 and D adds 13. Select all four: 7, 9, 11 and 13.",
+    "group": 3,
+    "basic": true,
+    "availableChords": [
+      "Minor 6/9 add 11",
+      "Minor 6(♭9, 11)",
+      "Minor 11",
+      "Minor 13",
+      "Minor 7(11, 13)",
+      "Minor 7(9, 13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 10": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 3 contains six chords with six or seven notes. Some use a sixth, while others use a seventh with extensions. This lesson uses all twelve keys. The chords use their basic arrangement, with no doubled or shifted notes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "9",
+      "11",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "exampleChord": "F minor 13",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7, G adds 9, B♭ adds 11 and D adds 13. Select all four: 7, 9, 11 and 13.",
+    "group": 3,
+    "basic": true,
+    "availableChords": [
+      "Minor 6/9 add 11",
+      "Minor 6(♭9, 11)",
+      "Minor 11",
+      "Minor 13",
+      "Minor 7(11, 13)",
+      "Minor 7(9, 13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 11": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 3 contains six chords with six or seven notes. Some use a sixth, while others use a seventh with extensions. This lesson uses chords built on F. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "9",
+      "11",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "exampleChord": "F minor 13",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7, G adds 9, B♭ adds 11 and D adds 13. Select all four: 7, 9, 11 and 13.",
+    "group": 3,
+    "basic": false,
+    "availableChords": [
+      "Minor 6/9 add 11",
+      "Minor 6(♭9, 11)",
+      "Minor 11",
+      "Minor 13",
+      "Minor 7(11, 13)",
+      "Minor 7(9, 13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 12": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. Group 3 contains six chords with six or seven notes. Some use a sixth, while others use a seventh with extensions. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "9",
+      "11",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "exampleChord": "F minor 13",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7, G adds 9, B♭ adds 11 and D adds 13. Select all four: 7, 9, 11 and 13.",
+    "group": 3,
+    "basic": false,
+    "availableChords": [
+      "Minor 6/9 add 11",
+      "Minor 6(♭9, 11)",
+      "Minor 11",
+      "Minor 13",
+      "Minor 7(11, 13)",
+      "Minor 7(9, 13)"
+    ]
+  },
+  "Minor Chord Extentions · Level 13": {
+    "heading": "Hear the minor chord. Find the added notes.",
+    "intro": "The chord type is Minor. Listen and select all the added note numbers that make up the chord you hear.",
+    "steps": [
+      {
+        "title": "Listen to the whole chord",
+        "description": "Press Play and listen to how the extra notes change the minor chord. You can listen again whenever you need to."
+      },
+      {
+        "title": "Select every note number you hear",
+        "description": "Choose all the numbers that belong to the chord, such as 6, 7, 9 or 11. More than one answer can be needed. Tap a selected number again to remove it."
+      },
+      {
+        "title": "Check and submit",
+        "description": "Check all your selected numbers before pressing Submit Answer. Include 7 whenever the chord contains a seventh. For example, Minor 11 needs 7, 9 and 11."
+      }
+    ],
+    "about": "A minor chord starts with three notes. Added notes give it a different sound; their numbers are what you select in this quiz. The ♭ sign means a lowered note and ♯ means a raised note, by one keyboard step, counting white and black keys. This is a mixed review of all seventeen chords from Groups 1, 2 and 3. This lesson uses all twelve keys. The same chord can be played in different arrangements, with some notes repeated or moved higher or lower. Choose the same numbers even when the arrangement changes. Select the notes present, not just the largest number in the chord name. The 7 button means the minor seventh in this category. This quiz uses 6 in sixth chords and 13 when it is an extension above a seventh.",
+    "choices": [
+      "6",
+      "7",
+      "♭9",
+      "9",
+      "11",
+      "♯11",
+      "♭13",
+      "13"
+    ],
+    "selected": [
+      "7",
+      "9",
+      "11",
+      "13"
+    ],
+    "exampleNotes": [
+      "F",
+      "A♭",
+      "C",
+      "E♭",
+      "G",
+      "B♭",
+      "D"
+    ],
+    "exampleChord": "F minor 13",
+    "exampleExplanation": "F, A♭ and C make the minor chord. E♭ adds 7, G adds 9, B♭ adds 11 and D adds 13. Select all four: 7, 9, 11 and 13.",
+    "group": 0,
+    "basic": false,
+    "availableChords": [
+      "Minor 6",
+      "Minor 7",
+      "Minor add ♭9",
+      "Minor add 9",
+      "Minor add 11",
+      "Minor add 9, 11",
+      "Minor 6/9",
+      "Minor 6 add 11",
+      "Minor 9",
+      "Minor 7(11)",
+      "Minor 7(13)",
+      "Minor 6/9 add 11",
+      "Minor 6(♭9, 11)",
+      "Minor 11",
+      "Minor 13",
+      "Minor 7(11, 13)",
+      "Minor 7(9, 13)"
+    ]
+  }
+}

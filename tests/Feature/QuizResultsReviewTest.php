@@ -48,6 +48,14 @@ class QuizResultsReviewTest extends TestCase
         $this->assertSame('C', $review['C']['picked']);
         $this->assertFalse($review['D']['correct']);
         $this->assertSame('C', $review['D']['picked']);
+        foreach ($review as $row) {
+            $question = $quiz->questions()->where('answer', $row['answer'])->firstOrFail();
+            $this->assertSame($question->prompt, $row['prompt']);
+            $this->assertContains($row['answer'], $row['choices']);
+            $this->assertSame(1, $row['answer_length']);
+            $this->assertNull($row['reference_note']);
+        }
+        $this->assertSame([], $response->viewData('page')['props']['review_keyboard_audio']);
     }
 
     public function test_retrying_a_quiz_clears_the_previous_review(): void
@@ -65,5 +73,14 @@ class QuizResultsReviewTest extends TestCase
                 ->has('review', 1)
                 ->where('review.0.picked', 'C')
                 ->where('review.0.correct', true));
+    }
+
+    public function test_review_never_exposes_another_members_completed_attempt(): void
+    {
+        $quiz = Quiz::factory()->create(['question_count' => 1]);
+        QuizQuestion::factory()->create(['quiz_id' => $quiz->id, 'position' => 1, 'answer' => 'C', 'choices' => ['C', 'D']]);
+        $owner = User::factory()->create();
+        $this->playThrough($owner, $quiz, ['C']);
+        $this->actingAs(User::factory()->create())->get(route('quiz.results', $quiz))->assertNotFound();
     }
 }

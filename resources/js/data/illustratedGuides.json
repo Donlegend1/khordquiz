@@ -1,0 +1,107 @@
+{
+  "Relative Pitch": {
+    "title": "Relative Pitch",
+    "slug": "relative-pitch",
+    "pages": 5
+  },
+  "Melodic Dictation": {
+    "title": "Melodic Dictation",
+    "slug": "melodic-dictation",
+    "pages": 8
+  },
+  "Intervals": {
+    "title": "Intervals",
+    "slug": "intervals",
+    "pages": 7
+  },
+  "Basic Triads": {
+    "title": "Basic Triads",
+    "slug": "basic-triads",
+    "pages": 9
+  },
+  "Add 9": {
+    "title": "Add 9",
+    "slug": "add-9",
+    "pages": 9
+  },
+  "7th Degree Chords": {
+    "title": "7th Degree Chords",
+    "slug": "7th-degree-chords",
+    "pages": 9
+  },
+  "Secondary 7th Chords": {
+    "title": "Secondary 7th Chords",
+    "slug": "secondary-7th-chords",
+    "pages": 11
+  },
+  "9th Degree Chords": {
+    "title": "9th Degree Chords",
+    "slug": "9th-degree-chords",
+    "pages": 7
+  },
+  "Secondary 9th Chords": {
+    "title": "Secondary 9th Chords",
+    "slug": "secondary-9th-chords",
+    "pages": 8
+  },
+  "11th Degree Chords": {
+    "title": "11th Degree Chords",
+    "slug": "11th-degree-chords",
+    "pages": 7
+  },
+  "Secondary 11th Chords": {
+    "title": "Secondary 11th Chords",
+    "slug": "secondary-11th-chords",
+    "pages": 8
+  },
+  "13th Degree Chords": {
+    "title": "13th Degree Chords",
+    "slug": "13th-degree-chords",
+    "pages": 7
+  },
+  "Chord Tone Recognition": {
+    "title": "Chord Tone Recognition",
+    "slug": "chord-tone-recognition",
+    "pages": 4
+  },
+  "Major Chord Extensions": {
+    "title": "Major Chord Extensions",
+    "slug": "major-chord-extensions",
+    "pages": 18
+  },
+  "Minor Chord Extensions": {
+    "title": "Minor Chord Extensions",
+    "slug": "minor-chord-extensions",
+    "pages": 18
+  },
+  "Dominant Chord Extensions": {
+    "title": "Dominant Chord Extensions",
+    "slug": "dominant-chord-extensions",
+    "pages": 11
+  },
+  "Chord Naming": {
+    "title": "Chord Naming",
+    "slug": "chord-naming",
+    "pages": 7
+  },
+  "Chord Progressions": {
+    "title": "Chord Progressions",
+    "slug": "chord-progressions",
+    "pages": 13
+  },
+  "Modal Harmony": {
+    "title": "Modal Harmony",
+    "slug": "modal-harmony",
+    "pages": 9
+  },
+  "Modal Voicings": {
+    "title": "Modal Voicings",
+    "slug": "modal-voicings",
+    "pages": 21
+  },
+  "Scales": {
+    "title": "Scales",
+    "slug": "scales",
+    "pages": 24
+  }
+}

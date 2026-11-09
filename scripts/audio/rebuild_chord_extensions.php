@@ -1,0 +1,32 @@
+<?php
+
+use App\Models\Quiz;
+use App\Models\QuizAttempt;
+use App\Models\QuizQuestion;
+use App\Models\QuizQuestionAudio;
+use Illuminate\Support\Facades\DB;
+
+config(['cache.default' => 'array']);
+$quizzes = Quiz::whereIn('category', ['Major Chord Extensions', 'Minor Chord Extensions', 'Dominant Chord Extensions'])->get();
+$questions = QuizQuestion::whereIn('quiz_id', $quizzes->pluck('id'))->get();
+$attempts = QuizAttempt::whereIn('quiz_id', $quizzes->pluck('id'))->get();
+$backup = [
+    'quizzes' => $quizzes->map->getAttributes()->all(),
+    'questions' => $questions->map->getAttributes()->all(),
+    'audio' => QuizQuestionAudio::whereIn('quiz_question_id', $questions->pluck('id'))->get()->map->getAttributes()->all(),
+    'attempts' => $attempts->map->getAttributes()->all(),
+    'answers' => DB::table('quiz_attempt_answers')->whereIn('quiz_attempt_id', $attempts->pluck('id'))->get()->all(),
+];
+$backupPath = storage_path('app/private/chord-extensions-before-seven-levels-'.gmdate('Ymd-His').'-'.bin2hex(random_bytes(4)).'.json');
+if (file_put_contents($backupPath, json_encode($backup, JSON_THROW_ON_ERROR)) === false) {
+    throw new RuntimeException('Could not save the pre-rebuild backup.');
+}
+echo 'Saved pre-rebuild content and attempts: '.$backupPath.PHP_EOL;
+unset($backup, $questions, $attempts, $quizzes);
+
+DB::transaction(function (): void {
+    require __DIR__.'/build_major_chord_extensions.php';
+    require __DIR__.'/build_minor_chord_extensions.php';
+    require __DIR__.'/build_dominant_chord_extensions.php';
+    require __DIR__.'/verify_chord_extensions.php';
+});

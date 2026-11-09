@@ -1,0 +1,772 @@
+{
+  "Lydian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Lydian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Lydian",
+      "Lydian ♯2",
+      "Lydian Augmented",
+      "Lydian Dominant",
+      "Lydian Diminished"
+    ],
+    "example": "Lydian",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "C",
+      "E",
+      "G",
+      "B"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A, C, E, G, B, all notes sounding together",
+    "exampleExplanation": "This visual example shows Lydian over F bass. Choose Lydian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "lydian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Lydian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Lydian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Lydian",
+      "Lydian ♯2",
+      "Lydian Augmented",
+      "Lydian Dominant",
+      "Lydian Diminished"
+    ],
+    "example": "Lydian",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "C",
+      "E",
+      "G",
+      "B"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A, C, E, G, B, all notes sounding together",
+    "exampleExplanation": "This visual example shows Lydian over F bass. Choose Lydian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "lydian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Mixolydian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Mixolydian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Mixolydian",
+      "Mixolydian ♭2",
+      "Mixolydian ♭6",
+      "Mixolydian ♭2 ♭6",
+      "Mixolydian ♯4"
+    ],
+    "example": "Mixolydian",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "D",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A, D, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Mixolydian over F bass. Choose Mixolydian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "mixolydian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Mixolydian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Mixolydian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Mixolydian",
+      "Mixolydian ♭2",
+      "Mixolydian ♭6",
+      "Mixolydian ♭2 ♭6",
+      "Mixolydian ♯4"
+    ],
+    "example": "Mixolydian",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "D",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A, D, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Mixolydian over F bass. Choose Mixolydian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "mixolydian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Phrygian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Phrygian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Phrygian",
+      "Phrygian Dominant",
+      "Phrygian (♭4)",
+      "Phrygian ♮6",
+      "Phrygian ♮7"
+    ],
+    "example": "Phrygian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "D♭",
+      "E♭",
+      "G♭",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, D♭, E♭, G♭, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Phrygian over F bass. Choose Phrygian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "phrygian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Phrygian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Phrygian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Phrygian",
+      "Phrygian Dominant",
+      "Phrygian (♭4)",
+      "Phrygian ♮6",
+      "Phrygian ♮7"
+    ],
+    "example": "Phrygian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "D♭",
+      "E♭",
+      "G♭",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, D♭, E♭, G♭, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Phrygian over F bass. Choose Phrygian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "phrygian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Locrian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Locrian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Locrian",
+      "Locrian ♮2",
+      "Locrian ♮6",
+      "Locrian Dominant",
+      "Super Locrian"
+    ],
+    "example": "Locrian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C♭",
+      "D♭",
+      "G♭",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, C♭, D♭, G♭, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Locrian over F bass. Choose Locrian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "locrian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Locrian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Locrian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Locrian",
+      "Locrian ♮2",
+      "Locrian ♮6",
+      "Locrian Dominant",
+      "Super Locrian"
+    ],
+    "example": "Locrian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C♭",
+      "D♭",
+      "G♭",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, C♭, D♭, G♭, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Locrian over F bass. Choose Locrian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "locrian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Dorian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Dorian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Dorian",
+      "Dorian ♭2",
+      "Dorian ♯4",
+      "Dorian ♭5",
+      "Dorian ♮7"
+    ],
+    "example": "Dorian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C",
+      "D",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A♭, C, D, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Dorian over F bass. Choose Dorian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "dorian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Dorian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Dorian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Dorian",
+      "Dorian ♭2",
+      "Dorian ♯4",
+      "Dorian ♭5",
+      "Dorian ♮7"
+    ],
+    "example": "Dorian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C",
+      "D",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A♭, C, D, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Dorian over F bass. Choose Dorian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "dorian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Aeolian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Aeolian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Aeolian",
+      "Aeolian ♭2",
+      "Aeolian ♮6",
+      "Aeolian ♮7",
+      "Aeolian Dominant",
+      "Aeolian ♭5"
+    ],
+    "example": "Aeolian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "D♭",
+      "E♭",
+      "G",
+      "C"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, D♭, E♭, G, C, all notes sounding together",
+    "exampleExplanation": "This visual example shows Aeolian over F bass. Choose Aeolian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "aeolian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Aeolian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Aeolian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Aeolian",
+      "Aeolian ♭2",
+      "Aeolian ♮6",
+      "Aeolian ♮7",
+      "Aeolian Dominant",
+      "Aeolian ♭5"
+    ],
+    "example": "Aeolian",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "D♭",
+      "E♭",
+      "G",
+      "C"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below A♭, D♭, E♭, G, C, all notes sounding together",
+    "exampleExplanation": "This visual example shows Aeolian over F bass. Choose Aeolian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "aeolian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Ionian Mode #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Ionian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Ionian",
+      "Ionian ♭2",
+      "Ionian ♯2",
+      "Ionian Augmented",
+      "Ionian ♭6",
+      "Ionian ♭2 ♭6"
+    ],
+    "example": "Ionian",
+    "bass": "F",
+    "upperNotes": [
+      "C",
+      "D",
+      "E",
+      "G",
+      "A"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below C, D, E, G, A, all notes sounding together",
+    "exampleExplanation": "This visual example shows Ionian over F bass. Choose Ionian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "ionian",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Ionian Mode #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares Ionian and its variants. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Ionian",
+      "Ionian ♭2",
+      "Ionian ♯2",
+      "Ionian Augmented",
+      "Ionian ♭6",
+      "Ionian ♭2 ♭6"
+    ],
+    "example": "Ionian",
+    "bass": "F",
+    "upperNotes": [
+      "C",
+      "D",
+      "E",
+      "G",
+      "A"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All six notes played together",
+    "diagramLabel": "F bass below C, D, E, G, A, all notes sounding together",
+    "exampleExplanation": "This visual example shows Ionian over F bass. Choose Ionian. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "ionian",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Major Modes #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares the named major modes. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Romanian Major",
+      "Hungarian Major",
+      "Byzantine Major",
+      "Harmonic Major",
+      "Melodic Major",
+      "Major Augmented"
+    ],
+    "example": "Romanian Major",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "C",
+      "D",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A, C, D, E♭, G♭, B, all notes sounding together",
+    "exampleExplanation": "This visual example shows Romanian Major over F bass. Choose Romanian Major. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "major-modes",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Major Modes #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares the named major modes. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Romanian Major",
+      "Hungarian Major",
+      "Byzantine Major",
+      "Harmonic Major",
+      "Melodic Major",
+      "Major Augmented"
+    ],
+    "example": "Romanian Major",
+    "bass": "F",
+    "upperNotes": [
+      "A",
+      "C",
+      "D",
+      "E♭",
+      "G♭",
+      "B"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A, C, D, E♭, G♭, B, all notes sounding together",
+    "exampleExplanation": "This visual example shows Romanian Major over F bass. Choose Romanian Major. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "major-modes",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Minor Modes #1": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares the named minor modes. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson keeps F as the bass throughout. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Natural Minor",
+      "Harmonic Minor",
+      "Melodic Minor",
+      "Hungarian Minor",
+      "Romanian Minor",
+      "Neapolitan Minor"
+    ],
+    "example": "Natural Minor",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C",
+      "D♭",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A♭, C, D♭, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Natural Minor over F bass. Choose Natural Minor. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "minor-modes",
+    "fOnly": true,
+    "id": "modal-voicing-guide-heading"
+  },
+  "Minor Modes #2": {
+    "heading": "Hear the voicing. Choose its modal name.",
+    "intro": "Listen to the bass note and the chord notes above it as one sound. Choose the name that matches what you hear.",
+    "steps": [
+      {
+        "title": "Listen to all the notes together",
+        "description": "Press Play to hear the complete chord sound. Notice the bass note underneath the higher notes. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the exact modal name",
+        "description": "This lesson compares the named minor modes. Select the full name from the answer buttons. Small changes to the chord notes can change its modal colour."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "A voicing is a way of arranging notes to make a chord sound. Here, each modal name has its own set of notes above a bass note. Listen to how those notes sound together. This lesson uses all twelve bass notes. The same modal sound moves to different starting notes. In the answer names, ♭ means lowered, ♯ means raised and ♮ means natural. A change of one keyboard step counts both white and black keys. The number beside a symbol describes a note’s place in the mode, counted from the bass note; it does not mean its position in the displayed chord. Choose the modal name rather than an inversion or a note name.",
+    "choices": [
+      "Natural Minor",
+      "Harmonic Minor",
+      "Melodic Minor",
+      "Hungarian Minor",
+      "Romanian Minor",
+      "Neapolitan Minor"
+    ],
+    "example": "Natural Minor",
+    "bass": "F",
+    "upperNotes": [
+      "A♭",
+      "C",
+      "D♭",
+      "E♭",
+      "G",
+      "B♭"
+    ],
+    "upperLabel": "Upper chord notes",
+    "playedTogetherLabel": "All seven notes played together",
+    "diagramLabel": "F bass below A♭, C, D♭, E♭, G, B♭, all notes sounding together",
+    "exampleExplanation": "This visual example shows Natural Minor over F bass. Choose Natural Minor. In your quiz, listen to the whole voicing and select the full name that matches.",
+    "family": "minor-modes",
+    "fOnly": false,
+    "id": "modal-voicing-guide-heading"
+  }
+}

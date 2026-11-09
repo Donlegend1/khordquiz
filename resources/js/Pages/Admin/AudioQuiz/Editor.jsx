@@ -1,4 +1,5 @@
 import AppShell from '@/Layouts/AppShell';
+import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import {
@@ -6,9 +7,12 @@ import {
     KEYBOARD_BLACK_KEYS,
     KEYBOARD_WHITE_KEYS,
     MELODIC_DICTATION_LENGTHS,
-    NAMING_DEGREES,
-    NAMING_EXCLUDES,
     NAMING_QUALITIES,
+    namingDegreeOptions,
+    namingExcludeOptions,
+    toggleNamingDegree as toggleNamingDegreeSelection,
+    validNamingSelection,
+    encodeNamingAnswer,
     blackKeyLeft,
     blackKeyWidth,
     buildNamedChord,
@@ -35,6 +39,33 @@ function TrashIcon(props) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
             <path d="M5 7h14M9 7V5.5A1.5 1.5 0 0110.5 4h3A1.5 1.5 0 0115 5.5V7m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V7" />
         </svg>
+    );
+}
+
+// Only rendered where `notes` is non-null (NoteSample resolved the real
+// audio_path — Relative Pitch's solfège questions today), right alongside
+// the existing <audio controls> preview of the old pre-rendered file — lets
+// an admin A/B the two instead of having to trust the live-mixing engine's
+// note/timing math blind. Reuses the exact same engine the member-facing
+// quiz player uses (resources/js/lib/audio-engine.js), so this plays
+// precisely what a student would hear.
+function LiveMixButton({ notes }) {
+    const [playing, setPlaying] = useState(false);
+
+    function play() {
+        setPlaying(true);
+        playNotes(notes, { onEnded: () => setPlaying(false) }).catch(() => setPlaying(false));
+    }
+
+    return (
+        <button
+            type="button"
+            onClick={play}
+            disabled={playing}
+            className="inline-flex items-center gap-1 rounded-full bg-brand/10 px-2 py-0.5 text-[11px] font-semibold text-brand disabled:opacity-50"
+        >
+            {playing ? 'Playing…' : '▶ Live mix'}
+        </button>
     );
 }
 
@@ -506,12 +537,12 @@ function NamingPicker({ quality, degrees, exclude, onQuality, onToggleDegree, on
             </div>
             <div>
                 <p className="mb-1.5 text-xs font-semibold text-neutral-500">Degrees</p>
-                <MultiPicker options={NAMING_DEGREES} selected={degrees} onToggle={onToggleDegree} />
+                <MultiPicker options={namingDegreeOptions(quality)} selected={degrees} onToggle={onToggleDegree} />
             </div>
             <div>
                 <p className="mb-1.5 text-xs font-semibold text-neutral-500">Exclude</p>
                 <div className="flex flex-wrap gap-2">
-                    {NAMING_EXCLUDES.map((option) => (
+                    {namingExcludeOptions(degrees).map((option) => (
                         <button
                             key={option}
                             type="button"
@@ -642,7 +673,7 @@ function ProgressionBuilder({ config, slots, onChangeSlot, preview }) {
 // Display-only, same as Settings.jsx's INSTRUMENT_LABELS — the stored sound value
 // and every audio path stay "Guitar"; this just clarifies the pill's label now
 // that Harpejji and Bass Guitar sit alongside it.
-const SOUND_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone' };
+const SOUND_LABELS = { EP: 'Rhodes', Guitar: 'Acoustic Guitar', Saxophone: 'Tenor Saxophone', Voice: 'Solo Choir' };
 
 // Same families as the member-facing sound pickers (QuizCategory.jsx's
 // SOUND_CATEGORIES, Settings.jsx's INSTRUMENT_GROUPS) — every category and
@@ -654,10 +685,25 @@ const SOUND_CATEGORIES = [
     { name: 'Guitar', sounds: ['Guitar', 'Electric Guitar', 'Harpejji', 'Bass Guitar'] },
     { name: 'Strings', sounds: ['Violin', 'Strings', 'Cello', 'Upright Bass'] },
     { name: 'Brass', sounds: ['Saxophone', 'Trombone', 'Tuba', 'Trumpet'] },
-    { name: 'Vocals', sounds: ['Voice', 'Audience Choir', 'Ensemble Choir', 'Sustained Choir', 'Bulgarian Choir'] },
+    { name: 'Vocals', sounds: ['Voice', 'Tropar Choir', 'Ensemble Choir', 'Sustained Choir'] },
     { name: 'Percussion', sounds: ['Marimba', 'Steel Drum', 'Celesta', 'Vibraphone'] },
     { name: 'Woodwinds', sounds: ['Flute', 'Clarinet', 'Oboe', 'Bassoon'] },
 ];
+
+function QuestionPagination({ pagination }) {
+    if (!pagination || pagination.last_page <= 1) return null;
+    const linkClass = 'inline-flex min-h-10 items-center justify-center rounded-lg border border-neutral-200 bg-white px-3 py-2 text-xs font-semibold text-neutral-700 transition-colors hover:bg-neutral-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900';
+    return (
+        <nav aria-label="Question pages" className="my-4 flex flex-wrap items-center justify-between gap-3 border-y border-neutral-100 py-3">
+            <p aria-live="polite" className="text-xs text-neutral-500">Showing {pagination.from}–{pagination.to} of {pagination.total} questions</p>
+            <div className="flex items-center gap-2">
+                {pagination.previous_url ? <Link href={pagination.previous_url} preserveState preserveScroll className={linkClass}>Previous</Link> : <span aria-disabled="true" className="px-3 py-2 text-xs text-neutral-400">Previous</span>}
+                <span className="text-xs font-medium text-neutral-600">{pagination.current_page} / {pagination.last_page}</span>
+                {pagination.next_url ? <Link href={pagination.next_url} preserveState preserveScroll className={linkClass}>Next</Link> : <span aria-disabled="true" className="px-3 py-2 text-xs text-neutral-400">Next</span>}
+            </div>
+        </nav>
+    );
+}
 
 function QuestionsPanel({ quiz }) {
     const [activeSound, setActiveSound] = useState('Piano');
@@ -667,13 +713,24 @@ function QuestionsPanel({ quiz }) {
     // Once the question pool has generated audio attached (the rendering pipeline's
     // job), manually uploading one file per question is no longer how content gets
     // added here — hide that form rather than leaving it sitting there unused.
-    const hasGeneratedAudio = quiz.questions.some((question) => question.audio_variants.length > 0);
+    const hasGeneratedAudio = (quiz.audio_sounds?.length ?? 0) > 0;
     // Derived from this quiz's actual attached audio, not a hand-maintained list —
     // a hardcoded SOUNDS array here kept going stale every time a new instrument
     // was generated (Bass Guitar and Strings both sat grayed-out after being
     // fully built, because this array wasn't updated alongside them). This can't
-    // go stale the same way.
-    const builtSounds = new Set(quiz.questions.flatMap((question) => question.audio_variants.map((variant) => variant.sound)));
+    // go stale the same way. Also counts a sound as "built" when the live-mixing
+    // engine can already cover it (missing_instrument_previews — see
+    // AudioQuizController::missingInstrumentPreviews) even with no
+    // quiz_question_audio rows pre-attached at all: the live-mixing engine is
+    // the actual source of truth going forward, not just the old pre-rendered
+    // pipeline, so an instrument it can already play shouldn't read as unbuilt.
+    const builtSounds = new Set([
+        ...(quiz.audio_sounds ?? []),
+        ...quiz.questions.flatMap((question) => [
+            ...question.audio_variants.map((variant) => variant.sound),
+            ...question.missing_instrument_previews.map((preview) => preview.sound),
+        ]),
+    ]);
     const preset = presetFor(quiz.category, quiz.title);
     const isBulkKey = quiz.title === 'Find the Key #1' || quiz.title === 'Find the Key #2';
     const lengthConfig = MELODIC_DICTATION_LENGTHS[quiz.title];
@@ -691,7 +748,7 @@ function QuestionsPanel({ quiz }) {
     const isMulti = Boolean(multiOptions);
     const [selectedExtensions, setSelectedExtensions] = useState([]);
 
-    const isNaming = quiz.title === 'Chord naming';
+    const isNaming = quiz.title === 'Chord naming' || ['Chord Naming · Level 1', 'Chord Naming · Level 2', 'Chord Naming · Level 3', 'Chord Naming · Level 4', 'Chord Naming · Level 5', 'Chord Naming · Level 6'].includes(quiz.title);
     const [namingQuality, setNamingQuality] = useState(null);
     const [namingDegrees, setNamingDegrees] = useState([]);
     const [namingExclude, setNamingExclude] = useState(null);
@@ -744,9 +801,9 @@ function QuestionsPanel({ quiz }) {
 
     useEffect(() => {
         if (!isNaming) return;
-        setData('choices', namedChord ? [namedChord] : []);
+        setData('choices', validNamingSelection(namingQuality, namingDegrees, namingExclude) ? [encodeNamingAnswer(namingQuality, namingDegrees, namingExclude)] : []);
         setData('correct', 0);
-    }, [namedChord]);
+    }, [isNaming, namingQuality, namingDegrees, namingExclude]);
 
     const chooseLength = (value) => {
         setSequenceLength(value);
@@ -758,7 +815,9 @@ function QuestionsPanel({ quiz }) {
     };
 
     const toggleNamingDegree = (option) => {
-        setNamingDegrees((prev) => (prev.includes(option) ? prev.filter((item) => item !== option) : [...prev, option]));
+        const next = toggleNamingDegreeSelection(namingDegrees, option);
+        setNamingDegrees(next);
+        if (!namingExcludeOptions(next).includes(namingExclude)) setNamingExclude('None');
     };
 
     const changeProgressionSlot = (index, field, value) => {
@@ -801,14 +860,16 @@ function QuestionsPanel({ quiz }) {
                 <div className="rounded-2xl border border-black/5 bg-white p-5">
                     <div className="flex items-center justify-between gap-3">
                         <p className="text-xs font-bold uppercase tracking-wide text-neutral-400">
-                            {quiz.questions.length} question{quiz.questions.length === 1 ? '' : 's'} configured
+                            {quiz.questions_total} question{quiz.questions_total === 1 ? '' : 's'} configured
                         </p>
                     </div>
 
                     {/* Every planned category and instrument shows here, not just the ones
                         with generated audio — an instrument with nothing yet renders as a
-                        dimmer pill and falls through to the "audio not generated yet"
-                        message below, so this list doubles as a what's-left checklist.
+                        dimmer pill; selecting it shows only the question rows it actually
+                        has something playable for (see the questions list's filter below),
+                        so this pill list doubles as a what's-left checklist without the
+                        question list itself padding out with dead rows.
                         Grouped in its own labeled panel (Category above Sound) so the two
                         rows read as one filter, not two unrelated pill lists. */}
                     <div className="mt-3 rounded-xl border border-black/5 bg-neutral-50 p-3.5">
@@ -862,8 +923,31 @@ function QuestionsPanel({ quiz }) {
                         </div>
                     </div>
 
+                    <QuestionPagination pagination={quiz.pagination} />
+                    {(() => {
+                        // Nothing playable for this instrument at all on a given question
+                        // (no generated audio, no live-mix fallback either — e.g. a
+                        // Relative Tone Pitch #2 position outside this instrument's real
+                        // range) — the row would only ever show a dead "audio not
+                        // generated" line, so it's dropped instead of listing it as a
+                        // checklist item with no path to ever being resolved.
+                        const visibleQuestions = quiz.questions.filter((question) => {
+                            if (question.audio_variants.find((item) => item.sound === activeSound)) return true;
+
+                            return question.missing_instrument_previews.some((item) => item.sound === activeSound);
+                        });
+
+                        if (visibleQuestions.length === 0) {
+                            return (
+                                <p className="mt-3 text-xs text-neutral-400">
+                                    No {SOUND_LABELS[activeSound] ?? activeSound} audio or samples on this page.
+                                </p>
+                            );
+                        }
+
+                        return (
                     <ul className="mt-3 divide-y divide-black/5">
-                        {quiz.questions.map((question) => {
+                        {visibleQuestions.map((question) => {
                             const variant = question.audio_variants.find((item) => item.sound === activeSound);
                             return (
                                 <li key={question.id} className="flex items-start justify-between gap-4 py-3">
@@ -875,13 +959,35 @@ function QuestionsPanel({ quiz }) {
                                         <span className="mt-1 inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
                                             Answer: {question.answer}
                                         </span>
-                                        {question.audio_url && <audio controls src={question.audio_url} className="mt-2 block h-8 w-full max-w-xs" />}
+                                        {question.audio_url && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                {!question.notes && <audio controls src={question.audio_url} className="block h-8 w-full max-w-xs" />}
+                                                {question.notes && <LiveMixButton notes={question.notes} />}
+                                            </div>
+                                        )}
                                         <div className="mt-2">
                                             {variant ? (
-                                                <audio controls src={variant.url} className="h-8 w-full max-w-xs" />
-                                            ) : (
-                                                <p className="text-xs text-neutral-400">{SOUND_LABELS[activeSound] ?? activeSound} audio not generated yet.</p>
-                                            )}
+                                                <div className="flex items-center gap-2">
+                                                    {!variant.notes && <audio controls src={variant.url} className="h-8 w-full max-w-xs" />}
+                                                    {variant.notes && <LiveMixButton notes={variant.notes} />}
+                                                </div>
+                                            ) : (() => {
+                                                // No generated audio for this quiz/question — but the
+                                                // instrument's own note sample library might already
+                                                // have the pitch this question needs (e.g. a bank built
+                                                // before any dedicated audio pipeline run touched this
+                                                // quiz) — see AudioQuizController::missingInstrumentPreviews.
+                                                // The list above is already filtered to rows where one
+                                                // of these two branches has something to show, so this
+                                                // preview is guaranteed to exist here.
+                                                const preview = question.missing_instrument_previews.find((item) => item.sound === activeSound);
+                                                return (
+                                                    <div className="flex items-center gap-2">
+                                                        <p className="text-xs text-neutral-400">No audio generated for this quiz yet, but a sample exists:</p>
+                                                        <LiveMixButton notes={preview.notes} />
+                                                    </div>
+                                                );
+                                            })()}
                                         </div>
                                     </div>
                                     <button type="button" onClick={() => deleteQuestion(question.id)} className="shrink-0 text-neutral-300 hover:text-brand">
@@ -891,6 +997,9 @@ function QuestionsPanel({ quiz }) {
                             );
                         })}
                     </ul>
+                        );
+                    })()}
+                    <QuestionPagination pagination={quiz.pagination} />
                 </div>
             )}
         </div>
@@ -936,7 +1045,7 @@ export default function Editor({ category, categorySlug, categories, difficultie
                         <>
                             <div className="mb-4">
                                 <h2 className="text-xl font-bold text-neutral-900">{quiz.title}</h2>
-                                <p className="text-sm text-neutral-500">{quiz.questions.length} question(s) configured</p>
+                                <p className="text-sm text-neutral-500">{quiz.questions_total} question(s) configured</p>
                             </div>
 
                             <SettingsTabs key={`settings-${quiz.id}`} quiz={quiz} difficulties={difficulties} />

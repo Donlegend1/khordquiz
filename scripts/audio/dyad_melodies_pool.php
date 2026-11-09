@@ -10,15 +10,45 @@
 
 require_once __DIR__.'/five_note_melodies_pool.php';
 
+// Frozen forever, independent of FIVE_NOTE_TEMPLATES' current membership —
+// the original 5 templates this pool (and every instrument's already-built
+// Dyad Melodies audio) was created against. Each original template's 3rd/4th
+// alternation below is keyed off its position in THIS list, not its position
+// in FIVE_NOTE_TEMPLATES, so adding a template there later (e.g. for 5-Note
+// Melodies) can never silently reshuffle the harmony NoteSample::resolve()
+// computes for already-built Dyad Melodies audio. New templates appended to
+// FIVE_NOTE_TEMPLATES after this pool existed get their own stable index
+// below instead (never reusing 0-4), so this function stays deterministic
+// however many templates FIVE_NOTE_TEMPLATES grows to.
+const DYAD_MELODY_ORIGINAL_TEMPLATE_ORDER = [
+    'arch', 'descending-arch', 'rising-skips-falling-steps', 'rising-steps-falling-skips', 'zigzag',
+];
+
 // Returns the 35 patterns, each as:
 //   ['label', 'fileSlug', 'startDegree', 'dyads' => [ ['harmonyIdx' => int, 'topIdx' => int], ... ] ]
 // Indices are diatonic scale-degree indices (stepwiseMidiForIndex/stepwiseLabelForIndex).
 function dyadMelodyPatterns(): array
 {
+    $templateOrder = DYAD_MELODY_ORIGINAL_TEMPLATE_ORDER;
+    $originalCount = count($templateOrder);
+    foreach (array_keys(FIVE_NOTE_TEMPLATES) as $template) {
+        if (! in_array($template, $templateOrder, true)) {
+            $templateOrder[] = $template;
+        }
+    }
+
     $patterns = [];
-    $patternIndex = 0;
     foreach (range(0, 6) as $startDegree) {
-        foreach (FIVE_NOTE_TEMPLATES as $moves) {
+        foreach (FIVE_NOTE_TEMPLATES as $template => $moves) {
+            $templateIndex = array_search($template, $templateOrder, true);
+            // Original 5 templates keep their exact historical patternIndex
+            // (startDegree * 5 + their fixed 0-4 slot) no matter how many
+            // templates exist today; anything appended after them gets its
+            // own stable, non-colliding index instead.
+            $patternIndex = $templateIndex < $originalCount
+                ? $startDegree * $originalCount + $templateIndex
+                : $startDegree * (count($templateOrder) - $originalCount) + ($templateIndex - $originalCount);
+
             $relativeIndices = [0];
             $running = 0;
             foreach ($moves as $move) {
@@ -44,7 +74,6 @@ function dyadMelodyPatterns(): array
                 'startDegree' => $startDegree,
                 'dyads' => $dyads,
             ];
-            $patternIndex++;
         }
     }
 

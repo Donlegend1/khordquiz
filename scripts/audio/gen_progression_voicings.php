@@ -28,7 +28,7 @@ const EXTENSION_INTERVAL = ['♭9' => 13, '9' => 14, '♯9' => 15, '11' => 17, '
 
 const PRESETS = [
     'diatonic-progression' => [
-        'title' => 'Diatonic Progression', 'folder' => 'diatonic-progression', 'length' => 4,
+        'title' => 'Diatonic Progression #1', 'folder' => 'diatonic-progression', 'length' => 4,
         'degrees' => ['1', '2', '3', '4', '5', '6', '7'], 'qualities' => [],
         'fixedQualities' => [1 => 'Major', 2 => 'Minor', 3 => 'Minor', 4 => 'Major', 5 => 'Major', 6 => 'Minor', 7 => 'Diminished'],
         'fixedDegrees' => null, 'extensions' => null,

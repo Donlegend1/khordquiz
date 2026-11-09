@@ -1,3 +1,4 @@
+import AudioLibrary from '@/Components/Site/AudioLibrary';
 import Contact from '@/Components/Site/Contact';
 import AllInOne from '@/Components/Site/AllInOne';
 import Categories from '@/Components/Site/Categories';
@@ -12,7 +13,7 @@ import SiteLayout from '@/Layouts/SiteLayout';
 import { useTrans } from '@/lib/i18n';
 import { Head } from '@inertiajs/react';
 
-export default function Welcome() {
+export default function Welcome({ catalog }) {
     const t = useTrans();
 
     return (
@@ -20,8 +21,9 @@ export default function Welcome() {
             <Head title={t('Welcome')} />
             <Hero />
             <Features />
+            <AudioLibrary />
             <HowItWorks />
-            <Categories />
+            <Categories catalog={catalog} />
             <AllInOne />
             <StoreBadges />
             <Pricing />

@@ -1,3 +1,4 @@
+import AvatarBadge from '@/Components/AvatarBadge';
 import AppShell from '@/Layouts/AppShell';
 import { useTrans } from '@/lib/i18n';
 import { PLAN_INFO, planStatus } from '@/lib/subscription';
@@ -46,7 +47,7 @@ function SignOutModal({ open, onClose, user }) {
                 </div>
 
                 <div className="mt-5 flex items-center gap-3 rounded-2xl bg-neutral-50 p-3.5">
-                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-sm font-bold text-brand">{initials(user.name)}</span>
+                    <AvatarBadge id={user.avatar} name={user.name} size={44} />
                     <div className="min-w-0 flex-1">
                         <p className="text-xs font-semibold text-neutral-500">{t('Signed in as')}</p>
                         <p className="truncate text-sm font-bold text-neutral-900">{user.name}</p>
@@ -66,15 +67,6 @@ function SignOutModal({ open, onClose, user }) {
             </div>
         </div>
     );
-}
-
-function initials(name) {
-    return name
-        .split(' ')
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0]?.toUpperCase())
-        .join('');
 }
 
 function SectionLabel({ title, action }) {
@@ -136,9 +128,7 @@ export default function Account({ subscription: sub }) {
 
             <div className="mx-auto max-w-2xl space-y-6">
                 <div className="flex flex-col items-center gap-3 py-2 text-center">
-                    <span className="flex h-20 w-20 items-center justify-center rounded-full bg-brand/10 text-2xl font-bold text-brand ring-4 ring-white">
-                        {initials(user.name)}
-                    </span>
+                    <AvatarBadge id={user.avatar} name={user.name} size={80} />
                     <div>
                         <p className="text-xl font-extrabold text-neutral-900">{user.name}</p>
                         <p className="text-sm text-neutral-500">{user.email}</p>

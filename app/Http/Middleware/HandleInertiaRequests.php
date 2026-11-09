@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Support\Locales;
+use App\Models\QuestionReport;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             'flash' => [
                 'success' => $request->session()->get('success'),
             ],
+            'questionReportReasons' => QuestionReport::REASONS,
         ];
     }
 }

@@ -1,0 +1,218 @@
+{
+  "Melodic Diatonic Intervals": {
+    "heading": "Hear two notes. Name the distance.",
+    "intro": "You will hear two notes, one after the other. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear the first note followed by the second. Notice how far apart they sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Major 3rd."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz focuses on major and perfect intervals. An octave is the distance from a note to the next higher note with the same name, such as C to the next C. “Melodic” means the two notes play one after the other.",
+    "choices": [
+      "Major 2nd",
+      "Major 3rd",
+      "Perfect 4th",
+      "Perfect 5th",
+      "Major 6th",
+      "Major 7th",
+      "Octave"
+    ],
+    "example": "Major 3rd",
+    "pair": {
+      "low": "C",
+      "high": "E",
+      "together": false
+    },
+    "exampleExplanation": "In this visual example, C and E are a major 3rd apart. Choose Major 3rd for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  },
+  "Harmonic Diatonic Intervals": {
+    "heading": "Two notes together. Name the distance.",
+    "intro": "You will hear two notes at the same time. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear both notes together. Try to hear the lower sound and the higher sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Major 3rd."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz focuses on major and perfect intervals. An octave is the distance from a note to the next higher note with the same name, such as C to the next C. “Harmonic” means the two notes play together.",
+    "choices": [
+      "Major 2nd",
+      "Major 3rd",
+      "Perfect 4th",
+      "Perfect 5th",
+      "Major 6th",
+      "Major 7th",
+      "Octave"
+    ],
+    "example": "Major 3rd",
+    "pair": {
+      "low": "C",
+      "high": "E",
+      "together": true
+    },
+    "exampleExplanation": "In this visual example, C and E are a major 3rd apart. Choose Major 3rd for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  },
+  "Melodic Non-diatonic Intervals": {
+    "heading": "Hear two notes. Name the distance.",
+    "intro": "You will hear two notes, one after the other. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear the first note followed by the second. Notice how far apart they sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Minor 3rd."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz focuses on minor intervals and the tritone. The answer button calls the tritone “Tri Tone”. Each answer describes a different distance between two notes. “Melodic” means the two notes play one after the other.",
+    "choices": [
+      "Minor 2nd",
+      "Minor 3rd",
+      "Tri Tone",
+      "Minor 6th",
+      "Minor 7th"
+    ],
+    "example": "Minor 3rd",
+    "pair": {
+      "low": "C",
+      "high": "E♭",
+      "together": false
+    },
+    "exampleExplanation": "In this visual example, C and E♭ are a minor 3rd apart. Choose Minor 3rd for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  },
+  "Harmonic Non-diatonic Intervals": {
+    "heading": "Two notes together. Name the distance.",
+    "intro": "You will hear two notes at the same time. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear both notes together. Try to hear the lower sound and the higher sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Minor 3rd."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz focuses on minor intervals and the tritone. The answer button calls the tritone “Tri Tone”. Each answer describes a different distance between two notes. “Harmonic” means the two notes play together.",
+    "choices": [
+      "Minor 2nd",
+      "Minor 3rd",
+      "Tri Tone",
+      "Minor 6th",
+      "Minor 7th"
+    ],
+    "example": "Minor 3rd",
+    "pair": {
+      "low": "C",
+      "high": "E♭",
+      "together": true
+    },
+    "exampleExplanation": "In this visual example, C and E♭ are a minor 3rd apart. Choose Minor 3rd for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  },
+  "Melodic Intervals: General": {
+    "heading": "Hear two notes. Name the distance.",
+    "intro": "You will hear two notes, one after the other. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear the first note followed by the second. Notice how far apart they sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Perfect 5th."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz mixes all twelve interval choices from the diatonic and non-diatonic quizzes. Listen for the distance between the notes, then choose its name. “Melodic” means the two notes play one after the other.",
+    "choices": [
+      "Minor 2nd",
+      "Major 2nd",
+      "Minor 3rd",
+      "Major 3rd",
+      "Perfect 4th",
+      "Tri Tone",
+      "Perfect 5th",
+      "Minor 6th",
+      "Major 6th",
+      "Minor 7th",
+      "Major 7th",
+      "Octave"
+    ],
+    "example": "Perfect 5th",
+    "pair": {
+      "low": "C",
+      "high": "G",
+      "together": false
+    },
+    "exampleExplanation": "In this visual example, C and G are a perfect 5th apart. Choose Perfect 5th for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  },
+  "Harmonic Intervals: General": {
+    "heading": "Two notes together. Name the distance.",
+    "intro": "You will hear two notes at the same time. Choose the name of the distance between them.",
+    "steps": [
+      {
+        "title": "Listen to the two notes",
+        "description": "Press Play to hear both notes together. Try to hear the lower sound and the higher sound. You can listen again whenever you need to."
+      },
+      {
+        "title": "Choose the interval",
+        "description": "An interval is the distance between two notes. Select the answer that matches what you hear, such as Perfect 5th."
+      },
+      {
+        "title": "Submit your answer",
+        "description": "When you are ready, press Submit Answer. You can change your choice before you submit."
+      }
+    ],
+    "about": "An interval names how far apart two notes are. This quiz mixes all twelve interval choices from the diatonic and non-diatonic quizzes. Listen for the distance between the notes, then choose its name. “Harmonic” means the two notes play together.",
+    "choices": [
+      "Minor 2nd",
+      "Major 2nd",
+      "Minor 3rd",
+      "Major 3rd",
+      "Perfect 4th",
+      "Tri Tone",
+      "Perfect 5th",
+      "Minor 6th",
+      "Major 6th",
+      "Minor 7th",
+      "Major 7th",
+      "Octave"
+    ],
+    "example": "Perfect 5th",
+    "pair": {
+      "low": "C",
+      "high": "G",
+      "together": true
+    },
+    "exampleExplanation": "In this visual example, C and G are a perfect 5th apart. Choose Perfect 5th for that distance. During the quiz, listen for the distance between the notes you hear; the notes may have different names."
+  }
+}

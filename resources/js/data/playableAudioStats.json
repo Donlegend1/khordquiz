@@ -1,0 +1,9 @@
+{
+    "examples": 549588,
+    "instruments": 28,
+    "audited_at": "2026-11-06T08:50:13+00:00",
+    "candidates": 784991,
+    "unresolved": 0,
+    "missing_notes": 0,
+    "method": "Distinct registered live-mix note-file and timing combinations across published quizzes. All required note files exist. Shared examples across lessons are counted once. Reference tracks and unregistered fallback combinations are excluded."
+}
