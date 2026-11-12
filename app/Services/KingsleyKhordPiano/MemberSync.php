@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Notifications\KingsleyKhordPianoInvitation;
 use App\Role;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -34,21 +35,39 @@ class MemberSync
     }
 
     /**
-     * @return array{synced: int, created: int, revoked: int}
+     * Works through the member list one API page (chunk) at a time. Each member
+     * is saved in its own transaction, so one bad record is logged and skipped
+     * instead of stopping the run or leaving a half-written account.
+     *
+     * @return array{synced: int, created: int, failed: int, revoked: int}
      */
     public function syncAll(bool $invite = true): array
     {
         $startedAt = now()->subSecond();
-        $synced = $created = 0;
+        $synced = $created = $failed = 0;
 
-        foreach ($this->client->members() as $member) {
-            [, $wasCreated] = $this->sync($member, $invite);
-            $synced++;
-            $created += (int) $wasCreated;
+        foreach ($this->client->pages() as $page => $members) {
+            foreach ($members as $member) {
+                try {
+                    [, $wasCreated] = DB::transaction(fn () => $this->sync($member, $invite));
+                    $synced++;
+                    $created += (int) $wasCreated;
+                } catch (\Throwable $e) {
+                    $failed++;
+                    Log::error('Kingsleykhordpiano member sync failed.', ['page' => $page + 1, 'email' => $member['email'], 'id' => $member['id'] ?? null, 'error' => $e->getMessage()]);
+                }
+            }
+
+            Log::info('Kingsleykhordpiano members chunk synced.', ['page' => $page + 1, 'members' => count($members), 'synced' => $synced, 'failed' => $failed]);
         }
 
-        // Only reached when every page was fetched — a failed request throws
-        // above, so a partial run never revokes anybody.
+        // Revoking relies on every member having just been stamped. A failed
+        // page request throws above, and a failed member wasn't stamped, so in
+        // either case nobody is revoked this run.
+        if ($failed > 0) {
+            return ['synced' => $synced, 'created' => $created, 'failed' => $failed, 'revoked' => 0];
+        }
+
         $revoked = 0;
         User::query()
             ->whereNotNull('kkp_member_id')
@@ -57,7 +76,7 @@ class MemberSync
                 $revoked += (int) $this->revoke($user);
             });
 
-        return ['synced' => $synced, 'created' => $created, 'revoked' => $revoked];
+        return ['synced' => $synced, 'created' => $created, 'failed' => 0, 'revoked' => $revoked];
     }
 
     /**
@@ -117,37 +136,33 @@ class MemberSync
      */
     public function sync(array $member, bool $invite = true): array
     {
-        $user = User::query()->where('email', $member['email'])->first();
-        $created = false;
-
-        if ($user === null) {
-            if (! $member['active']) {
-                // Lapsed members without an account don't need one.
-                return [new User, false];
-            }
-
-            $user = User::create([
+        $user = User::query()->firstOrCreate(
+            ['email' => $member['email']],
+            [
                 'name' => $member['name'],
                 'first_name' => $member['first_name'],
                 'last_name' => $member['last_name'],
-                'email' => $member['email'],
                 'password' => Hash::make(Str::random(40)),
                 'role' => Role::Member,
-            ]);
-            // Their address is already verified by Kingsleykhordpiano, and the
-            // invite link proves it again.
-            $user->forceFill(['email_verified_at' => now()])->save();
-            $created = true;
-        }
+            ],
+        );
+        $created = $user->wasRecentlyCreated;
 
         $user->forceFill([
+            'first_name' => $user->first_name ?? $member['first_name'],
+            'last_name' => $user->last_name ?? $member['last_name'],
             'kkp_member_id' => $member['id'] ?? $user->kkp_member_id ?? $member['email'],
             'kkp_synced_at' => now(),
+            // Their address is already verified by Kingsleykhordpiano, and the
+            // invite link proves it again.
+            'email_verified_at' => $user->email_verified_at ?? ($created ? now() : null),
         ])->save();
 
         $this->applyMembership($user, $member);
 
-        if ($invite && $created) {
+        // Only active members are invited — a lapsed member's account exists
+        // (with its expired subscription) but has nothing to unlock yet.
+        if ($invite && $created && $member['active']) {
             $this->invite($user);
         }
 
@@ -171,16 +186,24 @@ class MemberSync
             return;
         }
 
-        if (! $member['active']) {
+        // Never subscribed on Kingsleykhordpiano: nothing to record, but end
+        // any KKP access they had before.
+        if (! $member['active'] && ! ($member['has_subscription'] ?? true)) {
             $this->expire($subscription);
 
+            return;
+        }
+
+        // A lapsed membership is recorded as an expired KKP plan, unless the
+        // user has something else going on here (e.g. a KhordQuiz free trial).
+        if (! $member['active'] && $subscription->provider !== Subscription::PROVIDER_KKP && $subscription->access !== 'none') {
             return;
         }
 
         $subscription->fill([
             'access' => 'paid',
             'plan_id' => $member['plan_id'],
-            'status' => 'active',
+            'status' => $member['active'] ? 'active' : 'expired',
             'provider' => Subscription::PROVIDER_KKP,
             'current_period_end' => $member['expires_at'],
             'renews' => $member['expires_at'] ? Subscription::formatDate($member['expires_at']) : null,

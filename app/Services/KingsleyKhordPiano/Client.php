@@ -13,12 +13,14 @@ use Illuminate\Support\Str;
  * Configure in .env (see config/services.php → kingsleykhordpiano):
  *   KKP_API_URL      e.g. https://kingsleykhordpiano.com
  *   KKP_API_TOKEN    sent as "Authorization: Bearer <token>"
- *   KKP_MEMBERS_PATH list endpoint, default /api/members
- *   KKP_MEMBER_PATH  single lookup, default /api/members/lookup?email={email}
+ *   KKP_MEMBERS_PATH list endpoint, default /api/khord-quiz/members
+ *   KKP_MEMBER_PATH  single lookup, default /api/khord-quiz/members/{email}
  *
  * Accepted response shapes — the list endpoint may return a bare array, or wrap
  * it in "data" / "members", and may paginate with any of next_page_url,
- * links.next, meta.next_page_url or next. The lookup returns the member object
+ * links.next, meta.next_page_url, next, or meta.current_page/last_page (?page=N).
+ * Items may be flat, or Kingsleykhordpiano's {member, subscribed, subscription}
+ * (see flatten()). The lookup returns the member object
  * (bare, or under "data" / "member"), or 404 when the email isn't a member.
  *
  * Each member object is normalised by normalize(); recognised fields:
@@ -41,13 +43,19 @@ class Client
     }
 
     /**
-     * Every subscribed member, following pagination.
+     * Every member, one page (chunk) at a time — only one page is ever held in
+     * memory. Page size comes from KKP_PER_PAGE.
      *
-     * @return \Generator<int, array<string, mixed>>
+     * @return \Generator<int, list<array<string, mixed>>>
      */
-    public function members(): \Generator
+    public function pages(): \Generator
     {
         $url = $this->url((string) config('services.kingsleykhordpiano.members_path'));
+        $perPage = (int) config('services.kingsleykhordpiano.per_page', 100);
+
+        if ($perPage > 0) {
+            $url = $this->withQuery($url, ['per_page' => $perPage]);
+        }
 
         for ($page = 0; $url !== null && $page < 1000; $page++) {
             $body = $this->request()->get($url)->throw()->json();
@@ -59,16 +67,30 @@ class Client
                 default => [],
             };
 
+            logger()->info('Fetched Kingsleykhordpiano members page.', ['page' => $page + 1, 'url' => $url, 'count' => count($items)]);
+
+            $members = [];
             foreach ($items as $item) {
                 if (is_array($item) && ($member = $this->normalize($item, listed: true))) {
-                    yield $member;
+                    $members[] = $member;
                 }
             }
 
-            $next = is_array($body) && ! array_is_list($body)
-                ? ($body['next_page_url'] ?? $body['links']['next'] ?? $body['meta']['next_page_url'] ?? $body['next'] ?? null)
-                : null;
-            $url = is_string($next) && $next !== '' ? $this->url($next) : null;
+            yield $members;
+
+            $url = $this->nextPageUrl($body, $url);
+        }
+    }
+
+    /**
+     * Every member, following pagination.
+     *
+     * @return \Generator<int, array<string, mixed>>
+     */
+    public function members(): \Generator
+    {
+        foreach ($this->pages() as $members) {
+            yield from $members;
         }
     }
 
@@ -101,10 +123,14 @@ class Client
 
     /**
      * @param  array<string, mixed>  $raw
-     * @return array{id: ?string, email: string, first_name: ?string, last_name: ?string, name: string, plan_id: string, expires_at: ?Carbon, active: bool}|null
+     * @return array{id: ?string, email: string, first_name: ?string, last_name: ?string, name: string, plan_id: string, expires_at: ?Carbon, active: bool, has_subscription: bool}|null
      */
     public function normalize(array $raw, bool $listed): ?array
     {
+        if (is_array($raw['member'] ?? null)) {
+            $raw = $this->flatten($raw);
+        }
+
         $email = $raw['email'] ?? $raw['user_email'] ?? null;
 
         if (! is_string($email) || ! filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -145,7 +171,74 @@ class Client
             'plan_id' => $plan,
             'expires_at' => $expiresAt,
             'active' => $active,
+            'has_subscription' => (bool) ($raw['has_subscription'] ?? true),
         ];
+    }
+
+    /**
+     * Kingsleykhordpiano's own shape:
+     *   {member: {id, first_name, last_name, display_name, email, …},
+     *    subscribed: bool,
+     *    subscription: null | {status, type, provider, is_lifetime, started_at, expires_at,
+     *                          plan: null | {id, tier, type, slug, is_premium}}}
+     *
+     * @param  array<string, mixed>  $raw
+     * @return array<string, mixed>
+     */
+    private function flatten(array $raw): array
+    {
+        $subscription = is_array($raw['subscription'] ?? null) ? $raw['subscription'] : [];
+        $plan = is_array($subscription['plan'] ?? null) ? $subscription['plan'] : [];
+        $status = $subscription['status'] ?? null;
+        $subscribed = $subscription !== [] && filter_var($raw['subscribed'] ?? false, FILTER_VALIDATE_BOOLEAN);
+
+        return array_merge($raw['member'], [
+            'has_subscription' => $subscription !== [],
+            // No status (e.g. a manual grant) counts as active while it hasn't
+            // expired — normalize() then turns off anything past its expiry.
+            'active' => $subscribed && (! is_string($status) || in_array(Str::lower($status), self::ACTIVE_STATUSES, true)),
+            'plan' => filter_var($subscription['is_lifetime'] ?? false, FILTER_VALIDATE_BOOLEAN)
+                ? 'lifetime'
+                : ($subscription['type'] ?? $plan['type'] ?? null),
+            'expires_at' => $subscription['expires_at'] ?? null,
+        ]);
+    }
+
+    /**
+     * Follows a next-page link if the response has one, otherwise
+     * meta.current_page / last_page (or has_more) with a ?page= query.
+     */
+    private function nextPageUrl(mixed $body, string $url): ?string
+    {
+        if (! is_array($body) || array_is_list($body)) {
+            return null;
+        }
+
+        $next = $body['next_page_url'] ?? $body['links']['next'] ?? $body['meta']['next_page_url'] ?? $body['next'] ?? null;
+
+        if (is_string($next) && $next !== '') {
+            return $this->url($next);
+        }
+
+        $meta = is_array($body['meta'] ?? null) ? $body['meta'] : [];
+        $current = (int) ($meta['current_page'] ?? 0);
+        $hasMore = isset($meta['last_page']) ? $current < (int) $meta['last_page'] : (bool) ($meta['has_more'] ?? false);
+
+        if ($current < 1 || ! $hasMore) {
+            return null;
+        }
+
+        return $this->withQuery($url, ['page' => $current + 1]);
+    }
+
+    /**
+     * @param  array<string, scalar>  $params
+     */
+    private function withQuery(string $url, array $params): string
+    {
+        parse_str((string) parse_url($url, PHP_URL_QUERY), $query);
+
+        return Str::before($url, '?').'?'.http_build_query(array_merge($query, $params));
     }
 
     private function planId(mixed $value): string
@@ -154,7 +247,8 @@ class Client
 
         return match (true) {
             str_contains($value, 'life') => 'lifetime',
-            str_contains($value, 'month') => 'monthly',
+            // KhordQuiz has no quarterly plan; access still ends at the real expiry date.
+            str_contains($value, 'month') || str_contains($value, 'quarter') => 'monthly',
             str_contains($value, 'year') || str_contains($value, 'annual') => 'yearly',
             default => (string) config('services.kingsleykhordpiano.default_plan', 'yearly'),
         };
@@ -167,10 +261,14 @@ class Client
         }
 
         try {
-            return is_numeric($value) ? Carbon::createFromTimestamp((int) $value) : Carbon::parse((string) $value);
+            $date = is_numeric($value) ? Carbon::createFromTimestamp((int) $value) : Carbon::parse((string) $value);
         } catch (\Throwable) {
             return null;
         }
+
+        // Outside what a DATETIME column can hold (e.g. 0000-00-00 or a
+        // year-9999 "never") — treat as no usable date.
+        return $date->year >= 1970 && $date->year < 9999 ? $date : null;
     }
 
     private function request(): PendingRequest

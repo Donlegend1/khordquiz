@@ -25,6 +25,7 @@ class KingsleyKhordPianoSyncTest extends TestCase
             'services.kingsleykhordpiano.token' => 'secret',
             'services.kingsleykhordpiano.members_path' => '/api/members',
             'services.kingsleykhordpiano.member_path' => '/api/members/lookup?email={email}',
+            'services.kingsleykhordpiano.per_page' => 0,
         ]);
 
         Notification::fake();
@@ -60,6 +61,110 @@ class KingsleyKhordPianoSyncTest extends TestCase
         $this->assertSame('lifetime', Subscription::forUser($tolu)->plan_id);
 
         Notification::assertSentTo([$grace, $tolu], KingsleyKhordPianoInvitation::class);
+    }
+
+    public function test_sync_reads_the_real_kingsleykhordpiano_payload_across_meta_paginated_pages(): void
+    {
+        config(['services.kingsleykhordpiano.per_page' => 3]);
+        $item = fn (int $id, string $email, bool $subscribed, ?array $subscription) => [
+            'member' => ['id' => $id, 'first_name' => 'First'.$id, 'last_name' => 'Last', 'display_name' => "First{$id} Last", 'email' => $email, 'email_verified' => true],
+            'subscribed' => $subscribed,
+            'subscription' => $subscription,
+        ];
+
+        Http::fake([
+            'kkp.test/api/members?per_page=3&page=2' => Http::response([
+                'data' => [$item(3, 'life@example.com', true, ['status' => 'active', 'type' => null, 'provider' => 'manual', 'is_lifetime' => true, 'expires_at' => null, 'plan' => null])],
+                'meta' => ['current_page' => 2, 'last_page' => 2, 'has_more' => false],
+            ]),
+            'kkp.test/api/members?per_page=3' => Http::response([
+                'synced_at' => now()->toIso8601String(),
+                'data' => [
+                    $item(1, 'paid@example.com', true, ['status' => 'active', 'type' => 'monthly', 'provider' => 'paypal', 'is_lifetime' => false, 'expires_at' => now()->addMonth()->toIso8601String(), 'plan' => ['id' => 1, 'tier' => 'standard', 'type' => 'monthly']]),
+                    $item(2, 'never@example.com', false, null),
+                    $item(4, 'expired@example.com', true, ['status' => 'expired', 'type' => null, 'provider' => 'stripe', 'is_lifetime' => false, 'expires_at' => now()->addWeek()->toIso8601String(), 'plan' => null]),
+                ],
+                'meta' => ['current_page' => 1, 'last_page' => 2, 'has_more' => true],
+            ]),
+        ]);
+
+        $this->artisan('kkp:sync')->assertSuccessful();
+
+        $paid = User::query()->where('email', 'paid@example.com')->firstOrFail();
+        $this->assertSame('1', $paid->kkp_member_id);
+        $this->assertSame('First1', $paid->first_name);
+        $this->assertTrue($paid->hasQuizAccess());
+        $this->assertSame('monthly', Subscription::forUser($paid)->plan_id);
+
+        $life = User::query()->where('email', 'life@example.com')->firstOrFail();
+        $this->assertTrue($life->hasQuizAccess());
+        $this->assertSame('lifetime', Subscription::forUser($life)->plan_id);
+
+        // Account exists, but no made-up KKP subscription.
+        $never = User::query()->where('email', 'never@example.com')->firstOrFail();
+        $this->assertFalse($never->hasQuizAccess());
+        $this->assertNull(Subscription::forUser($never)->provider);
+
+        // "subscribed": true but status "expired" → no access.
+        $expired = User::query()->where('email', 'expired@example.com')->firstOrFail();
+        $this->assertFalse($expired->hasQuizAccess());
+        $this->assertSame('expired', Subscription::forUser($expired)->status);
+
+        Notification::assertSentTo([$paid, $life], KingsleyKhordPianoInvitation::class);
+        Notification::assertNotSentTo([$never, $expired], KingsleyKhordPianoInvitation::class);
+    }
+
+    public function test_one_failing_member_is_skipped_without_stopping_the_run_or_revoking_anyone(): void
+    {
+        $other = User::factory()->create(['kkp_member_id' => '99']);
+        Subscription::forUser($other)->update(['access' => 'paid', 'plan_id' => 'yearly', 'status' => 'active', 'provider' => Subscription::PROVIDER_KKP]);
+
+        User::creating(function (User $user) {
+            if ($user->email === 'broken@example.com') {
+                throw new \RuntimeException('boom');
+            }
+        });
+
+        Http::fake(['kkp.test/*' => Http::response(['data' => [
+            ['id' => 1, 'email' => 'broken@example.com', 'status' => 'active'],
+            // A far-future grant must save fine (MySQL TIMESTAMP stops at 2038).
+            ['id' => 2, 'email' => 'fine@example.com', 'status' => 'active', 'plan' => 'yearly', 'expires_at' => '2050-11-03T12:49:00+00:00'],
+        ]])]);
+
+        $this->artisan('kkp:sync')->assertFailed();
+
+        $this->assertDatabaseMissing('users', ['email' => 'broken@example.com']);
+        $fine = User::query()->where('email', 'fine@example.com')->firstOrFail();
+        $this->assertTrue($fine->hasQuizAccess());
+        $this->assertSame(2050, Subscription::forUser($fine)->current_period_end->year);
+        // A failed member means the run is incomplete, so nobody is revoked.
+        $this->assertTrue($other->fresh()->hasQuizAccess());
+    }
+
+    public function test_sync_creates_every_returned_member_with_their_subscription_even_when_lapsed(): void
+    {
+        $existing = User::factory()->create(['email' => 'old@example.com']);
+
+        Http::fake(['kkp.test/*' => Http::response(['data' => [
+            ['id' => 21, 'email' => 'lapsed@example.com', 'name' => 'Lapsed One', 'plan' => 'monthly', 'status' => 'cancelled', 'expires_at' => now()->subWeek()->toIso8601String()],
+            ['id' => 22, 'email' => 'OLD@example.com', 'name' => 'Old Member', 'plan' => 'yearly', 'status' => 'active'],
+        ]])]);
+
+        $this->artisan('kkp:sync')->assertSuccessful();
+
+        $lapsed = User::query()->where('email', 'lapsed@example.com')->firstOrFail();
+        $subscription = Subscription::forUser($lapsed);
+        $this->assertSame('21', $lapsed->kkp_member_id);
+        $this->assertSame(Subscription::PROVIDER_KKP, $subscription->provider);
+        $this->assertSame('monthly', $subscription->plan_id);
+        $this->assertSame('expired', $subscription->status);
+        $this->assertFalse($lapsed->hasQuizAccess());
+        Notification::assertNotSentTo($lapsed, KingsleyKhordPianoInvitation::class);
+
+        // Existing account is matched, not duplicated, and gets the membership.
+        $this->assertSame(1, User::query()->where('email', 'old@example.com')->count());
+        $this->assertSame('22', $existing->fresh()->kkp_member_id);
+        $this->assertTrue($existing->fresh()->hasQuizAccess());
     }
 
     public function test_members_missing_from_the_list_lose_access_but_paying_members_keep_theirs(): void

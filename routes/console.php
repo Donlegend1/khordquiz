@@ -21,6 +21,12 @@ Artisan::command('kkp:sync {--no-invite : Create accounts without emailing invit
     $result = $sync->syncAll(invite: ! $this->option('no-invite'));
     $this->info("Synced {$result['synced']} members: {$result['created']} new accounts, {$result['revoked']} revoked.");
 
+    if ($result['failed'] > 0) {
+        $this->warn("{$result['failed']} members failed (see the log) — revoking was skipped this run.");
+
+        return 1;
+    }
+
     return 0;
 })->purpose('Sync subscribed Kingsleykhordpiano members into KhordQuiz');
 

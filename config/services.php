@@ -48,9 +48,11 @@ return [
         'base_url' => env('KKP_API_URL'),
         'token' => env('KKP_API_TOKEN'),
         // Lists subscribed members (paginated or not).
-        'members_path' => env('KKP_MEMBERS_PATH', '/api/members'),
+        'members_path' => env('KKP_MEMBERS_PATH', '/api/khord-quiz/members'),
         // Looks up one member by email; {email} is replaced (URL-encoded).
-        'member_path' => env('KKP_MEMBER_PATH', '/api/members/lookup?email={email}'),
+        'member_path' => env('KKP_MEMBER_PATH', '/api/khord-quiz/members/{email}'),
+        // Members fetched and processed per chunk (sent as ?per_page=). 0 = API default.
+        'per_page' => (int) env('KKP_PER_PAGE', 100),
         // KhordQuiz plan granted when the member's record doesn't map to one.
         'default_plan' => env('KKP_DEFAULT_PLAN', 'yearly'),
         'timeout' => (int) env('KKP_API_TIMEOUT', 8),
