@@ -10,6 +10,8 @@ use App\Support\Locales;
 use App\Support\QuizCatalog;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -24,7 +26,40 @@ class SettingsController extends Controller
             'goalOptions' => ProgressController::GOAL_OPTIONS,
             'defaultInstrument' => $user->default_instrument,
             'language' => $user->language ?? Locales::DEFAULT_LABEL,
+            'preferences' => collect(UserPreference::forUser($user)->toSettings($user))
+                ->only(['appearance', 'notation', 'sound_effects', 'haptics', 'reminders', 'reminder_time', 'streak_alerts', 'notify_by']),
         ]);
+    }
+
+    /**
+     * Saves any of the toggles and pickers that live in user_preferences (the
+     * same row the mobile app's settings screen reads), one field at a time.
+     */
+    public function updatePreferences(Request $request): RedirectResponse|HttpResponse
+    {
+        $data = $request->validate([
+            'appearance' => ['sometimes', 'string', Rule::in(UserPreference::APPEARANCES)],
+            'notation' => ['sometimes', 'string', Rule::in(UserPreference::NOTATIONS)],
+            'sound_effects' => ['sometimes', 'boolean'],
+            'haptics' => ['sometimes', 'boolean'],
+            'reminders' => ['sometimes', 'boolean'],
+            'reminder_time' => ['sometimes', 'string', 'regex:/^(1[0-2]|[1-9]):[0-5]\d (AM|PM)$/'],
+            'streak_alerts' => ['sometimes', 'boolean'],
+            'notify_by' => ['sometimes', 'string', Rule::in(UserPreference::NOTIFY_BY)],
+            'timezone' => ['sometimes', 'nullable', 'timezone:all'],
+        ]);
+
+        $preferences = UserPreference::forUser($request->user());
+        $preferences->fill($data);
+        $preferences->syncPushFlag();
+        $preferences->save();
+
+        // The app shell reports the browser's timezone in the background with fetch().
+        if ($request->expectsJson() && ! $request->header('X-Inertia')) {
+            return response()->noContent();
+        }
+
+        return back();
     }
 
     // Switches the whole UI to the chosen language — SetLocale reads

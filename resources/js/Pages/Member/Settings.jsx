@@ -5,12 +5,13 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
 
-// Most rows here mirror the mobile app's own Settings screen (see app/settings.tsx
-// there), where appearance, language, instrument, sound, haptics and notification
-// preferences live only on-device (AsyncStorage), never on the server — so keeping
-// them in local React state here, reset on reload, is faithful to the app, not a
-// shortcut. Daily goal is the one row backed by a real column (users.daily_goal),
-// so it reuses the same endpoint as the Progress page's goal picker.
+// Every row is saved on the server. Language, daily goal and default instrument
+// have their own endpoints; the rest live in user_preferences (the same row the
+// mobile app's settings screen reads) and go through settings.preferences.
+// Where each one takes effect:
+//   Appearance        AppShell (dark theme)        Notation   quiz answer labels
+//   Sound/Haptics     answer feedback in quizzes   Reminders, reminder time,
+//   streak alerts     scheduled notifications       Notify me by  how notifications are delivered
 // Values stay English (they're compared/stored); only the display goes through t().
 const APPEARANCES = [tk('System'), tk('Light'), tk('Dark')];
 const NOTATIONS = [tk('Solfège'), tk('Numbers')];
@@ -487,9 +488,21 @@ function ResetProgressSheet({ open, onClose }) {
     );
 }
 
-export default function Settings({ dailyGoal, goalOptions, defaultInstrument, language: savedLanguage }) {
+export default function Settings({ dailyGoal, goalOptions, defaultInstrument, language: savedLanguage, preferences }) {
     const t = useTrans();
-    const [appearance, setAppearance] = useState('System');
+    const [settings, setSettings] = useState(preferences);
+
+    // Shown straight away, rolled back if the server rejects it.
+    function save(field, value) {
+        const previous = settings[field];
+        setSettings((current) => ({ ...current, [field]: value }));
+        router.patch(
+            route('settings.preferences'),
+            { [field]: value },
+            { preserveScroll: true, preserveState: true, onError: () => setSettings((current) => ({ ...current, [field]: previous })) },
+        );
+    }
+
     const [language, setLanguage] = useState(savedLanguage ?? 'English');
 
     // Saved to users.language — the server re-renders this page with the new
@@ -508,13 +521,6 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument, la
         setInstrument(option);
         router.patch(route('settings.default-instrument'), { default_instrument: option }, { preserveScroll: true, preserveState: true });
     }
-    const [notation, setNotation] = useState('Solfège');
-    const [soundEffects, setSoundEffects] = useState(true);
-    const [haptics, setHaptics] = useState(true);
-    const [reminders, setReminders] = useState(true);
-    const [reminderTime, setReminderTime] = useState('7:00 PM');
-    const [streakAlerts, setStreakAlerts] = useState(true);
-    const [notifyBy, setNotifyBy] = useState('Push');
     const [resetOpen, setResetOpen] = useState(false);
 
     return (
@@ -523,7 +529,7 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument, la
 
             <div className="mx-auto max-w-2xl">
                 <Section title={t('General')}>
-                    <PickerRow first icon={ContrastIcon} label={t('Appearance')} hint={t("System follows your phone's setting")} options={APPEARANCES} value={appearance} onChange={setAppearance} formatOption={(option) => t(option)} />
+                    <PickerRow first icon={ContrastIcon} label={t('Appearance')} hint={t("System follows your phone's setting")} options={APPEARANCES} value={settings.appearance} onChange={(value) => save('appearance', value)} formatOption={(option) => t(option)} />
                     <PickerRow icon={LanguageIcon} label={t('Language')} options={LANGUAGES} value={language} onChange={chooseLanguage} />
                 </Section>
 
@@ -538,24 +544,24 @@ export default function Settings({ dailyGoal, goalOptions, defaultInstrument, la
                         onChange={chooseInstrument}
                         formatOption={(option) => t(INSTRUMENT_LABELS[option] ?? option)}
                     />
-                    <PickerRow icon={NotationIcon} label={t('Notation')} hint={t('For quizzes with solfège answers')} options={NOTATIONS} value={notation} onChange={setNotation} formatOption={(option) => t(option)} />
+                    <PickerRow icon={NotationIcon} label={t('Notation')} hint={t('For quizzes with solfège answers')} options={NOTATIONS} value={settings.notation} onChange={(value) => save('notation', value)} formatOption={(option) => t(option)} />
                     <RowShell icon={VolumeIcon} label={t('Sound effects')}>
-                        <Toggle value={soundEffects} onChange={setSoundEffects} />
+                        <Toggle value={settings.sound_effects} onChange={(value) => save('sound_effects', value)} />
                     </RowShell>
                     <RowShell icon={PhoneIcon} label={t('Haptic feedback')}>
-                        <Toggle value={haptics} onChange={setHaptics} />
+                        <Toggle value={settings.haptics} onChange={(value) => save('haptics', value)} />
                     </RowShell>
                 </Section>
 
                 <Section title={t('Notifications')}>
                     <RowShell first icon={BellIcon} label={t('Practice reminders')} hint={t('A daily nudge to keep practising')}>
-                        <Toggle value={reminders} onChange={setReminders} />
+                        <Toggle value={settings.reminders} onChange={(value) => save('reminders', value)} />
                     </RowShell>
-                    <TimeRow icon={ClockIcon} label={t('Reminder time')} value={reminderTime} onChange={setReminderTime} disabled={!reminders} />
+                    <TimeRow icon={ClockIcon} label={t('Reminder time')} value={settings.reminder_time} onChange={(value) => save('reminder_time', value)} disabled={!settings.reminders} />
                     <RowShell icon={FlameIcon} label={t('Streak alerts')} hint={t('Before your streak runs out')}>
-                        <Toggle value={streakAlerts} onChange={setStreakAlerts} />
+                        <Toggle value={settings.streak_alerts} onChange={(value) => save('streak_alerts', value)} />
                     </RowShell>
-                    <PickerRow icon={BellCircleIcon} label={t('Notify me by')} hint={t('Perfect scores, challenges and updates')} options={NOTIFICATION_DELIVERIES} value={notifyBy} onChange={setNotifyBy} formatOption={(option) => t(option)} />
+                    <PickerRow icon={BellCircleIcon} label={t('Notify me by')} hint={t('Perfect scores, challenges and updates')} options={NOTIFICATION_DELIVERIES} value={settings.notify_by} onChange={(value) => save('notify_by', value)} formatOption={(option) => t(option)} />
                 </Section>
 
                 <Section title={t('Data')}>

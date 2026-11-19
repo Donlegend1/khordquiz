@@ -37,10 +37,14 @@ class SettingsController extends Controller
             'streak_alerts' => ['sometimes', 'boolean'],
             'default_instrument' => ['sometimes', 'string', Rule::in(UserPreference::INSTRUMENTS)],
             'daily_goal' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'notation' => ['sometimes', 'string', Rule::in(UserPreference::NOTATIONS)],
+            'notify_by' => ['sometimes', 'string', Rule::in(UserPreference::NOTIFY_BY)],
+            'timezone' => ['sometimes', 'nullable', 'timezone:all'],
         ]);
 
         $preferences = UserPreference::forUser($user);
         $preferences->fill(collect($data)->except('daily_goal')->all());
+        $preferences->syncPushFlag();
         $preferences->save();
 
         // users.language is what the web UI's locale is driven from (SetLocale).

@@ -8,8 +8,9 @@ namespace App\Models;
 // receive the verification link. Revisit once real mail delivery is set up.
 use App\Role;
 use App\Services\Billing\StripeGateway;
-use Illuminate\Support\Facades\Log;
+use App\Support\Locales;
 use Database\Factories\UserFactory;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,11 +18,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
 #[Fillable(['name', 'first_name', 'last_name', 'email', 'password', 'role', 'suspended_at', 'current_streak', 'longest_streak', 'last_practiced_on', 'daily_goal', 'default_instrument', 'country', 'skill_level', 'avatar', 'language', 'terms_accepted_at', 'plan_choice', 'payment_method', 'plan_started_at', 'plan_expires_at', 'kkp_member_id', 'kkp_synced_at', 'kkp_invited_at'])]
 #[Hidden(['password', 'remember_token'])]
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
@@ -99,6 +101,19 @@ class User extends Authenticatable
         return $this->plan_choice !== null && $this->plan_started_at !== null && ! $this->hasPlanExpired();
     }
 
+    /**
+     * Emails and other notifications go out in the language picked in Settings.
+     */
+    public function preferredLocale(): string
+    {
+        return Locales::codeFor($this->language);
+    }
+
+    public function preferences(): HasOne
+    {
+        return $this->hasOne(UserPreference::class);
+    }
+
     public function subscription(): HasOne
     {
         return $this->hasOne(Subscription::class);
@@ -120,6 +135,9 @@ class User extends Authenticatable
                     Log::error('Could not cancel Stripe billing for a deleted account.', ['user' => $user->id, 'error' => $e->getMessage()]);
                 }
             }
+
+            // The notifications table is polymorphic, so no foreign key cascades.
+            $user->notifications()->delete();
         });
     }
 

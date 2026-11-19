@@ -8,6 +8,7 @@ use App\Models\QuizAttemptAnswer;
 use App\Models\QuizMark;
 use App\Models\QuizQuestion;
 use App\Models\QuizSession;
+use App\Notifications\PerfectScore;
 use App\Support\AddNineSamples;
 use App\Support\AeolianScaleAllKeysSamples;
 use App\Support\AeolianScaleSamples;
@@ -103,6 +104,7 @@ class QuizController extends Controller
                 'slug' => $mark->quiz->slug,
                 'title' => $mark->quiz->title,
                 'category' => $mark->quiz->category,
+                'categorySlug' => Str::slug($mark->quiz->category),
                 'difficulty' => $mark->quiz->difficulty,
                 'savedAt' => $mark->updated_at->diffForHumans(),
             ])->values(),
@@ -691,6 +693,11 @@ class QuizController extends Controller
         }
         $session->sound ??= $attempt->sound;
         $session->save();
+
+        // Archiving runs again on revisits; only the first save is a new result.
+        if ($session->wasRecentlyCreated && $session->total > 0 && $session->correct === $session->total) {
+            $attempt->user->notify(new PerfectScore($attempt->quiz->title));
+        }
 
         return $session;
     }

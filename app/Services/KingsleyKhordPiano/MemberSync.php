@@ -200,6 +200,8 @@ class MemberSync
             return;
         }
 
+        $wasKkpPlan = $subscription->provider === Subscription::PROVIDER_KKP;
+
         $subscription->fill([
             'access' => 'paid',
             'plan_id' => $member['plan_id'],
@@ -211,6 +213,36 @@ class MemberSync
             'next_plan' => null,
             'trial_cancelled' => false,
         ])->save();
+
+        if ($member['active']) {
+            $this->recordPlan($user, $member);
+        } elseif ($wasKkpPlan) {
+            $this->clearPlan($user);
+        }
+    }
+
+    /**
+     * Mirrors an active membership onto the user's plan fields, which the admin
+     * Users page lists and filters by.
+     *
+     * @param  array{plan_id: string, expires_at: ?Carbon}  $member
+     */
+    private function recordPlan(User $user, array $member): void
+    {
+        $user->forceFill([
+            'plan_choice' => $member['plan_id'],
+            'plan_started_at' => $user->plan_started_at ?? now(),
+            'plan_expires_at' => $member['plan_id'] === 'lifetime' ? null : $member['expires_at'],
+        ])->save();
+    }
+
+    /**
+     * The plan fields grant quiz access by themselves (User::hasGrantedPlan()),
+     * so a lapsed or revoked membership must clear them too.
+     */
+    private function clearPlan(User $user): void
+    {
+        $user->forceFill(['plan_choice' => null, 'plan_started_at' => null, 'plan_expires_at' => null])->save();
     }
 
     private function revoke(User $user): bool
@@ -222,7 +254,13 @@ class MemberSync
 
     private function expire(Subscription $subscription): bool
     {
-        if ($subscription->provider !== Subscription::PROVIDER_KKP || $subscription->status === 'expired') {
+        if ($subscription->provider !== Subscription::PROVIDER_KKP) {
+            return false;
+        }
+
+        $this->clearPlan($subscription->user);
+
+        if ($subscription->status === 'expired') {
             return false;
         }
 

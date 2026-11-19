@@ -3,6 +3,7 @@ import AnswerBuilder, { answerLabelFor, answerTypeFor, baseChordFor, buildChordN
 import AudioStimulus from '@/Components/Quiz/AudioStimulus';
 import { buildNamedChord, decodeNamingAnswer, namingDisplayQuality } from '@/lib/quizAnswerPresets';
 import { useTrans } from '@/lib/i18n';
+import { playAnswerFeedback, useMemberAppearance, useNotation, usePreferences } from '@/lib/preferences';
 import { playNotes } from '@/lib/audio-engine';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import { useEffect, useRef, useState } from 'react';
@@ -150,6 +151,16 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
     const { data, setData, post, processing, reset } = useForm({ choice: null });
     const [advancing, setAdvancing] = useState(false);
     const [cancelling, setCancelling] = useState(false);
+    const preferences = usePreferences();
+    const notation = useNotation();
+    useMemberAppearance();
+
+    // Sound effect / vibration once per graded answer (Settings → Sound effects, Haptic feedback).
+    const feedbackKey = feedback ? `${progress.current}:${feedback.correct}` : null;
+    useEffect(() => {
+        if (feedback) playAnswerFeedback(feedback.correct, preferences);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [feedbackKey]);
 
     // A fresh question (no feedback yet) clears whatever was selected for the last one.
     useEffect(() => {
@@ -305,6 +316,7 @@ export default function QuizPlay({ quiz, progress, question, finished, feedback 
                                                 } else {
                                                     shown = t(feedback.correctAnswer);
                                                 }
+                                                shown = notation(shown);
                                                 return t('The correct answer is :answer.', { answer: '\u0000' })
                                                     .split('\u0000')
                                                     .map((part, i) => (

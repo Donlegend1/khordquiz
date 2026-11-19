@@ -3,56 +3,69 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSupportMessageRequest;
-use App\Mail\ContactMessageReceived;
-use App\Models\ContactMessage;
+use App\Models\SupportMessage;
+use App\Services\SupportDesk;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Throwable;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class SupportController extends Controller
 {
+    public const RECENT_REQUESTS = 20;
+
     /**
-     * Save a member's support request and email it to support — same
-     * ContactMessage/Mailable pipeline the public Contact form uses, just
-     * with the member's own account for name/email instead of asking for it,
-     * and an optional file attachment the public form doesn't have.
+     * The Help & Support hub, with the member's own requests and their status.
      */
-    public function store(StoreSupportMessageRequest $request): RedirectResponse
+    public function index(Request $request): Response
+    {
+        $requests = SupportMessage::query()
+            ->where('user_id', $request->user()->id)
+            ->withCount('replies')
+            ->orderByDesc('last_activity_at')
+            ->orderByDesc('id')
+            ->limit(self::RECENT_REQUESTS)
+            ->get()
+            ->map->toSummary();
+
+        return Inertia::render('Member/Support', ['requests' => $requests]);
+    }
+
+    public function show(Request $request, SupportMessage $supportMessage): Response
+    {
+        abort_unless($supportMessage->user_id === $request->user()->id, 404);
+
+        $supportMessage->load('replies.author');
+
+        return Inertia::render('Member/SupportRequest', ['request' => $supportMessage->toThread()]);
+    }
+
+    /**
+     * Opens a support request from Support → Email Support. The member's own
+     * account supplies their name and email; device details, when they opt in,
+     * are appended so the team can reproduce problems.
+     */
+    public function store(StoreSupportMessageRequest $request, SupportDesk $desk): RedirectResponse
     {
         $data = $request->validated();
-        $user = $request->user();
 
-        $attachmentPath = null;
-        $attachmentName = null;
-        if ($request->hasFile('attachment')) {
-            $file = $request->file('attachment');
-            $attachmentPath = $file->store('support-attachments', 'public');
-            $attachmentName = $file->getClientOriginalName();
-        }
-
-        $message = $data['message'];
         if ($request->boolean('include_device') && ! empty($data['device_info'])) {
-            $message .= "\n\n---\n".$data['device_info'];
+            $data['message'] .= "\n\n---\n".$data['device_info'];
         }
 
-        $contactMessage = ContactMessage::create([
-            'name' => $user->name,
-            'email' => $user->email,
-            'subject' => '['.$data['topic'].'] '.($data['subject'] ?: 'Support request'),
-            'message' => $message,
-            'ip_address' => $request->ip(),
-            'attachment_path' => $attachmentPath,
-            'attachment_name' => $attachmentName,
-        ]);
+        $supportMessage = $desk->open($request->user(), $data, 'web', $request->file('attachment'));
 
-        // The message is already saved, so a mail failure shouldn't fail the member's request.
-        try {
-            Mail::to(config('mail.contact_address'))->send(new ContactMessageReceived($contactMessage));
-        } catch (Throwable $e) {
-            Log::error('Support message email failed', ['id' => $contactMessage->id, 'error' => $e->getMessage()]);
-        }
+        return back()->with('success', __('Your message has been sent. We usually reply within 24 hours.'))
+            ->with('supportRequestId', $supportMessage->id);
+    }
 
-        return back()->with('success', __('Your message has been sent. We usually reply within 24 hours.'));
+    public function reply(Request $request, SupportMessage $supportMessage, SupportDesk $desk): RedirectResponse
+    {
+        abort_unless($supportMessage->user_id === $request->user()->id, 404);
+
+        $data = $request->validate(['body' => ['required', 'string', 'max:5000']]);
+        $desk->replyAsMember($supportMessage, $request->user(), $data['body']);
+
+        return back()->with('success', __('Your reply has been sent.'));
     }
 }

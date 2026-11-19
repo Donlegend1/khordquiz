@@ -71,5 +71,8 @@ Route::prefix('v1')->group(function () {
         Route::get('chat', [SupportController::class, 'messages']);
         Route::post('chat', [SupportController::class, 'send']);
         Route::post('support', [SupportController::class, 'email']);
+        Route::get('support/requests', [SupportController::class, 'requests']);
+        Route::get('support/requests/{supportMessage}', [SupportController::class, 'showRequest']);
+        Route::post('support/requests/{supportMessage}/replies', [SupportController::class, 'replyToRequest'])->middleware('throttle:20,1');
     });
 });

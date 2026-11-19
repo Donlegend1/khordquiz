@@ -1,5 +1,5 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { useTrans } from '@/lib/i18n';
 
 function BookmarkIcon(props) {
@@ -36,18 +36,23 @@ export default function Saved({ saved }) {
                     {saved.map((item) => (
                         <li
                             key={item.slug}
-                            className="flex items-center gap-4 rounded-2xl border border-black/5 bg-white px-5 py-4"
+                            className="flex items-center gap-2 rounded-2xl border border-black/5 bg-white pr-3 transition-colors duration-150 hover:border-brand/20 hover:bg-neutral-50"
                         >
-                            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
-                                <BookmarkIcon className="h-5 w-5" />
-                            </span>
-                            <div className="min-w-0 flex-1">
-                                <p className="font-medium text-neutral-900">{t(item.title)}</p>
-                                <p className="mt-0.5 text-sm text-neutral-500">
-                                    {t(item.category)} · {t(item.difficulty)}
-                                </p>
-                            </div>
-                            <span className="shrink-0 text-sm text-neutral-400">{item.savedAt}</span>
+                            <Link
+                                href={route('quiz.category', { category: item.categorySlug, quiz: item.slug })}
+                                className="flex min-w-0 flex-1 items-center gap-4 py-4 pl-5"
+                            >
+                                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand">
+                                    <BookmarkIcon className="h-5 w-5" />
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                    <p className="font-medium text-neutral-900">{t(item.title)}</p>
+                                    <p className="mt-0.5 text-sm text-neutral-500">
+                                        {t(item.category)} · {t(item.difficulty)}
+                                    </p>
+                                </div>
+                                <span className="shrink-0 text-sm text-neutral-400">{item.savedAt}</span>
+                            </Link>
                             <button
                                 type="button"
                                 onClick={() => removeBookmark(item.slug)}

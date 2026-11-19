@@ -2,8 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Mail\ContactMessageReceived;
-use App\Models\ContactMessage;
+use App\Mail\SupportRequestReceived;
+use App\Models\SupportMessage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -37,12 +37,16 @@ class SupportEmailTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $this->assertDatabaseHas('contact_messages', [
-            'email' => 'ada@example.com',
-            'subject' => '[Bug report] Audio does not play',
+        $this->assertDatabaseHas('support_messages', [
+            'user_id' => $user->id,
+            'topic' => 'Bug report',
+            'subject' => 'Audio does not play',
+            'source' => 'web',
+            'status' => 'open',
         ]);
+        $this->assertStringContainsString('Safari', SupportMessage::firstOrFail()->message);
 
-        Mail::assertSent(ContactMessageReceived::class, function (ContactMessageReceived $mail) {
+        Mail::assertSent(SupportRequestReceived::class, function (SupportRequestReceived $mail) {
             return $mail->hasTo(config('mail.contact_address'))
                 && $mail->hasReplyTo('ada@example.com');
         });
@@ -61,12 +65,12 @@ class SupportEmailTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect();
 
-        $contactMessage = ContactMessage::firstOrFail();
-        $this->assertNotNull($contactMessage->attachment_path);
-        $this->assertSame('screenshot.png', $contactMessage->attachment_name);
-        Storage::disk('public')->assertExists($contactMessage->attachment_path);
+        $supportMessage = SupportMessage::firstOrFail();
+        $this->assertNotNull($supportMessage->attachment_path);
+        $this->assertSame('screenshot.png', $supportMessage->attachment_name);
+        Storage::disk('public')->assertExists($supportMessage->attachment_path);
 
-        Mail::assertSent(ContactMessageReceived::class, fn (ContactMessageReceived $mail) => count($mail->attachments()) === 1);
+        Mail::assertSent(SupportRequestReceived::class, fn (SupportRequestReceived $mail) => count($mail->attachments()) === 1);
     }
 
     public function test_attachment_over_10mb_is_rejected(): void
@@ -81,7 +85,7 @@ class SupportEmailTest extends TestCase
             ->post('/support-email', $this->validMessage(['attachment' => $file]))
             ->assertSessionHasErrors('attachment');
 
-        $this->assertSame(0, ContactMessage::count());
+        $this->assertSame(0, SupportMessage::count());
         Mail::assertNothingSent();
     }
 
@@ -98,6 +102,6 @@ class SupportEmailTest extends TestCase
             ->post('/support-email', ['topic' => '', 'message' => ''])
             ->assertSessionHasErrors(['topic', 'message']);
 
-        $this->assertSame(0, ContactMessage::count());
+        $this->assertSame(0, SupportMessage::count());
     }
 }

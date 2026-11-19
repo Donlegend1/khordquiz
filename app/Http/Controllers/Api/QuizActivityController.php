@@ -8,6 +8,7 @@ use App\Models\QuizBookmark;
 use App\Models\QuizCompletion;
 use App\Models\QuizSession;
 use App\Models\User;
+use App\Notifications\PerfectScore;
 use App\Support\MobileCatalog;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -79,6 +80,10 @@ class QuizActivityController extends Controller
             'total' => $data['total'],
             'played_at' => $playedAt,
         ]);
+
+        if ($data['correct'] === $data['total']) {
+            $user->notify(new PerfectScore($quiz['name']));
+        }
 
         foreach ($data['answers'] ?? [] as $answer) {
             QuizAnswer::query()->create([

@@ -2,6 +2,7 @@ import { reviewSelection } from '@/lib/reviewAnswers';
 import { progressionPartMatches } from '@/lib/twoFiveOneExtensions';
 import { Fragment, useEffect, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
+import { useNotation } from '@/lib/preferences';
 import PitchKeyboardChoices from './PitchKeyboardChoices';
 import { namingAnswersMatch } from '@/lib/chordNaming';
 import {
@@ -184,7 +185,7 @@ function NoteKeyboardChoices({ answered, correctAnswer, value, onChange, keyboar
                         ))}
                 </p>
             )}
-            <div className="relative flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
+            <div className="piano-keys relative flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
                 {NOTE_WHITE_KEYS.map((note, index) => (
                     <button
                         key={note}
@@ -229,6 +230,7 @@ function NoteKeyboardChoices({ answered, correctAnswer, value, onChange, keyboar
 
 function FlatChoices({ answered, choices, correctAnswer, value, onChange }) {
     const t = useTrans();
+    const notation = useNotation();
     return (
         <div className="grid gap-2.5 sm:grid-cols-2">
             {choices.map((choice, index) => {
@@ -260,7 +262,7 @@ function FlatChoices({ answered, choices, correctAnswer, value, onChange }) {
                         <span className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-lg text-xs font-bold ${badge}`}>
                             {CHOICE_LETTERS[index] ?? index + 1}
                         </span>
-                        {t(choice)}
+                        {notation(t(choice))}
                     </button>
                 );
             })}
@@ -854,6 +856,7 @@ const SEQUENCE_QUIZZES_WITHOUT_CHROMATIC_NOTES = new Set(['3-Note Stepwise', '3-
 
 function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle, onTap, onUndo, onClear }) {
     const t = useTrans();
+    const notation = useNotation();
     const slots = Array.from({ length }, (_, index) => sequence[index] ?? null);
     const blackKeysInert = SEQUENCE_QUIZZES_WITHOUT_CHROMATIC_NOTES.has(quizTitle);
     const correctNotes = correctAnswer ? correctAnswer.split(' ') : [];
@@ -899,11 +902,11 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                             <li key={index} className="flex w-16 flex-col items-center gap-1.5">
                                 <span className="text-xs text-neutral-400">{index + 1}</span>
                                 <span className={`flex h-11 w-full items-center justify-center rounded-lg border text-sm font-bold ${slotClasses(note, index)}`}>
-                                    {note ?? '–'}
+                                    {note ? notation(note) : '–'}
                                 </span>
                                 {incorrect && correctNotes[index] && (
                                     <span className="text-sm font-bold text-emerald-700">
-                                        <span className="sr-only">{t('Correct note:')} </span>{correctNotes[index]}
+                                        <span className="sr-only">{t('Correct note:')} </span>{notation(correctNotes[index])}
                                     </span>
                                 )}
                             </li>
@@ -912,7 +915,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                 </ol>
             </section>
 
-            <div className="relative mt-3 flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
+            <div className="piano-keys relative mt-3 flex h-36 overflow-hidden rounded-2xl border border-black/10 bg-white sm:h-44">
                 {KEYBOARD_WHITE_KEYS.map((note, index) => (
                     <button
                         key={index}
@@ -923,7 +926,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                             index < KEYBOARD_WHITE_KEYS.length - 1 ? 'border-r border-neutral-200' : ''
                         }`}
                     >
-                        {note}
+                        {notation(note)}
                     </button>
                 ))}
                 {KEYBOARD_BLACK_KEYS.map(({ afterIndex, note }) => (
@@ -939,7 +942,7 @@ function SequenceChoices({ answered, length, sequence, correctAnswer, quizTitle,
                             blackKeysInert ? '' : 'hover:bg-neutral-800 active:bg-brand'
                         }`}
                     >
-                        {note}
+                        {notation(note)}
                     </button>
                 ))}
             </div>

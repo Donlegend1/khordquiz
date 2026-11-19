@@ -2,16 +2,19 @@
 
 use App\Http\Controllers\Admin\AudioQuizController;
 use App\Http\Controllers\Admin\QuizController as AdminQuizController;
+use App\Http\Controllers\Admin\SupportController as AdminSupportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\BillingController;
-use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\QuestionReportController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\StripeWebhookController;
 use App\Http\Controllers\SubscriptionPageController;
 use App\Http\Controllers\SupportController;
 use App\Http\Controllers\WelcomeController;
@@ -56,6 +59,10 @@ Route::patch('/settings/default-instrument', [SettingsController::class, 'update
     ->middleware(['auth', 'verified'])
     ->name('settings.default-instrument');
 
+Route::patch('/settings/preferences', [SettingsController::class, 'updatePreferences'])
+    ->middleware(['auth', 'verified'])
+    ->name('settings.preferences');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/quiz', [QuizController::class, 'categories'])->name('quiz.categories');
     Route::get('/attempt-history', [ProgressController::class, 'history'])->name('quiz.history');
@@ -84,12 +91,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/mistakes', fn () => Inertia::render('Member/Mistakes'))->name('mistakes');
     Route::get('/saved', [QuizController::class, 'saved'])->name('saved');
     Route::get('/challenges', fn () => Inertia::render('Member/Challenges'))->name('challenges');
-    Route::get('/leaderboard', fn () => Inertia::render('Member/Leaderboard'))->name('leaderboard');
+    Route::get('/leaderboard', LeaderboardController::class)->name('leaderboard');
     Route::get('/account', [SubscriptionPageController::class, 'account'])->name('account');
     Route::get('/subscription', [SubscriptionPageController::class, 'show'])->name('subscription');
     Route::get('/suggestions', fn () => Inertia::render('Member/Suggestions'))->name('suggestions');
-    Route::get('/notifications', fn () => Inertia::render('Member/Notifications'))->name('notifications');
-    Route::get('/support', fn () => Inertia::render('Member/Support'))->name('support');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])->name('notifications.read-all');
+    Route::patch('/notifications/{notification}/read', [NotificationController::class, 'markRead'])->name('notifications.read');
+    Route::get('/support', [SupportController::class, 'index'])->name('support');
+    Route::get('/support/requests/{supportMessage}', [SupportController::class, 'show'])->name('support.requests.show');
+    Route::post('/support/requests/{supportMessage}/replies', [SupportController::class, 'reply'])->middleware('throttle:20,1')->name('support.requests.reply');
     Route::get('/help-center', fn () => Inertia::render('Member/HelpCenter'))->name('help-center');
     Route::get('/support-email', fn () => Inertia::render('Member/SupportEmail'))->name('support-email');
     Route::post('/support-email', [SupportController::class, 'store'])->name('support-email.store');
@@ -99,6 +110,10 @@ Route::middleware(['auth', 'verified', 'admin'])
     ->prefix('admin')
     ->name('admin.')
     ->group(function () {
+        Route::get('/support', [AdminSupportController::class, 'index'])->name('support.index');
+        Route::get('/support/{supportMessage}', [AdminSupportController::class, 'show'])->name('support.show');
+        Route::post('/support/{supportMessage}/replies', [AdminSupportController::class, 'reply'])->name('support.reply');
+        Route::patch('/support/{supportMessage}/status', [AdminSupportController::class, 'updateStatus'])->name('support.status');
         Route::get('/question-reports', [QuestionReportController::class, 'index'])->name('question-reports.index');
         Route::patch('/question-reports/{questionReport}', [QuestionReportController::class, 'update'])->name('question-reports.update');
         Route::get('/audio-quiz', [AudioQuizController::class, 'index'])->name('audio-quiz.index');

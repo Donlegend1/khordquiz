@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Support\Locales;
 use App\Models\QuestionReport;
+use App\Models\SupportMessage;
+use App\Models\UserPreference;
+use App\Support\Locales;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,6 +46,12 @@ class HandleInertiaRequests extends Middleware
                 'success' => $request->session()->get('success'),
             ],
             'questionReportReasons' => QuestionReport::REASONS,
+            // Theme, notation, sound effects and haptics — applied by AppShell and the quiz screens.
+            'preferences' => fn () => $request->user() ? UserPreference::forUser($request->user())->toClient() : null,
+            // Badge count on the Notifications nav item.
+            'unreadNotifications' => fn () => $request->user()?->unreadNotifications()->count() ?? 0,
+            // Badge on the admin Support inbox: requests waiting on the team.
+            'openSupportRequests' => fn () => $request->user()?->isAdmin() ? SupportMessage::query()->where('status', SupportMessage::STATUS_OPEN)->count() : 0,
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
 use App\Models\SupportMessage;
+use App\Services\SupportDesk;
 use App\Support\HelpCenter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -92,27 +93,55 @@ class SupportController extends Controller
         ], 201);
     }
 
-    public function email(Request $request): JsonResponse
+    /**
+     * Opens a support request from the app's contact screen — the same ticket
+     * the web's Email Support creates, so the team sees and answers both in
+     * the admin Support inbox.
+     */
+    public function email(Request $request, SupportDesk $desk): JsonResponse
     {
         $data = $request->validate([
             'topic' => ['required', 'string', 'max:80'],
+            'subject' => ['nullable', 'string', 'max:150'],
             'message' => ['required', 'string', 'min:10', 'max:5000'],
         ]);
 
-        $message = SupportMessage::query()->create([
-            'user_id' => $request->user()->id,
-            'topic' => $data['topic'],
-            'message' => $data['message'],
-        ]);
+        $message = $desk->open($request->user(), $data, 'app');
 
         return response()->json([
             'message' => 'Message sent. We reply within 24 hours.',
-            'support_message' => [
-                'id' => $message->id,
-                'topic' => $message->topic,
-                'message' => $message->message,
-                'created_at' => $message->created_at?->toIso8601String(),
-            ],
+            'support_message' => $message->toSummary(),
         ], 201);
+    }
+
+    public function requests(Request $request): JsonResponse
+    {
+        $requests = SupportMessage::query()
+            ->where('user_id', $request->user()->id)
+            ->withCount('replies')
+            ->orderByDesc('last_activity_at')
+            ->orderByDesc('id')
+            ->limit(50)
+            ->get()
+            ->map->toSummary();
+
+        return response()->json(['requests' => $requests]);
+    }
+
+    public function showRequest(Request $request, SupportMessage $supportMessage): JsonResponse
+    {
+        abort_unless($supportMessage->user_id === $request->user()->id, 404);
+
+        return response()->json(['request' => $supportMessage->load('replies.author')->toThread()]);
+    }
+
+    public function replyToRequest(Request $request, SupportMessage $supportMessage, SupportDesk $desk): JsonResponse
+    {
+        abort_unless($supportMessage->user_id === $request->user()->id, 404);
+
+        $data = $request->validate(['body' => ['required', 'string', 'max:5000']]);
+        $reply = $desk->replyAsMember($supportMessage, $request->user(), $data['body']);
+
+        return response()->json(['reply' => $reply->load('author')->toThread()], 201);
     }
 }

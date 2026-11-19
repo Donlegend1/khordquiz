@@ -3,10 +3,6 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import { tk, useLocale, useTrans } from '@/lib/i18n';
 
-// Sample leaderboard, same as the mobile app's own Rank tab (see
-// src/lib/demo-leaderboard.ts there): "Sample leaderboard used to preview the
-// Rank page until rankings come from the server." The web schema has no points
-// or ranking system yet, so this mirrors that same honest placeholder here.
 const PODIUM_COLORS = [
     { bg: 'bg-rose-50', text: 'text-brand' },
     { bg: 'bg-emerald-50', text: 'text-emerald-700' },
@@ -14,43 +10,9 @@ const PODIUM_COLORS = [
 ];
 const ROW_COLORS = ['bg-amber-50 text-amber-700', 'bg-sky-50 text-sky-700', 'bg-indigo-50 text-indigo-700', 'bg-rose-50 text-rose-700'];
 
-const PERIODS = {
-    week: {
-        label: tk('This week'),
-        total: 1248,
-        you: { rank: 485, points: 296, accuracy: 74, streak: 6 },
-        ahead: { name: 'Aisha H.', pointsToPass: 4 },
-        podium: [
-            { place: 1, name: 'Isaac A.', points: 2580 },
-            { place: 2, name: 'Imani B.', points: 2024 },
-            { place: 3, name: 'Jonah C.', points: 1756 },
-        ],
-        rows: [
-            { rank: 4, name: 'Aisha D.', points: 1588, accuracy: 93, streak: 36 },
-            { rank: 5, name: 'David E.', points: 1469, accuracy: 96, streak: 35 },
-            { rank: 6, name: 'Mia F.', points: 1378, accuracy: 93, streak: 34 },
-            { rank: 7, name: 'Noah G.', points: 1306, accuracy: 89, streak: 31 },
-            { rank: 8, name: 'Zara H.', points: 1244, accuracy: 91, streak: 29 },
-        ],
-    },
-    all: {
-        label: tk('All time'),
-        total: 1248,
-        you: { rank: 512, points: 4120, accuracy: 74, streak: 6 },
-        ahead: { name: 'Esther R.', pointsToPass: 18 },
-        podium: [
-            { place: 1, name: 'Daniel K.', points: 18450 },
-            { place: 2, name: 'Sofia M.', points: 15210 },
-            { place: 3, name: 'Tunde O.', points: 13870 },
-        ],
-        rows: [
-            { rank: 4, name: 'Grace P.', points: 12990, accuracy: 94, streak: 58 },
-            { rank: 5, name: 'Marcus Q.', points: 11840, accuracy: 92, streak: 52 },
-            { rank: 6, name: 'Chioma S.', points: 10765, accuracy: 90, streak: 47 },
-            { rank: 7, name: 'Liam T.', points: 9920, accuracy: 88, streak: 44 },
-            { rank: 8, name: 'Zainab U.', points: 9315, accuracy: 91, streak: 40 },
-        ],
-    },
+const PERIOD_LABELS = {
+    week: tk('This week'),
+    all: tk('All time'),
 };
 
 function initials(name) {
@@ -62,38 +24,39 @@ function initials(name) {
         .join('');
 }
 
-function TrophyIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...props}>
-            <path d="M8 4h8v5a4 4 0 01-8 0V4z" />
-            <path d="M8 5H5a3 3 0 003 3M16 5h3a3 3 0 01-3 3" />
-            <path d="M12 13v3M9 20h6M10 20v-2.5h4V20" />
-        </svg>
-    );
+// "Aisha Hassan" → "Aisha H." so other members' full surnames aren't shown.
+function shortName(name) {
+    const parts = name.split(' ').filter(Boolean);
+
+    return parts.length > 1 ? `${parts[0]} ${parts[parts.length - 1][0].toUpperCase()}.` : name;
 }
 
 function PodiumSpot({ entry, order }) {
     const t = useTrans();
     const locale = useLocale();
-    const first = entry.place === 1;
-    const color = PODIUM_COLORS[entry.place - 1];
-    const barHeight = first ? 'h-24' : entry.place === 2 ? 'h-[72px]' : 'h-14';
+    const first = entry.rank === 1;
+    const color = PODIUM_COLORS[entry.rank - 1];
+    const barHeight = first ? 'h-24' : entry.rank === 2 ? 'h-[72px]' : 'h-14';
 
     return (
         <div className="flex flex-1 flex-col items-center gap-2" style={{ order }}>
             <div className="relative">
-                <span className={`flex items-center justify-center rounded-full font-extrabold ${color.bg} ${color.text} ${first ? 'h-16 w-16 text-lg' : 'h-14 w-14 text-base'}`}>
+                <span
+                    className={`flex items-center justify-center rounded-full font-extrabold ${color.bg} ${color.text} ${first ? 'h-16 w-16 text-lg' : 'h-14 w-14 text-base'} ${
+                        entry.is_you ? 'ring-2 ring-brand ring-offset-2' : ''
+                    }`}
+                >
                     {initials(entry.name)}
                 </span>
                 <span
                     className={`absolute -bottom-1.5 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white text-xs font-extrabold text-white ${
-                        entry.place === 1 ? 'bg-amber-400' : entry.place === 2 ? 'bg-neutral-400' : 'bg-orange-400'
+                        entry.rank === 1 ? 'bg-amber-400' : entry.rank === 2 ? 'bg-neutral-400' : 'bg-orange-400'
                     }`}
                 >
-                    {entry.place}
+                    {entry.rank}
                 </span>
             </div>
-            <p className="max-w-full truncate text-sm font-semibold text-neutral-900">{entry.name}</p>
+            <p className="max-w-full truncate text-sm font-semibold text-neutral-900">{entry.is_you ? t('You') : shortName(entry.name)}</p>
             <div className={`flex w-full flex-col items-center justify-start rounded-t-xl pt-2.5 ${barHeight} ${first ? 'bg-neutral-900' : 'bg-neutral-100'}`}>
                 <span className={`text-sm font-extrabold tabular-nums ${first ? 'text-white' : 'text-neutral-900'}`}>
                     {entry.points.toLocaleString(locale)}
@@ -104,19 +67,47 @@ function PodiumSpot({ entry, order }) {
     );
 }
 
-export default function Leaderboard() {
+function RankRow({ row, index }) {
+    const t = useTrans();
+    const locale = useLocale();
+
+    return (
+        <li className={`flex items-center gap-3 px-3 py-3 ${row.is_you ? '-mx-2 rounded-xl bg-rose-50/60 px-5' : ''}`}>
+            <span className="w-8 shrink-0 text-center text-sm font-bold tabular-nums text-neutral-400">{row.rank.toLocaleString(locale)}</span>
+            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${ROW_COLORS[index % ROW_COLORS.length]}`}>
+                {initials(row.name)}
+            </span>
+            <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold text-neutral-900">{row.is_you ? t('You') : shortName(row.name)}</p>
+                <p className="truncate text-xs text-neutral-500">
+                    {t(':accuracy% accuracy · :streak-day streak', { accuracy: row.accuracy, streak: row.streak })}
+                </p>
+            </div>
+            <span className="shrink-0 text-sm font-extrabold tabular-nums text-neutral-900">{row.points.toLocaleString(locale)}</span>
+        </li>
+    );
+}
+
+export default function Leaderboard({ boards }) {
     const t = useTrans();
     const locale = useLocale();
     const [period, setPeriod] = useState('week');
-    const board = PERIODS[period];
-    const topPercent = Math.max(1, Math.ceil((board.you.rank / board.total) * 100));
+    const board = boards[period];
+    const { you } = board;
+    const topPercent = Math.max(1, Math.ceil((you.rank / board.total) * 100));
+    const ahead = board.around.find((row) => row.rank === you.rank - 1);
+    const players = board.top.filter((row) => row.points > 0 || row.is_you);
+    const podium = players.length >= 3 ? players.slice(0, 3) : [];
+    const rows = players.slice(podium.length);
+    const youInTop = players.some((row) => row.is_you);
+    const aroundYou = youInTop ? [] : board.around.filter((row) => row.rank > players.length);
 
     return (
         <AppShell eyebrow={t('Member')} title={t('Leaderboard')} intro={t('See how your practice stacks up against other members.')}>
             <Head title={t('Leaderboard')} />
 
             <div className="mb-6 grid grid-cols-2 gap-2 sm:inline-flex sm:gap-0 sm:rounded-xl sm:bg-neutral-100 sm:p-1">
-                {Object.entries(PERIODS).map(([key, value]) => (
+                {Object.entries(PERIOD_LABELS).map(([key, label]) => (
                     <button
                         key={key}
                         type="button"
@@ -125,7 +116,7 @@ export default function Leaderboard() {
                             period === key ? 'bg-brand text-white shadow-sm' : 'bg-neutral-100 text-neutral-500 hover:text-neutral-900 sm:bg-transparent'
                         }`}
                     >
-                        {t(value.label)}
+                        {t(label)}
                     </button>
                 ))}
             </div>
@@ -133,14 +124,21 @@ export default function Leaderboard() {
             <div className="mb-6 flex items-center gap-4 rounded-2xl bg-neutral-900 p-4 text-white sm:gap-6 sm:p-6">
                 <div className="flex shrink-0 flex-col items-start text-left">
                     <span className="text-[10px] font-semibold uppercase tracking-wide text-white/60 sm:text-[11px]">{t('Your rank')}</span>
-                    <span className="text-2xl font-extrabold tabular-nums sm:text-3xl">#{board.you.rank.toLocaleString(locale)}</span>
+                    <span className="text-2xl font-extrabold tabular-nums sm:text-3xl">#{you.rank.toLocaleString(locale)}</span>
                     <span className="text-[11px] text-white/60 sm:text-xs">{t('of :total', { total: board.total.toLocaleString(locale) })}</span>
                 </div>
                 <div className="h-12 w-px shrink-0 bg-white/15 sm:h-14" />
                 <div className="flex min-w-0 flex-1 flex-col items-start gap-1 text-left">
-                    <span className="text-sm font-extrabold tabular-nums sm:text-base">{t(':points pts', { points: board.you.points.toLocaleString(locale) })}</span>
+                    <span className="text-sm font-extrabold tabular-nums sm:text-base">{t(':points pts', { points: you.points.toLocaleString(locale) })}</span>
                     <span className="truncate text-xs text-white/70 sm:text-sm">
-                        {t(':points pts to pass :name', { points: board.ahead.pointsToPass.toLocaleString(locale), name: board.ahead.name })}
+                        {ahead
+                            ? t(':points pts to pass :name', {
+                                  points: (ahead.points - you.points + 1).toLocaleString(locale),
+                                  name: shortName(ahead.name),
+                              })
+                            : you.points > 0
+                              ? t("You're in the lead")
+                              : t('Play a quiz to get on the board')}
                     </span>
                     <span className="mt-1 rounded-full bg-white/10 px-2.5 py-0.5 text-[10px] font-bold sm:text-[11px]">{t('Top :percent%', { percent: topPercent })}</span>
                 </div>
@@ -148,32 +146,35 @@ export default function Leaderboard() {
 
             <div className="mb-3 flex items-baseline justify-between">
                 <h2 className="text-lg font-bold text-neutral-900">{t('Top players')}</h2>
-                <span className="text-sm text-neutral-500">{t('Top :count', { count: 50 })}</span>
+                <span className="text-sm text-neutral-500">{t('Top :count', { count: board.top.length })}</span>
             </div>
 
-            <div className="mb-4 flex items-end gap-3">
-                <PodiumSpot entry={board.podium[1]} order={1} />
-                <PodiumSpot entry={board.podium[0]} order={2} />
-                <PodiumSpot entry={board.podium[2]} order={3} />
-            </div>
+            {podium.length === 3 && (
+                <div className="mb-4 flex items-end gap-3">
+                    <PodiumSpot entry={podium[1]} order={1} />
+                    <PodiumSpot entry={podium[0]} order={2} />
+                    <PodiumSpot entry={podium[2]} order={3} />
+                </div>
+            )}
 
-            <ul className="divide-y divide-black/5 rounded-2xl border border-black/5 bg-white px-2">
-                {board.rows.map((row, index) => (
-                    <li key={row.rank} className="flex items-center gap-3 px-3 py-3">
-                        <span className="w-6 shrink-0 text-center text-sm font-bold tabular-nums text-neutral-400">{row.rank}</span>
-                        <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-bold ${ROW_COLORS[index % ROW_COLORS.length]}`}>
-                            {initials(row.name)}
-                        </span>
-                        <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-semibold text-neutral-900">{row.name}</p>
-                            <p className="truncate text-xs text-neutral-500">
-                                {t(':accuracy% accuracy · :streak-day streak', { accuracy: row.accuracy, streak: row.streak })}
-                            </p>
-                        </div>
-                        <span className="shrink-0 text-sm font-extrabold tabular-nums text-neutral-900">{row.points.toLocaleString(locale)}</span>
-                    </li>
-                ))}
-            </ul>
+            {rows.length > 0 && (
+                <ul className="divide-y divide-black/5 rounded-2xl border border-black/5 bg-white px-2">
+                    {rows.map((row, index) => (
+                        <RankRow key={row.id} row={row} index={index} />
+                    ))}
+                </ul>
+            )}
+
+            {aroundYou.length > 0 && (
+                <>
+                    <p className="my-3 text-center text-sm font-bold tracking-widest text-neutral-300">···</p>
+                    <ul className="divide-y divide-black/5 rounded-2xl border border-black/5 bg-white px-2">
+                        {aroundYou.map((row, index) => (
+                            <RankRow key={row.id} row={row} index={index} />
+                        ))}
+                    </ul>
+                </>
+            )}
         </AppShell>
     );
 }

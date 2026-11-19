@@ -2,6 +2,7 @@ import AvatarBadge from '@/Components/AvatarBadge';
 import { Link, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
+import { useMemberAppearance } from '@/lib/preferences';
 
 function LogOutIcon(props) {
     return (
@@ -70,17 +71,19 @@ const adminNav = [
         route: 'admin.audio-quiz.index',
         alsoCurrent: ['admin.audio-quiz.show', 'admin.audio-quiz.lesson', 'admin.quizzes.index', 'admin.quizzes.edit', 'admin.quizzes.create'],
     },
+    { label: tk('Support inbox'), icon: 'notifications', route: 'admin.support.index', alsoCurrent: ['admin.support.show'] },
     { label: tk('Question reports'), icon: 'support', route: 'admin.question-reports.index' },
     { label: tk('Users'), icon: 'account', route: 'admin.users.index', alsoCurrent: ['admin.users.show'] },
 ];
 
 export default function AppShell({ title, eyebrow, intro, action, children, headerClassName = 'flex', breadcrumbTitle }) {
     const t = useTrans();
-    const { auth, flash } = usePage().props;
+    const { auth, flash, unreadNotifications, openSupportRequests } = usePage().props;
     const user = auth.user;
     const isAdmin = user.role === 'admin';
     const [open, setOpen] = useState(false);
     const [loggingOut, setLoggingOut] = useState(false);
+    useMemberAppearance();
 
     // Lets the nav items animate in once, right after the shell mounts, instead of
     // appearing fully formed — a small touch that makes each page load feel considered.
@@ -96,6 +99,7 @@ export default function AppShell({ title, eyebrow, intro, action, children, head
         current: item.route
             ? route().current(item.route) || (item.alsoCurrent ?? []).some((name) => route().current(name))
             : false,
+        badge: { notifications: unreadNotifications, 'admin.support.index': openSupportRequests }[item.route] ?? 0,
         index,
     }));
     const topItems = items.filter((item) => !item.pinned);
@@ -338,7 +342,12 @@ function NavRow({ item, mounted, onNavigate }) {
             >
                 <NavIcon name={item.icon} />
             </span>
-            {t(item.label)}
+            <span className="flex-1">{t(item.label)}</span>
+            {item.badge > 0 && (
+                <span className="min-w-[20px] rounded-full bg-brand px-1.5 py-0.5 text-center text-[11px] font-bold tabular-nums text-white">
+                    {item.badge > 99 ? '99+' : item.badge}
+                </span>
+            )}
         </Link>
     );
 }

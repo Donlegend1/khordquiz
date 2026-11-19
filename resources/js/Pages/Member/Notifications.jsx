@@ -1,26 +1,10 @@
 import AppShell from '@/Layouts/AppShell';
-import { Head } from '@inertiajs/react';
-import { useMemo, useState } from 'react';
+import { Head, router } from '@inertiajs/react';
+import { useEffect, useMemo, useState } from 'react';
 import { tk, useTrans } from '@/lib/i18n';
 
 const HOUR = 60 * 60 * 1000;
 const DAY = 24 * HOUR;
-
-// Sample activity, same idea as the mobile app's own Notifications screen (see
-// src/lib/notification-history.ts there): a sample feed so the page isn't empty,
-// since there's no notifications table on the web yet. Read state here is local
-// to this visit only.
-// title/body are translation keys; `params` fills their placeholders (names,
-// quiz titles and scores stay as-is).
-const SAMPLE_NOTIFICATIONS = [
-    { id: 'n1', kind: 'perfect', title: tk('Perfect score!'), body: tk('You scored 100% on :quiz. Keep that ear sharp!'), params: { quiz: 'Relative Tone Pitch #1' }, at: Date.now() - 2 * HOUR, read: false },
-    { id: 'n2', kind: 'challenge', title: tk(':first beat your score'), body: tk(':name scored :their on :quiz, beating your :yours. Fancy a rematch?'), params: { first: 'Ada', name: 'Ada O.', their: '19/25', quiz: 'Diatonic Intervals', yours: '17/25' }, at: Date.now() - 1 * DAY, read: false },
-    { id: 'n3', kind: 'friend-perfect', title: tk(':first scored 100%!'), body: tk(':name just aced :quiz with a perfect score. Think you can match that?'), params: { first: 'Tunde', name: 'Tunde B.', quiz: 'Diatonic Intervals' }, at: Date.now() - 2 * DAY, read: false },
-    { id: 'n4', kind: 'friend-perfect', title: tk(':first scored 100%!'), body: tk(':name just aced :quiz with a perfect score. Think you can match that?'), params: { first: 'Chioma', name: 'Chioma A.', quiz: 'Secondary 7th Chords · Level 2' }, at: Date.now() - 2 * DAY - HOUR, read: false },
-    { id: 'n5', kind: 'perfect', title: tk('Perfect score!'), body: tk('You scored 100% on :quiz. Keep that ear sharp!'), params: { quiz: 'C Root Position' }, at: Date.now() - 3 * DAY, read: true },
-    { id: 'n6', kind: 'payment', title: tk('Your trial is ending soon'), body: tk('Your free trial ends in :days days. :plan (:price) starts after that — cancel anytime in Account.'), params: { days: 2, plan: 'Premium Monthly', price: '$9.99' }, at: Date.now() - 4 * DAY, read: false },
-    { id: 'n7', kind: 'challenge', title: tk("It's a draw!"), body: tk('You and :name both scored :score on :quiz.'), params: { name: 'David', score: '20/25', quiz: '3-Note Stepwise' }, at: Date.now() - 5 * DAY, read: true },
-];
 
 const BADGES = {
     challenge: { bg: 'bg-rose-50', color: 'text-brand' },
@@ -28,6 +12,9 @@ const BADGES = {
     general: { bg: 'bg-neutral-100', color: 'text-neutral-500' },
     payment: { bg: 'bg-sky-50', color: 'text-sky-600' },
     perfect: { bg: 'bg-amber-50', color: 'text-amber-700' },
+    reminder: { bg: 'bg-emerald-50', color: 'text-emerald-700' },
+    support: { bg: 'bg-sky-50', color: 'text-sky-600' },
+    streak: { bg: 'bg-orange-50', color: 'text-amber-700' },
 };
 
 const BUCKETS = [tk('Today'), tk('Yesterday'), tk('This Week'), tk('Earlier')];
@@ -70,6 +57,25 @@ function BadgeIcon({ kind, className }) {
                     <path d="M18 14l.9 2 2.1.9-2.1.9-.9 2-.9-2L15 16.9l2.1-.9z" />
                 </svg>
             );
+        case 'support':
+            return (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                    <path d="M4 5.5h16v10H9l-5 4z" />
+                </svg>
+            );
+        case 'reminder':
+            return (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                    <circle cx="12" cy="12" r="8.5" />
+                    <path d="M12 7.5V12l3 2" />
+                </svg>
+            );
+        case 'streak':
+            return (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+                    <path d="M12 2.5c1 3 .5 4.5-1 6-2 2-3 3.8-3 6a4 4 0 008 0c0-1.3-.5-2-1-2.8.9.4 2 1.6 2 3.8a5 5 0 01-10 0c0-4.2 3-6 4-8.2.6-1.3.7-2.8 1-4.8z" />
+                </svg>
+            );
         case 'payment':
             return (
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -96,9 +102,16 @@ function BellOffIcon(props) {
     );
 }
 
-export default function Notifications() {
+// The server sends ISO timestamps; the helpers above work in milliseconds.
+function withTimestamps(items) {
+    return items.map((item) => ({ ...item, at: Date.parse(item.at) }));
+}
+
+export default function Notifications({ notifications: initialNotifications }) {
     const t = useTrans();
-    const [notifications, setNotifications] = useState(SAMPLE_NOTIFICATIONS);
+    const [notifications, setNotifications] = useState(() => withTimestamps(initialNotifications));
+
+    useEffect(() => setNotifications(withTimestamps(initialNotifications)), [initialNotifications]);
     const hasUnread = notifications.some((item) => !item.read);
 
     const groups = useMemo(
@@ -110,12 +123,27 @@ export default function Notifications() {
         [notifications],
     );
 
+    // Updated on screen straight away; the server request just persists it.
     function markAllRead() {
         setNotifications((current) => current.map((item) => (item.read ? item : { ...item, read: true })));
+        router.post(route('notifications.read-all'), {}, { preserveScroll: true, preserveState: true });
     }
 
-    function markRead(id) {
-        setNotifications((current) => current.map((item) => (item.id === id ? { ...item, read: true } : item)));
+    // Notifications about something specific (e.g. a support reply) open it.
+    function open(item) {
+        if (!item.read) {
+            setNotifications((current) => current.map((entry) => (entry.id === item.id ? { ...entry, read: true } : entry)));
+            router.patch(route('notifications.read', item.id), {}, {
+                preserveScroll: true,
+                preserveState: true,
+                onFinish: () => item.url && router.visit(item.url),
+            });
+            return;
+        }
+
+        if (item.url) {
+            router.visit(item.url);
+        }
     }
 
     return (
@@ -155,7 +183,7 @@ export default function Notifications() {
                                         <button
                                             key={item.id}
                                             type="button"
-                                            onClick={() => markRead(item.id)}
+                                            onClick={() => open(item)}
                                             className={`relative flex w-full items-start gap-3 rounded-2xl border px-4 py-3.5 text-left transition-colors duration-150 ${
                                                 item.read ? 'border-black/5 bg-white hover:bg-neutral-50' : 'border-rose-100 bg-rose-50/60 hover:bg-rose-50'
                                             }`}

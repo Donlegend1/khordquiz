@@ -56,9 +56,14 @@ class KingsleyKhordPianoSyncTest extends TestCase
         $this->assertTrue($grace->hasQuizAccess());
         $this->assertSame('yearly', Subscription::forUser($grace)->plan_id);
         $this->assertSame(Subscription::PROVIDER_KKP, Subscription::forUser($grace)->provider);
+        $this->assertSame('yearly', $grace->plan_choice);
+        $this->assertNotNull($grace->plan_started_at);
+        $this->assertTrue($grace->plan_expires_at->isSameDay(now()->addMonths(6)));
 
         $tolu = User::query()->where('email', 'tolu@example.com')->firstOrFail();
         $this->assertSame('lifetime', Subscription::forUser($tolu)->plan_id);
+        $this->assertSame('lifetime', $tolu->plan_choice);
+        $this->assertNull($tolu->plan_expires_at);
 
         Notification::assertSentTo([$grace, $tolu], KingsleyKhordPianoInvitation::class);
     }
@@ -159,6 +164,7 @@ class KingsleyKhordPianoSyncTest extends TestCase
         $this->assertSame('monthly', $subscription->plan_id);
         $this->assertSame('expired', $subscription->status);
         $this->assertFalse($lapsed->hasQuizAccess());
+        $this->assertNull($lapsed->plan_choice);
         Notification::assertNotSentTo($lapsed, KingsleyKhordPianoInvitation::class);
 
         // Existing account is matched, not duplicated, and gets the membership.
@@ -169,7 +175,7 @@ class KingsleyKhordPianoSyncTest extends TestCase
 
     public function test_members_missing_from_the_list_lose_access_but_paying_members_keep_theirs(): void
     {
-        $lapsed = User::factory()->create(['kkp_member_id' => '5']);
+        $lapsed = User::factory()->create(['kkp_member_id' => '5', 'plan_choice' => 'yearly', 'plan_started_at' => now()->subYear(), 'plan_expires_at' => now()->addMonth()]);
         Subscription::forUser($lapsed)->update(['access' => 'paid', 'plan_id' => 'yearly', 'status' => 'active', 'provider' => Subscription::PROVIDER_KKP]);
 
         $payer = User::factory()->subscribed('monthly')->create(['email' => 'payer@example.com']);
@@ -179,6 +185,8 @@ class KingsleyKhordPianoSyncTest extends TestCase
         $this->artisan('kkp:sync')->assertSuccessful();
 
         $this->assertFalse($lapsed->fresh()->hasQuizAccess());
+        $this->assertNull($lapsed->fresh()->plan_choice);
+        $this->assertNull($lapsed->fresh()->plan_expires_at);
         $this->assertSame('Stripe', Subscription::forUser($payer)->provider);
         $this->assertSame('monthly', Subscription::forUser($payer)->plan_id);
         // Existing accounts aren't re-invited.

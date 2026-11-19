@@ -126,7 +126,7 @@ export default function PitchKeyboardChoices({ answered, correctAnswer, value, o
                         }
                         gestureRef.current = null;
                     }}
-                    className="pitch-keyboard-scroll min-w-0 flex-1 snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-2xl border border-black/10 bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
+                    className="piano-keys pitch-keyboard-scroll min-w-0 flex-1 snap-x snap-mandatory overflow-x-auto overscroll-x-contain rounded-2xl border border-black/10 bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-900"
                 >
                     <div className="flex">
                         {octaves.map((octave, pageIndex) => (

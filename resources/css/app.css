@@ -61,3 +61,82 @@
     cursor: default;
     opacity: 0.4;
 }
+
+/*
+ * Dark appearance (Settings → Appearance). The app's components are styled
+ * with Tailwind's neutral greys and pastel tints rather than dark: variants,
+ * so the dark theme remaps those utilities while <html> has the "dark" class
+ * (set by AppShell from the member's preference). Brand colours, white text
+ * on brand/dark buttons and the already-dark hero cards are left alone.
+ */
+html.dark { color-scheme: dark; background-color: #0f0f10; }
+html.dark body { background-color: #0f0f10; }
+
+/* Surfaces */
+html.dark .bg-\[\#F6F1EC\] { background-color: #0f0f10; }
+html.dark .bg-white, html.dark .hover\:bg-white:hover, html.dark .group:hover .group-hover\:bg-white { background-color: #18181a; }
+html.dark .bg-neutral-50, html.dark .hover\:bg-neutral-50:hover, html.dark .bg-neutral-50\/80 { background-color: #1f1f22; }
+html.dark .bg-neutral-100, html.dark .hover\:bg-neutral-100:hover { background-color: #27272a; }
+html.dark .bg-neutral-200, html.dark .hover\:bg-neutral-200:hover { background-color: #323236; }
+html.dark .bg-neutral-900 { background-color: #232326; }
+html.dark .bg-white\/90, html.dark .bg-white\/95, html.dark .bg-white\/80 { background-color: rgb(24 24 26 / 0.92); }
+
+/* Text */
+html.dark .text-neutral-900, html.dark .hover\:text-neutral-900:hover { color: #f4f4f5; }
+html.dark .text-neutral-800 { color: #e4e4e7; }
+html.dark .text-neutral-700, html.dark .hover\:text-neutral-700:hover, html.dark .group:hover .group-hover\:text-neutral-700 { color: #d4d4d8; }
+html.dark .text-neutral-600 { color: #a1a1aa; }
+html.dark .text-neutral-500 { color: #8b8b93; }
+html.dark .text-neutral-400 { color: #71717a; }
+html.dark .text-neutral-300 { color: #52525b; }
+
+/* Borders, dividers, rings */
+html.dark .border-black\/5, html.dark .hover\:border-black\/5:hover { border-color: rgb(255 255 255 / 0.07); }
+html.dark .border-black\/10 { border-color: rgb(255 255 255 / 0.1); }
+html.dark .divide-black\/5 > :not([hidden]) ~ :not([hidden]) { border-color: rgb(255 255 255 / 0.07); }
+html.dark .divide-neutral-100 > :not([hidden]) ~ :not([hidden]) { border-color: #27272a; }
+html.dark .border-neutral-100 { border-color: #27272a; }
+html.dark .border-neutral-200 { border-color: #323236; }
+html.dark .border-neutral-300 { border-color: #3f3f46; }
+html.dark .border-neutral-900 { border-color: #e4e4e7; }
+html.dark .border-white { border-color: #18181a; }
+html.dark .ring-neutral-900\/10, html.dark .ring-black\/5 { --tw-ring-color: rgb(255 255 255 / 0.1); }
+
+/* Pastel tints become translucent washes; their text lightens to stay readable */
+html.dark .bg-rose-50, html.dark .hover\:bg-rose-50:hover, html.dark .bg-red-50 { background-color: rgb(244 63 94 / 0.14); }
+html.dark .bg-rose-50\/60 { background-color: rgb(244 63 94 / 0.09); }
+html.dark .bg-emerald-50, html.dark .bg-green-50 { background-color: rgb(16 185 129 / 0.14); }
+html.dark .hover\:bg-emerald-100:hover { background-color: rgb(16 185 129 / 0.22); }
+html.dark .bg-amber-50, html.dark .bg-orange-50 { background-color: rgb(245 158 11 / 0.14); }
+html.dark .bg-sky-50 { background-color: rgb(14 165 233 / 0.14); }
+html.dark .bg-violet-50 { background-color: rgb(139 92 246 / 0.16); }
+html.dark .bg-indigo-50 { background-color: rgb(99 102 241 / 0.16); }
+html.dark .text-emerald-600, html.dark .text-emerald-700, html.dark .text-emerald-800, html.dark .text-green-600, html.dark .text-green-700 { color: #34d399; }
+html.dark .text-amber-600, html.dark .text-amber-700, html.dark .text-amber-800 { color: #fbbf24; }
+html.dark .text-rose-700, html.dark .text-rose-800, html.dark .text-red-600, html.dark .text-red-700 { color: #fb7185; }
+html.dark .text-sky-600, html.dark .text-sky-700 { color: #38bdf8; }
+html.dark .text-violet-600, html.dark .text-violet-700 { color: #a78bfa; }
+html.dark .text-indigo-700 { color: #818cf8; }
+html.dark .border-emerald-200, html.dark .border-green-200 { border-color: rgb(16 185 129 / 0.35); }
+html.dark .border-rose-100, html.dark .border-rose-200 { border-color: rgb(244 63 94 / 0.3); }
+html.dark .border-amber-200 { border-color: rgb(245 158 11 / 0.35); }
+html.dark .border-sky-200 { border-color: rgb(14 165 233 / 0.35); }
+
+/* Form controls (@tailwindcss/forms paints them white) */
+html.dark input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+html.dark select,
+html.dark textarea { background-color: #1f1f22; color: #f4f4f5; border-color: #3f3f46; }
+html.dark input::placeholder, html.dark textarea::placeholder { color: #71717a; }
+html.dark .quiz-audio-timeline { --audio-track: #3f3f46; }
+
+/* Piano keyboards keep real key colours in dark mode: ivory white keys, black black keys. */
+html.dark .piano-keys, html.dark .piano-keys .bg-white { background-color: #ececee; }
+html.dark .piano-keys { border-color: rgb(255 255 255 / 0.12); }
+html.dark .piano-keys .border-neutral-200 { border-color: #c9c9cf; }
+html.dark .piano-keys .bg-neutral-900 { background-color: #111113; }
+html.dark .piano-keys .hover\:bg-neutral-50:hover { background-color: #dcdce0; }
+html.dark .piano-keys .text-neutral-400 { color: #8b8b93; }
+html.dark .piano-keys .text-neutral-600 { color: #52525b; }
+html.dark .piano-keys .text-neutral-300 { color: #d4d4d8; }
+html.dark .piano-keys .bg-amber-100 { background-color: #fef3c7; }
+html.dark .piano-keys .text-amber-700 { color: #b45309; }
