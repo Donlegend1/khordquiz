@@ -23,10 +23,14 @@ class Subscription extends Model
         'trial_used',
         'stripe_customer_id',
         'stripe_subscription_id',
+        'paddle_customer_id',
+        'paddle_subscription_id',
         'current_period_end',
     ];
 
     public const PROVIDER_STRIPE = 'Stripe';
+
+    public const PROVIDER_PADDLE = 'Paddle';
 
     public const PROVIDER_KKP = 'KingsleyKhordPiano';
 

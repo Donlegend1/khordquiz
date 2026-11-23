@@ -134,7 +134,7 @@ function PlanCard({ label, planId, highlight }) {
 
 // Matches the app's own plan-switch flow: moving between Monthly and Yearly is
 // scheduled for the next renewal (nothing charged today), not applied
-// immediately — BillingController::switch changes the Stripe price with no
+// immediately — BillingController::switch changes the Paddle/Stripe price with no
 // proration, so the new price applies from the next invoice.
 function SwitchModal({ planId, currentId, renews, onClose, onConfirm }) {
     const t = useTrans();
@@ -288,7 +288,8 @@ const CANCEL_REASONS = [
 // Two steps: first capture why the member is leaving (premade reasons, so we
 // can see patterns across cancellations), then the existing confirm step.
 // The reason is sent to Stripe as the subscription's cancellation feedback
-// (visible in the Stripe dashboard).
+// (visible in the Stripe dashboard), or logged for Paddle, whose API has no
+// such field.
 function CancelModal({ open, renews, tier, onClose, onConfirm }) {
     const t = useTrans();
     const [step, setStep] = useState('reason');
@@ -393,7 +394,7 @@ function CancelModal({ open, renews, tier, onClose, onConfirm }) {
 }
 
 // Plan picker for members with no plan (or whose plan ended): each option
-// opens Stripe Checkout. Monthly/Yearly start with the free trial if the
+// opens checkout (Paddle). Monthly/Yearly start with the free trial if the
 // member hasn't had one yet.
 function ChoosePlan({ sub, locked, billingAvailable }) {
     const t = useTrans();

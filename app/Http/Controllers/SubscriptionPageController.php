@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Subscription;
 use App\Models\SubscriptionPayment;
 use App\Models\User;
+use App\Services\Billing\PaddleGateway;
 use App\Services\Billing\StripeGateway;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -15,12 +16,12 @@ use Inertia\Response;
 // Account (plan card) and Delete Account (renewal warning).
 class SubscriptionPageController extends Controller
 {
-    public function show(Request $request, StripeGateway $stripe): Response
+    public function show(Request $request, StripeGateway $stripe, PaddleGateway $paddle): Response
     {
         return Inertia::render('Member/Subscription', [
             'subscription' => self::forWeb($request->user()),
             'locked' => $request->boolean('locked') && ! $request->user()->hasQuizAccess(),
-            'billingAvailable' => $stripe->isConfigured(),
+            'billingAvailable' => $paddle->isConfigured() || $stripe->isConfigured(),
         ]);
     }
 
@@ -71,8 +72,8 @@ class SubscriptionPageController extends Controller
             'trial' => $trial,
             'unlocked' => $user->hasQuizAccess(),
             // What the member can do from the web.
-            'manageable' => $provider === Subscription::PROVIDER_STRIPE && $subscription->stripe_subscription_id !== null && $live,
-            'hasBillingPortal' => $subscription->stripe_customer_id !== null,
+            'manageable' => $provider === $subscription->provider && BillingController::hasLiveWebSubscription($subscription) && $live,
+            'hasBillingPortal' => $subscription->paddle_customer_id !== null || $subscription->stripe_customer_id !== null,
             'trialAvailable' => ! $subscription->trial_used && $subscription->access === 'none',
             'history' => SubscriptionPayment::query()
                 ->where('user_id', $user->id)

@@ -7,6 +7,7 @@ namespace App\Models;
 // member — including existing test accounts — out of the app with no way to
 // receive the verification link. Revisit once real mail delivery is set up.
 use App\Role;
+use App\Services\Billing\PaddleGateway;
 use App\Services\Billing\StripeGateway;
 use App\Support\Locales;
 use Database\Factories\UserFactory;
@@ -77,7 +78,7 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->plan_choice !== null && $this->plan_expires_at !== null && $this->plan_expires_at->isPast();
     }
 
-    // Whether this member can play quizzes on the web: a live subscription (Stripe,
+    // Whether this member can play quizzes on the web: a live subscription (Paddle, Stripe,
     // App Store / Google Play via the mobile app, or a Kingsleykhordpiano
     // membership), or a plan an admin assigned by hand. Admins always can.
     public function hasQuizAccess(): bool
@@ -121,12 +122,21 @@ class User extends Authenticatable implements HasLocalePreference
 
     protected static function booted(): void
     {
-        // A deleted account must stop being billed on the web (Stripe). App
-        // Store / Google Play plans can only be cancelled in the store — the
-        // delete screens warn about those.
+        // A deleted account must stop being billed on the web (Paddle, Stripe).
+        // App Store / Google Play plans can only be cancelled in the store —
+        // the delete screens warn about those.
         static::deleting(function (User $user) {
             $subscription = Subscription::query()->where('user_id', $user->id)->first();
             $stripe = app(StripeGateway::class);
+            $paddle = app(PaddleGateway::class);
+
+            if ($subscription?->provider === Subscription::PROVIDER_PADDLE && $subscription->paddle_subscription_id && $subscription->status !== 'expired' && $paddle->isConfigured()) {
+                try {
+                    $paddle->cancelSubscription($subscription->paddle_subscription_id, 'immediately');
+                } catch (\Throwable $e) {
+                    Log::error('Could not cancel Paddle billing for a deleted account.', ['user' => $user->id, 'error' => $e->getMessage()]);
+                }
+            }
 
             if ($subscription?->provider === Subscription::PROVIDER_STRIPE && $subscription->stripe_subscription_id && $stripe->isConfigured()) {
                 try {

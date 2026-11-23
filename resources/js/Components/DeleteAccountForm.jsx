@@ -63,7 +63,7 @@ export default function DeleteAccountForm({ sub, user }) {
     // member must type), so it's rendered between the translated halves.
     const [confirmBefore, confirmAfter = ''] = t('Type :word to confirm').split(':word');
 
-    // Stripe (web) billing is cancelled automatically when the account is
+    // Web billing (Paddle/Stripe) is cancelled automatically when the account is
     // deleted; App Store / Google Play subscriptions can only be cancelled in
     // the store, so warn about those.
     const plan = PLAN_INFO[sub?.planId];

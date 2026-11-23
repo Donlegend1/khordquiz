@@ -42,6 +42,26 @@ return [
         ],
     ],
 
+    // Web billing through Paddle Billing (used for new purchases when set; any
+    // existing Stripe members keep being billed by Stripe). Create one Price per
+    // plan in Paddle (monthly and yearly recurring, lifetime one-time). The free
+    // trial (App\Support\Plans::TRIAL_DAYS, once per member) is applied at
+    // checkout, whether or not the Paddle price has a trial of its own.
+    // Webhook endpoint: /paddle/webhook — subscribe it to transaction.completed
+    // and every subscription.* event.
+    'paddle' => [
+        // 'sandbox' while testing, 'production' for live payments.
+        'environment' => env('PADDLE_ENVIRONMENT', 'sandbox'),
+        'client_token' => env('PADDLE_CLIENT_TOKEN'),
+        'api_key' => env('PADDLE_API_KEY'),
+        'webhook_secret' => env('PADDLE_WEBHOOK_SECRET'),
+        'prices' => [
+            'monthly' => env('PADDLE_PRICE_MONTHLY'),
+            'yearly' => env('PADDLE_PRICE_YEARLY'),
+            'lifetime' => env('PADDLE_PRICE_LIFETIME'),
+        ],
+    ],
+
     // Kingsleykhordpiano members get KhordQuiz included. See
     // App\Services\KingsleyKhordPiano\Client for the response shape expected.
     'kingsleykhordpiano' => [

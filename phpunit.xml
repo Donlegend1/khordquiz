@@ -30,6 +30,9 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="SESSION_DRIVER" value="array"/>
+        <env name="PADDLE_API_KEY" value=""/>
+        <env name="PADDLE_CLIENT_TOKEN" value=""/>
+        <env name="PADDLE_WEBHOOK_SECRET" value=""/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>

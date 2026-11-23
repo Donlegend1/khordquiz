@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 // field anywhere in the schema, so that would be a guess, not a fact (see the Filters
 // dropdown's own "Free trials" option, which has the same honest caveat).
 const PLAN_LABELS = { monthly: 'Monthly', yearly: 'Yearly', lifetime: 'Lifetime' };
-const PAYMENT_LABELS = { stripe: 'Stripe', paypal: 'PayPal' };
+const PAYMENT_LABELS = { paddle: 'Paddle', stripe: 'Stripe', paypal: 'PayPal' };
 
 function initials(name) {
     return name

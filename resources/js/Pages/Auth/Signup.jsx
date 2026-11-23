@@ -42,24 +42,13 @@ function CheckCircleIcon(props) {
 
 // Simplified, brand-appropriate marks — not the official logos — matching
 // how StoreBadges.jsx already represents Apple/Google this way.
-function StripeIcon(props) {
+function CardIcon(props) {
     return (
         <svg viewBox="0 0 24 24" {...props}>
-            <rect width="24" height="24" rx="6" fill="#635BFF" />
-            <path
-                fill="#fff"
-                d="M11.1 9.6c0-.6.5-.8 1.3-.8.9 0 2.2.3 3.1.8V7c-1-.4-2-.6-3.1-.6-2.5 0-4.2 1.3-4.2 3.5 0 3.4 4.7 2.9 4.7 4.3 0 .6-.5.8-1.4.8-1 0-2.5-.4-3.5-1v2.7c1.1.5 2.2.7 3.5.7 2.6 0 4.4-1.3 4.4-3.5-.1-3.7-4.8-3-4.8-4.3z"
-            />
-        </svg>
-    );
-}
-
-function PayPalIcon(props) {
-    return (
-        <svg viewBox="0 0 24 24" {...props}>
-            <rect width="24" height="24" rx="6" fill="#003087" />
-            <path fill="#009CDE" d="M9.6 17.5l.5-3H12c2.9 0 5.1-1.2 5.7-4.5.1-.4.1-.8.1-1.1-.9.5-2 .7-3.2.7H11l-1.4 7.9z" />
-            <path fill="#fff" d="M8.3 6.5h3.2c1.7 0 3 .4 3.5 1.5.3.6.3 1.3.1 2.2-.6 3.3-2.8 4.5-5.7 4.5H8l-.9 5H5l2-11.5c.1-.4.5-.7.9-.7h.4z" />
+            <rect width="24" height="24" rx="6" fill="#111827" />
+            <rect x="5" y="7.5" width="14" height="9.5" rx="1.6" fill="none" stroke="#fff" strokeWidth="1.5" />
+            <path d="M5 10.5h14" stroke="#fff" strokeWidth="1.8" />
+            <path d="M7.5 14.2h3" stroke="#fff" strokeWidth="1.4" strokeLinecap="round" />
         </svg>
     );
 }
@@ -76,12 +65,9 @@ function DiamondIcon(props) {
 
 const PLAN_ORDER = ['monthly', 'yearly', 'lifetime'];
 
-// Stripe takes the payment (Checkout opens right after the account is created).
-// PayPal is shown but not available yet.
-const PAYMENT_METHODS = [
-    { id: 'stripe', label: 'Stripe', icon: StripeIcon },
-    { id: 'paypal', label: 'PayPal', icon: PayPalIcon, comingSoon: true },
-];
+// Paddle takes the payment (its secure checkout opens right after the account
+// is created) and offers card, PayPal and wallets there — so there's one choice.
+const PAYMENT_METHODS = [{ id: 'paddle', label: 'Card, PayPal & more', icon: CardIcon }];
 
 // Renders a translated sentence whose `:name` placeholders are JSX elements (links),
 // so the word order can follow the translation.
@@ -103,7 +89,7 @@ export default function Signup({ plan: initialPlan }) {
         password: '',
         terms: false,
         plan: initialPlan ?? 'yearly',
-        payment_method: 'stripe',
+        payment_method: 'paddle',
     });
 
     const plan = PLAN_INFO[data.plan];

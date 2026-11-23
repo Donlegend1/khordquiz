@@ -9,6 +9,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LeaderboardController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaddleWebhookController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgressController;
 use App\Http\Controllers\QuestionReportController;
@@ -156,9 +157,10 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Web billing (Stripe).
+// Web billing (Paddle, or Stripe for members it already bills).
 Route::middleware(['auth', 'verified'])->prefix('billing')->name('billing.')->group(function () {
     Route::post('/checkout/{plan}', [BillingController::class, 'checkout'])->name('checkout');
+    Route::get('/pay', [BillingController::class, 'pay'])->name('pay');
     Route::get('/success', [BillingController::class, 'success'])->name('success');
     Route::post('/portal', [BillingController::class, 'portal'])->name('portal');
     Route::post('/cancel', [BillingController::class, 'cancel'])->name('cancel');
@@ -170,3 +172,11 @@ Route::middleware(['auth', 'verified'])->prefix('billing')->name('billing.')->gr
 Route::post('/stripe/webhook', StripeWebhookController::class)
     ->withoutMiddleware([ValidateCsrfToken::class])
     ->name('stripe.webhook');
+
+// Paddle calls this directly — signature-checked instead of CSRF-protected.
+// Both spellings are accepted so the URL works however it's typed in Paddle.
+Route::post('/paddle/webhook', PaddleWebhookController::class)
+    ->withoutMiddleware([ValidateCsrfToken::class])
+    ->name('paddle.webhook');
+Route::post('/Paddle/webhook', PaddleWebhookController::class)
+    ->withoutMiddleware([ValidateCsrfToken::class]);

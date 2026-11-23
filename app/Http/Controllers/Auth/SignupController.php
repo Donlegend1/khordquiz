@@ -6,9 +6,9 @@ use App\Http\Controllers\BillingController;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Role;
+use App\Services\Billing\PaddleGateway;
 use App\Services\Billing\StripeGateway;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,15 +21,16 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 // Reached from the pricing section's plan buttons rather than a bare "/register"
 // link — same account creation as RegisteredUserController, then straight on to
-// Stripe Checkout for the picked plan (7-day free trial for Monthly/Yearly).
-// plan_choice records what they picked; access comes from the Subscription row
-// the checkout creates. PayPal isn't wired up yet.
-// Without Stripe configured (local dev), it skips payment and goes to onboarding.
+// checkout (Paddle, or Stripe if only that is set up) for the picked plan
+// (7-day free trial for Monthly/Yearly). plan_choice records what they picked;
+// access comes from the Subscription row the checkout creates.
+// With no payment provider configured (local dev), it skips payment and goes
+// to onboarding.
 class SignupController extends Controller
 {
     private const PLANS = ['monthly', 'yearly', 'lifetime'];
 
-    private const PAYMENT_METHODS = ['stripe'];
+    private const PAYMENT_METHODS = ['paddle', 'stripe'];
 
     /**
      * Display the signup view, pre-selecting the plan from the pricing page.
@@ -48,7 +49,7 @@ class SignupController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request, StripeGateway $stripe, BillingController $billing): SymfonyResponse
+    public function store(Request $request, PaddleGateway $paddle, StripeGateway $stripe, BillingController $billing): SymfonyResponse
     {
         $data = $request->validate([
             'first_name' => 'required|string|max:255',
@@ -76,7 +77,7 @@ class SignupController extends Controller
 
         Auth::login($user);
 
-        if ($stripe->isConfigured()) {
+        if ($paddle->isConfigured() || $stripe->isConfigured()) {
             return $billing->startCheckout($user, $data['plan']);
         }
 
