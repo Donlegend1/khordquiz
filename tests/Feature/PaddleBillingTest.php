@@ -268,6 +268,31 @@ class PaddleBillingTest extends TestCase
         $this->assertSame('monthly', $this->sentTransaction()['custom_data']['plan_id']);
     }
 
+    public function test_locally_every_plan_checks_out_with_the_test_price_but_keeps_its_plan(): void
+    {
+        config(['services.paddle.local_test_price' => 'pri_test_dollar']);
+        $user = User::factory()->create();
+        Subscription::forUser($user)->update(['paddle_customer_id' => 'ctm_test']);
+
+        $sync = app(PaddleSubscriptionSync::class);
+
+        // Not local (tests run as "testing"): the real prices are used.
+        $this->assertSame(['price_id' => 'pri_lifetime', 'quantity' => 1], $sync->transactionItem('lifetime', false));
+
+        $this->app['env'] = 'local';
+        $this->assertSame(['price_id' => 'pri_test_dollar', 'quantity' => 1], $sync->transactionItem('lifetime', false));
+        $this->assertSame('pri_test_dollar', $sync->priceFor('monthly'));
+
+        $sync->completeTransaction(array_merge(
+            $this->paddleTransaction('txn_test', $user, 'pri_test_dollar', 100),
+            ['custom_data' => ['user_id' => (string) $user->id, 'plan_id' => 'lifetime']],
+        ));
+
+        $subscription = Subscription::forUser($user);
+        $this->assertSame('lifetime', $subscription->plan_id);
+        $this->assertSame('$1.00', SubscriptionPayment::query()->sole()->amount);
+    }
+
     /**
      * A tiny stand-in for the Paddle API: just the endpoints billing uses.
      */

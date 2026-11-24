@@ -60,6 +60,10 @@ return [
             'yearly' => env('PADDLE_PRICE_YEARLY'),
             'lifetime' => env('PADDLE_PRICE_LIFETIME'),
         ],
+        // Only when APP_ENV=local: every plan checks out with this one cheap
+        // test price instead, so real payments can be tried for $1. The plan
+        // the member picked is still tracked (via the transaction's custom_data).
+        'local_test_price' => env('PADDLE_LOCAL_TEST_PRICE'),
     ],
 
     // Kingsleykhordpiano members get KhordQuiz included. See

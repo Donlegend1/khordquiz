@@ -24,12 +24,25 @@ class PaddleSubscriptionSync
 
     public function priceFor(string $planId): ?string
     {
-        return config("services.paddle.prices.{$planId}");
+        return $this->localTestPrice() ?? config("services.paddle.prices.{$planId}");
+    }
+
+    /**
+     * The $1 test price every plan uses locally (services.paddle.local_test_price),
+     * or null anywhere else.
+     */
+    public function localTestPrice(): ?string
+    {
+        $price = config('services.paddle.local_test_price');
+
+        return app()->environment('local') && filled($price) ? (string) $price : null;
     }
 
     public function planForPrice(?string $priceId): ?string
     {
-        if ($priceId === null) {
+        // The local test price stands in for every plan, so it says nothing
+        // about which one was bought — custom_data does.
+        if ($priceId === null || $priceId === $this->localTestPrice()) {
             return null;
         }
 
@@ -57,7 +70,8 @@ class PaddleSubscriptionSync
 
         $price = $this->paddle->getPrice($priceId);
 
-        if (! empty($price['trial_period']) === $withTrial) {
+        // One-time prices (e.g. a local test price) can't carry a trial.
+        if (empty($price['billing_cycle']) || ! empty($price['trial_period']) === $withTrial) {
             return ['price_id' => $priceId, 'quantity' => 1];
         }
 
@@ -109,6 +123,10 @@ class PaddleSubscriptionSync
         }
 
         if (! empty($transaction['subscription_id'])) {
+            // The plan this transaction was for, in case the subscription's
+            // price doesn't identify it (the local test price).
+            $subscription->plan_id = $planId ?? $subscription->plan_id;
+
             $this->syncSubscription($this->paddle->getSubscription($transaction['subscription_id']), $subscription);
 
             return;
